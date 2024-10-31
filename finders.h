@@ -83,12 +83,12 @@ STRUCT(StrongholdIter)
 
 STRUCT(StructureVariant)
 {
-    uint8_t abandoned   :1; // is zombie village
-    uint8_t giant       :1; // giant portal variant
-    uint8_t underground :1; // underground portal
-    uint8_t airpocket   :1; // portal with air pocket
-    uint8_t basement    :1; // igloo with basement
-    uint8_t cracked     :1; // geode with crack
+    uint8_t abandoned;      // is zombie village
+    uint8_t giant;          // giant portal variant
+    uint8_t underground;    // underground portal
+    uint8_t airpocket;      // portal with air pocket
+    uint8_t basement;       // igloo with basement
+    uint8_t cracked;        // geode with crack
     uint8_t size;           // geode size | igloo middel pieces
     uint8_t start;          // starting piece index
     short   biome;          // biome variant
