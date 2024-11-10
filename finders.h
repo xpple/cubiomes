@@ -144,8 +144,6 @@ STRUCT(BiomeFilter)
     uint64_t biomeToPick, biomeToPickM;
 };
 
-int getStructureDimension(int id);
-
 /***************************** Structure Positions *****************************
  *
  *  For most structure positions, Minecraft divides the world into a grid of
