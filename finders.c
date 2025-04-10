@@ -1195,7 +1195,8 @@ int isViableFeatureBiome(int mc, int structureType, int biomeID)
 
     case Igloo:
         if (mc <= MC_1_8) return 0;
-        return biomeID == snowy_taiga || biomeID == snowy_plains || biomeID == snowy_slopes;
+        return (biomeID == snowy_tundra || biomeID == snowy_taiga
+             || biomeID == snowy_plains || biomeID == snowy_slopes);
 
     case Ocean_Ruin:
         if (mc <= MC_1_12) return 0;
