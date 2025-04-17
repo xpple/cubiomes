@@ -816,7 +816,7 @@ int isStrongholdBiome(int mc, int id)
         return 0;
     case mushroom_field_shore:
         return mc >= MC_1_13;
-    case stone_shore:
+    case stone_shore: // stony_shore
         return mc <= MC_1_17;
     case bamboo_jungle:
     case bamboo_jungle_hills:
@@ -824,6 +824,7 @@ int isStrongholdBiome(int mc, int id)
         return mc <= MC_1_15 || mc >= MC_1_18;
     case mangrove_swamp:
     case deep_dark:
+    case cherry_grove:
         return 0;
     default:
         return 1;
