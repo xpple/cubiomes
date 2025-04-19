@@ -8,8 +8,22 @@
 #include <float.h>
 #include <math.h>
 
+#include "util.h"
+
+// https://c-faq.com/misc/bitsets.html
+#define BITMASK(b) (1 << ((b) % CHAR_BIT))
+#define BITSLOT(b) ((b) / CHAR_BIT)
+#define BITSET(a, b) ((a)[BITSLOT(b)] |= BITMASK(b))
+#define BITCLEAR(a, b) ((a)[BITSLOT(b)] &= ~BITMASK(b))
+#define BITTEST(a, b) ((a)[BITSLOT(b)] & BITMASK(b))
+#define BITNSLOTS(nb) ((nb + CHAR_BIT - 1) / CHAR_BIT)
 
 #define PI 3.14159265358979323846
+
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
+#define MAX_ORE_COUNT 100
 
 
 //==============================================================================
@@ -52,6 +66,18 @@ uint64_t getPopulationSeed(int mc, uint64_t ws, int x, int z)
         b = (int64_t)b / 2 * 2 + 1;
     }
     return (x * a + z * b) ^ ws;
+}
+
+uint64_t getDecoratorSeed(int mc, uint64_t ws, int x, int z, int salt)
+{
+    if (mc <= MC_1_12) {
+        fprintf(stderr, "getDecoratorSeed: not existent for version %s.\n", mc2str(mc));
+        exit(1);
+    }
+    uint64_t populationSeed = getPopulationSeed(mc, ws, x, z);
+    uint64_t seed;
+    setSeed(&seed, populationSeed + salt);
+    return seed;
 }
 
 
@@ -1172,7 +1198,593 @@ Pos getSpawn(const Generator *g)
     return spawn;
 }
 
+//==============================================================================
+// Simulating ore generation
+//==============================================================================
 
+static const uint32_t BASE_STONE_OVERWORLD_REPLACEMENTS[] = {STONE, GRANITE, DIORITE, ANDESITE, DEEPSLATE, TUFF};
+static const uint32_t BASE_STONE_NETHER_REPLACEMENTS[] = {NETHERRACK, BASALT, BLACKSTONE};
+static const uint32_t STONE_REPLACEMENTS[] = {STONE};
+static const uint32_t NETHERRACK_REPLACEMENTS[] = {NETHERRACK};
+
+int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
+{
+    static const OreConfig
+    // overworld
+    o_andesite_113 = {4, 4, 33, 10, AndesiteOre, ANDESITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+    o_andesite_116 = {4, 6, 33, 10, AndesiteOre, ANDESITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+
+    o_coal_113 = {5, 4, 17, 20, CoalOre, COAL_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+    o_coal_116 = {5, 6, 17, 20, CoalOre, COAL_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+    o_coal_117 = {7, 6, 17, 20, CoalOre, COAL_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+
+    o_copper_117 = {13, 6, 10, 6, CopperOre, COPPER_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+
+    o_deepslate_117 = {6, 6, 64, 2, DeepslateOre, DEEPSLATE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+
+    o_diamond_113 = {9, 4, 8, 1, DiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+    o_diamond_116 = {9, 6, 8, 1, DiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+    o_diamond_117 = {11, 6, 8, 1, DiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+
+    o_diorite_113 = {3, 4, 33, 10, DioriteOre, DIORITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+    o_diorite_116 = {3, 6, 33, 10, DioriteOre, DIORITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+
+    o_dirt_113 = {0, 4, 33, 10, DirtOre, DIRT, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+    o_dirt_116 = {0, 6, 33, 10, DirtOre, DIRT, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+
+    o_emerald_113 = {14, 4, 1, 1, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 1, STONE_REPLACEMENTS},
+    o_emerald_116 = {14, 6, 1, 1, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 1, STONE_REPLACEMENTS},
+    o_emerald_117 = {17, 6, 1, 1, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+
+    o_extra_gold_113 = {11, 4, 9, 20, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+    o_extra_gold_116 = {11, 6, 9, 20, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+    o_extra_gold_117 = {14, 6, 9, 20, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+
+    o_gold_113 = {7, 4, 9, 2, GoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+    o_gold_116 = {7, 6, 9, 2, GoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+    o_gold_117 = {9, 6, 9, 2, GoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+
+    o_granite_113 = {2, 4, 33, 10, GraniteOre, GRANITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+    o_granite_116 = {2, 6, 33, 10, GraniteOre, GRANITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+
+    o_gravel_113 = {1, 4, 33, 8, GravelOre, GRAVEL, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+    o_gravel_116 = {1, 6, 33, 8, GravelOre, GRAVEL, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+
+    o_iron_113 = {6, 4, 9, 20, IronOre, IRON_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+    o_iron_116 = {6, 6, 9, 20, IronOre, IRON_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+    o_iron_117 = {8, 6, 9, 20, IronOre, IRON_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+
+    o_lapis_113 = {10, 4, 7, 1, LapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+    o_lapis_116 = {10, 6, 7, 1, LapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+    o_lapis_117 = {12, 6, 7, 1, LapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+
+    o_redstone_113 = {8, 4, 8, 8, RedstoneOre, REDSTONE_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+    o_redstone_116 = {8, 6, 8, 8, RedstoneOre, REDSTONE_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+    o_redstone_117 = {10, 6, 8, 8, RedstoneOre, REDSTONE_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+
+    o_tuff_117 = {5, 6, 33, 1, TuffOre, TUFF, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEMENTS},
+
+    // nether
+    o_blackstone_116 = {12, 7, 33, 2, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+    o_blackstone_116_crimson_forest = {9, 7, 33, 2, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+    o_blackstone_116_warped_forest = {10, 7, 33, 2, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+
+    o_large_debris_116 = {15, 7, 3, 1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEMENTS},
+    o_large_debris_116_crimson_forest = {12, 7, 3, 1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEMENTS},
+    o_large_debris_116_warped_forest = {13, 7, 3, 1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEMENTS},
+
+    o_magma_113 = {8, 5, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+    o_magma_116 = {9, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+    o_magma_116_soul_sand_valley = {8, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+    o_magma_116_crimson_forest = {6, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+    o_magma_116_warped_forest = {7, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+    o_magma_116_basalt_deltas = {11, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+
+    o_nether_gold_116 = {13, 7, 10, 10, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+    o_nether_gold_116_crimson_forest = {10, 7, 10, 10, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+    o_nether_gold_116_warped_forest = {11, 7, 10, 10, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+    o_nether_gold_116_basalt_deltas = {13, 7, 10, 20, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+
+    o_nether_gravel_116 = {11, 7, 33, 2, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+    o_nether_gravel_116_crimson_forest = {8, 7, 33, 2, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+    o_nether_gravel_116_warped_forest = {9, 7, 33, 2, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+
+    o_quartz_113 = {7, 5, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+    o_quartz_116 = {14, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+    o_quartz_116_crimson_forest = {11, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+    o_quartz_116_warped_forest = {12, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+    o_quartz_116_basalt_deltas = {14, 7, 14, 32, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS},
+
+    o_small_debris_116 = {16, 7, 2, 1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEMENTS},
+    o_small_debris_116_crimson_forest = {13, 7, 2, 1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEMENTS},
+    o_small_debris_116_warped_forest = {14, 7, 2, 1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEMENTS},
+
+    o_soul_sand_116 = {10, 7, 12, 12, SoulSandOre, SOUL_SAND, DIM_NETHER, 1, NETHERRACK_REPLACEMENTS}
+    ;
+
+    switch (oreType)
+    {
+    case AndesiteOre:
+        if (mc <= MC_1_15) *oconf = o_andesite_113;
+        else if (mc <= MC_1_17) *oconf = o_andesite_116;
+        return mc > MC_1_12;
+    case CoalOre:
+        if (mc <= MC_1_15) *oconf = o_coal_113;
+        else if (mc <= MC_1_16) *oconf = o_coal_116;
+        else if (mc <= MC_1_17) *oconf = o_coal_117;
+        return mc > MC_1_12;
+    case CopperOre:
+        if (mc <= MC_1_17) *oconf = o_copper_117;
+        return mc > MC_1_16;
+    case DeepslateOre:
+        if (mc <= MC_1_17) *oconf = o_deepslate_117;
+        return mc > MC_1_16;
+    case DiamondOre:
+        if (mc <= MC_1_15) *oconf = o_diamond_113;
+        else if (mc <= MC_1_16) *oconf = o_diamond_116;
+        else if (mc <= MC_1_17) *oconf = o_diamond_117;
+        return mc > MC_1_12;
+    case DioriteOre:
+        if (mc <= MC_1_15) *oconf = o_diorite_113;
+        else if (mc <= MC_1_17) *oconf = o_diorite_116;
+        return mc > MC_1_12;
+    case DirtOre:
+        if (mc <= MC_1_15) *oconf = o_dirt_113;
+        else if (mc <= MC_1_17) *oconf = o_dirt_116;
+        return mc > MC_1_12;
+    case EmeraldOre:
+        if (mc <= MC_1_15) *oconf = o_emerald_113;
+        else if (mc <= MC_1_16) *oconf = o_emerald_116;
+        else if (mc <= MC_1_17) *oconf = o_emerald_117;
+        return mc > MC_1_12;
+    case ExtraGoldOre:
+        if (mc <= MC_1_15) *oconf = o_extra_gold_113;
+        else if (mc <= MC_1_16) *oconf = o_extra_gold_116;
+        else if (mc <= MC_1_17) *oconf = o_extra_gold_117;
+        return mc > MC_1_12;
+    case GoldOre:
+        if (mc <= MC_1_15) *oconf = o_gold_113;
+        else if (mc <= MC_1_16) *oconf = o_gold_116;
+        else if (mc <= MC_1_17) *oconf = o_gold_117;
+        return mc > MC_1_12;
+    case GraniteOre:
+        if (mc <= MC_1_15) *oconf = o_granite_113;
+        else if (mc <= MC_1_17) *oconf = o_granite_116;
+        return mc > MC_1_12;
+    case GravelOre:
+        if (mc <= MC_1_15) *oconf = o_gravel_113;
+        else if (mc <= MC_1_17) *oconf = o_gravel_116;
+        return mc > MC_1_12;
+    case IronOre:
+        if (mc <= MC_1_15) *oconf = o_iron_113;
+        else if (mc <= MC_1_16) *oconf = o_iron_116;
+        else if (mc <= MC_1_17) *oconf = o_iron_117;
+        return mc > MC_1_12;
+    case LapisOre:
+        if (mc <= MC_1_15) *oconf = o_lapis_113;
+        else if (mc <= MC_1_16) *oconf = o_lapis_116;
+        else if (mc <= MC_1_17) *oconf = o_lapis_117;
+        return mc > MC_1_12;
+    case RedstoneOre:
+        if (mc <= MC_1_15) *oconf = o_redstone_113;
+        else if (mc <= MC_1_16) *oconf = o_redstone_116;
+        else if (mc <= MC_1_17) *oconf = o_redstone_117;
+        return mc > MC_1_12;
+    case TuffOre:
+        if (mc <= MC_1_17) *oconf = o_tuff_117;
+        return mc > MC_1_16;
+    case BlackstoneOre:
+        if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_blackstone_116_crimson_forest;
+        else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_blackstone_116_warped_forest;
+        else if (mc <= MC_1_17) *oconf = o_blackstone_116;
+        return mc > MC_1_15;
+    case LargeDebrisOre:
+        if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_large_debris_116_crimson_forest;
+        else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_large_debris_116_warped_forest;
+        else if (mc <= MC_1_17) *oconf = o_large_debris_116;
+        return mc > MC_1_15;
+    case MagmaOre:
+        if (mc <= MC_1_15) *oconf = o_magma_113;
+        else if (mc <= MC_1_17 && biomeID == soul_sand_valley) *oconf = o_magma_116_soul_sand_valley;
+        else if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_magma_116_crimson_forest;
+        else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_magma_116_warped_forest;
+        else if (mc <= MC_1_17 && biomeID == basalt_deltas) *oconf = o_magma_116_basalt_deltas;
+        else if (mc <= MC_1_17) *oconf = o_magma_116;
+        return mc > MC_1_12;
+    case NetherGoldOre:
+        if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_nether_gold_116_crimson_forest;
+        else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_nether_gold_116_warped_forest;
+        else if (mc <= MC_1_17 && biomeID == basalt_deltas) *oconf = o_nether_gold_116_basalt_deltas;
+        else if (mc <= MC_1_17) *oconf = o_nether_gold_116;
+        return mc > MC_1_15;
+    case NetherGravelOre:
+        if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_nether_gravel_116_crimson_forest;
+        else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_nether_gravel_116_warped_forest;
+        else if (mc <= MC_1_17) *oconf = o_nether_gravel_116;
+        return mc > MC_1_15;
+    case QuartzOre:
+        if (mc <= MC_1_15) *oconf = o_quartz_113;
+        else if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_quartz_116_crimson_forest;
+        else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_quartz_116_warped_forest;
+        else if (mc <= MC_1_17 && biomeID == basalt_deltas) *oconf = o_quartz_116_basalt_deltas;
+        else if (mc <= MC_1_17) *oconf = o_quartz_116;
+        return mc > MC_1_12;
+    case SmallDebrisOre:
+        if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_small_debris_116_crimson_forest;
+        else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_small_debris_116_warped_forest;
+        else if (mc <= MC_1_17) *oconf = o_small_debris_116;
+        return mc > MC_1_15;
+    case SoulSandOre:
+        if (mc <= MC_1_17) *oconf = o_soul_sand_116;
+        return mc > MC_1_15;
+    default:
+        memset(oconf, 0, sizeof(OreConfig));
+        return 0;
+    }
+}
+
+int isViableOreBiome(int mc, int oreType, int biomeID)
+{
+    switch (oreType)
+    {
+    // overworld
+    case AndesiteOre:
+    case CoalOre:
+    case CopperOre:
+    case DeepslateOre:
+    case DiamondOre:
+    case DioriteOre:
+    case DirtOre:
+    case GoldOre:
+    case GraniteOre:
+    case GravelOre:
+    case IronOre:
+    case LapisOre:
+    case RedstoneOre:
+    case TuffOre:
+        return isOverworld(mc, biomeID);
+    case EmeraldOre:
+        return (biomeID == mountains || biomeID == mountain_edge || biomeID == wooded_mountains ||
+                biomeID == gravelly_mountains || biomeID == modified_gravelly_mountains);
+    case ExtraGoldOre:
+        return (biomeID == badlands || biomeID == wooded_badlands_plateau || biomeID == badlands_plateau ||
+                biomeID == eroded_badlands || biomeID == modified_wooded_badlands_plateau || biomeID == modified_badlands_plateau);
+    // nether
+    case LargeDebrisOre:
+    case MagmaOre:
+    case NetherGoldOre:
+    case QuartzOre:
+    case SmallDebrisOre:
+        return getDimension(biomeID) == DIM_NETHER;
+    case BlackstoneOre:
+    case NetherGravelOre:
+        return (biomeID == nether_wastes || biomeID == soul_sand_valley ||
+                biomeID == crimson_forest || biomeID == warped_forest);
+    case SoulSandOre:
+        return biomeID == soul_sand_valley;
+    default:
+        fprintf(stderr, "isViableOreBiome: not implemented for ore type %d.\n", oreType);
+        exit(1);
+    }
+    return 0;
+}
+
+int getBiomeForOreGen(const Generator *g, int chunkX, int chunkZ)
+{
+    if (g->mc <= MC_1_15) {
+        return getBiomeAt(g, 1, (chunkX << 4) + 8, 0, (chunkZ << 4) + 8);
+    }
+    return getBiomeAt(g, 4, (chunkX << 2) + 2, 0, (chunkZ << 2) + 2);
+}
+
+SizedPos3 generateOres(const Generator *g, OreConfig config, int chunkX, int chunkZ)
+{
+    uint64_t seed = getDecoratorSeed(g->mc, g->seed, chunkX << 4, chunkZ << 4, config.index + 10000 * config.step);
+
+    int repeatCount = config.repeatCount;
+    int size = MAX_ORE_COUNT;
+    Pos3* positions = malloc(size * sizeof(Pos3));
+    int posIndex = 0;
+
+    for (int i = 0; i < repeatCount; i++) {
+        Pos3 basePos = generateBaseOrePosition(g->mc, config, chunkX, chunkZ, &seed);
+        SizedPos3 orePositions = generateOrePositions(g->mc, config, basePos, &seed);
+
+        if (posIndex + orePositions.size > size) {
+            size = posIndex + orePositions.size;
+            Pos3* temp = realloc(positions, size * sizeof(Pos3));
+            if (!temp) {
+                fprintf(stderr, "Memory allocation failed.\n");
+                free(positions);
+                exit(1);
+            }
+            positions = temp;
+        }
+
+        for (int j = 0; j < orePositions.size; j++) {
+            positions[posIndex++] = orePositions.pos3s[j];
+        }
+    }
+    return (SizedPos3) {posIndex, positions};
+}
+
+Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, uint64_t *seed)
+{
+    if (config.oreType == EmeraldOre) {
+        return (Pos3) {chunkX << 4, 0, chunkZ << 4};
+    }
+    if (mc <= MC_1_14) {
+        int blockX = (chunkX << 4) + nextInt(seed, 16);
+        int blockY = getOreYPos(mc, config.oreType, seed);
+        int blockZ = (chunkZ << 4) + nextInt(seed, 16);
+        return (Pos3) {blockX, blockY, blockZ};
+    } else {
+        int blockX = (chunkX << 4) + nextInt(seed, 16);
+        int blockZ = (chunkZ << 4) + nextInt(seed, 16);
+        int blockY = getOreYPos(mc, config.oreType, seed);
+        return (Pos3) {blockX, blockY, blockZ};
+    }
+}
+
+int getOreYPos(int mc, int oreType, uint64_t *seed)
+{
+    switch (oreType) {
+    // overworld
+    case AndesiteOre:
+        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 80);
+        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 79);
+        break;
+    case CoalOre:
+        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 128);
+        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 127);
+        break;
+    case CopperOre:
+        if (mc <= MC_1_17) return providerTriangleRange(seed, 0, 96);
+        break;
+    case DeepslateOre:
+        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 16);
+        break;
+    case DiamondOre:
+        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 16);
+        // was 16 in 1.17, changed to 15 in 1.17.1
+        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 15);
+        break;
+    case DioriteOre:
+        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 80);
+        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 79);
+        break;
+    case DirtOre:
+        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 256);
+        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 255);
+        break;
+    case EmeraldOre:
+        if (mc <= MC_1_16) return nextInt(seed, 28) + 4;
+        if (mc <= MC_1_17) return providerUniformRange(seed, 4, 31);
+        break;
+    case ExtraGoldOre:
+        if (mc <= MC_1_16) return providerRange(seed, 32, 32, 80);
+        if (mc <= MC_1_17) return providerUniformRange(seed, 32, 79);
+        break;
+    case GoldOre:
+        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 32);
+        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 31);
+        break;
+    case GraniteOre:
+        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 80);
+        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 79);
+        break;
+    case GravelOre:
+        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 256);
+        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 255);
+        break;
+    case IronOre:
+        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 64);
+        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 63);
+        break;
+    case LapisOre:
+        if (mc <= MC_1_16) return providerDepthAverage(seed, 16, 16);
+        if (mc <= MC_1_17) return providerTriangleRange(seed, 0, 30);
+        break;
+    case RedstoneOre:
+        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 16);
+        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 15);
+        break;
+    case TuffOre:
+        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 16);
+        break;
+    // nether
+    case BlackstoneOre:
+        if (mc <= MC_1_16) return providerRange(seed, 5, 10, 37);
+        if (mc <= MC_1_17) return providerUniformRange(seed, 5, 31);
+        break;
+    case LargeDebrisOre:
+        if (mc <= MC_1_16) return providerDepthAverage(seed, 16, 8);
+        if (mc <= MC_1_17) return providerTriangleRange(seed, 8, 24);
+        break;
+    case MagmaOre:
+        if (mc <= MC_1_16) return 32 - 5 + nextInt(seed, 10);
+        if (mc <= MC_1_17) return providerUniformRange(seed, 27, 36);
+        break;
+    case NetherGoldOre:
+        if (mc <= MC_1_16) return providerRange(seed, 10, 20, 128);
+        if (mc <= MC_1_17) return providerUniformRange(seed, 10, 117);
+        break;
+    case NetherGravelOre:
+        if (mc <= MC_1_16) return providerRange(seed, 5, 0, 37);
+        if (mc <= MC_1_17) return providerUniformRange(seed, 5, 41);
+        break;
+    case QuartzOre:
+        if (mc <= MC_1_16) return providerRange(seed, 10, 20, 128);
+        if (mc <= MC_1_17) return providerUniformRange(seed, 10, 117);
+        break;
+    case SmallDebrisOre:
+        if (mc <= MC_1_16) return providerRange(seed, 8, 16, 128);
+        if (mc <= MC_1_17) return providerUniformRange(seed, 8, 119);
+        break;
+    case SoulSandOre:
+        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 32);
+        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 31);
+        break;
+    default:
+        fprintf(stderr, "getOreYPos: not implemented for ore type %d.\n", oreType);
+        exit(1);
+    }
+    return 0;
+}
+
+SizedPos3 generateOrePositions(int mc, OreConfig config, Pos3 pos, uint64_t *seed)
+{
+    if (config.oreType == EmeraldOre) {
+        int count;
+        if (mc <= MC_1_16) {
+            count = 3 + nextInt(seed, 6);
+        } else {
+            // was 6, 24 in 1.17, changed to 3, 8 in 1.17.1
+            count = nextIntBetween(seed, 3, 8);
+        }
+        Pos3* poses = malloc(count * sizeof(Pos3));
+        for (int i = 0; i < count; i++) {
+            if (mc <= MC_1_14) {
+                int x = pos.x + nextInt(seed, 16);
+                int y = getOreYPos(mc, EmeraldOre, seed);
+                int z = pos.z + nextInt(seed, 16);
+                poses[i] = (Pos3) {x, y, z};
+            } else {
+                int x = pos.x + nextInt(seed, 16);
+                int z = pos.z + nextInt(seed, 16);
+                int y = getOreYPos(mc, EmeraldOre, seed);
+                poses[i] = (Pos3) {x, y, z};
+            }
+        }
+        return (SizedPos3) {count, poses};
+    }
+
+    // scatter
+    if (config.oreType == LargeDebrisOre || config.oreType == SmallDebrisOre) {
+        int count = nextInt(seed, config.size + 1);
+        Pos3* poses = malloc(count * sizeof(Pos3));
+        for (int i = 0; i < count; ++i) {
+            int size = MIN(i, 7);
+            int x = roundf((nextFloat(seed) - nextFloat(seed)) * (float)size);
+            int y = roundf((nextFloat(seed) - nextFloat(seed)) * (float)size);
+            int z = roundf((nextFloat(seed) - nextFloat(seed)) * (float)size);
+            Pos3 startPos = (Pos3) {pos.x + x, pos.y + y, pos.z + z};
+
+            // TODO: check if the block at startPos is contained in config.replaceBlocks
+            // TODO: and if the block at startPos is not air-exposed
+            if (1) {
+                poses[i] = startPos;
+            }
+        }
+
+        return (SizedPos3) {count, poses};
+    }
+
+    // regular
+    float angle = nextFloat(seed) * (float)PI;
+    float size = (float)config.size / 8.0F;
+    int amortizedSize = ceil(((float)config.size / 16.0F * 2.0F + 1.0F) / 2.0F);
+    double offsetXPos = (double)pos.x + sin(angle) * (double)size;
+    double offsetXNeg = (double)pos.x - sin(angle) * (double)size;
+    double offsetZPos = (double)pos.z + cos(angle) * (double)size;
+    double offsetZNeg = (double)pos.z - cos(angle) * (double)size;
+    double offsetYPos = pos.y + nextInt(seed, 3) - 2;
+    double offsetYNeg = pos.y + nextInt(seed, 3) - 2;
+    int startX = pos.x - ceil(size) - amortizedSize;
+    int startY = pos.y - 2 - amortizedSize;
+    int startZ = pos.z - ceil(size) - amortizedSize;
+    int oreSize = 2 * (ceil(size) + amortizedSize);
+    int radius = 2 * (2 + amortizedSize);
+
+    for (int x = startX; x <= startX + oreSize; ++x) {
+        for (int z = startZ; z <= startZ + oreSize; ++z) {
+            // TODO: check if startY <= first y value in column that is motion blocking (Heightmap.Types#OCEAN_FLOOR_WG)
+            if (1) {
+                return generateVeinPart(config, seed, offsetXPos, offsetXNeg, offsetZPos, offsetZNeg, offsetYPos, offsetYNeg, startX, startY, startZ, oreSize, radius);
+            }
+        }
+    }
+
+    return (SizedPos3) {0, NULL};
+}
+
+SizedPos3 generateVeinPart(OreConfig config, uint64_t *seed, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius)
+{
+    Pos3* poses = malloc(100 * sizeof(Pos3));
+    int posIndex = 0;
+    char bitSet[BITNSLOTS(oreSize * radius * oreSize)];
+    int size = config.size;
+    double* store = malloc(4 * size * sizeof(double));
+
+    for (int i = 0; i < size; ++i) {
+        float percent = (float)i / (float)size;
+        double x = lerp(percent, offsetXPos, offsetXNeg);
+        double y = lerp(percent, offsetYPos, offsetYNeg);
+        double z = lerp(percent, offsetZPos, offsetZNeg);
+        double length = nextDouble(seed) * (double)size / 16.0;
+        double offset = ((sin((float)PI * percent) + 1.0F) * length + 1.0) / 2.0;
+        store[i * 4] = x;
+        store[i * 4 + 1] = y;
+        store[i * 4 + 2] = z;
+        store[i * 4 + 3] = offset;
+    }
+
+    for (int i = 0; i < size - 1; ++i) {
+        if (store[i * 4 + 3] <= 0.0) continue;
+        for (int j = i + 1; j < size; ++j) {
+            if (store[j * 4 + 3] <= 0.0) continue;
+            double diffX = store[i * 4] - store[j * 4];
+            double diffY = store[i * 4 + 1] - store[j * 4 + 1];
+            double diffZ = store[i * 4 + 2] - store[j * 4 + 2];
+            double offset = store[i * 4 + 3] - store[j * 4 + 3];
+            if (offset * offset <= diffX * diffX + diffY * diffY + diffZ * diffZ) continue;
+            if (offset > 0.0) {
+                store[j * 4 + 3] = -1.0;
+            } else {
+                store[i * 4 + 3] = -1.0;
+            }
+        }
+    }
+
+    for (int i = 0; i < size; ++i) {
+        double offset = store[i * 4 + 3];
+        if (offset < 0.0) continue;
+        double x = store[i * 4];
+        double y = store[i * 4 + 1];
+        double z = store[i * 4 + 2];
+
+        int minX = MAX(floor(x - offset), startX);
+        int minY = MAX(floor(y - offset), startY);
+        int minZ = MAX(floor(z - offset), startZ);
+
+        int maxX = MAX(floor(x + offset), minX);
+        int maxY = MAX(floor(y + offset), minY);
+        int maxZ = MAX(floor(z + offset), minZ);
+
+        for (int X = minX; X <= maxX; ++X) {
+            double xSlide = ((double)X + 0.5 - x) / offset;
+            if (xSlide * xSlide >= 1.0) continue;
+            for (int Y = minY; Y <= maxY; ++Y) {
+                double ySlide = ((double)Y + 0.5 - y) / offset;
+                if (xSlide * xSlide + ySlide * ySlide >= 1.0) continue;
+                for (int Z = minZ; Z <= maxZ; ++Z) {
+                    double zSlide = ((double)Z + 0.5 - z) / offset;
+                    if (xSlide * xSlide + ySlide * ySlide + zSlide * zSlide >= 1.0D) continue;
+                    int area = X - startX + (Y - startY) * oreSize + (Z - startZ) * oreSize * radius;
+                    if (BITTEST(bitSet, area)) continue;
+                    BITSET(bitSet, area);
+                    Pos3 pos = {X, Y, Z};
+                    // TODO: check if the block at pos is contained in config.replaceBlocks
+                    if (1) {
+                        poses[posIndex++] = pos;
+                    }
+                }
+            }
+        }
+    }
+
+    return (SizedPos3) {posIndex, poses};
+}
 
 //==============================================================================
 // Validating Structure Positions

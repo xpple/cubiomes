@@ -336,6 +336,11 @@ static inline uint64_t getStartSeed(uint64_t ws, uint64_t ls)
     return ss;
 }
 
+static inline int nextIntBetween(uint64_t *seed, const int min, const int max)
+{
+    return nextInt(seed, max - min + 1) + min;
+}
+
 
 ///============================================================================
 ///                               Arithmatic
