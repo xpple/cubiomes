@@ -1219,9 +1219,9 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
     o_andesite_113 = {4, 4, 33, 10, AndesiteOre, ANDESITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES},
     o_andesite_116 = {4, 6, 33, 10, AndesiteOre, ANDESITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES},
 
-    o_buried_diamond_118 = {20, 6, 8, 4, DiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES},
+    o_buried_diamond_118 = {20, 6, 8, 4, BuriedDiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES},
 
-    o_buried_lapis_118 = {22, 6, 7, 4, LapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES},
+    o_buried_lapis_118 = {22, 6, 7, 4, BuriedLapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES},
 
     o_clay_118 = {24, 6, 33, 46, ClayOre, CLAY, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES},
 
