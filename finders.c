@@ -1288,8 +1288,7 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
 
     o_lower_diorite_118 = {5, 6, 64, 2, LowerDioriteOre, DIORITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES},
 
-    // repeatCount is -1 because gold uses CountPlacement.of(UniformInt.of(0, 1))
-    o_lower_gold_118 = {15, 6, 9, -1, LowerGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES},
+    o_lower_gold_118 = {15, 6, 9, 1, LowerGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES},
 
     o_lower_granite_118 = {3, 6, 64, 2, LowerGraniteOre, GRANITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES},
 
@@ -1687,13 +1686,7 @@ SizedPos3 generateOres(const Generator *g, OreConfig config, int chunkX, int chu
         }
     }
 
-    int repeatCount;
-    // CountPlacement.of(UniformInt.of(0, 1)) check
-    if (oreType == LowerGoldOre) {
-        repeatCount = nextIntBetween(&seed, 0, 1);
-    } else {
-        repeatCount = config.repeatCount;
-    }
+    int repeatCount = config.repeatCount;
     int size = MAX_ORE_COUNT;
     Pos3* positions = malloc(size * sizeof(Pos3));
     int posIndex = 0;
@@ -1722,7 +1715,7 @@ SizedPos3 generateOres(const Generator *g, OreConfig config, int chunkX, int chu
 
 Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, uint64_t *seed)
 {
-    if (config.oreType == EmeraldOre) {
+    if ((mc <= MC_1_17 && config.oreType == EmeraldOre) || (mc <= MC_1_18 && config.oreType == LowerGoldOre)) {
         return (Pos3) {chunkX << 4, 0, chunkZ << 4};
     }
     if (mc <= MC_1_14) {
@@ -1911,25 +1904,29 @@ int getOreYPos(int mc, int oreType, uint64_t *seed)
 
 SizedPos3 generateOrePositions(int mc, OreConfig config, Pos3 pos, uint64_t *seed)
 {
-    if (config.oreType == EmeraldOre) {
+    if ((mc <= MC_1_17 && config.oreType == EmeraldOre) || (mc <= MC_1_18 && config.oreType == LowerGoldOre)) {
         int count;
-        if (mc <= MC_1_16) {
-            count = 3 + nextInt(seed, 6);
+        if (config.oreType == EmeraldOre) {
+            if (mc <= MC_1_16) {
+                count = 3 + nextInt(seed, 6);
+            } else {
+                // was 6, 24 in 1.17, changed to 3, 8 in 1.17.1
+                count = nextIntBetween(seed, 3, 8);
+            }
         } else {
-            // was 6, 24 in 1.17, changed to 3, 8 in 1.17.1
-            count = nextIntBetween(seed, 3, 8);
+            count = nextIntBetween(seed, 0, 1);
         }
         Pos3* poses = malloc(count * sizeof(Pos3));
         for (int i = 0; i < count; i++) {
             if (mc <= MC_1_14) {
                 int x = pos.x + nextInt(seed, 16);
-                int y = getOreYPos(mc, EmeraldOre, seed);
+                int y = getOreYPos(mc, config.oreType, seed);
                 int z = pos.z + nextInt(seed, 16);
                 poses[i] = (Pos3) {x, y, z};
             } else {
                 int x = pos.x + nextInt(seed, 16);
                 int z = pos.z + nextInt(seed, 16);
-                int y = getOreYPos(mc, EmeraldOre, seed);
+                int y = getOreYPos(mc, config.oreType, seed);
                 poses[i] = (Pos3) {x, y, z};
             }
         }
