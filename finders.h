@@ -446,10 +446,6 @@ static inline int providerTriangleRange(uint64_t *seed, const int minOffset, con
     return minOffset + nextIntBetween(seed, 0, midPoint2) + nextIntBetween(seed, 0, midPoint);
 }
 
-static inline int providerSpreadRange(uint64_t *seed, const int baseValue, const int spread) {
-    return spread == 0 ? baseValue : baseValue + nextInt(seed, spread + 1);
-}
-
 
 /**
  * Get the ore config for a given ore type.
