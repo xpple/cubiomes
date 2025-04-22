@@ -172,6 +172,11 @@ static inline void skipNextN(uint64_t *seed, uint64_t n)
     *seed &= 0xffffffffffffULL;
 }
 
+static inline int nextIntBetween(uint64_t *seed, const int min, const int max)
+{
+    return nextInt(seed, max - min + 1) + min;
+}
+
 
 ///=============================================================================
 ///                               Xoroshiro 128
@@ -265,6 +270,45 @@ static inline int xNextIntJ(Xoroshiro *xr, uint32_t n)
     return val;
 }
 
+static inline int xNextIntBetween(Xoroshiro *xr, const int min, const int max)
+{
+    return xNextInt(xr, max - min + 1) + min;
+}
+
+// expand as necessary
+STRUCT(RandomSource)
+{
+    void *state;
+    void (*setSeed)(void *state, uint64_t seed);
+    int (*nextInt)(void *state, int n);
+    float (*nextFloat)(void *state);
+    double (*nextDouble)(void *state);
+    int (*nextIntBetween)(void *state, int min, int max);
+};
+
+static inline RandomSource createJavaRandom(uint64_t *seed)
+{
+    return (RandomSource) {
+        .state = seed,
+        .setSeed = (void (*)(void *, uint64_t)) setSeed,
+        .nextInt = (int (*)(void *, int)) nextInt,
+        .nextFloat = (float (*)(void *)) nextFloat,
+        .nextDouble = (double (*)(void *)) nextDouble,
+        .nextIntBetween = (int (*)(void *, int, int)) nextIntBetween,
+    };
+}
+
+static inline RandomSource createXoroshiro(Xoroshiro *xr)
+{
+    return (RandomSource) {
+        .state = xr,
+        .setSeed = (void (*)(void *, uint64_t)) xSetSeed,
+        .nextInt = (int (*)(void *, int)) xNextInt,
+        .nextFloat = (float (*)(void *)) xNextFloat,
+        .nextDouble = (double (*)(void *)) xNextDouble,
+        .nextIntBetween = (int (*)(void *, int, int)) xNextIntBetween,
+    };
+}
 
 //==============================================================================
 //                              MC Seed Helpers
@@ -334,11 +378,6 @@ static inline uint64_t getStartSeed(uint64_t ws, uint64_t ls)
     ss = getStartSalt(ss, ls);
     ss = mcStepSeed(ss, 0);
     return ss;
-}
-
-static inline int nextIntBetween(uint64_t *seed, const int min, const int max)
-{
-    return nextInt(seed, max - min + 1) + min;
 }
 
 

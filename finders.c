@@ -68,18 +68,6 @@ uint64_t getPopulationSeed(int mc, uint64_t ws, int x, int z)
     return (x * a + z * b) ^ ws;
 }
 
-uint64_t getDecoratorSeed(int mc, uint64_t ws, int x, int z, int salt)
-{
-    if (mc <= MC_1_12) {
-        fprintf(stderr, "getDecoratorSeed: not existent for version %s.\n", mc2str(mc));
-        exit(1);
-    }
-    uint64_t populationSeed = getPopulationSeed(mc, ws, x, z);
-    uint64_t seed;
-    setSeed(&seed, populationSeed + salt);
-    return seed;
-}
-
 
 int getStructureConfig(int structureType, int mc, StructureConfig *sconf)
 {
@@ -1288,6 +1276,7 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
 
     o_lower_diorite_118 = {5, 6, 64, 2, LowerDioriteOre, DIORITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES},
 
+    // uses UniformInt.of(0, 1)
     o_lower_gold_118 = {15, 6, 9, 1, LowerGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES},
 
     o_lower_granite_118 = {3, 6, 64, 2, LowerGraniteOre, GRANITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES},
@@ -1327,6 +1316,7 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
     o_blackstone_118_crimson_forest = {7, 7, 33, 2, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES},
     o_blackstone_118_warped_forest = {8, 7, 33, 2, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES},
 
+    // scatter ore, no count
     o_large_debris_116 = {15, 7, 3, 1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES},
     o_large_debris_116_crimson_forest = {12, 7, 3, 1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES},
     o_large_debris_116_warped_forest = {13, 7, 3, 1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES},
@@ -1372,6 +1362,7 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
     o_quartz_118_warped_forest = {10, 5, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES},
     o_quartz_118_basalt_deltas = {12, 5, 14, 32, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES},
 
+    // scatter ore, no count
     o_small_debris_116 = {16, 7, 2, 1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES},
     o_small_debris_116_crimson_forest = {13, 7, 2, 1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES},
     o_small_debris_116_warped_forest = {14, 7, 2, 1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES},
@@ -1598,6 +1589,7 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
 
 int isViableOreBiome(int mc, int oreType, int biomeID)
 {
+    // check this in OverworldBiomes.java/NetherBiomes.java
     switch (oreType)
     {
     // overworld
@@ -1675,25 +1667,35 @@ int getBiomeForOreGen(const Generator *g, int chunkX, int chunkZ)
 
 SizedPos3 generateOres(const Generator *g, OreConfig config, int chunkX, int chunkZ)
 {
-    uint64_t seed = getDecoratorSeed(g->mc, g->seed, chunkX << 4, chunkZ << 4, config.index + 10000 * config.step);
+    uint64_t populationSeed = getPopulationSeed(g->mc, g->seed, chunkX << 4, chunkZ << 4);
+    RandomSource rnd;
+    if (g->mc <= MC_1_17) {
+        uint64_t seed;
+        rnd = createJavaRandom(&seed);
+    } else {
+        Xoroshiro xr;
+        rnd = createXoroshiro(&xr);
+    }
+    // set decorator seed
+    rnd.setSeed(rnd.state, populationSeed + config.index + 10000 * config.step);
 
     int oreType = config.oreType;
+    int repeatCount;
     // rareOrePlacement check
     if (oreType == LargeDiamondOre || oreType == UpperAndesiteOre ||
         oreType == UpperDioriteOre || oreType == UpperGraniteOre) {
-        if (nextFloat(&seed) >= 1.0F / config.repeatCount) {
-            return (SizedPos3) {0, NULL};
-        }
+        repeatCount = rnd.nextFloat(rnd.state) < 1.0F / config.repeatCount;
+    } else {
+        repeatCount = config.repeatCount;
     }
 
-    int repeatCount = config.repeatCount;
     int size = MAX_ORE_COUNT;
     Pos3* positions = malloc(size * sizeof(Pos3));
     int posIndex = 0;
 
     for (int i = 0; i < repeatCount; i++) {
-        Pos3 basePos = generateBaseOrePosition(g->mc, config, chunkX, chunkZ, &seed);
-        SizedPos3 orePositions = generateOrePositions(g->mc, config, basePos, &seed);
+        Pos3 basePos = generateBaseOrePosition(g->mc, config, chunkX, chunkZ, rnd);
+        SizedPos3 orePositions = generateOrePositions(g->mc, config, basePos, rnd);
 
         if (posIndex + orePositions.size > size) {
             size = posIndex + orePositions.size;
@@ -1713,187 +1715,187 @@ SizedPos3 generateOres(const Generator *g, OreConfig config, int chunkX, int chu
     return (SizedPos3) {posIndex, positions};
 }
 
-Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, uint64_t *seed)
+Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource rnd)
 {
     if ((mc <= MC_1_17 && config.oreType == EmeraldOre) || (mc <= MC_1_18 && config.oreType == LowerGoldOre)) {
         return (Pos3) {chunkX << 4, 0, chunkZ << 4};
     }
     if (mc <= MC_1_14) {
-        int blockX = (chunkX << 4) + nextInt(seed, 16);
-        int blockY = getOreYPos(mc, config.oreType, seed);
-        int blockZ = (chunkZ << 4) + nextInt(seed, 16);
+        int blockX = (chunkX << 4) + rnd.nextInt(rnd.state, 16);
+        int blockY = getOreYPos(mc, config.oreType, rnd);
+        int blockZ = (chunkZ << 4) + rnd.nextInt(rnd.state, 16);
         return (Pos3) {blockX, blockY, blockZ};
     } else {
-        int blockX = (chunkX << 4) + nextInt(seed, 16);
-        int blockZ = (chunkZ << 4) + nextInt(seed, 16);
-        int blockY = getOreYPos(mc, config.oreType, seed);
+        int blockX = (chunkX << 4) + rnd.nextInt(rnd.state, 16);
+        int blockZ = (chunkZ << 4) + rnd.nextInt(rnd.state, 16);
+        int blockY = getOreYPos(mc, config.oreType, rnd);
         return (Pos3) {blockX, blockY, blockZ};
     }
 }
 
-int getOreYPos(int mc, int oreType, uint64_t *seed)
+int getOreYPos(int mc, int oreType, RandomSource rnd)
 {
     switch (oreType) {
     // overworld
     case AndesiteOre:
-        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 80);
-        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 79);
+        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 80);
+        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 79);
         break;
     case BuriedDiamondOre:
-        if (mc <= MC_1_18) return providerTriangleRange(seed, -64 + -80, -64 + 80);
+        if (mc <= MC_1_18) return providerTriangleRange(rnd, -64 + -80, -64 + 80);
         break;
     case BuriedLapisOre:
-        if (mc <= MC_1_18) return providerUniformRange(seed, -64, 64);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, -64, 64);
         break;
     case ClayOre:
-        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 60);
-        if (mc <= MC_1_18) return providerUniformRange(seed, 0, 256);
+        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 60);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, 0, 256);
         break;
     case CoalOre:
-        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 128);
-        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 127);
+        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 128);
+        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 127);
         break;
     case CopperOre:
-        if (mc <= MC_1_17) return providerTriangleRange(seed, 0, 96);
-        if (mc <= MC_1_18) return providerTriangleRange(seed, -16, 112);
+        if (mc <= MC_1_17) return providerTriangleRange(rnd, 0, 96);
+        if (mc <= MC_1_18) return providerTriangleRange(rnd, -16, 112);
         break;
     case DeepslateOre:
-        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 16);
+        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 16);
         break;
     case DiamondOre:
-        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 16);
+        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 16);
         // was 16 in 1.17, changed to 15 in 1.17.1
-        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 15);
-        if (mc <= MC_1_18) return providerTriangleRange(seed, -64 + -80, -64 + 80);
+        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 15);
+        if (mc <= MC_1_18) return providerTriangleRange(rnd, -64 + -80, -64 + 80);
         break;
     case DioriteOre:
-        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 80);
-        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 79);
+        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 80);
+        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 79);
         break;
     case DirtOre:
-        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 256);
-        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 255);
-        if (mc <= MC_1_18) return providerUniformRange(seed, 0, 160);
+        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 256);
+        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 255);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, 0, 160);
         break;
     case EmeraldOre:
-        if (mc <= MC_1_16) return nextInt(seed, 28) + 4;
-        if (mc <= MC_1_17) return providerUniformRange(seed, 4, 31);
-        if (mc <= MC_1_18) return providerTriangleRange(seed, -16, 480);
+        if (mc <= MC_1_16) return rnd.nextInt(rnd.state, 28) + 4;
+        if (mc <= MC_1_17) return providerUniformRange(rnd, 4, 31);
+        if (mc <= MC_1_18) return providerTriangleRange(rnd, -16, 480);
         break;
     case ExtraGoldOre:
-        if (mc <= MC_1_16) return providerRange(seed, 32, 32, 80);
-        if (mc <= MC_1_17) return providerUniformRange(seed, 32, 79);
-        if (mc <= MC_1_18) return providerUniformRange(seed, 32, 256);
+        if (mc <= MC_1_16) return providerRange(rnd, 32, 32, 80);
+        if (mc <= MC_1_17) return providerUniformRange(rnd, 32, 79);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, 32, 256);
         break;
     case GoldOre:
-        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 32);
-        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 31);
-        if (mc <= MC_1_18) return providerTriangleRange(seed, -64, 32);
+        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 32);
+        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 31);
+        if (mc <= MC_1_18) return providerTriangleRange(rnd, -64, 32);
         break;
     case GraniteOre:
-        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 80);
-        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 79);
+        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 80);
+        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 79);
         break;
     case GravelOre:
-        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 256);
-        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 255);
-        if (mc <= MC_1_18) return providerUniformRange(seed, -64, 319);
+        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 256);
+        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 255);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, -64, 319);
         break;
     case IronOre:
-        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 64);
-        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 63);
+        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 64);
+        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 63);
         break;
     case LapisOre:
-        if (mc <= MC_1_16) return providerDepthAverage(seed, 16, 16);
-        if (mc <= MC_1_17) return providerTriangleRange(seed, 0, 30);
-        if (mc <= MC_1_18) return providerTriangleRange(seed, -32, 32);
+        if (mc <= MC_1_16) return providerDepthAverage(rnd, 16, 16);
+        if (mc <= MC_1_17) return providerTriangleRange(rnd, 0, 30);
+        if (mc <= MC_1_18) return providerTriangleRange(rnd, -32, 32);
         break;
     case LargeCopperOre:
-        if (mc <= MC_1_18) return providerTriangleRange(seed, -16, 112);
+        if (mc <= MC_1_18) return providerTriangleRange(rnd, -16, 112);
         break;
     case LargeDiamondOre:
-        if (mc <= MC_1_18) return providerTriangleRange(seed, -64 + -80, -64 + 80);
+        if (mc <= MC_1_18) return providerTriangleRange(rnd, -64 + -80, -64 + 80);
         break;
     case LowerAndesiteOre:
-        if (mc <= MC_1_18) return providerUniformRange(seed, 0, 60);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, 0, 60);
         break;
     case LowerCoalOre:
-        if (mc <= MC_1_18) return providerTriangleRange(seed, 0, 192);
+        if (mc <= MC_1_18) return providerTriangleRange(rnd, 0, 192);
         break;
     case LowerDioriteOre:
-        if (mc <= MC_1_18) return providerUniformRange(seed, 0, 60);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, 0, 60);
         break;
     case LowerGoldOre:
-        if (mc <= MC_1_18) return providerUniformRange(seed, -64, -48);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, -64, -48);
         break;
     case LowerGraniteOre:
-        if (mc <= MC_1_18) return providerUniformRange(seed, 0, 60);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, 0, 60);
         break;
     case LowerRedstoneOre:
-        if (mc <= MC_1_18) return providerTriangleRange(seed, -64 + -32, -64 + 32);
+        if (mc <= MC_1_18) return providerTriangleRange(rnd, -64 + -32, -64 + 32);
         break;
     case MiddleIronOre:
-        if (mc <= MC_1_18) return providerTriangleRange(seed, -24, 56);
+        if (mc <= MC_1_18) return providerTriangleRange(rnd, -24, 56);
         break;
     case RedstoneOre:
-        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 16);
-        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 15);
-        if (mc <= MC_1_18) return providerUniformRange(seed, -64, 15);
+        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 16);
+        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 15);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, -64, 15);
         break;
     case SmallIronOre:
-        if (mc <= MC_1_18) return providerUniformRange(seed, -64, 72);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, -64, 72);
         break;
     case TuffOre:
-        if (mc <= MC_1_17) return providerUniformRange(seed, 0, 16);
-        if (mc <= MC_1_18) return providerUniformRange(seed, -64, 0);
+        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 16);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, -64, 0);
         break;
     case UpperAndesiteOre:
-        if (mc <= MC_1_18) return providerUniformRange(seed, 64, 128);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, 64, 128);
         break;
     case UpperCoalOre:
-        if (mc <= MC_1_18) return providerUniformRange(seed, 136, 319);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, 136, 319);
         break;
     case UpperDioriteOre:
-        if (mc <= MC_1_18) return providerUniformRange(seed, 64, 128);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, 64, 128);
         break;
     case UpperGraniteOre:
-        if (mc <= MC_1_18) return providerUniformRange(seed, 64, 128);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, 64, 128);
         break;
     case UpperIronOre:
-        if (mc <= MC_1_18) return providerTriangleRange(seed, 80, 384);
+        if (mc <= MC_1_18) return providerTriangleRange(rnd, 80, 384);
         break;
     // nether
     case BlackstoneOre:
-        if (mc <= MC_1_16) return providerRange(seed, 5, 10, 37);
-        if (mc <= MC_1_18) return providerUniformRange(seed, 5, 31);
+        if (mc <= MC_1_16) return providerRange(rnd, 5, 10, 37);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, 5, 31);
         break;
     case LargeDebrisOre:
-        if (mc <= MC_1_16) return providerDepthAverage(seed, 16, 8);
-        if (mc <= MC_1_18) return providerTriangleRange(seed, 8, 24);
+        if (mc <= MC_1_16) return providerDepthAverage(rnd, 16, 8);
+        if (mc <= MC_1_18) return providerTriangleRange(rnd, 8, 24);
         break;
     case MagmaOre:
-        if (mc <= MC_1_16) return 32 - 5 + nextInt(seed, 10);
-        if (mc <= MC_1_18) return providerUniformRange(seed, 27, 36);
+        if (mc <= MC_1_16) return 32 - 5 + rnd.nextInt(rnd.state, 10);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, 27, 36);
         break;
     case NetherGoldOre:
-        if (mc <= MC_1_16) return providerRange(seed, 10, 20, 128);
-        if (mc <= MC_1_18) return providerUniformRange(seed, 0 + 10, 127 - 10);
+        if (mc <= MC_1_16) return providerRange(rnd, 10, 20, 128);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, 0 + 10, 127 - 10);
         break;
     case NetherGravelOre:
-        if (mc <= MC_1_16) return providerRange(seed, 5, 0, 37);
-        if (mc <= MC_1_18) return providerUniformRange(seed, 5, 41);
+        if (mc <= MC_1_16) return providerRange(rnd, 5, 0, 37);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, 5, 41);
         break;
     case QuartzOre:
-        if (mc <= MC_1_16) return providerRange(seed, 10, 20, 128);
-        if (mc <= MC_1_18) return providerUniformRange(seed, 0 + 10, 127 - 10);
+        if (mc <= MC_1_16) return providerRange(rnd, 10, 20, 128);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, 0 + 10, 127 - 10);
         break;
     case SmallDebrisOre:
-        if (mc <= MC_1_16) return providerRange(seed, 8, 16, 128);
-        if (mc <= MC_1_18) return providerUniformRange(seed, 8, 127 - 8);
+        if (mc <= MC_1_16) return providerRange(rnd, 8, 16, 128);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, 8, 127 - 8);
         break;
     case SoulSandOre:
-        if (mc <= MC_1_16) return providerRange(seed, 0, 0, 32);
-        if (mc <= MC_1_18) return providerUniformRange(seed, 0, 31);
+        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 32);
+        if (mc <= MC_1_18) return providerUniformRange(rnd, 0, 31);
         break;
     default:
         fprintf(stderr, "getOreYPos: not implemented for ore type %d.\n", oreType);
@@ -1902,31 +1904,31 @@ int getOreYPos(int mc, int oreType, uint64_t *seed)
     return 0;
 }
 
-SizedPos3 generateOrePositions(int mc, OreConfig config, Pos3 pos, uint64_t *seed)
+SizedPos3 generateOrePositions(int mc, OreConfig config, Pos3 pos, RandomSource rnd)
 {
     if ((mc <= MC_1_17 && config.oreType == EmeraldOre) || (mc <= MC_1_18 && config.oreType == LowerGoldOre)) {
         int count;
         if (config.oreType == EmeraldOre) {
             if (mc <= MC_1_16) {
-                count = 3 + nextInt(seed, 6);
+                count = 3 + rnd.nextInt(rnd.state, 6);
             } else {
                 // was 6, 24 in 1.17, changed to 3, 8 in 1.17.1
-                count = nextIntBetween(seed, 3, 8);
+                count = rnd.nextIntBetween(rnd.state, 3, 8);
             }
         } else {
-            count = nextIntBetween(seed, 0, 1);
+            count = rnd.nextIntBetween(rnd.state, 0, 1);
         }
         Pos3* poses = malloc(count * sizeof(Pos3));
         for (int i = 0; i < count; i++) {
             if (mc <= MC_1_14) {
-                int x = pos.x + nextInt(seed, 16);
-                int y = getOreYPos(mc, config.oreType, seed);
-                int z = pos.z + nextInt(seed, 16);
+                int x = pos.x + rnd.nextInt(rnd.state, 16);
+                int y = getOreYPos(mc, config.oreType, rnd);
+                int z = pos.z + rnd.nextInt(rnd.state, 16);
                 poses[i] = (Pos3) {x, y, z};
             } else {
-                int x = pos.x + nextInt(seed, 16);
-                int z = pos.z + nextInt(seed, 16);
-                int y = getOreYPos(mc, config.oreType, seed);
+                int x = pos.x + rnd.nextInt(rnd.state, 16);
+                int z = pos.z + rnd.nextInt(rnd.state, 16);
+                int y = getOreYPos(mc, config.oreType, rnd);
                 poses[i] = (Pos3) {x, y, z};
             }
         }
@@ -1935,13 +1937,13 @@ SizedPos3 generateOrePositions(int mc, OreConfig config, Pos3 pos, uint64_t *see
 
     // scatter
     if (config.oreType == LargeDebrisOre || config.oreType == SmallDebrisOre) {
-        int count = nextInt(seed, config.size + 1);
+        int count = rnd.nextInt(rnd.state, config.size + 1);
         Pos3* poses = malloc(count * sizeof(Pos3));
         for (int i = 0; i < count; ++i) {
             int size = MIN(i, 7);
-            int x = roundf((nextFloat(seed) - nextFloat(seed)) * (float)size);
-            int y = roundf((nextFloat(seed) - nextFloat(seed)) * (float)size);
-            int z = roundf((nextFloat(seed) - nextFloat(seed)) * (float)size);
+            int x = roundf((rnd.nextFloat(rnd.state) - rnd.nextFloat(rnd.state)) * (float)size);
+            int y = roundf((rnd.nextFloat(rnd.state) - rnd.nextFloat(rnd.state)) * (float)size);
+            int z = roundf((rnd.nextFloat(rnd.state) - rnd.nextFloat(rnd.state)) * (float)size);
             Pos3 startPos = (Pos3) {pos.x + x, pos.y + y, pos.z + z};
 
             // TODO: check if the block at startPos is contained in config.replaceBlocks
@@ -1955,15 +1957,15 @@ SizedPos3 generateOrePositions(int mc, OreConfig config, Pos3 pos, uint64_t *see
     }
 
     // regular
-    float angle = nextFloat(seed) * (float)PI;
+    float angle = rnd.nextFloat(rnd.state) * (float)PI;
     float size = (float)config.size / 8.0F;
     int amortizedSize = ceil(((float)config.size / 16.0F * 2.0F + 1.0F) / 2.0F);
     double offsetXPos = (double)pos.x + sin(angle) * (double)size;
     double offsetXNeg = (double)pos.x - sin(angle) * (double)size;
     double offsetZPos = (double)pos.z + cos(angle) * (double)size;
     double offsetZNeg = (double)pos.z - cos(angle) * (double)size;
-    double offsetYPos = pos.y + nextInt(seed, 3) - 2;
-    double offsetYNeg = pos.y + nextInt(seed, 3) - 2;
+    double offsetYPos = pos.y + rnd.nextInt(rnd.state, 3) - 2;
+    double offsetYNeg = pos.y + rnd.nextInt(rnd.state, 3) - 2;
     int startX = pos.x - ceil(size) - amortizedSize;
     int startY = pos.y - 2 - amortizedSize;
     int startZ = pos.z - ceil(size) - amortizedSize;
@@ -1974,7 +1976,7 @@ SizedPos3 generateOrePositions(int mc, OreConfig config, Pos3 pos, uint64_t *see
         for (int z = startZ; z <= startZ + oreSize; ++z) {
             // TODO: check if startY <= first y value in column that is motion blocking (Heightmap.Types#OCEAN_FLOOR_WG)
             if (1) {
-                return generateVeinPart(config, seed, offsetXPos, offsetXNeg, offsetZPos, offsetZNeg, offsetYPos, offsetYNeg, startX, startY, startZ, oreSize, radius);
+                return generateVeinPart(config, rnd, offsetXPos, offsetXNeg, offsetZPos, offsetZNeg, offsetYPos, offsetYNeg, startX, startY, startZ, oreSize, radius);
             }
         }
     }
@@ -1982,7 +1984,7 @@ SizedPos3 generateOrePositions(int mc, OreConfig config, Pos3 pos, uint64_t *see
     return (SizedPos3) {0, NULL};
 }
 
-SizedPos3 generateVeinPart(OreConfig config, uint64_t *seed, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius)
+SizedPos3 generateVeinPart(OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius)
 {
     Pos3* poses = malloc(100 * sizeof(Pos3));
     int posIndex = 0;
@@ -1995,7 +1997,7 @@ SizedPos3 generateVeinPart(OreConfig config, uint64_t *seed, double offsetXPos, 
         double x = lerp(percent, offsetXPos, offsetXNeg);
         double y = lerp(percent, offsetYPos, offsetYNeg);
         double z = lerp(percent, offsetZPos, offsetZNeg);
-        double length = nextDouble(seed) * (double)size / 16.0;
+        double length = rnd.nextDouble(rnd.state) * (double)size / 16.0;
         double offset = ((sin((float)PI * percent) + 1.0F) * length + 1.0) / 2.0;
         store[i * 4] = x;
         store[i * 4 + 1] = y;
@@ -2043,7 +2045,7 @@ SizedPos3 generateVeinPart(OreConfig config, uint64_t *seed, double offsetXPos, 
                 if (xSlide * xSlide + ySlide * ySlide >= 1.0) continue;
                 for (int Z = minZ; Z <= maxZ; ++Z) {
                     double zSlide = ((double)Z + 0.5 - z) / offset;
-                    if (xSlide * xSlide + ySlide * ySlide + zSlide * zSlide >= 1.0D) continue;
+                    if (xSlide * xSlide + ySlide * ySlide + zSlide * zSlide >= 1.0) continue;
                     int area = X - startX + (Y - startY) * oreSize + (Z - startZ) * oreSize * radius;
                     if (BITTEST(bitSet, area)) continue;
                     BITSET(bitSet, area);

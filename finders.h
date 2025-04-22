@@ -415,35 +415,35 @@ STRUCT(OreConfig)
 //==============================================================================
 
 // <=1.16.5
-static inline int providerRange(uint64_t *seed, const int bottomOffset, const int topOffset, const int maximumY) {
-    return nextInt(seed, maximumY - topOffset) + bottomOffset;
+static inline int providerRange(RandomSource rnd, const int bottomOffset, const int topOffset, const int maximumY) {
+    return rnd.nextInt(rnd.state, maximumY - topOffset) + bottomOffset;
 }
 
 // <=1.16.5
-static inline int providerDepthAverage(uint64_t *seed, const int baseline, const int spread) {
-    return nextInt(seed, spread) + nextInt(seed, spread) - spread + baseline;
+static inline int providerDepthAverage(RandomSource rnd, const int baseline, const int spread) {
+    return rnd.nextInt(rnd.state, spread) + rnd.nextInt(rnd.state, spread) - spread + baseline;
 }
 
 // >=1.17
-static inline int providerUniformRange(uint64_t *seed, const int minOffset, const int maxOffset) {
+static inline int providerUniformRange(RandomSource rnd, const int minOffset, const int maxOffset) {
     if (minOffset > maxOffset) {
         return minOffset;
     }
-    return nextIntBetween(seed, minOffset, maxOffset);
+    return rnd.nextIntBetween(rnd.state, minOffset, maxOffset);
 }
 
 // >=1.17
-static inline int providerTriangleRange(uint64_t *seed, const int minOffset, const int maxOffset) {
+static inline int providerTriangleRange(RandomSource rnd, const int minOffset, const int maxOffset) {
     if (minOffset > maxOffset) {
         return minOffset;
     }
     const int range = maxOffset - minOffset;
     if (range <= 0) {
-        return nextIntBetween(seed, minOffset, maxOffset);
+        return rnd.nextIntBetween(rnd.state, minOffset, maxOffset);
     }
     const int midPoint = range / 2;
     const int midPoint2 = range - midPoint;
-    return minOffset + nextIntBetween(seed, 0, midPoint2) + nextIntBetween(seed, 0, midPoint);
+    return minOffset + rnd.nextIntBetween(rnd.state, 0, midPoint2) + rnd.nextIntBetween(rnd.state, 0, midPoint);
 }
 
 
@@ -487,13 +487,13 @@ int isViableOreBiome(int mc, int oreType, int biomeID);
  */
 SizedPos3 generateOres(const Generator *g, OreConfig config, int chunkX, int chunkZ);
 
-Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, uint64_t *seed);
+Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource rnd);
 
-int getOreYPos(int mc, int oreType, uint64_t *seed);
+int getOreYPos(int mc, int oreType, RandomSource rnd);
 
-SizedPos3 generateOrePositions(int mc, OreConfig config, Pos3 bPos, uint64_t *seed);
+SizedPos3 generateOrePositions(int mc, OreConfig config, Pos3 bPos, RandomSource rnd);
 
-SizedPos3 generateVeinPart(OreConfig config, uint64_t *rand, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius);
+SizedPos3 generateVeinPart(OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius);
 
 /* Finds a suitable pseudo-random location in the specified area.
  * This function is used to determine the positions of spawn and strongholds.
