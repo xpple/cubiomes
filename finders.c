@@ -1689,30 +1689,21 @@ SizedPos3 generateOres(const Generator *g, OreConfig config, int chunkX, int chu
         repeatCount = config.repeatCount;
     }
 
-    int size = MAX_ORE_COUNT;
-    Pos3* positions = malloc(size * sizeof(Pos3));
-    int posIndex = 0;
-
+    SizedPos3* temp = malloc(repeatCount * sizeof(SizedPos3));
+    int size = 0;
     for (int i = 0; i < repeatCount; i++) {
         Pos3 basePos = generateBaseOrePosition(g->mc, config, chunkX, chunkZ, rnd);
         SizedPos3 orePositions = generateOrePositions(g->mc, config, basePos, rnd);
-
-        if (posIndex + orePositions.size > size) {
-            size = posIndex + orePositions.size;
-            Pos3* temp = realloc(positions, size * sizeof(Pos3));
-            if (!temp) {
-                fprintf(stderr, "Memory allocation failed.\n");
-                free(positions);
-                exit(1);
-            }
-            positions = temp;
-        }
-
-        for (int j = 0; j < orePositions.size; j++) {
-            positions[posIndex++] = orePositions.pos3s[j];
-        }
+        temp[i] = orePositions;
+        size += orePositions.size;
     }
-    return (SizedPos3) {posIndex, positions};
+    Pos3* positions = malloc(size * sizeof(Pos3));
+    int offset = 0;
+    for (int i = 0; i < repeatCount; i++) {
+        memcpy(positions + offset, temp[i].pos3s, sizeof(Pos3) * temp[i].size);
+        offset += temp[i].size;
+    }
+    return (SizedPos3) {size, positions};
 }
 
 Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource rnd)
