@@ -1233,7 +1233,6 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
     // check the size in OreFeatures.java
     // check the repeatCount in OrePlacements.java
 
-    // OreFeatures.java also states `discardChanceOnAirExposure`, which is currently ignored
     static const OreConfig
     // overworld
     o_andesite_113 = {4, 4, 33, 10, AndesiteOre, ANDESITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
