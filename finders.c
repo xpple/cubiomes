@@ -1703,6 +1703,7 @@ SizedPos3 generateOres(const Generator *g, OreConfig config, int chunkX, int chu
         memcpy(positions + offset, temp[i].pos3s, sizeof(Pos3) * temp[i].size);
         offset += temp[i].size;
     }
+    free(temp);
     return (SizedPos3) {size, positions};
 }
 
