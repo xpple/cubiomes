@@ -68,6 +68,38 @@ uint64_t getPopulationSeed(int mc, uint64_t ws, int x, int z)
     return (x * a + z * b) ^ ws;
 }
 
+void createPos3List(Pos3List* list, int initialCapacity)
+{
+    list->size = 0;
+    list->capacity = initialCapacity;
+    list->pos3s = malloc(list->capacity * sizeof(Pos3));
+    if (!list->pos3s) {
+        fprintf(stderr, "Memory allocation failed.\n");
+        exit(1);
+    }
+}
+
+void appendPos3List(Pos3List* list, Pos3 pos3)
+{
+    if (list->size == list->capacity) {
+        list->capacity *= 2;
+        Pos3* newPos3s = realloc(list->pos3s, list->capacity * sizeof(Pos3));
+        if (!newPos3s) {
+            fprintf(stderr, "Reallocation failed.\n");
+            exit(1);
+        }
+        list->pos3s = newPos3s;
+    }
+    list->pos3s[list->size++] = pos3;
+}
+
+void freePos3List(Pos3List* list)
+{
+    free(list->pos3s);
+    list->pos3s = NULL;
+    list->size = 0;
+    list->capacity = 0;
+}
 
 int getStructureConfig(int structureType, int mc, StructureConfig *sconf)
 {
@@ -1665,7 +1697,7 @@ int getBiomeForOreGen(const Generator *g, int chunkX, int chunkZ)
     return getBiomeAt(g, 4, (chunkX << 2) + 2, 0, (chunkZ << 2) + 2);
 }
 
-SizedPos3 generateOres(const Generator *g, OreConfig config, int chunkX, int chunkZ)
+Pos3List generateOres(const Generator *g, OreConfig config, int chunkX, int chunkZ)
 {
     uint64_t populationSeed = getPopulationSeed(g->mc, g->seed, chunkX << 4, chunkZ << 4);
     RandomSource rnd;
@@ -1689,23 +1721,25 @@ SizedPos3 generateOres(const Generator *g, OreConfig config, int chunkX, int chu
         repeatCount = config.repeatCount;
     }
 
-    SizedPos3* temp = malloc(repeatCount * sizeof(SizedPos3));
+    Pos3List* temp = malloc(repeatCount * sizeof(Pos3List));
     int size = 0;
     for (int i = 0; i < repeatCount; i++) {
         Pos3 basePos = generateBaseOrePosition(g->mc, config, chunkX, chunkZ, rnd);
-        SizedPos3 orePositions = generateOrePositions(g->mc, config, basePos, rnd);
+        Pos3List orePositions = generateOrePositions(g->mc, config, basePos, rnd);
         temp[i] = orePositions;
         size += orePositions.size;
     }
-    Pos3* positions = malloc(size * sizeof(Pos3));
+    Pos3List poses;
+    createPos3List(&poses, size);
     int offset = 0;
     for (int i = 0; i < repeatCount; i++) {
-        memcpy(positions + offset, temp[i].pos3s, sizeof(Pos3) * temp[i].size);
+        memcpy(poses.pos3s + offset, temp[i].pos3s, temp[i].size * sizeof(Pos3));
+        poses.size += temp[i].size;
         free(temp[i].pos3s);
         offset += temp[i].size;
     }
     free(temp);
-    return (SizedPos3) {size, positions};
+    return poses;
 }
 
 Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource rnd)
@@ -1897,7 +1931,7 @@ int getOreYPos(int mc, int oreType, RandomSource rnd)
     return 0;
 }
 
-SizedPos3 generateOrePositions(int mc, OreConfig config, Pos3 pos, RandomSource rnd)
+Pos3List generateOrePositions(int mc, OreConfig config, Pos3 pos, RandomSource rnd)
 {
     if ((mc <= MC_1_17 && config.oreType == EmeraldOre) || (mc <= MC_1_18 && config.oreType == LowerGoldOre)) {
         int count;
@@ -1911,27 +1945,29 @@ SizedPos3 generateOrePositions(int mc, OreConfig config, Pos3 pos, RandomSource 
         } else {
             count = rnd.nextIntBetween(rnd.state, 0, 1);
         }
-        Pos3* poses = malloc(count * sizeof(Pos3));
+        Pos3List poses;
+        createPos3List(&poses, count);
         for (int i = 0; i < count; i++) {
             if (mc <= MC_1_14) {
                 int x = pos.x + rnd.nextInt(rnd.state, 16);
                 int y = getOreYPos(mc, config.oreType, rnd);
                 int z = pos.z + rnd.nextInt(rnd.state, 16);
-                poses[i] = (Pos3) {x, y, z};
+                appendPos3List(&poses, (Pos3) {x, y, z});
             } else {
                 int x = pos.x + rnd.nextInt(rnd.state, 16);
                 int z = pos.z + rnd.nextInt(rnd.state, 16);
                 int y = getOreYPos(mc, config.oreType, rnd);
-                poses[i] = (Pos3) {x, y, z};
+                appendPos3List(&poses, (Pos3) {x, y, z});
             }
         }
-        return (SizedPos3) {count, poses};
+        return poses;
     }
 
     // scatter
     if (config.oreType == LargeDebrisOre || config.oreType == SmallDebrisOre) {
         int count = rnd.nextInt(rnd.state, config.size + 1);
-        Pos3* poses = malloc(count * sizeof(Pos3));
+        Pos3List poses;
+        createPos3List(&poses, count);
         for (int i = 0; i < count; ++i) {
             int size = MIN(i, 7);
             int x = roundf((rnd.nextFloat(rnd.state) - rnd.nextFloat(rnd.state)) * (float)size);
@@ -1942,11 +1978,11 @@ SizedPos3 generateOrePositions(int mc, OreConfig config, Pos3 pos, RandomSource 
             // TODO: check if the block at startPos is contained in config.replaceBlocks
             // TODO: and if the block at startPos is not air-exposed
             if (1) {
-                poses[i] = startPos;
+                appendPos3List(&poses, startPos);
             }
         }
 
-        return (SizedPos3) {count, poses};
+        return poses;
     }
 
     // regular
@@ -1974,13 +2010,15 @@ SizedPos3 generateOrePositions(int mc, OreConfig config, Pos3 pos, RandomSource 
         }
     }
 
-    return (SizedPos3) {0, NULL};
+    Pos3List poses;
+    createPos3List(&poses, 0);
+    return poses;
 }
 
-SizedPos3 generateVeinPart(OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius)
+Pos3List generateVeinPart(OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius)
 {
-    Pos3* poses = malloc(100 * sizeof(Pos3));
-    int posIndex = 0;
+    Pos3List poses;
+    createPos3List(&poses, 16);
     char bitSet[BITNSLOTS(oreSize * radius * oreSize)];
     int size = config.size;
     double* store = malloc(4 * size * sizeof(double));
@@ -2053,9 +2091,9 @@ SizedPos3 generateVeinPart(OreConfig config, RandomSource rnd, double offsetXPos
                             skipAirCheck = chance >= 1.0F ? 0 : rnd.nextFloat(rnd.state) >= chance;
                         }
                         if (skipAirCheck) {
-                            poses[posIndex++] = pos;
+                            appendPos3List(&poses, pos);
                         } else if (1) { // TODO: check if the block at pos is not air-exposed
-                            poses[posIndex++] = pos;
+                            appendPos3List(&poses, pos);
                         }
                     }
                 }
@@ -2063,7 +2101,7 @@ SizedPos3 generateVeinPart(OreConfig config, RandomSource rnd, double offsetXPos
         }
     }
 
-    return (SizedPos3) {posIndex, poses};
+    return poses;
 }
 
 //==============================================================================

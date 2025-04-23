@@ -57,13 +57,18 @@ STRUCT(StructureConfig)
 
 STRUCT(Pos)  { int x, z; };
 STRUCT(Pos3) { int x, y, z; };
-STRUCT(SizedPos3)
+STRUCT(Pos3List)
 {
-    int size;
     Pos3* pos3s;
+    int capacity;
+    int size;
 };
 
+void createPos3List(Pos3List* list, int initialCapacity);
 
+void appendPos3List(Pos3List* list, Pos3 pos3);
+
+void freePos3List(Pos3List* list);
 
 STRUCT(StrongholdIter)
 {
@@ -486,15 +491,15 @@ int isViableOreBiome(int mc, int oreType, int biomeID);
  * @param chunkZ the chunk Y-coordinate
  * @return a sized array of ore positions
  */
-SizedPos3 generateOres(const Generator *g, OreConfig config, int chunkX, int chunkZ);
+Pos3List generateOres(const Generator *g, OreConfig config, int chunkX, int chunkZ);
 
 Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource rnd);
 
 int getOreYPos(int mc, int oreType, RandomSource rnd);
 
-SizedPos3 generateOrePositions(int mc, OreConfig config, Pos3 bPos, RandomSource rnd);
+Pos3List generateOrePositions(int mc, OreConfig config, Pos3 bPos, RandomSource rnd);
 
-SizedPos3 generateVeinPart(OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius);
+Pos3List generateVeinPart(OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius);
 
 /* Finds a suitable pseudo-random location in the specified area.
  * This function is used to determine the positions of spawn and strongholds.
