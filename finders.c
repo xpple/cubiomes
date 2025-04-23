@@ -1701,6 +1701,7 @@ SizedPos3 generateOres(const Generator *g, OreConfig config, int chunkX, int chu
     int offset = 0;
     for (int i = 0; i < repeatCount; i++) {
         memcpy(positions + offset, temp[i].pos3s, sizeof(Pos3) * temp[i].size);
+        free(temp[i].pos3s);
         offset += temp[i].size;
     }
     free(temp);
