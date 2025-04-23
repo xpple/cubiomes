@@ -408,6 +408,7 @@ STRUCT(OreConfig)
     int8_t          dim;
     uint8_t         numReplaceBlocks;
     const uint32_t* replaceBlocks;
+    float           discardChanceOnAirExposure;
 };
 
 //==============================================================================
