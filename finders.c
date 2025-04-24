@@ -2004,7 +2004,7 @@ Pos3List generateOrePositions(int mc, OreConfig config, Pos3 pos, RandomSource r
         for (int z = startZ; z <= startZ + oreSize; ++z) {
             // TODO: check if startY <= first y value in column that is motion blocking (Heightmap.Types#OCEAN_FLOOR_WG)
             if (1) {
-                return generateVeinPart(config, rnd, offsetXPos, offsetXNeg, offsetZPos, offsetZNeg, offsetYPos, offsetYNeg, startX, startY, startZ, oreSize, radius);
+                return generateVeinPart(mc, config, rnd, offsetXPos, offsetXNeg, offsetZPos, offsetZNeg, offsetYPos, offsetYNeg, startX, startY, startZ, oreSize, radius);
             }
         }
     }
@@ -2014,8 +2014,10 @@ Pos3List generateOrePositions(int mc, OreConfig config, Pos3 pos, RandomSource r
     return poses;
 }
 
-Pos3List generateVeinPart(OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius)
+Pos3List generateVeinPart(int mc, OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius)
 {
+    const int minBuildHeight = mc <= MC_1_17 ? 0 : -64;
+    const int maxBuildHeight = mc <= MC_1_17 ? 256 : 320;
     Pos3List poses;
     createPos3List(&poses, 16);
     char bitSet[BITNSLOTS(oreSize * radius * oreSize)];
@@ -2076,6 +2078,7 @@ Pos3List generateVeinPart(OreConfig config, RandomSource rnd, double offsetXPos,
                 for (int Z = minZ; Z <= maxZ; ++Z) {
                     double zSlide = ((double)Z + 0.5 - z) / offset;
                     if (xSlide * xSlide + ySlide * ySlide + zSlide * zSlide >= 1.0) continue;
+                    if (Y < minBuildHeight || Y >= maxBuildHeight) continue;
                     int area = X - startX + (Y - startY) * oreSize + (Z - startZ) * oreSize * radius;
                     if (BITTEST(bitSet, area)) continue;
                     BITSET(bitSet, area);
