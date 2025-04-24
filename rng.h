@@ -270,7 +270,14 @@ static inline int xNextIntJ(Xoroshiro *xr, uint32_t n)
     return val;
 }
 
-static inline int xNextIntBetween(Xoroshiro *xr, const int min, const int max)
+static inline double xNextDoubleJ(Xoroshiro *xr)
+{
+    uint64_t a = xNextLong(xr);
+    uint64_t b = xNextLong(xr);
+    return ((a >> (64-26) << 27) + (b >> (64-27))) * 1.1102230246251565E-16;
+}
+
+static inline int xNextIntJBetween(Xoroshiro *xr, const int min, const int max)
 {
     return xNextIntJ(xr, max - min + 1) + min;
 }
@@ -305,8 +312,8 @@ static inline RandomSource createXoroshiro(Xoroshiro *xr)
         .setSeed = (void (*)(void *, uint64_t)) xSetSeed,
         .nextInt = (int (*)(void *, int)) xNextIntJ,
         .nextFloat = (float (*)(void *)) xNextFloat,
-        .nextDouble = (double (*)(void *)) xNextDouble,
-        .nextIntBetween = (int (*)(void *, int, int)) xNextIntBetween,
+        .nextDouble = (double (*)(void *)) xNextDoubleJ,
+        .nextIntBetween = (int (*)(void *, int, int)) xNextIntJBetween,
     };
 }
 
