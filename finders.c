@@ -1433,7 +1433,7 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
         return mc > MC_1_17;
     case ClayOre:
         if (mc <= MC_1_19) *oconf = o_clay_118;
-        if (mc <= MC_NEWEST) *oconf = o_clay_120;
+        else if (mc <= MC_NEWEST) *oconf = o_clay_120;
         return mc > MC_1_17;
     case CoalOre:
         if (mc <= MC_1_15) *oconf = o_coal_113;
@@ -1442,8 +1442,8 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
         return mc > MC_1_12 && mc <= MC_1_17;
     case CopperOre:
         if (mc <= MC_1_17) *oconf = o_copper_117;
-        if (mc <= MC_1_19) *oconf = o_copper_118;
-        if (mc <= MC_NEWEST) *oconf = o_copper_120;
+        else if (mc <= MC_1_19) *oconf = o_copper_118;
+        else if (mc <= MC_NEWEST) *oconf = o_copper_120;
         return mc > MC_1_16;
     case DeepslateOre:
         if (mc <= MC_1_17) *oconf = o_deepslate_117;
@@ -1633,7 +1633,7 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
         return mc > MC_1_15;
     case SoulSandOre:
         if (mc <= MC_1_17) *oconf = o_soul_sand_116;
-        if (mc <= MC_NEWEST) *oconf = o_soul_sand_118;
+        else if (mc <= MC_NEWEST) *oconf = o_soul_sand_118;
         return mc > MC_1_15;
     default:
         memset(oconf, 0, sizeof(OreConfig));
