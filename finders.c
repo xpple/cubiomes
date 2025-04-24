@@ -1244,8 +1244,8 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
     o_buried_lapis_118 = {22, 6, 7, 4, BuriedLapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 1.0F},
     o_buried_lapis_120 = {23, 6, 7, 4, BuriedLapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 1.0F},
 
-    o_clay_118 = {24, 6, 33, 46, ClayOre, CLAY, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_clay_120 = {25, 6, 33, 46, ClayOre, CLAY, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_clay_118 = {25, 6, 33, 46, ClayOre, CLAY, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_clay_120 = {26, 6, 33, 46, ClayOre, CLAY, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
     o_coal_113 = {5, 4, 17, 20, CoalOre, COAL_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
     o_coal_116 = {5, 6, 17, 20, CoalOre, COAL_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
@@ -1272,14 +1272,14 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
     o_emerald_113 = {14, 4, 1, 1, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 1, STONE_REPLACEABLES, 0.0F},
     o_emerald_116 = {14, 6, 1, 1, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 1, STONE_REPLACEABLES, 0.0F},
     o_emerald_117 = {17, 6, 1, 1, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_emerald_118 = {27, 6, 3, 100, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_emerald_120 = {28, 6, 3, 100, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_emerald_118 = {28, 6, 3, 100, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_emerald_120 = {29, 6, 3, 100, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
     o_extra_gold_113 = {11, 4, 9, 20, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
     o_extra_gold_116 = {11, 6, 9, 20, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
     o_extra_gold_117 = {14, 6, 9, 20, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_extra_gold_118 = {24, 6, 9, 50, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
-    o_extra_gold_120 = {25, 6, 9, 50, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
+    o_extra_gold_118 = {25, 6, 9, 50, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
+    o_extra_gold_120 = {26, 6, 9, 50, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
 
     o_gold_113 = {7, 4, 9, 2, GoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
     o_gold_116 = {7, 6, 9, 2, GoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
@@ -1798,7 +1798,6 @@ int getOreYPos(int mc, int oreType, RandomSource rnd)
         if (mc <= MC_NEWEST) return providerUniformRange(rnd, -64, 64);
         break;
     case ClayOre:
-        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 60);
         if (mc <= MC_NEWEST) return providerUniformRange(rnd, 0, 256);
         break;
     case CoalOre:
