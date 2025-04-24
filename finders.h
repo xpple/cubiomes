@@ -428,7 +428,9 @@ static inline int providerRange(RandomSource rnd, const int bottomOffset, const 
 
 // <=1.16.5
 static inline int providerDepthAverage(RandomSource rnd, const int baseline, const int spread) {
-    return rnd.nextInt(rnd.state, spread) + rnd.nextInt(rnd.state, spread) - spread + baseline;
+    int a = rnd.nextInt(rnd.state, spread);
+    int b = rnd.nextInt(rnd.state, spread);
+    return a + b - spread + baseline;
 }
 
 // >=1.17
@@ -450,7 +452,9 @@ static inline int providerTriangleRange(RandomSource rnd, const int minOffset, c
     }
     const int midPoint = range / 2;
     const int midPoint2 = range - midPoint;
-    return minOffset + rnd.nextIntBetween(rnd.state, 0, midPoint2) + rnd.nextIntBetween(rnd.state, 0, midPoint);
+    int a = rnd.nextIntBetween(rnd.state, 0, midPoint2);
+    int b = rnd.nextIntBetween(rnd.state, 0, midPoint);
+    return minOffset + a + b;
 }
 
 

@@ -1996,9 +1996,16 @@ Pos3List generateOrePositions(int mc, OreConfig config, Pos3 pos, RandomSource r
         createPos3List(&poses, count);
         for (int i = 0; i < count; ++i) {
             int size = MIN(i, 7);
-            int x = roundf((rnd.nextFloat(rnd.state) - rnd.nextFloat(rnd.state)) * (float)size);
-            int y = roundf((rnd.nextFloat(rnd.state) - rnd.nextFloat(rnd.state)) * (float)size);
-            int z = roundf((rnd.nextFloat(rnd.state) - rnd.nextFloat(rnd.state)) * (float)size);
+            float a, b;
+            a = rnd.nextFloat(rnd.state);
+            b = rnd.nextFloat(rnd.state);
+            int x = roundf((a - b) * (float)size);
+            a = rnd.nextFloat(rnd.state);
+            b = rnd.nextFloat(rnd.state);
+            int y = roundf((a - b) * (float)size);
+            a = rnd.nextFloat(rnd.state);
+            b = rnd.nextFloat(rnd.state);
+            int z = roundf((a - b) * (float)size);
             Pos3 startPos = (Pos3) {pos.x + x, pos.y + y, pos.z + z};
 
             // TODO: check if the block at startPos is contained in config.replaceBlocks
