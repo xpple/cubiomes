@@ -2047,7 +2047,9 @@ Pos3List generateVeinPart(int mc, OreConfig config, RandomSource rnd, double off
     const int maxBuildHeight = mc <= MC_1_17 ? 256 : 320;
     Pos3List poses;
     createPos3List(&poses, 16);
-    char bitSet[BITNSLOTS(oreSize * radius * oreSize)];
+    int slots = BITNSLOTS(oreSize * radius * oreSize);
+    char bitSet[slots];
+    memset(bitSet, 0, slots);
     int size = config.size;
     double* store = malloc(4 * size * sizeof(double));
 
