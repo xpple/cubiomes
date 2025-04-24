@@ -384,6 +384,7 @@ enum Ores {
     LowerGraniteOre,
     LowerRedstoneOre,
     MagmaOre,
+    MediumDiamondOre,
     MiddleIronOre,
     NetherGoldOre,
     NetherGravelOre,
