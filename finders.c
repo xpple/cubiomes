@@ -2038,7 +2038,7 @@ Pos3List generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreCon
         for (int z = startZ; z <= startZ + oreSize; ++z) {
             float y;
             mapApproxHeight(&y, 0, g, sn, x >> 2, z >> 2, 1, 1);
-            if (startY <= (int) floor(y)) {
+            if (g->dim == DIM_NETHER || startY <= (int) floor(y)) {
                 return generateVeinPart(mc, config, rnd, offsetXPos, offsetXNeg, offsetZPos, offsetZNeg, offsetYPos, offsetYNeg, startX, startY, startZ, oreSize, radius);
             }
         }
