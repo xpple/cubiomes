@@ -1720,7 +1720,7 @@ int getBiomeForOreGen(const Generator *g, int chunkX, int chunkZ)
     return getBiomeAt(g, 4, (chunkX << 2) + 2, 0, (chunkZ << 2) + 2);
 }
 
-Pos3List generateOres(const Generator *g, OreConfig config, int chunkX, int chunkZ)
+Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig config, int chunkX, int chunkZ)
 {
     uint64_t populationSeed = getPopulationSeed(g->mc, g->seed, chunkX << 4, chunkZ << 4);
     RandomSource rnd;
@@ -1748,7 +1748,7 @@ Pos3List generateOres(const Generator *g, OreConfig config, int chunkX, int chun
     int size = 0;
     for (int i = 0; i < repeatCount; i++) {
         Pos3 basePos = generateBaseOrePosition(g->mc, config, chunkX, chunkZ, rnd);
-        Pos3List orePositions = generateOrePositions(g->mc, config, basePos, rnd);
+        Pos3List orePositions = generateOrePositions(g, sn, config, basePos, rnd);
         temp[i] = orePositions;
         size += orePositions.size;
     }
@@ -1956,8 +1956,9 @@ int getOreYPos(int mc, int oreType, RandomSource rnd)
     return 0;
 }
 
-Pos3List generateOrePositions(int mc, OreConfig config, Pos3 pos, RandomSource rnd)
+Pos3List generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource rnd)
 {
+    int mc = g->mc;
     if ((mc <= MC_1_17 && config.oreType == EmeraldOre) || (mc <= MC_NEWEST && config.oreType == LowerGoldOre)) {
         int count;
         if (config.oreType == EmeraldOre) {
@@ -2035,8 +2036,9 @@ Pos3List generateOrePositions(int mc, OreConfig config, Pos3 pos, RandomSource r
 
     for (int x = startX; x <= startX + oreSize; ++x) {
         for (int z = startZ; z <= startZ + oreSize; ++z) {
-            // TODO: check if startY <= first y value in column that is motion blocking (Heightmap.Types#OCEAN_FLOOR_WG)
-            if (1) {
+            float y;
+            mapApproxHeight(&y, 0, g, sn, x >> 2, z >> 2, 1, 1);
+            if (startY <= (int) floor(y)) {
                 return generateVeinPart(mc, config, rnd, offsetXPos, offsetXNeg, offsetZPos, offsetZNeg, offsetYPos, offsetYNeg, startX, startY, startZ, oreSize, radius);
             }
         }

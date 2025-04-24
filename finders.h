@@ -491,18 +491,19 @@ int isViableOreBiome(int mc, int oreType, int biomeID);
 /**
  * Generate the ores of the given type in the chunk.
  * @param g the generator
+ * @param sn the surface noise
  * @param config the ore config
  * @param chunkX the chunk X-coordinate
  * @param chunkZ the chunk Y-coordinate
  * @return a sized array of ore positions
  */
-Pos3List generateOres(const Generator *g, OreConfig config, int chunkX, int chunkZ);
+Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig config, int chunkX, int chunkZ);
 
 Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource rnd);
 
 int getOreYPos(int mc, int oreType, RandomSource rnd);
 
-Pos3List generateOrePositions(int mc, OreConfig config, Pos3 bPos, RandomSource rnd);
+Pos3List generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 bPos, RandomSource rnd);
 
 Pos3List generateVeinPart(int mc, OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius);
 
