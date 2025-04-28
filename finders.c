@@ -1227,8 +1227,8 @@ static const uint32_t NETHERRACK_REPLACEABLES[] = {NETHERRACK};
 
 int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
 {
-    // check the index and step in BiomeDefaultFeatures.java
-    // check the size in OreFeatures.java
+    // check the step in BiomeDefaultFeatures.java
+    // check the size and discardChanceOnAirExposure in OreFeatures.java
     // check the repeatCount in OrePlacements.java
 
     static const OreConfig
@@ -1242,16 +1242,16 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
     o_buried_lapis_118 = {22, 6, 7, 4, BuriedLapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 1.0F},
     o_buried_lapis_120 = {23, 6, 7, 4, BuriedLapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 1.0F},
 
-    o_clay_118 = {25, 6, 33, 46, ClayOre, CLAY, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_clay_120 = {26, 6, 33, 46, ClayOre, CLAY, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_clay_118 = {26, 6, 33, 46, ClayOre, CLAY, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_clay_120 = {27, 6, 33, 46, ClayOre, CLAY, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
     o_coal_113 = {5, 4, 17, 20, CoalOre, COAL_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
     o_coal_116 = {5, 6, 17, 20, CoalOre, COAL_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
     o_coal_117 = {7, 6, 17, 20, CoalOre, COAL_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
     o_copper_117 = {13, 6, 10,  6, CopperOre, COPPER_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_copper_118 = {23, 6, 10, 16, CopperOre, COPPER_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_copper_120 = {24, 6, 10, 16, CopperOre, COPPER_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_copper_118 = {24, 6, 10, 16, CopperOre, COPPER_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_copper_120 = {25, 6, 10, 16, CopperOre, COPPER_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
     o_deepslate_117 = {6, 6, 64, 2, DeepslateOre, DEEPSLATE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
@@ -1270,14 +1270,15 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
     o_emerald_113 = {14, 4, 1,   1, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 1, STONE_REPLACEABLES, 0.0F},
     o_emerald_116 = {14, 6, 1,   1, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 1, STONE_REPLACEABLES, 0.0F},
     o_emerald_117 = {17, 6, 1,   1, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_emerald_118 = {28, 6, 3, 100, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_emerald_120 = {29, 6, 3, 100, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_emerald_118 = {31, 6, 3, 100, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_emerald_119 = {32, 6, 3, 100, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_emerald_120 = {33, 6, 3, 100, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
     o_extra_gold_113 = {11, 4, 9, 20, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
     o_extra_gold_116 = {11, 6, 9, 20, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
     o_extra_gold_117 = {14, 6, 9, 20, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_extra_gold_118 = {25, 6, 9, 50, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
-    o_extra_gold_120 = {26, 6, 9, 50, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
+    o_extra_gold_118 = {27, 6, 9, 50, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
+    o_extra_gold_120 = {28, 6, 9, 50, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
 
     o_gold_113 = { 7, 4, 9, 2, GoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
     o_gold_116 = { 7, 6, 9, 2, GoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
@@ -1352,17 +1353,13 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
     o_blackstone_116 =                {12, 7, 33, 2, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
     o_blackstone_116_crimson_forest = { 9, 7, 33, 2, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
     o_blackstone_116_warped_forest =  {10, 7, 33, 2, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_blackstone_118 =                {10, 7, 33, 2, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_blackstone_118_crimson_forest = { 7, 7, 33, 2, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_blackstone_118_warped_forest =  { 8, 7, 33, 2, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_blackstone_118 =                {18, 7, 33, 2, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
 
     // scatter ore, no count
     o_large_debris_116 =                {15, 7, 3, 1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
     o_large_debris_116_crimson_forest = {12, 7, 3, 1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
     o_large_debris_116_warped_forest =  {13, 7, 3, 1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
-    o_large_debris_118 =                {13, 7, 3, 1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 1.0F},
-    o_large_debris_118_crimson_forest = {10, 7, 3, 1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 1.0F},
-    o_large_debris_118_warped_forest =  {11, 7, 3, 1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 1.0F},
+    o_large_debris_118 =                {21, 7, 3, 1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 1.0F},
 
     o_magma_113 =                  { 8, 5, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
     o_magma_116 =                  { 9, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
@@ -1370,48 +1367,36 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
     o_magma_116_crimson_forest =   { 6, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
     o_magma_116_warped_forest =    { 7, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
     o_magma_116_basalt_deltas =    {11, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_magma_118 =                  { 7, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_magma_118_soul_sand_valley = { 6, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_magma_118_basalt_deltas =    { 9, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_magma_118_crimson_forest =   { 4, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_magma_118_warped_forest =    { 5, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_magma_118 =                  {11, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
 
     o_nether_gold_116 =                {13, 7, 10, 10, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
     o_nether_gold_116_crimson_forest = {10, 7, 10, 10, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
     o_nether_gold_116_warped_forest =  {11, 7, 10, 10, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
     o_nether_gold_116_basalt_deltas =  {13, 7, 10, 20, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_nether_gold_118 =                {11, 7, 10, 10, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_nether_gold_118_crimson_forest = { 8, 7, 10, 10, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_nether_gold_118_warped_forest =  { 9, 7, 10, 10, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_nether_gold_118_basalt_deltas =  {11, 7, 10, 20, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_gold_118 =                {19, 7, 10, 10, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_gold_118_basalt_deltas =  {13, 7, 10, 20, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
 
     o_nether_gravel_116 =                {11, 7, 33, 2, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
     o_nether_gravel_116_crimson_forest = { 8, 7, 33, 2, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
     o_nether_gravel_116_warped_forest =  { 9, 7, 33, 2, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_nether_gravel_118 =                { 9, 7, 33, 2, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_nether_gravel_118_crimson_forest = { 6, 7, 33, 2, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_nether_gravel_118_warped_forest =  { 7, 7, 33, 2, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_gravel_118 =                {17, 7, 33, 2, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
 
     o_quartz_113 =                { 7, 5, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
     o_quartz_116 =                {14, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
     o_quartz_116_crimson_forest = {11, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
     o_quartz_116_warped_forest =  {12, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
     o_quartz_116_basalt_deltas =  {14, 7, 14, 32, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_quartz_118 =                {12, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_quartz_118_crimson_forest = { 9, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_quartz_118_warped_forest =  {10, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_quartz_118_basalt_deltas =  {12, 7, 14, 32, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_quartz_118 =                {20, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_quartz_118_basalt_deltas =  {14, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
 
     // scatter ore, no count
     o_small_debris_116 =                {16, 7, 2, 1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
     o_small_debris_116_crimson_forest = {13, 7, 2, 1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
     o_small_debris_116_warped_forest =  {14, 7, 2, 1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
-    o_small_debris_118 =                {14, 7, 2, 1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 1.0F},
-    o_small_debris_118_crimson_forest = {11, 7, 2, 1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 1.0F},
-    o_small_debris_118_warped_forest =  {12, 7, 2, 1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 1.0F},
+    o_small_debris_118 =                {22, 7, 2, 1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 1.0F},
 
     o_soul_sand_116 = {10, 7, 12, 12, SoulSandOre, SOUL_SAND, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_soul_sand_118 = { 8, 7, 12, 12, SoulSandOre, SOUL_SAND, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F}
+    o_soul_sand_118 = {16, 7, 12, 12, SoulSandOre, SOUL_SAND, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F}
     ;
 
     switch (oreType)
@@ -1465,7 +1450,8 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
         if (mc <= MC_1_15) *oconf = o_emerald_113;
         else if (mc <= MC_1_16) *oconf = o_emerald_116;
         else if (mc <= MC_1_17) *oconf = o_emerald_117;
-        else if (mc <= MC_1_19) *oconf = o_emerald_118;
+        else if (mc <= MC_1_18) *oconf = o_emerald_118;
+        else if (mc <= MC_1_19) *oconf = o_emerald_119;
         else if (mc <= MC_NEWEST) *oconf = o_emerald_120;
         return mc > MC_1_12;
     case ExtraGoldOre:
@@ -1567,16 +1553,12 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
         if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_blackstone_116_crimson_forest;
         else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_blackstone_116_warped_forest;
         else if (mc <= MC_1_17) *oconf = o_blackstone_116;
-        else if (mc <= MC_NEWEST && biomeID == crimson_forest) *oconf = o_blackstone_118_crimson_forest;
-        else if (mc <= MC_NEWEST && biomeID == warped_forest) *oconf = o_blackstone_118_warped_forest;
         else if (mc <= MC_NEWEST) *oconf = o_blackstone_118;
         return mc > MC_1_15;
     case LargeDebrisOre:
         if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_large_debris_116_crimson_forest;
         else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_large_debris_116_warped_forest;
         else if (mc <= MC_1_17) *oconf = o_large_debris_116;
-        else if (mc <= MC_NEWEST && biomeID == crimson_forest) *oconf = o_large_debris_118_crimson_forest;
-        else if (mc <= MC_NEWEST && biomeID == warped_forest) *oconf = o_large_debris_118_warped_forest;
         else if (mc <= MC_NEWEST) *oconf = o_large_debris_118;
         return mc > MC_1_15;
     case MagmaOre:
@@ -1586,10 +1568,6 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
         else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_magma_116_warped_forest;
         else if (mc <= MC_1_17 && biomeID == basalt_deltas) *oconf = o_magma_116_basalt_deltas;
         else if (mc <= MC_1_17) *oconf = o_magma_116;
-        else if (mc <= MC_NEWEST && biomeID == soul_sand_valley) *oconf = o_magma_118_soul_sand_valley;
-        else if (mc <= MC_NEWEST && biomeID == crimson_forest) *oconf = o_magma_118_crimson_forest;
-        else if (mc <= MC_NEWEST && biomeID == warped_forest) *oconf = o_magma_118_warped_forest;
-        else if (mc <= MC_NEWEST && biomeID == basalt_deltas) *oconf = o_magma_118_basalt_deltas;
         else if (mc <= MC_NEWEST) *oconf = o_magma_118;
         return mc > MC_1_12;
     case NetherGoldOre:
@@ -1597,8 +1575,6 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
         else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_nether_gold_116_warped_forest;
         else if (mc <= MC_1_17 && biomeID == basalt_deltas) *oconf = o_nether_gold_116_basalt_deltas;
         else if (mc <= MC_1_17) *oconf = o_nether_gold_116;
-        else if (mc <= MC_NEWEST && biomeID == crimson_forest) *oconf = o_nether_gold_118_crimson_forest;
-        else if (mc <= MC_NEWEST && biomeID == warped_forest) *oconf = o_nether_gold_118_warped_forest;
         else if (mc <= MC_NEWEST && biomeID == basalt_deltas) *oconf = o_nether_gold_118_basalt_deltas;
         else if (mc <= MC_NEWEST) *oconf = o_nether_gold_118;
         return mc > MC_1_15;
@@ -1606,8 +1582,6 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
         if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_nether_gravel_116_crimson_forest;
         else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_nether_gravel_116_warped_forest;
         else if (mc <= MC_1_17) *oconf = o_nether_gravel_116;
-        else if (mc <= MC_NEWEST && biomeID == crimson_forest) *oconf = o_nether_gravel_118_crimson_forest;
-        else if (mc <= MC_NEWEST && biomeID == warped_forest) *oconf = o_nether_gravel_118_warped_forest;
         else if (mc <= MC_NEWEST) *oconf = o_nether_gravel_118;
         return mc > MC_1_15;
     case QuartzOre:
@@ -1616,8 +1590,6 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
         else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_quartz_116_warped_forest;
         else if (mc <= MC_1_17 && biomeID == basalt_deltas) *oconf = o_quartz_116_basalt_deltas;
         else if (mc <= MC_1_17) *oconf = o_quartz_116;
-        else if (mc <= MC_NEWEST && biomeID == crimson_forest) *oconf = o_quartz_118_crimson_forest;
-        else if (mc <= MC_NEWEST && biomeID == warped_forest) *oconf = o_quartz_118_warped_forest;
         else if (mc <= MC_NEWEST && biomeID == basalt_deltas) *oconf = o_quartz_118_basalt_deltas;
         else if (mc <= MC_NEWEST) *oconf = o_quartz_118;
         return mc > MC_1_12;
@@ -1625,8 +1597,6 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
         if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_small_debris_116_crimson_forest;
         else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_small_debris_116_warped_forest;
         else if (mc <= MC_1_17) *oconf = o_small_debris_116;
-        else if (mc <= MC_NEWEST && biomeID == crimson_forest) *oconf = o_small_debris_118_crimson_forest;
-        else if (mc <= MC_NEWEST && biomeID == warped_forest) *oconf = o_small_debris_118_warped_forest;
         else if (mc <= MC_NEWEST) *oconf = o_small_debris_118;
         return mc > MC_1_15;
     case SoulSandOre:
