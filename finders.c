@@ -23,8 +23,6 @@
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
-#define MAX_ORE_COUNT 100
-
 
 //==============================================================================
 // Finding Structure Positions
