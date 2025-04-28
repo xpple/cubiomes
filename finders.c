@@ -1399,10 +1399,10 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
     o_quartz_116_crimson_forest = {11, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
     o_quartz_116_warped_forest = {12, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
     o_quartz_116_basalt_deltas = {14, 7, 14, 32, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_quartz_118 = {12, 5, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_quartz_118_crimson_forest = {9, 5, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_quartz_118_warped_forest = {10, 5, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_quartz_118_basalt_deltas = {12, 5, 14, 32, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_quartz_118 = {12, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_quartz_118_crimson_forest = {9, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_quartz_118_warped_forest = {10, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_quartz_118_basalt_deltas = {12, 7, 14, 32, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
 
     // scatter ore, no count
     o_small_debris_116 = {16, 7, 2, 1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
@@ -2038,7 +2038,7 @@ Pos3List generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreCon
         for (int z = startZ; z <= startZ + oreSize; ++z) {
             float y;
             mapApproxHeight(&y, 0, g, sn, x >> 2, z >> 2, 1, 1);
-            if (g->dim == DIM_NETHER || startY <= (int) floor(y)) {
+            if (startY <= g->dim == DIM_OVERWORLD ? (int) floor(y) : 128) {
                 return generateVeinPart(mc, config, rnd, offsetXPos, offsetXNeg, offsetZPos, offsetZNeg, offsetYPos, offsetYNeg, startX, startY, startZ, oreSize, radius);
             }
         }
