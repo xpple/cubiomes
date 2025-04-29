@@ -1302,8 +1302,8 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
     o_lapis_118 = {21, 6, 7, 2, LapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
     o_lapis_120 = {22, 6, 7, 2, LapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_large_copper_118 = {23, 6, 20, 16, LargeCopperOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_large_copper_120 = {24, 6, 20, 16, LargeCopperOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_large_copper_118 = {23, 6, 20, 16, LargeCopperOre, COPPER_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_large_copper_120 = {24, 6, 20, 16, LargeCopperOre, COPPER_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
     // uses rareOrePlacement
     o_large_diamond_118 = {19, 6, 12, 9, LargeDiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.7F},
