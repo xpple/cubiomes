@@ -364,6 +364,8 @@ enum Ores {
     CoalOre,
     CopperOre,
     DeepslateOre,
+    DeltasGoldOre,
+    DeltasQuartzOre,
     DiamondOre,
     DioriteOre,
     DirtOre,
