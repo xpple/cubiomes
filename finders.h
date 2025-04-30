@@ -390,7 +390,7 @@ enum Ores {
     MiddleIronOre,
     NetherGoldOre,
     NetherGravelOre,
-    QuartzOre,
+    NetherQuartzOre,
     RedstoneOre,
     SmallDebrisOre,
     SmallIronOre,

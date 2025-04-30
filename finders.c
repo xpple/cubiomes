@@ -1383,11 +1383,11 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
     o_nether_gravel_116_warped_forest =  { 9, 7, 33, 2, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
     o_nether_gravel_118 =                {17, 7, 33, 2, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
 
-    o_quartz_113 =                { 7, 5, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_quartz_116 =                {14, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_quartz_116_crimson_forest = {11, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_quartz_116_warped_forest =  {12, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_quartz_118 =                {20, 7, 14, 16, QuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_quartz_113 =                { 7, 5, 14, 16, NetherQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_quartz_116 =                {14, 7, 14, 16, NetherQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_quartz_116_crimson_forest = {11, 7, 14, 16, NetherQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_quartz_116_warped_forest =  {12, 7, 14, 16, NetherQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_quartz_118 =                {20, 7, 14, 16, NetherQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
 
     // scatter ore, no count
     o_small_debris_116 =                {16, 7, 2, 1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
@@ -1588,12 +1588,12 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
         else if (mc <= MC_1_17) *oconf = o_nether_gravel_116;
         else if (mc <= MC_NEWEST) *oconf = o_nether_gravel_118;
         return mc > MC_1_15;
-    case QuartzOre:
-        if (mc <= MC_1_15) *oconf = o_quartz_113;
-        else if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_quartz_116_crimson_forest;
-        else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_quartz_116_warped_forest;
-        else if (mc <= MC_1_17) *oconf = o_quartz_116;
-        else if (mc <= MC_NEWEST) *oconf = o_quartz_118;
+    case NetherQuartzOre:
+        if (mc <= MC_1_15) *oconf = o_nether_quartz_113;
+        else if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_nether_quartz_116_crimson_forest;
+        else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_nether_quartz_116_warped_forest;
+        else if (mc <= MC_1_17) *oconf = o_nether_quartz_116;
+        else if (mc <= MC_NEWEST) *oconf = o_nether_quartz_118;
         return mc > MC_1_12;
     case SmallDebrisOre:
         if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_small_debris_116_crimson_forest;
@@ -1669,7 +1669,7 @@ int isViableOreBiome(int mc, int oreType, int biomeID)
         return getDimension(biomeID) == DIM_NETHER;
     case BlackstoneOre:
     case NetherGoldOre:
-    case QuartzOre:
+    case NetherQuartzOre:
     case NetherGravelOre:
         return (biomeID == nether_wastes || biomeID == soul_sand_valley ||
                 biomeID == crimson_forest || biomeID == warped_forest);
@@ -1912,7 +1912,7 @@ int getOreYPos(int mc, int oreType, RandomSource rnd)
         if (mc <= MC_NEWEST) return providerUniformRange(rnd, 5, 41);
         break;
     case DeltasQuartzOre:
-    case QuartzOre:
+    case NetherQuartzOre:
         if (mc <= MC_1_16) return providerRange(rnd, 10, 20, 128);
         if (mc <= MC_NEWEST) return providerUniformRange(rnd, 0 + 10, 127 - 10);
         break;
