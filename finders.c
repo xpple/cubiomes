@@ -1721,7 +1721,13 @@ Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig conf
     int size = 0;
     for (int i = 0; i < repeatCount; i++) {
         Pos3 basePos = generateBaseOrePosition(g->mc, config, chunkX, chunkZ, rnd);
-        Pos3List orePositions = generateOrePositions(g, sn, config, basePos, rnd);
+        int biome = getBiomeAt(g, 1, basePos.x, basePos.y, basePos.z);
+        Pos3List orePositions;
+        if (isViableOreBiome(g->mc, oreType, biome)) {
+            orePositions = generateOrePositions(g, sn, config, basePos, rnd);
+        } else {
+            createPos3List(&orePositions, 0);
+        }
         temp[i] = orePositions;
         size += orePositions.size;
     }
