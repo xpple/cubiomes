@@ -57,7 +57,18 @@ STRUCT(StructureConfig)
 
 STRUCT(Pos)  { int x, z; };
 STRUCT(Pos3) { int x, y, z; };
+STRUCT(Pos3List)
+{
+    Pos3* pos3s;
+    int capacity;
+    int size;
+};
 
+void createPos3List(Pos3List* list, int initialCapacity);
+
+void appendPos3List(Pos3List* list, Pos3 pos3);
+
+void freePos3List(Pos3List* list);
 
 STRUCT(StrongholdIter)
 {
@@ -314,6 +325,188 @@ Pos estimateSpawn(const Generator *g, uint64_t *rng);
  */
 Pos getSpawn(const Generator *g);
 
+
+enum Blocks {
+    ANCIENT_DEBRIS,
+    ANDESITE,
+    BASALT,
+    BLACKSTONE,
+    CLAY,
+    COAL_ORE,
+    COPPER_ORE,
+    DEEPSLATE,
+    DIAMOND_ORE,
+    DIORITE,
+    DIRT,
+    EMERALD_ORE,
+    GOLD_ORE,
+    GRANITE,
+    GRAVEL,
+    IRON_ORE,
+    LAPIS_ORE,
+    MAGMA_BLOCK,
+    NETHERRACK,
+    NETHER_GOLD_ORE,
+    NETHER_QUARTZ_ORE,
+    REDSTONE_ORE,
+    SOUL_SAND,
+    STONE,
+    TUFF,
+};
+
+enum Ores {
+    AndesiteOre,
+    BlackstoneOre,
+    BuriedDiamondOre,
+    BuriedLapisOre,
+    ClayOre,
+    CoalOre,
+    CopperOre,
+    DeepslateOre,
+    DeltasGoldOre,
+    DeltasQuartzOre,
+    DiamondOre,
+    DioriteOre,
+    DirtOre,
+    EmeraldOre,
+    ExtraGoldOre,
+    GoldOre,
+    GraniteOre,
+    GravelOre,
+    IronOre,
+    LapisOre,
+    LargeCopperOre,
+    LargeDebrisOre,
+    LargeDiamondOre,
+    LowerAndesiteOre,
+    LowerCoalOre,
+    LowerDioriteOre,
+    LowerGoldOre,
+    LowerGraniteOre,
+    LowerRedstoneOre,
+    MagmaOre,
+    MediumDiamondOre,
+    MiddleIronOre,
+    NetherGoldOre,
+    NetherGravelOre,
+    NetherQuartzOre,
+    RedstoneOre,
+    SmallDebrisOre,
+    SmallIronOre,
+    SoulSandOre,
+    TuffOre,
+    UpperAndesiteOre,
+    UpperCoalOre,
+    UpperDioriteOre,
+    UpperGraniteOre,
+    UpperIronOre,
+};
+
+
+// use getOreConfig() for the version specific ore configuration
+STRUCT(OreConfig)
+{
+    int32_t         index;
+    int32_t         step;
+    int32_t         size;
+    int32_t         repeatCount;
+    uint32_t        oreType;
+    uint32_t        oreBlock;
+    int8_t          dim;
+    uint8_t         numReplaceBlocks;
+    const uint32_t* replaceBlocks;
+    float           discardChanceOnAirExposure;
+};
+
+//==============================================================================
+// Ore height providers
+//==============================================================================
+
+// <=1.16.5
+static inline int providerRange(RandomSource rnd, const int bottomOffset, const int topOffset, const int maximumY) {
+    return rnd.nextInt(rnd.state, maximumY - topOffset) + bottomOffset;
+}
+
+// <=1.16.5
+static inline int providerDepthAverage(RandomSource rnd, const int baseline, const int spread) {
+    int a = rnd.nextInt(rnd.state, spread);
+    int b = rnd.nextInt(rnd.state, spread);
+    return a + b - spread + baseline;
+}
+
+// >=1.17
+static inline int providerUniformRange(RandomSource rnd, const int minOffset, const int maxOffset) {
+    if (minOffset > maxOffset) {
+        return minOffset;
+    }
+    return rnd.nextIntBetween(rnd.state, minOffset, maxOffset);
+}
+
+// >=1.17
+static inline int providerTriangleRange(RandomSource rnd, const int minOffset, const int maxOffset) {
+    if (minOffset > maxOffset) {
+        return minOffset;
+    }
+    const int range = maxOffset - minOffset;
+    if (range <= 0) {
+        return rnd.nextIntBetween(rnd.state, minOffset, maxOffset);
+    }
+    const int midPoint = range / 2;
+    const int midPoint2 = range - midPoint;
+    int a = rnd.nextIntBetween(rnd.state, 0, midPoint2);
+    int b = rnd.nextIntBetween(rnd.state, 0, midPoint);
+    return minOffset + a + b;
+}
+
+
+/**
+ * Get the ore config for a given ore type.
+ *
+ * @param oreType the ore type as listed in Ores.
+ * @param mc the Minecraft version as listed in MCVersion
+ * @param biomeID the biome ID as listed in BiomeID
+ * @param oconf the target config
+ * @return 0 on failure
+ */
+int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf);
+
+/**
+ * Get the biome used for ore generation for a given chunk. After this, call
+ * `isViableOreBiome` to check whether the ore can generate in the chunk.
+ * @param g the generator
+ * @param chunkX the chunk X-coordinate
+ * @param chunkZ the chunk Y-coordinate
+ * @return the biome ID
+ */
+int getBiomeForOreGen(const Generator *g, int chunkX, int chunkZ);
+
+/**
+ * Check whether the given ore type generates in this biome.
+ * @param mc the Minecraft version
+ * @param oreType the ore type
+ * @param biomeID the biome ID
+ * @return 0 if the ore does not generate in this biome
+ */
+int isViableOreBiome(int mc, int oreType, int biomeID);
+
+/**
+ * Generate the ores of the given type in the chunk.
+ * @param g the generator
+ * @param sn the surface noise
+ * @param config the ore config
+ * @param chunkX the chunk X-coordinate
+ * @param chunkZ the chunk Y-coordinate
+ * @return a sized array of ore positions
+ */
+Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig config, int chunkX, int chunkZ);
+
+Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource rnd);
+
+int getOreYPos(int mc, int oreType, RandomSource rnd);
+
+Pos3List generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 bPos, RandomSource rnd);
+
+Pos3List generateVeinPart(int mc, OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius);
 
 /* Finds a suitable pseudo-random location in the specified area.
  * This function is used to determine the positions of spawn and strongholds.
