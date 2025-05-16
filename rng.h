@@ -282,6 +282,15 @@ static inline int xNextIntJBetween(Xoroshiro *xr, const int min, const int max)
     return xNextIntJ(xr, max - min + 1) + min;
 }
 
+static inline Xoroshiro xAtPos(Xoroshiro *xr, int x, int y, int z)
+{
+    uint64_t l = x * 3129871 ^ z * 116129781L ^ y;
+    l = l * l * 42317861L + l * 11L;
+    l >>= 16;
+
+    return (Xoroshiro) {l ^ xr->lo, xr->hi};
+}
+
 // expand as necessary
 STRUCT(RandomSource)
 {
@@ -421,6 +430,10 @@ static inline double clampedLerp(double part, double from, double to)
     if (part <= 0) return from;
     if (part >= 1) return to;
     return lerp(part, from, to);
+}
+
+static inline double clampedMap(double input, double inputMin, double inputMax, double ouputMin, double outputMax) {
+    return clampedLerp((input - inputMin) / (inputMax - inputMin), ouputMin, outputMax);
 }
 
 /* Find the modular inverse: (1/x) | mod m.
