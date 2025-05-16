@@ -2126,6 +2126,97 @@ Pos3List generateVeinPart(int mc, OreConfig config, RandomSource rnd, double off
 }
 
 //==============================================================================
+// Ore vein generation
+//==============================================================================
+
+int initOreVeinNoise(OreVeinParameters *params, uint64_t ws, int mc) {
+    static const uint64_t md5_ore[2] = {0x9b88124de600116d, 0x2ae68055aa4a7761}; // minecraft:ore
+    static const uint64_t md5_ore_veininess[2] = {0x6b86c7820a307171, 0xd87fb0fefd9c1624}; // minecraft:ore_veininess
+    static const uint64_t md5_ore_vein_a[2] = {0x4cd8d69b9a841649, 0xcdd63f17bfe8f5ed}; // minecraft:ore_vein_a
+    static const uint64_t md5_ore_vein_b[2] = {0x6b26220b31f7c6c9, 0xae077edebf6aaec1}; // minecraft:ore_vein_b
+    static const uint64_t md5_ore_gap[2] = {0x9c4cc6b2fb0be4bb, 0xbd5964705573bb5e}; // minecraft:ore_gap
+
+    if (mc <= MC_1_17) {
+        return 0;
+    }
+
+    Xoroshiro wsx;
+    xSetSeed(&wsx, ws);
+    const uint64_t lo = xNextLong(&wsx);
+    const uint64_t hi = xNextLong(&wsx);
+
+    Xoroshiro ore_x = {lo ^ md5_ore[0], hi ^ md5_ore[1]};
+    const uint64_t a = xNextLong(&ore_x);
+    const uint64_t b = xNextLong(&ore_x);
+    ore_x = (Xoroshiro) {a, b};
+    params->posRandom = ore_x;
+
+    Xoroshiro ore_veininess_x = {lo ^ md5_ore_veininess[0], hi ^ md5_ore_veininess[1]};
+    DoublePerlinNoise ore_veininess_n;
+    const double ore_veininess_amp = {1.0};
+    xDoublePerlinInit(&ore_veininess_n, &ore_veininess_x, malloc(2 * sizeof(PerlinNoise)), &ore_veininess_amp, -8, 1, -1);
+    params->oreVeininess = ore_veininess_n;
+
+    Xoroshiro ore_vein_a_x = {lo ^ md5_ore_vein_a[0], hi ^ md5_ore_vein_a[1]};
+    DoublePerlinNoise ore_vein_a_n;
+    const double ore_vein_a_amp = {1.0};
+    xDoublePerlinInit(&ore_vein_a_n, &ore_vein_a_x, malloc(2 * sizeof(PerlinNoise)), &ore_vein_a_amp, -7, 1, -1);
+    params->oreVeinA = ore_vein_a_n;
+
+    Xoroshiro ore_vein_b_x = {lo ^ md5_ore_vein_b[0], hi ^ md5_ore_vein_b[1]};
+    DoublePerlinNoise ore_vein_b_n;
+    const double ore_vein_b_amp = {1.0};
+    xDoublePerlinInit(&ore_vein_b_n, &ore_vein_b_x, malloc(2 * sizeof(PerlinNoise)), &ore_vein_b_amp, -7, 1, -1);
+    params->oreVeinB = ore_vein_b_n;
+
+    Xoroshiro ore_gap_x = {lo ^ md5_ore_gap[0], hi ^ md5_ore_gap[1]};
+    DoublePerlinNoise ore_gap_n;
+    const double ore_gap_amp = {1.0};
+    xDoublePerlinInit(&ore_gap_n, &ore_gap_x, malloc(2 * sizeof(PerlinNoise)), &ore_gap_amp, -5, 1, -1);
+    params->oreGap = ore_gap_n;
+
+    return 1;
+}
+
+int32_t getOreVeinBlockAt(int x, int y, int z, OreVeinParameters* params)
+{
+    static const OreVeinConfig
+    ov_copper = {COPPER_ORE, RAW_COPPER_BLOCK, GRANITE, 0, 50},
+    ov_iron = {IRON_ORE, RAW_IRON_BLOCK, TUFF, -60, -8};
+    static const int min_y = MIN(ov_copper.minY, ov_iron.minY);
+    static const int max_y = MIN(ov_copper.maxY, ov_iron.maxY);
+
+    if (y < min_y || y > max_y) {
+        return -1;
+    }
+    double veinRidgedSample = MAX(fabs(sampleDoublePerlin(&params->oreVeinA, 4 * x, 4 * y, 4 * z)), fabs(sampleDoublePerlin(&params->oreVeinB, 4 * x, 4 * y, 4 * z)));
+    if (veinRidgedSample >= 0.08F) {
+        return -1;
+    }
+    double veinToggleSample = sampleDoublePerlin(&params->oreVeininess, x * 1.5, y * 1.5, z * 1.5);
+    OreVeinConfig ovconf = veinToggleSample > 0.0 ? ov_copper : ov_iron;
+    double abs = fabs(veinToggleSample);
+    int belowTop = ovconf.maxY - y;
+    int aboveBottom = y - ovconf.minY;
+    if (aboveBottom < 0 || belowTop < 0) {
+        return -1;
+    }
+    int offset = MIN(belowTop, aboveBottom);
+    if (abs + clampedMap(offset, 0.0, 20.0, -0.2, 0.0) < 0.4F) {
+        return -1;
+    }
+    Xoroshiro xr = xAtPos(&params->posRandom, x, y, z);
+    if (xNextFloat(&xr) > 0.7F) {
+        return -1;
+    }
+    double veinGapSample = sampleDoublePerlin(&params->oreGap, x, y, z);
+    if (xNextFloat(&xr) < clampedMap(abs, 0.4F, 0.6F, 0.1F, 0.3F) && veinGapSample > -0.3F) {
+        return xNextFloat(&xr) < 0.02F ? ovconf.rawOreBlock : ovconf.oreBlock;
+    }
+    return ovconf.fillerBlock;
+}
+
+//==============================================================================
 // Validating Structure Positions
 //==============================================================================
 
