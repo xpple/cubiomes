@@ -1686,12 +1686,15 @@ int isViableOreBiome(int mc, int oreType, int biomeID)
     return 0;
 }
 
-int getBiomeForOreGen(const Generator *g, int chunkX, int chunkZ)
+int getBiomeForOreGen(const Generator *g, int chunkX, int chunkZ, int y)
 {
     if (g->mc <= MC_1_15) {
         return getBiomeAt(g, 1, (chunkX << 4) + 8, 0, (chunkZ << 4) + 8);
     }
-    return getBiomeAt(g, 4, (chunkX << 2) + 2, 0, (chunkZ << 2) + 2);
+    if (g->mc <= MC_1_17) {
+        return getBiomeAt(g, 4, (chunkX << 2) + 2, 0, (chunkZ << 2) + 2);
+    }
+    return getBiomeAt(g, 4, (chunkX << 2) + 2, y >> 2, (chunkZ << 2) + 2);
 }
 
 Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig config, int chunkX, int chunkZ)
@@ -1699,11 +1702,11 @@ Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig conf
     uint64_t populationSeed = getPopulationSeed(g->mc, g->seed, chunkX << 4, chunkZ << 4);
     RandomSource rnd;
     if (g->mc <= MC_1_17) {
-        uint64_t seed;
-        rnd = createJavaRandom(&seed);
+        uint64_t* seed = malloc(sizeof(uint64_t));
+        rnd = createJavaRandom(seed);
     } else {
-        Xoroshiro xr;
-        rnd = createXoroshiro(&xr);
+        Xoroshiro* xr = malloc(sizeof(Xoroshiro));
+        rnd = createXoroshiro(xr);
     }
     // set decorator seed
     rnd.setSeed(rnd.state, populationSeed + config.index + 10000 * config.step);
@@ -1732,6 +1735,7 @@ Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig conf
         temp[i] = orePositions;
         size += orePositions.size;
     }
+    free(rnd.state);
     Pos3List poses;
     createPos3List(&poses, size);
     int offset = 0;
