@@ -464,7 +464,7 @@ static inline int providerTriangleRange(RandomSource rnd, const int minOffset, c
  *
  * @param oreType the ore type as listed in Ores.
  * @param mc the Minecraft version as listed in MCVersion
- * @param biomeID the biome ID as listed in BiomeID
+ * @param biomeID the biome ID as listed in BiomeID, unused for >=1.18
  * @param oconf the target config
  * @return 0 on failure
  */
