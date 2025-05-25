@@ -348,6 +348,8 @@ enum Blocks {
     NETHERRACK,
     NETHER_GOLD_ORE,
     NETHER_QUARTZ_ORE,
+    RAW_COPPER_BLOCK,
+    RAW_IRON_BLOCK,
     REDSTONE_ORE,
     SOUL_SAND,
     STONE,
@@ -508,6 +510,33 @@ int getOreYPos(int mc, int oreType, RandomSource rnd);
 Pos3List generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 bPos, RandomSource rnd);
 
 Pos3List generateVeinPart(int mc, OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius);
+
+enum OreVeins {
+    CopperVein,
+    IronVein,
+};
+
+STRUCT(OreVeinConfig)
+{
+    uint32_t oreBlock;
+    uint32_t rawOreBlock;
+    uint32_t fillerBlock;
+    int32_t  minY;
+    int32_t  maxY;
+};
+
+STRUCT(OreVeinParameters)
+{
+    DoublePerlinNoise oreVeininess;
+    DoublePerlinNoise oreVeinA;
+    DoublePerlinNoise oreVeinB;
+    DoublePerlinNoise oreGap;
+    Xoroshiro         posRandom;
+};
+
+int initOreVeinNoise(OreVeinParameters *params, uint64_t ws, int mc);
+
+int32_t getOreVeinBlockAt(int x, int y, int z, OreVeinParameters* params);
 
 /* Finds a suitable pseudo-random location in the specified area.
  * This function is used to determine the positions of spawn and strongholds.
