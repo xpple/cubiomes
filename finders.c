@@ -2187,8 +2187,8 @@ int32_t getOreVeinBlockAt(int x, int y, int z, OreVeinParameters* params)
     static const OreVeinConfig
     ov_copper = {COPPER_ORE, RAW_COPPER_BLOCK, GRANITE, 0, 50},
     ov_iron = {IRON_ORE, RAW_IRON_BLOCK, TUFF, -60, -8};
-    static const int min_y = MIN(ov_copper.minY, ov_iron.minY);
-    static const int max_y = MAX(ov_copper.maxY, ov_iron.maxY);
+    static const int min_y = MIN(0 /*ov_copper.minY*/, -60 /*ov_iron.minY*/);
+    static const int max_y = MAX(50 /*ov_copper.maxY*/, -8 /*ov_iron.maxY*/);
 
     if (y < min_y || y > max_y) {
         return -1;
