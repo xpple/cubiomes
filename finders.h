@@ -251,6 +251,8 @@ Pos getLargeStructureChunkInRegion(StructureConfig config, uint64_t seed, int re
 int getMineshafts(int mc, uint64_t seed, int chunkX, int chunkZ,
         int chunkW, int chunkH, Pos *out, int nout);
 
+uint64_t getPopulationSeed(int mc, uint64_t ws, int x, int z);
+
 // not exacly a structure
 static inline ATTR(const)
 int isSlimeChunk(uint64_t seed, int chunkX, int chunkZ)

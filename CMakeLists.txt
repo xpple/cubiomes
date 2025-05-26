@@ -21,6 +21,14 @@ set(HEADERS
 	rng.h
 	util.h
 	quadbase.h
+	loot/desert_temple.h
+	loot/logging.h
+	loot/loot_functions.h
+	loot/loot_library.h
+	loot/loot_table_context.h
+	loot/mc_loot.h
+	loot/ruined_portal.h
+	loot/cjson/cJSON.h
 )
 set(SOURCES
 	finders.c
@@ -31,6 +39,11 @@ set(SOURCES
 	noise.c
 	util.c
 	quadbase.c
+	test_loot.c
+	loot/loot_functions.c
+	loot/loot_table_context.c
+	loot/loot_table_parser.c
+	loot/cjson/cJSON.c
 )
 
 add_library(objects OBJECT ${SOURCES})
