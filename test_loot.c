@@ -2,19 +2,20 @@
 
 #include "finders.h"
 #include "generator.h"
+#include "util.h"
 
 #include "loot/mc_loot.h"
 
 Pos findStructure(StructureConfig sconf, Generator g);
-uint64_t getDesertPyramidLootSeed(uint64_t ws, int x, int z, int index, int step, int chestIdx, int mc);
 void print_loot(LootTableContext* ctx);
 
 int main() {
 	uint64_t seed = 8052710360952744907ULL;
 	int version = MC_1_21;
+	int stype = Ruined_Portal;
 
 	StructureConfig sconf;
-	if (!getStructureConfig(Desert_Pyramid, version, &sconf)) {
+	if (!getStructureConfig(stype, version, &sconf)) {
 		printf("Structure config failed\n");
 		return 1;
 	}
@@ -23,24 +24,43 @@ int main() {
 	applySeed(&generator, DIM_OVERWORLD, seed);
 
 	Pos pos = findStructure(sconf, generator);
-	printf("Structure found at %d %d\n", pos.x, pos.z);
+	printf("Structure %s found at %d %d\n", struct2str(sconf.structType), pos.x, pos.z);
 
-	LootTableContext ctx;
-	FILE* fptr = fopen("loot/loot_tables/desert_pyramid.json", "rb");
-	if (fptr == NULL) {
-		printf("Failed to open file\n");
+	int biome = getBiomeAt(&generator, 4, pos.x >> 2, 320 >> 2, pos.z >> 2);
+	StructureVariant sv;
+	getVariant(&sv, sconf.structType, version, seed, pos.x, pos.z, biome);
+
+	int n = END_CITY_PIECES_MAX;
+	Piece* pieces = malloc(n * sizeof(Piece));
+	int pieceCount = getStructurePieces(pieces, n, sconf.structType, sv, version, seed, pos.x, pos.z);
+	if (pieceCount < 0) {
+		printf("Pieces not supported for structure\n");
+		free(pieces);
 		return 1;
 	}
-	if (init_loot_table_file(fptr, &ctx, MC_1_21) == -1) {
-		printf("Failed to parse loot table\n");
+	for (int i = 0; i < pieceCount; ++i) {
+		Piece p = pieces[i];
+		int stringSize = snprintf(NULL, 0, "loot/loot_tables/%s.json", p.lootTable);
+		char* lootTableFile = malloc(stringSize + 1);
+		snprintf(lootTableFile, stringSize + 1, "loot/loot_tables/%s.json", p.lootTable);
+		FILE* fptr = fopen(lootTableFile, "rb");
+		free(lootTableFile);
+		if (fptr == NULL) {
+			printf("Failed to open file\n");
+			return 1;
+		}
+		LootTableContext ctx;
+		if (init_loot_table_file(fptr, &ctx, version) == -1) {
+			printf("Failed to parse loot table\n");
+		}
+		for (int j = 0; j < p.chestCount; ++j) {
+			set_loot_seed(&ctx, p.lootSeeds[j]);
+			generate_loot(&ctx);
+			print_loot(&ctx);
+			free_loot_table(&ctx);
+		}
 	}
-
-	uint64_t lootSeed = getDesertPyramidLootSeed(seed, pos.x >> 4, pos.z >> 4, 1, 4, 0, version);
-
-	set_loot_seed(&ctx, lootSeed);
-	generate_loot(&ctx);
-	print_loot(&ctx);
-	free_loot_table(&ctx);
+	free(pieces);
 
 	return 0;
 }
@@ -67,18 +87,6 @@ Pos findStructure(StructureConfig sconf, Generator g) {
 		z += dz;
 	}
 	return (Pos) {0, 0};
-}
-
-uint64_t getDesertPyramidLootSeed(uint64_t ws, int chunkX, int chunkZ, int index, int step, int chestIdx, int mc) {
-	uint64_t populationSeed = getPopulationSeed(mc, ws, chunkX << 4, chunkZ << 4);
-	Xoroshiro chunkRand;
-	// set decorator seed
-	xSetSeed(&chunkRand, populationSeed + index + 10000 * step);
-	xNextIntJ(&chunkRand, 3);
-	for (int i = 0; i < chestIdx; i++) {
-		xNextLongJ(&chunkRand);
-	}
-	return xNextLongJ(&chunkRand);
 }
 
 void print_loot(LootTableContext* ctx) {

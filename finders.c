@@ -3379,6 +3379,148 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
     }
 }
 
+int getStructurePieces(Piece *list, int n, int stype, StructureVariant sv, int mc, uint64_t seed, int chunkX, int chunkZ) {
+    if (stype == End_City) {
+        if (n < END_CITY_PIECES_MAX) {
+            return -1;
+        }
+        return getEndCityPieces(list, mc, seed, chunkX, chunkZ);
+    }
+    if (stype == Fortress) {
+        return getFortressPieces(list, n, mc, seed, chunkX, chunkZ);
+    }
+    static const struct { int index, step; }
+    s_buried_treasure = {0, 3},
+    s_bastion_remnant = {0, 4},
+    s_desert_pyramid = {1, 4},
+    s_igloo = {3, 4},
+    s_ruined_portal = {10, 4},
+    s_ruined_portal_desert = {11, 4},
+    s_ruined_portal_jungle = {12, 4},
+    s_ruined_portal_mountain = {13, 4},
+    s_ruined_portal_nether = {14, 4},
+    s_ruined_portal_ocean = {15, 4},
+    s_ruined_portal_swamp = {16, 4};
+
+    int minBlockX = chunkX << 4;
+    int minBlockZ = chunkZ << 4;
+    uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
+    RandomSource rnd;
+    if (mc <= MC_1_17) {
+        uint64_t* r = malloc(sizeof(uint64_t));
+        rnd = createJavaRandom(r);
+    } else {
+        Xoroshiro* xr = malloc(sizeof(Xoroshiro));
+        rnd = createXoroshiro(xr);
+    }
+    switch (stype) {
+    case Desert_Pyramid: {
+        Piece* p = list;
+        p->name = "TeDP";
+        p->pos = (Pos3) {minBlockX, 64, minBlockZ};
+        p->chestCount = 4;
+        p->lootTable = "desert_pyramid";
+        p->lootSeeds = malloc(p->chestCount * sizeof(uint64_t));
+        rnd.setSeed(rnd.state, populationSeed + s_desert_pyramid.index + 10000 * s_desert_pyramid.step);
+        rnd.nextInt(rnd.state, 3);
+        for (int i = 0; i < p->chestCount; ++i) {
+            p->lootSeeds[i] = rnd.nextLong(&rnd);
+        }
+        free(rnd.state);
+        return 1;
+    }
+    case Igloo: {
+        if (!sv.basement) {
+            Piece* p = list;
+            p->name = "igloo/top";
+            p->pos = (Pos3) {minBlockX, 90, minBlockZ};
+            p->chestCount = 0;
+            p->lootSeeds = malloc(p->chestCount * sizeof(uint64_t));
+            free(rnd.state);
+            return 1;
+        }
+        Piece* topPiece = &list[0];
+        topPiece->name = "igloo/top";
+        topPiece->pos = (Pos3) {minBlockX, 90, minBlockZ};
+        topPiece->chestCount = 0;
+        topPiece->lootSeeds = malloc(topPiece->chestCount * sizeof(uint64_t));
+        for (int i = 1; i < sv.size + 1; ++i) {
+            Piece* middlePiece = &list[i];
+            middlePiece->name = "igloo/middle";
+            middlePiece->pos = (Pos3) {minBlockX + 2, 90 - i * 3, minBlockZ + 4};
+            middlePiece->chestCount = 0;
+            middlePiece->lootSeeds = malloc(middlePiece->chestCount * sizeof(uint64_t));
+        }
+        Piece* bottomPiece = &list[sv.size + 1];
+        bottomPiece->name = "igloo/bottom";
+        bottomPiece->pos = (Pos3) {minBlockX, 90 - 3 - sv.size * 3, minBlockZ - 2};
+        bottomPiece->chestCount = 1;
+        bottomPiece->lootTable = "igloo_chest";
+        bottomPiece->lootSeeds = malloc(bottomPiece->chestCount * sizeof(uint64_t));
+        rnd.setSeed(rnd.state, populationSeed + s_igloo.index + 10000 * s_igloo.step);
+        bottomPiece->lootSeeds[0] = rnd.nextLong(&rnd);
+        free(rnd.state);
+        return sv.size + 2;
+    }
+    case Swamp_Hut: {
+        Piece* p = list;
+        p->name = "TeSH";
+        p->pos = (Pos3) {minBlockX, 64, minBlockZ};
+        p->chestCount = 0;
+        p->lootSeeds = malloc(p->chestCount * sizeof(uint64_t));
+        free(rnd.state);
+        return 1;
+    }
+    // structures that have piece and one chest
+    case Treasure: {
+        Piece* p = list;
+        p->name = "BTP";
+        p->pos = (Pos3) {minBlockX + 9, 90, minBlockZ + 9};
+        p->lootTable = "buried_treasure";
+        rnd.setSeed(rnd.state, populationSeed + s_buried_treasure.index + 10000 * s_buried_treasure.step);
+        break;
+    }
+    case Ruined_Portal:
+    case Ruined_Portal_N: {
+        Piece* p = list;
+        p->name = "RUPO";
+        p->pos = (Pos3) {minBlockX, 0, minBlockZ}; // cannot really do any better
+        p->lootTable = "ruined_portal";
+        int biomeCat = getCategory(mc, sv.biome);
+        if (biomeCat == beach || biomeCat == river || biomeCat == taiga || biomeCat == forest ||
+            sv.biome == mushroom_fields || sv.biome == ice_spikes || sv.biome == dripstone_caves ||
+            sv.biome == lush_caves || sv.biome == savanna || sv.biome == snowy_plains ||
+            sv.biome == plains || sv.biome == sunflower_plains) {
+            rnd.setSeed(rnd.state, populationSeed + s_ruined_portal.index + 10000 * s_ruined_portal.step);
+        } else if (sv.biome == desert) {
+            rnd.setSeed(rnd.state, populationSeed + s_ruined_portal_desert.index + 10000 * s_ruined_portal_desert.step);
+        } else if (biomeCat == jungle) {
+            rnd.setSeed(rnd.state, populationSeed + s_ruined_portal_jungle.index + 10000 * s_ruined_portal_jungle.step);
+        } else if (biomeCat == ocean) {
+            rnd.setSeed(rnd.state, populationSeed + s_ruined_portal_ocean.index + 10000 * s_ruined_portal_ocean.step);
+        } else if (sv.biome == swamp || sv.biome == mangrove_swamp) {
+            rnd.setSeed(rnd.state, populationSeed + s_ruined_portal_swamp.index + 10000 * s_ruined_portal_swamp.step);
+        } else if (biomeCat == badlands || sv.biome == windswept_hills || sv.biome == windswept_forest ||
+            sv.biome == windswept_gravelly_hills || sv.biome == savanna_plateau || sv.biome == windswept_savanna ||
+            sv.biome == stone_shore || biomeCat == mountains) {
+            rnd.setSeed(rnd.state, populationSeed + s_ruined_portal_mountain.index + 10000 * s_ruined_portal_mountain.step);
+        } else { // nether ruined portal
+            rnd.setSeed(rnd.state, populationSeed + s_ruined_portal_nether.index + 10000 * s_ruined_portal_nether.step);
+        }
+        break;
+    }
+    default: // unsupported structures
+        free(rnd.state);
+        return -1;
+    }
+    Piece* p = list;
+    p->chestCount = 1;
+    p->lootSeeds = malloc(p->chestCount * sizeof(uint64_t));
+    p->lootSeeds[0] = rnd.nextLong(rnd.state);
+    free(rnd.state);
+    return 1;
+}
+
 static
 Piece *addEndCityPiece(PieceEnv *env, Piece *prev, int rot, int px, int py, int pz, int typ)
 {
@@ -3620,7 +3762,7 @@ int genFatTower(PieceEnv *env, Piece *current, int depth)
     return 1;
 }
 
-int getEndCityPieces(Piece *list, uint64_t seed, int chunkX, int chunkZ)
+int getEndCityPieces(Piece *list, int mc, uint64_t seed, int chunkX, int chunkZ)
 {
     uint64_t rng = chunkGenerateRnd(seed, chunkX, chunkZ);
     int rot = nextInt(&rng, 4);
@@ -3638,6 +3780,38 @@ int getEndCityPieces(Piece *list, uint64_t seed, int chunkX, int chunkZ)
     base = addEndCityPiece(&env, base, rot, -1, 4, -1, THIRD_FLOOR_1);
     base = addEndCityPiece(&env, base, rot, -1, 8, -1, THIRD_ROOF);
     genPiecesRecusively(genTower, &env, base, 1);
+
+    uint64_t populationSeed = getPopulationSeed(mc, seed, chunkX << 4, chunkZ << 4);
+    RandomSource rnd;
+    if (mc <= MC_1_17) {
+        uint64_t* r = malloc(sizeof(uint64_t));
+        rnd = createJavaRandom(r);
+    } else {
+        Xoroshiro* xr = malloc(sizeof(Xoroshiro));
+        rnd = createXoroshiro(xr);
+    }
+    rnd.setSeed(rnd.state, populationSeed + 2 + 10000 * 4);
+    for (int i = 0; i < n; ++i) {
+        Piece piece = list[i];
+        switch (piece.type) {
+        case FAT_TOWER_TOP:
+        case END_SHIP:
+            piece.chestCount = 2;
+            piece.lootSeeds = malloc(piece.chestCount * sizeof(uint64_t));
+            piece.lootSeeds[0] = rnd.nextLong(rnd.state);
+            piece.lootSeeds[1] = rnd.nextLong(rnd.state);
+            break;
+        case THIRD_FLOOR_2:
+            piece.chestCount = 1;
+            piece.lootSeeds = malloc(piece.chestCount * sizeof(uint64_t));
+            piece.lootSeeds[0] = rnd.nextLong(rnd.state);
+            break;
+        default:
+            piece.chestCount = 0;
+            piece.lootSeeds = malloc(piece.chestCount * sizeof(uint64_t));
+            break;
+        }
+    }
     return n;
 }
 
@@ -3892,6 +4066,34 @@ int getFortressPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, int
         p->next = q->next;
         q->next = NULL;
         extendFortressPiece(&env, q);
+    }
+
+    uint64_t populationSeed = getPopulationSeed(mc, seed, chunkX << 4, chunkZ << 4);
+    RandomSource rnd;
+    if (mc <= MC_1_17) {
+        uint64_t* r = malloc(sizeof(uint64_t));
+        rnd = createJavaRandom(r);
+    } else {
+        Xoroshiro* xr = malloc(sizeof(Xoroshiro));
+        rnd = createXoroshiro(xr);
+    }
+    rnd.setSeed(rnd.state, populationSeed + 1 + 10000 * 7);
+    for (int i = 0; i < count; ++i) {
+        Piece piece = list[i];
+        switch (piece.type) {
+        case CORRIDOR_TURN_LEFT:
+        case CORRIDOR_TURN_RIGHT:
+            piece.chestCount = 1;
+            piece.lootSeeds = malloc(piece.chestCount * sizeof(uint64_t));
+            piece.lootSeeds[0] = rnd.nextLong(rnd.state);
+            break;
+        case BRIDGE_SPAWNER:
+            rnd.nextInt(rnd.state, 1);
+            // fallthrough
+        default:
+            piece.chestCount = 0;
+            piece.lootSeeds = malloc(piece.chestCount * sizeof(uint64_t));
+        }
     }
     return count;
 }

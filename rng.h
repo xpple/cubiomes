@@ -296,6 +296,7 @@ STRUCT(RandomSource)
 {
     void *state;
     void (*setSeed)(void *state, uint64_t seed);
+    uint64_t (*nextLong)(void *state);
     int (*nextInt)(void *state, int n);
     float (*nextFloat)(void *state);
     double (*nextDouble)(void *state);
@@ -307,6 +308,7 @@ static inline RandomSource createJavaRandom(uint64_t *seed)
     return (RandomSource) {
         .state = seed,
         .setSeed = (void (*)(void *, uint64_t)) setSeed,
+        .nextLong = (uint64_t (*)(void *)) nextLong,
         .nextInt = (int (*)(void *, int)) nextInt,
         .nextFloat = (float (*)(void *)) nextFloat,
         .nextDouble = (double (*)(void *)) nextDouble,
@@ -319,6 +321,7 @@ static inline RandomSource createXoroshiro(Xoroshiro *xr)
     return (RandomSource) {
         .state = xr,
         .setSeed = (void (*)(void *, uint64_t)) xSetSeed,
+        .nextLong = (uint64_t (*)(void *)) xNextLongJ,
         .nextInt = (int (*)(void *, int)) xNextIntJ,
         .nextFloat = (float (*)(void *)) xNextFloat,
         .nextDouble = (double (*)(void *)) xNextDoubleJ,
