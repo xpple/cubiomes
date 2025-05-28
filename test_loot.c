@@ -63,8 +63,8 @@ int main() {
 			set_loot_seed(&ctx, p.lootSeeds[j]);
 			generate_loot(&ctx);
 			print_loot(&ctx);
-			free_loot_table(&ctx);
 		}
+		free_loot_table(&ctx);
 	}
 	freeStructurePieces(pieces, pieceCount);
 
@@ -80,7 +80,9 @@ Pos findStructure(StructureConfig sconf, Generator g) {
 			Pos p;
 			if (getStructurePos(sconf.structType, g.mc, g.seed, x, z, &p)) {
 				if (isViableStructurePos(sconf.structType, &g, p.x, p.z, 0)) {
-					return (Pos) {p.x, p.z};
+					if (isViableStructureTerrain(sconf.structType, &g, p.x, p.z)) {
+						return (Pos) {p.x, p.z};
+					}
 				}
 			}
 		}

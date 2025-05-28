@@ -3800,26 +3800,29 @@ int getEndCityPieces(Piece *list, int mc, uint64_t seed, int chunkX, int chunkZ)
     }
     rnd.setSeed(rnd.state, populationSeed + 2 + 10000 * 4);
     for (int i = 0; i < n; ++i) {
-        Piece piece = list[i];
-        switch (piece.type) {
+        Piece* piece = &list[i];
+        switch (piece->type) {
         case FAT_TOWER_TOP:
         case END_SHIP:
-            piece.chestCount = 2;
-            piece.lootSeeds = malloc(piece.chestCount * sizeof(uint64_t));
-            piece.lootSeeds[0] = rnd.nextLong(rnd.state);
-            piece.lootSeeds[1] = rnd.nextLong(rnd.state);
+            piece->chestCount = 2;
+            piece->lootTable = "end_city_treasure";
+            piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
+            piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+            piece->lootSeeds[1] = rnd.nextLong(rnd.state);
             break;
         case THIRD_FLOOR_2:
-            piece.chestCount = 1;
-            piece.lootSeeds = malloc(piece.chestCount * sizeof(uint64_t));
-            piece.lootSeeds[0] = rnd.nextLong(rnd.state);
+            piece->chestCount = 1;
+            piece->lootTable = "end_city_treasure";
+            piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
+            piece->lootSeeds[0] = rnd.nextLong(rnd.state);
             break;
         default:
-            piece.chestCount = 0;
-            piece.lootSeeds = malloc(piece.chestCount * sizeof(uint64_t));
+            piece->chestCount = 0;
+            piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
             break;
         }
     }
+    free(rnd.state);
     return n;
 }
 
@@ -4087,22 +4090,24 @@ int getFortressPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, int
     }
     rnd.setSeed(rnd.state, populationSeed + 1 + 10000 * 7);
     for (int i = 0; i < count; ++i) {
-        Piece piece = list[i];
-        switch (piece.type) {
+        Piece* piece = &list[i];
+        switch (piece->type) {
         case CORRIDOR_TURN_LEFT:
         case CORRIDOR_TURN_RIGHT:
-            piece.chestCount = 1;
-            piece.lootSeeds = malloc(piece.chestCount * sizeof(uint64_t));
-            piece.lootSeeds[0] = rnd.nextLong(rnd.state);
+            piece->chestCount = 1;
+            piece->lootTable = "nether_bridge";
+            piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
+            piece->lootSeeds[0] = rnd.nextLong(rnd.state);
             break;
         case BRIDGE_SPAWNER:
             rnd.nextInt(rnd.state, 1);
             // fallthrough
         default:
-            piece.chestCount = 0;
-            piece.lootSeeds = malloc(piece.chestCount * sizeof(uint64_t));
+            piece->chestCount = 0;
+            piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
         }
     }
+    free(rnd.state);
     return count;
 }
 
