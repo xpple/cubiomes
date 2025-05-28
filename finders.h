@@ -109,6 +109,9 @@ STRUCT(Piece)
     uint8_t rot;        // rotation
     int8_t depth;
     int8_t type;
+    int chestCount;
+    uint64_t* lootSeeds;
+    const char* lootTable; // for now each piece can only have one loot table
     Piece *next;
 };
 
@@ -250,6 +253,8 @@ Pos getLargeStructureChunkInRegion(StructureConfig config, uint64_t seed, int re
  */
 int getMineshafts(int mc, uint64_t seed, int chunkX, int chunkZ,
         int chunkW, int chunkH, Pos *out, int nout);
+
+uint64_t getPopulationSeed(int mc, uint64_t ws, int x, int z);
 
 // not exacly a structure
 static inline ATTR(const)
@@ -624,6 +629,31 @@ uint64_t chunkGenerateRnd(uint64_t worldSeed, int chunkX, int chunkZ)
 int getVariant(StructureVariant *sv, int structType, int mc, uint64_t seed,
         int blockX, int blockZ, int biomeID);
 
+/**
+ * Get a list of structure pieces for the given structure. Not all structures are supported.
+ * For the supported structures, each structure piece has information about the name, (basic)
+ * position, chest count, and loot table and seeds for each chest. The number of pieces is returned.
+ *
+ * @param list the output list of pieces
+ * @param n either for fortresses the maximum size of the output list, or for end cities a value at least END_CITY_PIECES_MAX
+ * @param stype the structure type
+ * @param sv the structure variant (if available)
+ * @param mc the Minecraft version
+ * @param seed the world seed
+ * @param chunkX the chunk X-coordinate
+ * @param chunkZ the chunk Z-coordinate
+ * @return the number of pieces
+ */
+int getStructurePieces(Piece *list, int n, int stype, StructureVariant sv, int mc, uint64_t seed, int chunkX, int chunkZ);
+
+/**
+ * Free the pieces list.
+ *
+ * @param list the list of pieces to free
+ * @param pieceCount the amount of pieces in the list
+ */
+void freeStructurePieces(Piece *list, int pieceCount);
+
 /* Generate the structure pieces of an End City. This pieces buffer should be
  * large enough to hold END_CITY_PIECES_MAX elements.
  * @pieces          : output buffer
@@ -632,7 +662,7 @@ int getVariant(StructureVariant *sv, int structType, int mc, uint64_t seed,
  *
  * Returns the number of structure pieces generated.
  */
-int getEndCityPieces(Piece *pieces, uint64_t seed, int chunkX, int chunkZ);
+int getEndCityPieces(Piece *list, int mc, uint64_t seed, int chunkX, int chunkZ);
 enum
 {   // End City piece types
     BASE_FLOOR,
