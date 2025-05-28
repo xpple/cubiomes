@@ -21,7 +21,7 @@ int main() {
 	}
 	Generator generator;
 	setupGenerator(&generator, version, 0);
-	applySeed(&generator, DIM_OVERWORLD, seed);
+	applySeed(&generator, sconf.dim, seed);
 
 	Pos pos = findStructure(sconf, generator);
 	printf("Structure %s found at %d %d\n", struct2str(sconf.structType), pos.x, pos.z);
@@ -32,7 +32,7 @@ int main() {
 
 	int n = END_CITY_PIECES_MAX;
 	Piece* pieces = malloc(n * sizeof(Piece));
-	int pieceCount = getStructurePieces(pieces, n, sconf.structType, sv, version, seed, pos.x, pos.z);
+	int pieceCount = getStructurePieces(pieces, n, sconf.structType, sv, version, seed, pos.x >> 4, pos.z >> 4);
 	if (pieceCount < 0) {
 		printf("Pieces not supported for structure\n");
 		free(pieces);
