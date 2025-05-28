@@ -3424,7 +3424,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureVariant sv, int m
         rnd.setSeed(rnd.state, populationSeed + s_desert_pyramid.index + 10000 * s_desert_pyramid.step);
         rnd.nextInt(rnd.state, 3);
         for (int i = 0; i < p->chestCount; ++i) {
-            p->lootSeeds[i] = rnd.nextLong(&rnd);
+            p->lootSeeds[i] = rnd.nextLong(rnd.state);
         }
         free(rnd.state);
         return 1;
@@ -3458,7 +3458,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureVariant sv, int m
         bottomPiece->lootTable = "igloo_chest";
         bottomPiece->lootSeeds = malloc(bottomPiece->chestCount * sizeof(uint64_t));
         rnd.setSeed(rnd.state, populationSeed + s_igloo.index + 10000 * s_igloo.step);
-        bottomPiece->lootSeeds[0] = rnd.nextLong(&rnd);
+        bottomPiece->lootSeeds[0] = rnd.nextLong(rnd.state);
         free(rnd.state);
         return sv.size + 2;
     }
@@ -3519,6 +3519,14 @@ int getStructurePieces(Piece *list, int n, int stype, StructureVariant sv, int m
     p->lootSeeds[0] = rnd.nextLong(rnd.state);
     free(rnd.state);
     return 1;
+}
+
+void freeStructurePieces(Piece *list, int pieceCount) {
+    for (int i = 0; i < pieceCount; ++i) {
+        Piece p = list[i];
+        free(p.lootSeeds);
+    }
+    free(list);
 }
 
 static

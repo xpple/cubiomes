@@ -33,6 +33,7 @@ int main() {
 	int n = END_CITY_PIECES_MAX;
 	Piece* pieces = malloc(n * sizeof(Piece));
 	int pieceCount = getStructurePieces(pieces, n, sconf.structType, sv, version, seed, pos.x >> 4, pos.z >> 4);
+	printf("Piece count: %d\n", pieceCount);
 	if (pieceCount < 0) {
 		printf("Pieces not supported for structure\n");
 		free(pieces);
@@ -40,6 +41,10 @@ int main() {
 	}
 	for (int i = 0; i < pieceCount; ++i) {
 		Piece p = pieces[i];
+		printf("Piece name: %s\n", p.name);
+		if (p.chestCount == 0) {
+			continue;
+		}
 		int stringSize = snprintf(NULL, 0, "loot/loot_tables/%s.json", p.lootTable);
 		char* lootTableFile = malloc(stringSize + 1);
 		snprintf(lootTableFile, stringSize + 1, "loot/loot_tables/%s.json", p.lootTable);
@@ -54,13 +59,14 @@ int main() {
 			printf("Failed to parse loot table\n");
 		}
 		for (int j = 0; j < p.chestCount; ++j) {
+			printf("Chest %d (loot seed %" PRId64 "):\n", j, p.lootSeeds[j]);
 			set_loot_seed(&ctx, p.lootSeeds[j]);
 			generate_loot(&ctx);
 			print_loot(&ctx);
 			free_loot_table(&ctx);
 		}
 	}
-	free(pieces);
+	freeStructurePieces(pieces, pieceCount);
 
 	return 0;
 }

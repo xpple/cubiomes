@@ -646,6 +646,14 @@ int getVariant(StructureVariant *sv, int structType, int mc, uint64_t seed,
  */
 int getStructurePieces(Piece *list, int n, int stype, StructureVariant sv, int mc, uint64_t seed, int chunkX, int chunkZ);
 
+/**
+ * Free the pieces list.
+ *
+ * @param list the list of pieces to free
+ * @param pieceCount the amount of pieces in the list
+ */
+void freeStructurePieces(Piece *list, int pieceCount);
+
 /* Generate the structure pieces of an End City. This pieces buffer should be
  * large enough to hold END_CITY_PIECES_MAX elements.
  * @pieces          : output buffer
