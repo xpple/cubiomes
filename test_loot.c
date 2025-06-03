@@ -6,7 +6,7 @@
 
 #include "loot/mc_loot.h"
 
-Pos findStructure(StructureConfig sconf, Generator g);
+Pos findStructure(StructureConfig sconf, Generator g, SurfaceNoise sn);
 void print_loot(LootTableContext* ctx);
 
 int main() {
@@ -22,23 +22,30 @@ int main() {
 	Generator generator;
 	setupGenerator(&generator, version, 0);
 	applySeed(&generator, sconf.dim, seed);
+	SurfaceNoise sn;
+	initSurfaceNoise(&sn, sconf.dim, seed);
 
-	Pos pos = findStructure(sconf, generator);
+	Pos pos = findStructure(sconf, generator, sn);
 	printf("Structure %s found at %d %d\n", struct2str(sconf.structType), pos.x, pos.z);
 
 	int biome = getBiomeAt(&generator, 4, pos.x >> 2, 320 >> 2, pos.z >> 2);
 	StructureVariant sv;
 	getVariant(&sv, sconf.structType, version, seed, pos.x, pos.z, biome);
+	StructureSaltConfig ssconf;
+	if (!getStructureSaltConfig(stype, version, sv.biome != -1 ? sv.biome : biome, &ssconf)) {
+		printf("Structure salt config failed\n");
+		return 1;
+	}
 
 	int n = END_CITY_PIECES_MAX;
 	Piece* pieces = malloc(n * sizeof(Piece));
-	int pieceCount = getStructurePieces(pieces, n, sconf.structType, sv, version, seed, pos.x >> 4, pos.z >> 4);
-	printf("Piece count: %d\n", pieceCount);
+	int pieceCount = getStructurePieces(pieces, n, sconf.structType, ssconf, sv, version, seed, pos.x >> 4, pos.z >> 4);
 	if (pieceCount < 0) {
 		printf("Pieces not supported for structure\n");
 		free(pieces);
 		return 1;
 	}
+	printf("Piece count: %d\n", pieceCount);
 	for (int i = 0; i < pieceCount; ++i) {
 		Piece p = pieces[i];
 		printf("Piece name: %s\n", p.name);
@@ -48,6 +55,7 @@ int main() {
 		int stringSize = snprintf(NULL, 0, "loot/loot_tables/%s.json", p.lootTable);
 		char* lootTableFile = malloc(stringSize + 1);
 		snprintf(lootTableFile, stringSize + 1, "loot/loot_tables/%s.json", p.lootTable);
+		printf("Loot table file: %s\n", lootTableFile);
 		FILE* fptr = fopen(lootTableFile, "rb");
 		free(lootTableFile);
 		if (fptr == NULL) {
@@ -71,22 +79,28 @@ int main() {
 	return 0;
 }
 
-Pos findStructure(StructureConfig sconf, Generator g) {
-	int x = 1, dx = 0, z = 0, dz = -1;
-	const int radius = 30000000 / (sconf.regionSize << 4);
+Pos findStructure(StructureConfig sconf, Generator g, SurfaceNoise sn) {
+	int centerX = 0;
+	int centerZ = 0;
+
+	int regionSize = sconf.regionSize << 4;
+	const int radius = 30000000 / regionSize;
+	int x = centerX / regionSize, dx = 0, z = centerZ / regionSize, dz = -1;
+	const int leftBoundX = centerX - radius, rightBoundX = centerX + radius;
+	const int bottomBoundZ = centerZ - radius, topBoundZ = centerZ + radius;
 	const uint64_t max = (2ULL * radius + 1) * (2ULL * radius + 1);
 	for (uint64_t i = 0; i < max; i++) {
-		if (-radius <= x && x <= radius && -radius <= z && z <= radius) {
+		if (leftBoundX <= x && x <= rightBoundX && bottomBoundZ <= z && z <= topBoundZ) {
 			Pos p;
 			if (getStructurePos(sconf.structType, g.mc, g.seed, x, z, &p)) {
 				if (isViableStructurePos(sconf.structType, &g, p.x, p.z, 0)) {
-					if (isViableStructureTerrain(sconf.structType, &g, p.x, p.z)) {
+					if (sconf.structType == End_City ? isViableEndCityTerrain(&g, &sn, p.x, p.z) : isViableStructureTerrain(sconf.structType, &g, p.x, p.z)) {
 						return (Pos) {p.x, p.z};
 					}
 				}
 			}
 		}
-		if (x == z || (x < 0 && x == -z) || (x > 0 && x == 1 - z)) {
+		if (x - centerX == z - centerZ || (x < centerX && x - centerX == centerZ - z) || (x > centerX && x - centerX == centerZ + 1 - z)) {
 			const int temp = dx;
 			dx = -dz;
 			dz = temp;

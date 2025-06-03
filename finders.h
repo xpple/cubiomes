@@ -54,6 +54,11 @@ STRUCT(StructureConfig)
     float   rarity;
 };
 
+STRUCT(StructureSaltConfig) {
+    int32_t generationStep;
+    int32_t decoratorIndex;
+};
+
 
 STRUCT(Pos)  { int x, z; };
 STRUCT(Pos3) { int x, y, z; };
@@ -202,6 +207,19 @@ static inline uint64_t moveStructure(uint64_t baseSeed, int regX, int regZ)
  * failure (e.g. version does not support structure type).
  */
 int getStructureConfig(int structureType, int mc, StructureConfig *sconf);
+
+/**
+ * Get the structure salt config (step and index) for a given feature. Currently
+ * only supports those features for which loot is supported. Returns zero upon
+ * failure (version is below 1.13, or structure does not exist in that version).
+ *
+ * @param structureType the structure type to get the config for
+ * @param mc the Minecraft version
+ * @param biome the biome variant as returned by getVariant, or in <1.18 the biome itself
+ * @param ssconf the output config
+ * @return zero upon failure
+ */
+int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltConfig *ssconf);
 
 /* The library can be compiled to use a custom internal getter for structure
  * configurations. For this, the macro STRUCT_CONFIG_OVERRIDE should be defined
@@ -637,6 +655,7 @@ int getVariant(StructureVariant *sv, int structType, int mc, uint64_t seed,
  * @param list the output list of pieces
  * @param n either for fortresses the maximum size of the output list, or for end cities a value at least END_CITY_PIECES_MAX
  * @param stype the structure type
+ * @param ssconf the structure salt config from getStructureSaltConfig
  * @param sv the structure variant (if available)
  * @param mc the Minecraft version
  * @param seed the world seed
@@ -644,7 +663,7 @@ int getVariant(StructureVariant *sv, int structType, int mc, uint64_t seed,
  * @param chunkZ the chunk Z-coordinate
  * @return the number of pieces
  */
-int getStructurePieces(Piece *list, int n, int stype, StructureVariant sv, int mc, uint64_t seed, int chunkX, int chunkZ);
+int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf, StructureVariant sv, int mc, uint64_t seed, int chunkX, int chunkZ);
 
 /**
  * Free the pieces list.
@@ -662,7 +681,7 @@ void freeStructurePieces(Piece *list, int pieceCount);
  *
  * Returns the number of structure pieces generated.
  */
-int getEndCityPieces(Piece *list, int mc, uint64_t seed, int chunkX, int chunkZ);
+int getEndCityPieces(Piece *list, uint64_t seed, int chunkX, int chunkZ);
 enum
 {   // End City piece types
     BASE_FLOOR,
