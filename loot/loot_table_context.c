@@ -58,7 +58,7 @@ static void generate_loot_pool(LootTableContext* context, int pool_index)
 	for (int r = 0; r < rolls; r++)
 	{
 		// roll a weighted random entry
-		int w = nextInt(&context->prng_state, pool->total_weight);
+		int w = pool->total_weight > 1 ? nextInt(&context->prng_state, pool->total_weight) : 0;
 		int entry = pool->precomputed_loot[w];
 		int item = pool->entry_to_item[entry];
 		if (item == -1)
