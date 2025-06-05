@@ -681,7 +681,7 @@ void freeStructurePieces(Piece *list, int pieceCount);
  *
  * Returns the number of structure pieces generated.
  */
-int getEndCityPieces(Piece *list, uint64_t seed, int chunkX, int chunkZ);
+int getEndCityPieces(Piece *pieces, uint64_t seed, int chunkX, int chunkZ);
 enum
 {   // End City piece types
     BASE_FLOOR,

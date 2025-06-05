@@ -3399,7 +3399,59 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
             r->start = 1 + nextInt(&rng, 10);
         }
         r->rotation = nextInt(&rng, 4);
-        r->mirror = nextFloat(&rng) < 0.5f;
+        r->mirror = nextFloat(&rng) >= 0.5f;
+
+        if (r->giant) {
+            switch (r->start) {
+            case 1: sx = 11, sy = 17, sz = 16; break;
+            case 2: sx = 11, sy = 16, sz = 16; break;
+            case 3: sx = 16, sy = 16, sz = 16; break;
+            default: UNREACHABLE();
+            }
+        } else {
+            switch (r->start) {
+            case 1: sx = 6, sy = 10, sz = 6; break;
+            case 2: sx = 9, sy = 12, sz = 9; break;
+            case 3: sx = 8, sy = 9, sz = 9; break;
+            case 4: sx = 8, sy = 9, sz = 9; break;
+            case 5: sx = 10, sy = 7, sz = 7; break;
+            case 6: sx = 5, sy = 7, sz = 7; break;
+            case 7: sx = 9, sy = 7, sz = 9; break;
+            case 8: sx = 14, sy = 9, sz = 9; break;
+            case 9: sx = 10, sy = 8, sz = 9; break;
+            case 10: sx = 12, sy = 8, sz = 10; break;
+            default: UNREACHABLE();
+            }
+        }
+
+        Pos pivotPos = {sx / 2, sz / 2};
+        Pos startPos;
+        switch (r->rotation) { // 0:0, 1:cw90, 2:cw180, 3:cw270=ccw90
+        case 0: startPos = (Pos) {0, 0}; break;
+        case 1: startPos = (Pos) {pivotPos.x + pivotPos.z, pivotPos.z - pivotPos.x}; break;
+        case 2: startPos = (Pos) {pivotPos.x + pivotPos.x, pivotPos.z + pivotPos.z}; break;
+        case 3: startPos = (Pos) {pivotPos.x - pivotPos.z, pivotPos.x + pivotPos.z}; break;
+        default: UNREACHABLE();
+        }
+
+        Pos3 size = {sx, sy, sz};
+        int mirX = size.x;
+        if (r->mirror) {
+            mirX = -mirX;
+        }
+        Pos3 endPos;
+        switch (r->rotation) { // 0:0, 1:cw90, 2:cw180, 3:cw270=ccw90
+        case 0: endPos = (Pos3) {mirX, size.y, size.z}; break;
+        case 1: endPos = (Pos3) {startPos.x - size.z, size.y, startPos.z + mirX}; break;
+        case 2: endPos = (Pos3) {startPos.x - mirX, size.y, startPos.z - size.z}; break;
+        case 3: endPos = (Pos3) {startPos.x + size.z, size.y, startPos.z - mirX}; break;
+        default: UNREACHABLE();
+        }
+
+        r->x = startPos.x;
+        r->z = startPos.z;
+        r->sx = endPos.x - startPos.x;
+        r->sz = endPos.z - startPos.z;
         return 1;
 
     case Monument:
@@ -3567,6 +3619,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         bottomPiece->chestCount = 1;
         bottomPiece->lootTable = "igloo_chest";
         bottomPiece->lootSeeds = malloc(bottomPiece->chestCount * sizeof(uint64_t));
+        rnd.nextLong(rnd.state); // LootTableSeed from placeInWorld is not used it seems
         bottomPiece->lootSeeds[0] = rnd.nextLong(rnd.state);
         free(rnd.state);
         return sv.size + 2;

@@ -12,7 +12,7 @@ void print_loot(LootTableContext* ctx);
 int main() {
 	uint64_t seed = 8052710360952744907ULL;
 	int version = MC_1_21;
-	int stype = Ruined_Portal;
+	int stype = Igloo;
 
 	StructureConfig sconf;
 	if (!getStructureConfig(stype, version, &sconf)) {
@@ -39,7 +39,15 @@ int main() {
 
 	int n = END_CITY_PIECES_MAX;
 	Piece* pieces = malloc(n * sizeof(Piece));
-	int pieceCount = getStructurePieces(pieces, n, sconf.structType, ssconf, sv, version, seed, pos.x >> 4, pos.z >> 4);
+	int posX, posZ;
+	if (stype == Ruined_Portal || stype == Ruined_Portal_N) {
+		posX = pos.x + sv.x + sv.sx / 2;
+		posZ = pos.z + sv.z + sv.sz / 2;
+	} else {
+		posX = pos.x;
+		posZ = pos.z;
+	}
+	int pieceCount = getStructurePieces(pieces, n, sconf.structType, ssconf, sv, version, seed, posX >> 4, posZ >> 4);
 	if (pieceCount < 0) {
 		printf("Pieces not supported for structure\n");
 		free(pieces);
@@ -80,12 +88,14 @@ int main() {
 }
 
 Pos findStructure(StructureConfig sconf, Generator g, SurfaceNoise sn) {
-	int centerX = 0;
-	int centerZ = 0;
+	Pos center = {0, 0};
 
 	int regionSize = sconf.regionSize << 4;
-	const int radius = 30000000 / regionSize;
-	int x = centerX / regionSize, dx = 0, z = centerZ / regionSize, dz = -1;
+	int centerX = center.x / regionSize;
+	int centerZ = center.z / regionSize;
+	int radius = 30000000 / regionSize;
+
+	int x = centerX, dx = 0, z = centerZ, dz = -1;
 	const int leftBoundX = centerX - radius, rightBoundX = centerX + radius;
 	const int bottomBoundZ = centerZ - radius, topBoundZ = centerZ + radius;
 	const uint64_t max = (2ULL * radius + 1) * (2ULL * radius + 1);
