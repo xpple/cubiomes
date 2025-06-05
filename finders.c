@@ -3562,9 +3562,14 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
     }
 }
 
-int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf, StructureVariant sv, int mc, uint64_t seed, int chunkX, int chunkZ) {
-    int minBlockX = chunkX << 4;
-    int minBlockZ = chunkZ << 4;
+int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf, StructureVariant sv, int mc, uint64_t seed, int posX, int posZ) {
+    if (stype == Ruined_Portal || stype == Ruined_Portal_N) {
+        posX += sv.x + sv.sx / 2;
+        posZ += sv.z + sv.sz / 2;
+    }
+
+    int minBlockX = posX & ~15;
+    int minBlockZ = posZ & ~15;
     uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
     RandomSource rnd;
     if (mc <= MC_1_17) {
@@ -3634,7 +3639,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         return 1;
     }
     case Fortress: {
-        int count = getFortressPieces(list, n, mc, seed, chunkX, chunkZ);
+        int count = getFortressPieces(list, n, mc, seed, posX >> 4, posZ >> 4);
         for (int i = 0; i < count; ++i) {
             Piece* piece = &list[i];
             switch (piece->type) {
@@ -3661,7 +3666,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             free(rnd.state);
             return -1;
         }
-        int count = getEndCityPieces(list, seed, chunkX, chunkZ);
+        int count = getEndCityPieces(list, seed, posX >> 4, posZ >> 4);
         for (int i = 0; i < count; ++i) {
             Piece* piece = &list[i];
             switch (piece->type) {

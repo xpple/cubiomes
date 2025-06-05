@@ -659,11 +659,11 @@ int getVariant(StructureVariant *sv, int structType, int mc, uint64_t seed,
  * @param sv the structure variant (if available)
  * @param mc the Minecraft version
  * @param seed the world seed
- * @param chunkX the chunk X-coordinate
- * @param chunkZ the chunk Z-coordinate
+ * @param posX the block X-coordinate as yielded by getStructurePos
+ * @param posZ the block Z-coordinate as yielded by getStructurePos
  * @return the number of pieces
  */
-int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf, StructureVariant sv, int mc, uint64_t seed, int chunkX, int chunkZ);
+int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf, StructureVariant sv, int mc, uint64_t seed, int posX, int posZ);
 
 /**
  * Free the pieces list.

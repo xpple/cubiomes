@@ -12,7 +12,7 @@ void print_loot(LootTableContext* ctx);
 int main() {
 	uint64_t seed = 8052710360952744907ULL;
 	int version = MC_1_21;
-	int stype = Igloo;
+	int stype = Ruined_Portal;
 
 	StructureConfig sconf;
 	if (!getStructureConfig(stype, version, &sconf)) {
@@ -39,15 +39,7 @@ int main() {
 
 	int n = END_CITY_PIECES_MAX;
 	Piece* pieces = malloc(n * sizeof(Piece));
-	int posX, posZ;
-	if (stype == Ruined_Portal || stype == Ruined_Portal_N) {
-		posX = pos.x + sv.x + sv.sx / 2;
-		posZ = pos.z + sv.z + sv.sz / 2;
-	} else {
-		posX = pos.x;
-		posZ = pos.z;
-	}
-	int pieceCount = getStructurePieces(pieces, n, sconf.structType, ssconf, sv, version, seed, posX >> 4, posZ >> 4);
+	int pieceCount = getStructurePieces(pieces, n, sconf.structType, ssconf, sv, version, seed, pos.x, pos.z);
 	if (pieceCount < 0) {
 		printf("Pieces not supported for structure\n");
 		free(pieces);
