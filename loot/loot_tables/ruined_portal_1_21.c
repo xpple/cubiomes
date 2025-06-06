@@ -5,40 +5,41 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-char* item_names[26] = {"minecraft:obsidian", "minecraft:flint", "minecraft:iron_nugget", "minecraft:flint_and_steel", "minecraft:fire_charge", "minecraft:golden_apple", "minecraft:gold_nugget", "minecraft:golden_sword", "minecraft:golden_axe", "minecraft:golden_hoe", "minecraft:golden_shovel", "minecraft:golden_pickaxe", "minecraft:golden_boots", "minecraft:golden_chestplate", "minecraft:golden_helmet", "minecraft:golden_leggings", "minecraft:glistering_melon_slice", "minecraft:golden_horse_armor", "minecraft:light_weighted_pressure_plate", "minecraft:golden_carrot", "minecraft:clock", "minecraft:gold_ingot", "minecraft:bell", "minecraft:enchanted_golden_apple", "minecraft:gold_block", "minecraft:lodestone"};
-int precomputed_loot__0[398] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 20, 20, 20, 20, 20, 21, 21, 21, 21, 21, 22, 23, 24};
-int entry_to_item__0[25] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
-int entry_functions_count__0[25] = {1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1};
-int entry_functions_index__0[25] = {0, 1, 2, 3, 3, 3, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 14, 15, 15, 16, 16, 16};
-static LootPool ruined_portal_1_21__0 = {
-    .min_rolls = 4,
-    .max_rolls = 8,
-    .roll_count_function = roll_count_uniform,
-    .entry_count = 25,
-    .total_weight = 398,
-    .precomputed_loot = precomputed_loot__0,
-    .entry_to_item = entry_to_item__0,
-    .entry_functions_count = entry_functions_count__0,
-    .entry_functions_index = entry_functions_index__0,
-    .loot_functions = NULL, // initialised later
-};
-int precomputed_loot__1[3] = {0, 1, 1};
-int entry_to_item__1[2] = {-1, 25};
-int entry_functions_count__1[2] = {0, 1};
-int entry_functions_index__1[2] = {0, 0};
-static LootPool ruined_portal_1_21__1 = {
-    .min_rolls = 1,
-    .max_rolls = 1,
-    .roll_count_function = roll_count_constant,
-    .entry_count = 2,
-    .total_weight = 3,
-    .precomputed_loot = precomputed_loot__1,
-    .entry_to_item = entry_to_item__1,
-    .entry_functions_count = entry_functions_count__1,
-    .entry_functions_index = entry_functions_index__1,
-    .loot_functions = NULL, // initialised later
-};
 int init_ruined_portal_1_21(LootTableContext* context) {
+    static char* item_names[26] = {"minecraft:obsidian", "minecraft:flint", "minecraft:iron_nugget", "minecraft:flint_and_steel", "minecraft:fire_charge", "minecraft:golden_apple", "minecraft:gold_nugget", "minecraft:golden_sword", "minecraft:golden_axe", "minecraft:golden_hoe", "minecraft:golden_shovel", "minecraft:golden_pickaxe", "minecraft:golden_boots", "minecraft:golden_chestplate", "minecraft:golden_helmet", "minecraft:golden_leggings", "minecraft:glistering_melon_slice", "minecraft:golden_horse_armor", "minecraft:light_weighted_pressure_plate", "minecraft:golden_carrot", "minecraft:clock", "minecraft:gold_ingot", "minecraft:bell", "minecraft:enchanted_golden_apple", "minecraft:gold_block", "minecraft:lodestone"};
+    static int precomputed_loot__0[398] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 20, 20, 20, 20, 20, 21, 21, 21, 21, 21, 22, 23, 24};
+    static int entry_to_item__0[25] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+    static int entry_functions_count__0[25] = {1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1};
+    static int entry_functions_index__0[25] = {0, 1, 2, 3, 3, 3, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 14, 15, 15, 16, 16, 16};
+    static LootPool ruined_portal_1_21__0 = {
+        .min_rolls = 4,
+        .max_rolls = 8,
+        .roll_count_function = roll_count_uniform,
+        .entry_count = 25,
+        .total_weight = 398,
+        .precomputed_loot = precomputed_loot__0,
+        .entry_to_item = entry_to_item__0,
+        .entry_functions_count = entry_functions_count__0,
+        .entry_functions_index = entry_functions_index__0,
+        .loot_functions = NULL, // initialised later
+    };
+    static int precomputed_loot__1[3] = {0, 1, 1};
+    static int entry_to_item__1[2] = {-1, 25};
+    static int entry_functions_count__1[2] = {0, 1};
+    static int entry_functions_index__1[2] = {0, 0};
+    static LootPool ruined_portal_1_21__1 = {
+        .min_rolls = 1,
+        .max_rolls = 1,
+        .roll_count_function = roll_count_constant,
+        .entry_count = 2,
+        .total_weight = 3,
+        .precomputed_loot = precomputed_loot__1,
+        .entry_to_item = entry_to_item__1,
+        .entry_functions_count = entry_functions_count__1,
+        .entry_functions_index = entry_functions_index__1,
+        .loot_functions = NULL, // initialised later
+    };
+
     context->version = MC_1_21;
     context->item_count = 26;
     context->item_names = item_names;

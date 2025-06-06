@@ -29,6 +29,7 @@ set(HEADERS
 	loot/loot_table_parser.h
 	loot/mc_loot.h
 	loot/ruined_portal.h
+	loot/loot_tables/desert_pyramid_1_13.h
 	loot/loot_tables/ruined_portal_1_21.h
 	loot/cjson/cJSON.h
 )
@@ -46,6 +47,7 @@ set(SOURCES
 	loot/loot_tables.c
 	loot/loot_table_context.c
 	loot/loot_table_parser.c
+	loot/loot_tables/desert_pyramid_1_13.c
 	loot/loot_tables/ruined_portal_1_21.c
 	loot/cjson/cJSON.c
 )

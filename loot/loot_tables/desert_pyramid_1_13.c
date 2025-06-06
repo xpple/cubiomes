@@ -1,0 +1,77 @@
+#include "desert_pyramid_1_13.h"
+
+#include "../../biomes.h"
+
+#include "../loot_table_context.h"
+#include "../loot_table_parser.h"
+
+int init_desert_pyramid_1_13(LootTableContext* context) {
+    static char* item_names[19] = {"minecraft:diamond", "minecraft:iron_ingot", "minecraft:gold_ingot", "minecraft:emerald", "minecraft:bone", "minecraft:spider_eye", "minecraft:rotten_flesh", "minecraft:saddle", "minecraft:iron_horse_armor", "minecraft:golden_horse_armor", "minecraft:diamond_horse_armor", "minecraft:book", "minecraft:golden_apple", "minecraft:enchanted_golden_apple", "minecraft:bone", "minecraft:gunpowder", "minecraft:rotten_flesh", "minecraft:string", "minecraft:sand"};
+    static int precomputed_loot__0[232] = {0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 13, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14};
+    static int entry_to_item__0[15] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, -1};
+    static int entry_functions_count__0[15] = {1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0};
+    static int entry_functions_index__0[15] = {0, 1, 2, 3, 4, 5, 6, 7, 7, 7, 7, 7, 8, 8, 8};
+    static LootPool desert_pyramid_1_13__0 = {
+        .min_rolls = 2,
+        .max_rolls = 4,
+        .roll_count_function = roll_count_uniform,
+        .entry_count = 15,
+        .total_weight = 232,
+        .precomputed_loot = precomputed_loot__0,
+        .entry_to_item = entry_to_item__0,
+        .entry_functions_count = entry_functions_count__0,
+        .entry_functions_index = entry_functions_index__0,
+        .loot_functions = NULL, // initialised later
+    };
+    static int precomputed_loot__1[50] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4};
+    static int entry_to_item__1[5] = {4, 15, 6, 17, 18};
+    static int entry_functions_count__1[5] = {1, 1, 1, 1, 1};
+    static int entry_functions_index__1[5] = {0, 1, 2, 3, 4};
+    static LootPool desert_pyramid_1_13__1 = {
+        .min_rolls = 4,
+        .max_rolls = 4,
+        .roll_count_function = roll_count_constant,
+        .entry_count = 5,
+        .total_weight = 50,
+        .precomputed_loot = precomputed_loot__1,
+        .entry_to_item = entry_to_item__1,
+        .entry_functions_count = entry_functions_count__1,
+        .entry_functions_index = entry_functions_index__1,
+        .loot_functions = NULL, // initialised later
+    };
+
+    context->version = MC_1_13;
+    context->item_count = 19;
+    context->item_names = item_names;
+
+    context->unresolved_subtable_count = 0;
+    context->subtable_count = 0;
+    context->subtable_pool_offset = NULL;
+    context->subtable_pool_count = NULL;
+
+    context->pool_count = 2;
+    context->loot_pools = malloc(context->pool_count * sizeof(LootPool));
+    if (context->loot_pools == NULL) {
+        return 0;
+    }
+    context->loot_pools[0] = desert_pyramid_1_13__0;
+    context->loot_pools[1] = desert_pyramid_1_13__1;
+    LootPool* loot_pool__0 = &(context->loot_pools[0]);
+    loot_pool__0->loot_functions = malloc(8 * sizeof(LootFunction));
+    create_set_count(&(loot_pool__0->loot_functions[loot_pool__0->entry_functions_index[0] + loot_pool__0->entry_functions_count[0]]), 1, 3);
+    create_set_count(&(loot_pool__0->loot_functions[loot_pool__0->entry_functions_index[1] + loot_pool__0->entry_functions_count[1]]), 1, 5);
+    create_set_count(&(loot_pool__0->loot_functions[loot_pool__0->entry_functions_index[2] + loot_pool__0->entry_functions_count[2]]), 2, 7);
+    create_set_count(&(loot_pool__0->loot_functions[loot_pool__0->entry_functions_index[3] + loot_pool__0->entry_functions_count[3]]), 1, 3);
+    create_set_count(&(loot_pool__0->loot_functions[loot_pool__0->entry_functions_index[4] + loot_pool__0->entry_functions_count[4]]), 4, 6);
+    create_set_count(&(loot_pool__0->loot_functions[loot_pool__0->entry_functions_index[5] + loot_pool__0->entry_functions_count[5]]), 1, 3);
+    create_set_count(&(loot_pool__0->loot_functions[loot_pool__0->entry_functions_index[6] + loot_pool__0->entry_functions_count[6]]), 3, 7);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[loot_pool__0->entry_functions_index[11] + loot_pool__0->entry_functions_count[11]]), MC_1_13, get_item_type("minecraft:book"), 1);
+    LootPool* loot_pool__1 = &(context->loot_pools[1]);
+    loot_pool__1->loot_functions = malloc(5 * sizeof(LootFunction));
+    create_set_count(&(loot_pool__1->loot_functions[loot_pool__1->entry_functions_index[0] + loot_pool__1->entry_functions_count[0]]), 1, 8);
+    create_set_count(&(loot_pool__1->loot_functions[loot_pool__1->entry_functions_index[1] + loot_pool__1->entry_functions_count[1]]), 1, 8);
+    create_set_count(&(loot_pool__1->loot_functions[loot_pool__1->entry_functions_index[2] + loot_pool__1->entry_functions_count[2]]), 1, 8);
+    create_set_count(&(loot_pool__1->loot_functions[loot_pool__1->entry_functions_index[3] + loot_pool__1->entry_functions_count[3]]), 1, 8);
+    create_set_count(&(loot_pool__1->loot_functions[loot_pool__1->entry_functions_index[4] + loot_pool__1->entry_functions_count[4]]), 1, 8);
+    return 1;
+}

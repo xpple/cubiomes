@@ -2,7 +2,7 @@ import glob
 import json
 
 from abc import abstractmethod
-from textwrap import dedent
+from textwrap import dedent, indent
 
 
 class LootFunction:
@@ -154,7 +154,7 @@ def parse_loot_table(version: str, json_pools) -> LootTableContext:
 
 
 def parse_pool_rolls(json_rolls) -> (int, int, str):
-    if type(json_rolls) == float:
+    if isinstance(json_rolls, (int, float)):
         min_rolls, max_rolls = json_rolls, json_rolls
         roll_count_function = "roll_count_constant"
     else:
@@ -166,28 +166,31 @@ def parse_pool_rolls(json_rolls) -> (int, int, str):
 
 def parse_loot_function(json_function_entry, entry_name: str) -> LootFunction:
     json_function = json_function_entry["function"]
-    if json_function == 'minecraft:set_count':
+    if json_function.startswith('minecraft:'):
+        json_function = json_function[len('minecraft:'):]
+
+    if json_function == 'set_count':
         json_count = json_function_entry["count"]
-        if type(json_count) == float:
+        if isinstance(json_count, (int, float)):
             min_rolls, max_rolls = json_count, json_count
         else:
             min_rolls = json_count["min"]
             max_rolls = json_count["max"]
         return SetCountFunction(int(min_rolls), int(max_rolls))
-    if json_function == 'minecraft:set_stew_effect':
+    if json_function == 'set_stew_effect':
         return SetEffectFunction()
-    if json_function == 'minecraft:set_damage':
+    if json_function == 'set_damage':
         return SetDamageFunction()
-    if json_function == 'minecraft:set_ominous_bottle_amplifier':
+    if json_function == 'set_ominous_bottle_amplifier':
         return SkipCallsFunction(1)
-    if json_function == 'minecraft:no_op':
+    if json_function == 'no_op':
         return NoOpFunction()
-    if json_function == 'minecraft:enchant_randomly':
+    if json_function == 'enchant_randomly':
         enchantments = json_function_entry.get("enchantments", None)
         return EnchantRandomlyFunction(enchantments, entry_name)
-    if json_function == 'minecraft:enchant_with_levels':
+    if json_function == 'enchant_with_levels':
         levels = json_function_entry.get("levels", None)
-        if type(levels) == float:
+        if isinstance(levels, (int, float)):
             min_level, max_level = levels, levels
         elif levels is not None:
             min_level = levels["min"]
@@ -198,7 +201,7 @@ def parse_loot_function(json_function_entry, entry_name: str) -> LootFunction:
         is_treasure = json_function_entry.get("is_treasure", True)
         return EnchantWithLevelsFunction(entry_name, int(min_level), int(max_level), int(is_treasure))
 
-    raise RuntimeError("unsupported loot function")
+    raise RuntimeError(f"Unsupported loot function '{json_function}'")
 
 
 def gen_c_loot_table(c_file_name: str, context: LootTableContext) -> str:
@@ -210,7 +213,8 @@ def gen_c_loot_table(c_file_name: str, context: LootTableContext) -> str:
         #include "../loot_table_context.h"
         #include "../loot_table_parser.h"
 
-        char* item_names[{len(context.item_names)}] = {{\"{"\", \"".join(context.item_names)}\"}};
+        int init_{c_file_name}(LootTableContext* context) {{
+            static char* item_names[{len(context.item_names)}] = {{\"{"\", \"".join(context.item_names)}\"}};
         """)
 
     loot_functions_size: list[int] = []
@@ -240,12 +244,12 @@ def gen_c_loot_table(c_file_name: str, context: LootTableContext) -> str:
             function_index += len(functions)
         loot_functions_size.append(function_index)
 
-        file_content += f"int precomputed_loot__{pool_idx}[{total_weight}] = {{{", ".join(precomputed_loot)}}};\n"
-        file_content += f"int entry_to_item__{pool_idx}[{entries_len}] = {{{", ".join(entry_to_item)}}};\n"
-        file_content += f"int entry_functions_count__{pool_idx}[{entries_len}] = {{{", ".join(entry_functions_count)}}};\n"
-        file_content += f"int entry_functions_index__{pool_idx}[{entries_len}] = {{{", ".join(entry_functions_index)}}};\n"
+        file_content += f"    static int precomputed_loot__{pool_idx}[{total_weight}] = {{{", ".join(precomputed_loot)}}};\n"
+        file_content += f"    static int entry_to_item__{pool_idx}[{entries_len}] = {{{", ".join(entry_to_item)}}};\n"
+        file_content += f"    static int entry_functions_count__{pool_idx}[{entries_len}] = {{{", ".join(entry_functions_count)}}};\n"
+        file_content += f"    static int entry_functions_index__{pool_idx}[{entries_len}] = {{{", ".join(entry_functions_index)}}};\n"
 
-        file_content += dedent(f"""\
+        file_content += indent(dedent(f"""\
             static LootPool {c_file_name}__{pool_idx} = {{
                 .min_rolls = {loot_pool.min_rolls},
                 .max_rolls = {loot_pool.max_rolls},
@@ -258,25 +262,24 @@ def gen_c_loot_table(c_file_name: str, context: LootTableContext) -> str:
                 .entry_functions_index = entry_functions_index__{pool_idx},
                 .loot_functions = NULL, // initialised later
             }};
-            """)
+            """), "    ")
 
-    file_content += dedent(f"""\
-        int init_{c_file_name}(LootTableContext* context) {{
-            context->version = MC_{context.version};
-            context->item_count = {len(context.item_names)};
-            context->item_names = item_names;
+    file_content += indent(dedent(f"""
+        context->version = MC_{context.version};
+        context->item_count = {len(context.item_names)};
+        context->item_names = item_names;
 
-            context->unresolved_subtable_count = 0;
-            context->subtable_count = 0;
-            context->subtable_pool_offset = NULL;
-            context->subtable_pool_count = NULL;
+        context->unresolved_subtable_count = 0;
+        context->subtable_count = 0;
+        context->subtable_pool_offset = NULL;
+        context->subtable_pool_count = NULL;
 
-            context->pool_count = {len(context.loot_pools)};
-            context->loot_pools = malloc(context->pool_count * sizeof(LootPool));
-            if (context->loot_pools == NULL) {{
-                return 0;
-            }}
-        """)
+        context->pool_count = {len(context.loot_pools)};
+        context->loot_pools = malloc(context->pool_count * sizeof(LootPool));
+        if (context->loot_pools == NULL) {{
+            return 0;
+        }}
+        """), "    ")
     for i in range(len(context.loot_pools)):
         file_content += f"    context->loot_pools[{i}] = {c_file_name}__{i};\n"
 
