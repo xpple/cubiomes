@@ -30,7 +30,7 @@ release: CFLAGS += -fPIC
 endif
 
 
-libcubiomes: noise.o biomes.o layers.o biomenoise.o generator.o finders.o util.o quadbase.o loot_functions.o loot_table_context.o loot_table_parser.o loot_tables.o cjson.o desert_pyramid_1_13.o ruined_portal_1_21.o
+libcubiomes: noise.o biomes.o layers.o biomenoise.o generator.o finders.o util.o quadbase.o loot_functions.o loot_table_context.o loot_table_parser.o loot_tables.o cjson.o buried_treasure_1_13.o buried_treasure_1_18.o desert_pyramid_1_13.o desert_pyramid_1_20.o igloo_chest_1_13.o nether_bridge_1_13.o nether_bridge_1_20.o ruined_portal_1_16_1.o ruined_portal_1_21_5.o
 	$(AR) $(ARFLAGS) libcubiomes.a $^
 
 finders.o: finders.c finders.h
@@ -72,10 +72,31 @@ loot_table_parser.o: loot/loot_table_parser.c
 loot_tables.o: loot/loot_tables.c loot/loot_tables.h
 	$(CC) -c $(CFLAGS) $<
 
+buried_treasure_1_13.o: loot/loot_tables/buried_treasure_1_13.c loot/loot_tables/buried_treasure_1_13.h
+	$(CC) -c $(CFLAGS) $<
+
+buried_treasure_1_18.o: loot/loot_tables/buried_treasure_1_18.c loot/loot_tables/buried_treasure_1_18.h
+	$(CC) -c $(CFLAGS) $<
+
 desert_pyramid_1_13.o: loot/loot_tables/desert_pyramid_1_13.c loot/loot_tables/desert_pyramid_1_13.h
 	$(CC) -c $(CFLAGS) $<
 
-ruined_portal_1_21.o: loot/loot_tables/ruined_portal_1_21.c loot/loot_tables/ruined_portal_1_21.h
+desert_pyramid_1_20.o: loot/loot_tables/desert_pyramid_1_20.c loot/loot_tables/desert_pyramid_1_20.h
+	$(CC) -c $(CFLAGS) $<
+
+igloo_chest_1_13.o: loot/loot_tables/igloo_chest_1_13.c loot/loot_tables/igloo_chest_1_13.h
+	$(CC) -c $(CFLAGS) $<
+
+nether_bridge_1_13.o: loot/loot_tables/nether_bridge_1_13.c loot/loot_tables/nether_bridge_1_13.h
+	$(CC) -c $(CFLAGS) $<
+
+nether_bridge_1_20.o: loot/loot_tables/nether_bridge_1_20.c loot/loot_tables/nether_bridge_1_20.h
+	$(CC) -c $(CFLAGS) $<
+
+ruined_portal_1_16_1.o: loot/loot_tables/ruined_portal_1_16_1.c loot/loot_tables/ruined_portal_1_16_1.h
+	$(CC) -c $(CFLAGS) $<
+
+ruined_portal_1_21_5.o: loot/loot_tables/ruined_portal_1_21_5.c loot/loot_tables/ruined_portal_1_21_5.h
 	$(CC) -c $(CFLAGS) $<
 
 cjson.o: loot/cjson/cJSON.c loot/cjson/cJSON.h

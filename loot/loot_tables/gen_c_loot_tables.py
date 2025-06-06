@@ -3,7 +3,7 @@ import json
 
 from abc import abstractmethod
 from textwrap import dedent, indent
-
+from warnings import warn
 
 class LootFunction:
     def __init__(self):
@@ -114,7 +114,7 @@ class LootTableContext:
 
 
 def main():
-    for file_name in glob.glob("ruined_portal.1_21.json"):
+    for file_name in glob.glob("*.json"):
         with open(file_name, 'r', encoding='UTF-8') as f:
             data = json.load(f)
 
@@ -186,8 +186,6 @@ def parse_loot_function(json_function_entry, entry_name: str) -> LootFunction:
         return SetDamageFunction()
     if json_function == 'set_ominous_bottle_amplifier':
         return SkipCallsFunction(1)
-    if json_function == 'no_op':
-        return NoOpFunction()
     if json_function == 'enchant_randomly':
         enchantments = json_function_entry.get("enchantments", None)
         return EnchantRandomlyFunction(enchantments, entry_name)
@@ -204,7 +202,8 @@ def parse_loot_function(json_function_entry, entry_name: str) -> LootFunction:
         is_treasure = json_function_entry.get("is_treasure", True)
         return EnchantWithLevelsFunction(entry_name, int(min_level), int(max_level), int(is_treasure))
 
-    raise RuntimeError(f"Unsupported loot function '{json_function}'")
+    warn(f"Unsupported loot function '{json_function}'")
+    return NoOpFunction()
 
 
 def gen_c_loot_table(c_file_name: str, context: LootTableContext) -> str:
