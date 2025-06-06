@@ -4,6 +4,7 @@
 #include "generator.h"
 #include "util.h"
 
+#include "loot/loot_tables.h"
 #include "loot/mc_loot.h"
 
 Pos findStructure(StructureConfig sconf, Generator g, SurfaceNoise sn);
@@ -52,19 +53,9 @@ int main() {
 		if (p.chestCount == 0) {
 			continue;
 		}
-		int stringSize = snprintf(NULL, 0, "loot/loot_tables/%s.json", p.lootTable);
-		char* lootTableFile = malloc(stringSize + 1);
-		snprintf(lootTableFile, stringSize + 1, "loot/loot_tables/%s.json", p.lootTable);
-		printf("Loot table file: %s\n", lootTableFile);
-		FILE* fptr = fopen(lootTableFile, "rb");
-		free(lootTableFile);
-		if (fptr == NULL) {
-			printf("Failed to open file\n");
-			return 1;
-		}
 		LootTableContext ctx;
-		if (init_loot_table_file(fptr, &ctx, version) == -1) {
-			printf("Failed to parse loot table\n");
+		if (!init_loot_table_name(&ctx, p.lootTable, version)) {
+			printf("Failed to initialise loot table\n");
 		}
 		for (int j = 0; j < p.chestCount; ++j) {
 			printf("Chest %d (loot seed %" PRId64 "):\n", j, p.lootSeeds[j]);

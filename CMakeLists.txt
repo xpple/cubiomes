@@ -24,10 +24,12 @@ set(HEADERS
 	loot/desert_temple.h
 	loot/logging.h
 	loot/loot_functions.h
-	loot/loot_library.h
+	loot/loot_tables.h
 	loot/loot_table_context.h
+	loot/loot_table_parser.h
 	loot/mc_loot.h
 	loot/ruined_portal.h
+	loot/loot_tables/ruined_portal_1_21.h
 	loot/cjson/cJSON.h
 )
 set(SOURCES
@@ -41,8 +43,10 @@ set(SOURCES
 	quadbase.c
 	test_loot.c
 	loot/loot_functions.c
+	loot/loot_tables.c
 	loot/loot_table_context.c
 	loot/loot_table_parser.c
+	loot/loot_tables/ruined_portal_1_21.c
 	loot/cjson/cJSON.c
 )
 

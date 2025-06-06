@@ -30,7 +30,7 @@ release: CFLAGS += -fPIC
 endif
 
 
-libcubiomes: noise.o biomes.o layers.o biomenoise.o generator.o finders.o util.o quadbase.o loot_functions.o loot_table_context.o loot_table_parser.o cjson.o
+libcubiomes: noise.o biomes.o layers.o biomenoise.o generator.o finders.o util.o quadbase.o loot_functions.o loot_table_context.o loot_table_parser.o loot_tables.o cjson.o ruined_portal_1_21.o
 	$(AR) $(ARFLAGS) libcubiomes.a $^
 
 finders.o: finders.c finders.h
@@ -67,6 +67,12 @@ loot_table_context.o: loot/loot_table_context.c loot/loot_table_context.h
 	$(CC) -c $(CFLAGS) $<
 
 loot_table_parser.o: loot/loot_table_parser.c
+	$(CC) -c $(CFLAGS) $<
+
+loot_tables.o: loot/loot_tables.c loot/loot_tables.h
+	$(CC) -c $(CFLAGS) $<
+
+ruined_portal_1_21.o: loot/loot_tables/ruined_portal_1_21.c loot/loot_tables/ruined_portal_1_21.h
 	$(CC) -c $(CFLAGS) $<
 
 cjson.o: loot/cjson/cJSON.c loot/cjson/cJSON.h

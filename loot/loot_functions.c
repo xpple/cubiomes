@@ -683,8 +683,8 @@ static int get_applicable_enchantments(const ItemType item, const int version, i
 	};
 
 	const int* order = ORDER_V1_13;
-	if (version >= MC_1_14) order = ORDER_V1_14;
-	if (version >= MC_1_21) order = ORDER_V1_21;
+	if (version > MC_1_13) order = ORDER_V1_14;
+	if (version > MC_1_20) order = ORDER_V1_21;
 
 	int i = 0, j = 0;
 	while (order[i] != NO_ENCHANTMENT)

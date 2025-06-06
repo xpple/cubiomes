@@ -4,12 +4,13 @@
 
 #include "mc_loot.h"
 #include "loot_functions.h"
+#include "loot_table_parser.h"
 #include "logging.h"
 
 #include "cjson/CJSON.h"
 
 
-static ItemType get_item_type(const char* item_name)
+ItemType get_item_type(const char* item_name)
 {
 	if (strstr(item_name, "_pickaxe") != NULL) return PICKAXE;
 	if (strstr(item_name, "_axe") != NULL) return AXE;

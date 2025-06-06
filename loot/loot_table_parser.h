@@ -1,0 +1,6 @@
+#ifndef LOOT_TABLE_PARSER_H
+#define LOOT_TABLE_PARSER_H
+
+ItemType get_item_type(const char* item_name);
+
+#endif //LOOT_TABLE_PARSER_H
