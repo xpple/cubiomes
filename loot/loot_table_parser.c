@@ -32,7 +32,7 @@ ItemType get_item_type(const char* item_name)
 	return NO_ITEM;
 }
 
-static Enchantment get_enchantment_from_name(const char* ench)
+Enchantment get_enchantment_from_name(const char* ench)
 {
 	// I'm sorry.
 	if (strcmp(ench, "minecraft:protection") == 0) return PROTECTION;

@@ -117,13 +117,16 @@ def main():
     for file_name in glob.glob("ruined_portal.1_21.json"):
         with open(file_name, 'r', encoding='UTF-8') as f:
             data = json.load(f)
-            print(data)
 
         loot_table_name, version, _ = file_name.split('.')
         context = parse_loot_table(version, data["pools"])
         c_file_name = loot_table_name + '_' + version
-        content = gen_c_loot_table(c_file_name, context)
-        print(content)
+        c_file_content = gen_c_loot_table(c_file_name, context)
+        with open(c_file_name + '.c', 'w', encoding='UTF-8') as f:
+            f.write(c_file_content)
+        c_header_file_content = gen_c_loot_table_header(c_file_name)
+        with open(c_file_name + '.h', 'w', encoding='UTF-8') as f:
+            f.write(c_header_file_content)
 
 
 def parse_loot_table(version: str, json_pools) -> LootTableContext:
@@ -296,6 +299,21 @@ def gen_c_loot_table(c_file_name: str, context: LootTableContext) -> str:
     file_content += dedent(f"""\
             return 1;
         }}
+        """)
+
+    return file_content
+
+
+def gen_c_loot_table_header(c_file_name: str) -> str:
+    file_content = dedent(f"""\
+        #ifndef {c_file_name.upper()}_H
+        #define {c_file_name.upper()}_H
+        
+        #include "../loot_table_context.h"
+        
+        int init_{c_file_name}(LootTableContext* context);
+        
+        #endif //{c_file_name.upper()}_H
         """)
 
     return file_content
