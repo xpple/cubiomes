@@ -789,14 +789,16 @@ int resolve_subtable_file(LootTableContext* context, const char* subtable_name, 
 void free_loot_table(LootTableContext* context)
 {
 	// free item name arrays
-	for (int i = 0; i < context->item_count; i++)
-		free(context->item_names[i]);
-	free(context->item_names);
+	// for (int i = 0; i < context->item_count; i++)
+	// 	free(context->item_names[i]);
+	// free(context->item_names);
 
 	// free unresolved subtable names
+	printf("Before free unresolved subtable names\n");
 	for (int i = 0; i < context->unresolved_subtable_count; i++)
 		if (context->unresolved_subtable_names[i] != NULL)
 			free(context->unresolved_subtable_names[i]);
+	printf("After free unresolved subtable names\n");
 
 	// count total loot pools (incl. subtables)
 	int total_pools = context->pool_count;
@@ -804,9 +806,11 @@ void free_loot_table(LootTableContext* context)
 		total_pools += context->subtable_pool_count[i];
 
 	// free loot pools
+	printf("Before free loot pools\n");
 	for (int i = 0; i < total_pools; i++)
 		free_loot_pool(&(context->loot_pools[i]));
-	free(context->loot_pools);
+	// free(context->loot_pools);
+	printf("After free loot pools\n");
 
 	// free subtable pool offset and count arrays
 	if (context->subtable_pool_offset != NULL)

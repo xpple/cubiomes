@@ -63,7 +63,11 @@ int main() {
 			generate_loot(&ctx);
 			print_loot(&ctx);
 		}
-		free_loot_table(&ctx);
+		for (int j = 0; j < ctx.pool_count; ++j) {
+			LootPool* pool = &ctx.loot_pools[j];
+			free(pool->loot_functions);
+		}
+		free(ctx.loot_pools);
 	}
 	freeStructurePieces(pieces, pieceCount);
 

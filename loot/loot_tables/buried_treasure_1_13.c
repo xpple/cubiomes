@@ -109,18 +109,18 @@ void init_buried_treasure_1_13(LootTableContext* context) {
     loot_pool__0->loot_functions = malloc(0 * sizeof(LootFunction));
     LootPool* loot_pool__1 = &(context->loot_pools[1]);
     loot_pool__1->loot_functions = malloc(3 * sizeof(LootFunction));
-    create_set_count(&(loot_pool__1->loot_functions[loot_pool__1->entry_functions_index[0] + loot_pool__1->entry_functions_count[0]]), 1, 4);
-    create_set_count(&(loot_pool__1->loot_functions[loot_pool__1->entry_functions_index[1] + loot_pool__1->entry_functions_count[1]]), 1, 4);
-    create_set_count(&(loot_pool__1->loot_functions[loot_pool__1->entry_functions_index[2] + loot_pool__1->entry_functions_count[2]]), 1, 2);
+    create_set_count(&(loot_pool__1->loot_functions[0]), 1, 4);
+    create_set_count(&(loot_pool__1->loot_functions[1]), 1, 4);
+    create_set_count(&(loot_pool__1->loot_functions[2]), 1, 2);
     LootPool* loot_pool__2 = &(context->loot_pools[2]);
     loot_pool__2->loot_functions = malloc(3 * sizeof(LootFunction));
-    create_set_count(&(loot_pool__2->loot_functions[loot_pool__2->entry_functions_index[0] + loot_pool__2->entry_functions_count[0]]), 4, 8);
-    create_set_count(&(loot_pool__2->loot_functions[loot_pool__2->entry_functions_index[1] + loot_pool__2->entry_functions_count[1]]), 1, 2);
-    create_set_count(&(loot_pool__2->loot_functions[loot_pool__2->entry_functions_index[2] + loot_pool__2->entry_functions_count[2]]), 1, 5);
+    create_set_count(&(loot_pool__2->loot_functions[0]), 4, 8);
+    create_set_count(&(loot_pool__2->loot_functions[1]), 1, 2);
+    create_set_count(&(loot_pool__2->loot_functions[2]), 1, 5);
     LootPool* loot_pool__3 = &(context->loot_pools[3]);
     loot_pool__3->loot_functions = malloc(0 * sizeof(LootFunction));
     LootPool* loot_pool__4 = &(context->loot_pools[4]);
     loot_pool__4->loot_functions = malloc(2 * sizeof(LootFunction));
-    create_set_count(&(loot_pool__4->loot_functions[loot_pool__4->entry_functions_index[0] + loot_pool__4->entry_functions_count[0]]), 2, 4);
-    create_set_count(&(loot_pool__4->loot_functions[loot_pool__4->entry_functions_index[1] + loot_pool__4->entry_functions_count[1]]), 2, 4);
+    create_set_count(&(loot_pool__4->loot_functions[0]), 2, 4);
+    create_set_count(&(loot_pool__4->loot_functions[1]), 2, 4);
 }

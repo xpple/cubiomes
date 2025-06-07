@@ -291,12 +291,12 @@ def gen_c_loot_table(c_file_name: str, context: LootTableContext) -> str:
     for pool_idx, loot_pool in enumerate(context.loot_pools):
         file_content += f"    LootPool* loot_pool__{pool_idx} = &(context->loot_pools[{pool_idx}]);\n"
         file_content += f"    loot_pool__{pool_idx}->loot_functions = malloc({loot_functions_size[pool_idx]} * sizeof(LootFunction));\n"
-        for entry_idx, entry in enumerate(loot_pool.entries):
+        i = 0
+        for entry in loot_pool.entries:
             for function in entry.functions:
-                findex = f"loot_pool__{pool_idx}->entry_functions_index[{entry_idx}]"
-                i = f"loot_pool__{pool_idx}->entry_functions_count[{entry_idx}]"
-                function_str = f"&(loot_pool__{pool_idx}->loot_functions[{findex} + {i}])"
+                function_str = f"&(loot_pool__{pool_idx}->loot_functions[{i}])"
                 file_content += f"    {function.to_function_call(function_str, context.version)};\n"
+                i += 1
 
     file_content += "}\n"
 

@@ -56,11 +56,11 @@ void init_nether_bridge_1_20(LootTableContext* context) {
     context->loot_pools[1] = nether_bridge_1_20__1;
     LootPool* loot_pool__0 = &(context->loot_pools[0]);
     loot_pool__0->loot_functions = malloc(5 * sizeof(LootFunction));
-    create_set_count(&(loot_pool__0->loot_functions[loot_pool__0->entry_functions_index[0] + loot_pool__0->entry_functions_count[0]]), 1, 3);
-    create_set_count(&(loot_pool__0->loot_functions[loot_pool__0->entry_functions_index[1] + loot_pool__0->entry_functions_count[1]]), 1, 5);
-    create_set_count(&(loot_pool__0->loot_functions[loot_pool__0->entry_functions_index[2] + loot_pool__0->entry_functions_count[2]]), 1, 3);
-    create_set_count(&(loot_pool__0->loot_functions[loot_pool__0->entry_functions_index[6] + loot_pool__0->entry_functions_count[6]]), 3, 7);
-    create_set_count(&(loot_pool__0->loot_functions[loot_pool__0->entry_functions_index[11] + loot_pool__0->entry_functions_count[11]]), 2, 4);
+    create_set_count(&(loot_pool__0->loot_functions[0]), 1, 3);
+    create_set_count(&(loot_pool__0->loot_functions[1]), 1, 5);
+    create_set_count(&(loot_pool__0->loot_functions[2]), 1, 3);
+    create_set_count(&(loot_pool__0->loot_functions[3]), 3, 7);
+    create_set_count(&(loot_pool__0->loot_functions[4]), 2, 4);
     LootPool* loot_pool__1 = &(context->loot_pools[1]);
     loot_pool__1->loot_functions = malloc(0 * sizeof(LootFunction));
 }
