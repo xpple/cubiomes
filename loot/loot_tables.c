@@ -9,6 +9,8 @@
 #include "loot_tables/buried_treasure_1_18.h"
 #include "loot_tables/desert_pyramid_1_13.h"
 #include "loot_tables/desert_pyramid_1_20.h"
+#include "loot_tables/end_city_treasure_1_13.h"
+#include "loot_tables/end_city_treasure_1_20.h"
 #include "loot_tables/igloo_chest_1_13.h"
 #include "loot_tables/nether_bridge_1_13.h"
 #include "loot_tables/nether_bridge_1_20.h"
@@ -21,6 +23,9 @@ int init_loot_table_name(LootTableContext* context, const char* loot_table, int 
     }
     if (strcmp(loot_table, "desert_pyramid") == 0) {
         return init_desert_pyramid(context, version);
+    }
+    if (strcmp(loot_table, "end_city_treasure") == 0) {
+        return init_end_city_treasure(context, version);
     }
     if (strcmp(loot_table, "igloo_chest") == 0) {
         return init_igloo_chest(context, version);
@@ -45,6 +50,12 @@ int init_buried_treasure(LootTableContext* context, int version) {
 int init_desert_pyramid(LootTableContext* context, int version) {
     if (version < MC_1_20) init_desert_pyramid_1_13(context);
     else init_desert_pyramid_1_20(context);
+    return version > MC_1_12;
+}
+
+int init_end_city_treasure(LootTableContext * context, int version) {
+    if (version < MC_1_20) init_end_city_treasure_1_13(context);
+    else init_end_city_treasure_1_20(context);
     return version > MC_1_12;
 }
 
