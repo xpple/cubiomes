@@ -21,14 +21,12 @@ set(HEADERS
 	rng.h
 	util.h
 	quadbase.h
-	loot/desert_temple.h
 	loot/logging.h
 	loot/loot_functions.h
 	loot/loot_tables.h
 	loot/loot_table_context.h
 	loot/loot_table_parser.h
 	loot/mc_loot.h
-	loot/ruined_portal.h
 	loot/loot_tables/buried_treasure_1_13.h
 	loot/loot_tables/buried_treasure_1_18.h
 	loot/loot_tables/desert_pyramid_1_13.h

@@ -8,7 +8,6 @@
 
 // ---------------------------------------------------------
 
-typedef enum GenerationMode GenerationMode;
 enum GenerationMode {
 	GENERATE_NATURAL = 0,
 	GENERATE_INDEXED = 1,
@@ -16,6 +15,7 @@ enum GenerationMode {
 	SKIP_ENCHANTMENTS = 4,
 	STOP_AT_PREDICATE_MATCH = 8
 };
+typedef enum GenerationMode GenerationMode;
 
 typedef struct LootPool LootPool;
 struct LootPool {

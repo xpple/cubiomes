@@ -75,3 +75,11 @@ int init_ruined_portal(LootTableContext* context, int version) {
     else init_ruined_portal_1_21_5(context);
     return version > MC_1_15;
 }
+
+void free_loot_table_pools(LootTableContext* context) {
+    for (int j = 0; j < context->pool_count; ++j) {
+        LootPool* pool = &context->loot_pools[j];
+        free(pool->loot_functions);
+    }
+    free(context->loot_pools);
+}

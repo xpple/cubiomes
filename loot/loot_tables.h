@@ -12,4 +12,6 @@ int init_igloo_chest(LootTableContext* context, int version);
 int init_nether_bridge(LootTableContext* context, int version);
 int init_ruined_portal(LootTableContext* context, int version);
 
+void free_loot_table_pools(LootTableContext* context);
+
 #endif //LOOT_TABLES_H

@@ -56,6 +56,7 @@ int main() {
 		LootTableContext ctx;
 		if (!init_loot_table_name(&ctx, p.lootTable, version)) {
 			printf("Failed to initialise loot table\n");
+			return 1;
 		}
 		for (int j = 0; j < p.chestCount; ++j) {
 			printf("Chest %d (loot seed %" PRId64 "):\n", j, p.lootSeeds[j]);
@@ -63,11 +64,7 @@ int main() {
 			generate_loot(&ctx);
 			print_loot(&ctx);
 		}
-		for (int j = 0; j < ctx.pool_count; ++j) {
-			LootPool* pool = &ctx.loot_pools[j];
-			free(pool->loot_functions);
-		}
-		free(ctx.loot_pools);
+		free_loot_table_pools(&ctx);
 	}
 	freeStructurePieces(pieces, pieceCount);
 
