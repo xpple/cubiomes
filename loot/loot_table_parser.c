@@ -7,7 +7,7 @@
 #include "loot_table_parser.h"
 #include "logging.h"
 
-#include "cjson/CJSON.h"
+#include "cjson/cJSON.h"
 
 
 ItemType get_item_type(const char* item_name)
