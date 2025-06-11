@@ -3,11 +3,13 @@
 
 #include "../../biomes.h"
 
+#include "../items.h"
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
 void init_buried_treasure_1_13(LootTableContext* context) {
     static char* item_names[11] = {"minecraft:heart_of_the_sea", "minecraft:iron_ingot", "minecraft:gold_ingot", "minecraft:tnt", "minecraft:emerald", "minecraft:diamond", "minecraft:prismarine_crystals", "minecraft:leather_chestplate", "minecraft:iron_sword", "minecraft:cooked_cod", "minecraft:cooked_salmon"};
+    static int global_item_ids[11] = {ITEM_HEART_OF_THE_SEA, ITEM_IRON_INGOT, ITEM_GOLD_INGOT, ITEM_TNT, ITEM_EMERALD, ITEM_DIAMOND, ITEM_PRISMARINE_CRYSTALS, ITEM_LEATHER_CHESTPLATE, ITEM_IRON_SWORD, ITEM_COOKED_COD, ITEM_COOKED_SALMON};
     static int precomputed_loot__0[1] = {0};
     static int entry_to_item__0[1] = {0};
     static int entry_functions_count__0[1] = {0};
@@ -92,6 +94,7 @@ void init_buried_treasure_1_13(LootTableContext* context) {
     context->version = MC_1_13;
     context->item_count = 11;
     context->item_names = item_names;
+    context->global_item_ids = global_item_ids;
 
     context->unresolved_subtable_count = 0;
     context->subtable_count = 0;

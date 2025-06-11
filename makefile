@@ -30,7 +30,7 @@ release: CFLAGS += -fPIC
 endif
 
 
-libcubiomes: noise.o biomes.o layers.o biomenoise.o generator.o finders.o util.o quadbase.o loot_functions.o loot_table_context.o loot_table_parser.o loot_tables.o cjson.o buried_treasure_1_13.o buried_treasure_1_18.o desert_pyramid_1_13.o desert_pyramid_1_20.o end_city_treasure_1_13.o end_city_treasure_1_20.o igloo_chest_1_13.o nether_bridge_1_13.o nether_bridge_1_20.o ruined_portal_1_16_1.o ruined_portal_1_21_5.o
+libcubiomes: noise.o biomes.o layers.o biomenoise.o generator.o finders.o util.o quadbase.o items.o loot_functions.o loot_table_context.o loot_table_parser.o loot_tables.o cjson.o buried_treasure_1_13.o buried_treasure_1_18.o desert_pyramid_1_13.o desert_pyramid_1_20.o end_city_treasure_1_13.o end_city_treasure_1_20.o igloo_chest_1_13.o nether_bridge_1_13.o nether_bridge_1_20.o ruined_portal_1_16_1.o ruined_portal_1_21_5.o
 	$(AR) $(ARFLAGS) libcubiomes.a $^
 
 finders.o: finders.c finders.h
@@ -58,6 +58,9 @@ util.o: util.c util.h
 	$(CC) -c $(CFLAGS) $<
 
 quadbase.o: quadbase.c quadbase.h
+	$(CC) -c $(CFLAGS) $<
+
+items.o: loot/items.c loot/items.h
 	$(CC) -c $(CFLAGS) $<
 
 loot_functions.o: loot/loot_functions.c loot/loot_functions.h

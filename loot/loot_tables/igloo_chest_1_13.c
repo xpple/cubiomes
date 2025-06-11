@@ -3,11 +3,13 @@
 
 #include "../../biomes.h"
 
+#include "../items.h"
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
 void init_igloo_chest_1_13(LootTableContext* context) {
     static char* item_names[8] = {"minecraft:apple", "minecraft:coal", "minecraft:gold_nugget", "minecraft:stone_axe", "minecraft:rotten_flesh", "minecraft:emerald", "minecraft:wheat", "minecraft:golden_apple"};
+    static int global_item_ids[8] = {ITEM_APPLE, ITEM_COAL, ITEM_GOLD_NUGGET, ITEM_STONE_AXE, ITEM_ROTTEN_FLESH, ITEM_EMERALD, ITEM_WHEAT, ITEM_GOLDEN_APPLE};
     static int precomputed_loot__0[63] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6};
     static int entry_to_item__0[7] = {0, 1, 2, 3, 4, 5, 6};
     static int entry_functions_count__0[7] = {1, 1, 1, 0, 0, 0, 1};
@@ -44,6 +46,7 @@ void init_igloo_chest_1_13(LootTableContext* context) {
     context->version = MC_1_13;
     context->item_count = 8;
     context->item_names = item_names;
+    context->global_item_ids = global_item_ids;
 
     context->unresolved_subtable_count = 0;
     context->subtable_count = 0;

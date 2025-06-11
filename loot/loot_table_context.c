@@ -1,3 +1,4 @@
+#include "items.h"
 #include "loot_table_context.h"
 #include <string.h>
 
@@ -22,11 +23,27 @@ int get_item_id(LootTableContext* context, const char* item_name)
 	return -1;
 }
 
+int get_global_item_id(LootTableContext* context, int item_id) {
+	if (item_id < 0 || item_id >= context->item_count) {
+		return ITEM_UNKNOWN;
+	}
+	return context->global_item_ids[item_id];
+}
+
 const char* get_item_name(LootTableContext* context, int item_id)
 {
 	if (item_id < 0 || item_id >= context->item_count)
 		return NULL;
 	return context->item_names[item_id];
+}
+
+int has_item(LootTableContext* context, int global_item_id) {
+	for (int i = 0; i < context->item_count; ++i) {
+		if (context->global_item_ids[i] == global_item_id) {
+			return 1;
+		}
+	}
+	return 0;
 }
 
 // ------------------------------------------------------------------------

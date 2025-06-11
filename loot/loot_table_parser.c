@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "items.h"
 #include "mc_loot.h"
 #include "loot_functions.h"
 #include "loot_table_parser.h"
@@ -215,7 +216,8 @@ static void init_loot_table_items(const cJSON* loot_table, LootTableContext* ctx
 	// allocate memory for item names
 	ctx->item_count = item_count;
 	ctx->item_names = (char**)malloc(item_count * sizeof(char*));
-	if (ctx->item_names == NULL) return; // FIXME add logging
+	ctx->global_item_ids = malloc(item_count * sizeof(int));
+	if (ctx->item_names == NULL || ctx->global_item_ids == NULL) return; // FIXME add logging
 
 	// fill the item names array
 	int ix = 0;
@@ -234,6 +236,7 @@ static void init_loot_table_items(const cJSON* loot_table, LootTableContext* ctx
 			ctx->item_names[ix] = (char*)malloc(strlen(item_name) + 1);
 			if (ctx->item_names[ix] == NULL || item_name == NULL) return; // FIXME add logging
 			strcpy(ctx->item_names[ix], item_name);
+			ctx->global_item_ids[ix] = item_name2global_id(item_name);
 			ix++;
 			if (ix >= item_count) break;
 		}
@@ -597,7 +600,8 @@ static int merge_item_lists(LootTableContext* ctx, LootTableContext* sub_ctx)
 
 	// allocate memory for the new item names
 	char** new_item_names = (char**)malloc(total_unique_items * sizeof(char*));
-	if (new_item_names == NULL)
+	int* new_global_item_ids = malloc(total_unique_items * sizeof(int));
+	if (new_item_names == NULL || new_global_item_ids == NULL)
 		return -1; // failed to allocate memory
 
 	// copy the original item names without changes
@@ -607,6 +611,7 @@ static int merge_item_lists(LootTableContext* ctx, LootTableContext* sub_ctx)
 		if (new_item_names[i] == NULL)
 			return -1; // failed to allocate memory
 		strcpy(new_item_names[i], ctx->item_names[i]);
+		new_global_item_ids[i] = ctx->global_item_ids[i];
 	}
 
 	// copy subtable item names not present in the original context
@@ -628,6 +633,7 @@ static int merge_item_lists(LootTableContext* ctx, LootTableContext* sub_ctx)
 			if (new_item_names[new_item_id] == NULL)
 				return -1; // failed to allocate memory
 			strcpy(new_item_names[new_item_id], sub_ctx->item_names[i]);
+			new_global_item_ids[new_item_id] = sub_ctx->global_item_ids[i];
 			new_item_id++;
 		}
 	}
@@ -636,7 +642,9 @@ static int merge_item_lists(LootTableContext* ctx, LootTableContext* sub_ctx)
 	for (int i = 0; i < ctx->item_count; i++)
 		free(ctx->item_names[i]);
 	free(ctx->item_names);
+	free(ctx->global_item_ids);
 	ctx->item_names = new_item_names;
+	ctx->global_item_ids = new_global_item_ids;
 	ctx->item_count = total_unique_items;
 
 	return 0;
@@ -770,6 +778,7 @@ int resolve_subtable(LootTableContext* context, const char* subtable_name, const
 	for (int i = 0; i < subtable_context.item_count; i++)
 		free(subtable_context.item_names[i]);
 	free(subtable_context.item_names);
+	free(subtable_context.global_item_ids);
 
 	return 0;
 }
@@ -792,6 +801,7 @@ void free_loot_table(LootTableContext* context)
 	for (int i = 0; i < context->item_count; i++)
 		free(context->item_names[i]);
 	free(context->item_names);
+	free(context->global_item_ids);
 
 	// free unresolved subtable names
 	for (int i = 0; i < context->unresolved_subtable_count; i++)

@@ -218,11 +218,13 @@ def gen_c_loot_table(c_file_name: str, context: LootTableContext) -> str:
 
         #include "../../biomes.h"
 
+        #include "../items.h"
         #include "../loot_table_context.h"
         #include "../loot_table_parser.h"
 
         void init_{c_file_name}(LootTableContext* context) {{
             static char* item_names[{len(context.item_names)}] = {{\"{"\", \"".join(context.item_names)}\"}};
+            static int global_item_ids[{len(context.item_names)}] = {{{", ".join(f"ITEM_{item_name[len('minecraft:'):].upper()}" for item_name in context.item_names)}}};
         """)
 
     loot_functions_size: list[int] = []
@@ -276,6 +278,7 @@ def gen_c_loot_table(c_file_name: str, context: LootTableContext) -> str:
         context->version = MC_{context.version};
         context->item_count = {len(context.item_names)};
         context->item_names = item_names;
+        context->global_item_ids = global_item_ids;
 
         context->unresolved_subtable_count = 0;
         context->subtable_count = 0;

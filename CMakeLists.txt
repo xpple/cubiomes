@@ -21,6 +21,7 @@ set(HEADERS
 	rng.h
 	util.h
 	quadbase.h
+	loot/items.h
 	loot/logging.h
 	loot/loot_functions.h
 	loot/loot_tables.h
@@ -50,6 +51,7 @@ set(SOURCES
 	util.c
 	quadbase.c
 	test_loot.c
+	loot/items.c
 	loot/loot_functions.c
 	loot/loot_tables.c
 	loot/loot_table_context.c

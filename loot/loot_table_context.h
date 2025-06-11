@@ -45,6 +45,7 @@ struct LootTableContext {
 	int version;
 	int item_count;    // how many different items can this loot table generate
 	char** item_names; // names of the different items
+	int* global_item_ids; // consistent item ids
 
 	int pool_count;
 	LootPool* loot_pools;
@@ -82,7 +83,9 @@ void set_loot_seed(LootTableContext* context, uint64_t seed);
 void set_internal_loot_seed(LootTableContext* context, uint64_t internal_seed);
 
 int get_item_id(LootTableContext* context, const char* item_name);
+int get_global_item_id(LootTableContext* context, int item_id);
 const char* get_item_name(LootTableContext* context, int item_id);
+int has_item(LootTableContext* context, int global_item_id);
 
 void generate_loot(LootTableContext* context);
 

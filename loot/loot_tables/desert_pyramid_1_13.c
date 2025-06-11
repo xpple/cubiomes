@@ -3,11 +3,13 @@
 
 #include "../../biomes.h"
 
+#include "../items.h"
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
 void init_desert_pyramid_1_13(LootTableContext* context) {
     static char* item_names[19] = {"minecraft:diamond", "minecraft:iron_ingot", "minecraft:gold_ingot", "minecraft:emerald", "minecraft:bone", "minecraft:spider_eye", "minecraft:rotten_flesh", "minecraft:saddle", "minecraft:iron_horse_armor", "minecraft:golden_horse_armor", "minecraft:diamond_horse_armor", "minecraft:book", "minecraft:golden_apple", "minecraft:enchanted_golden_apple", "minecraft:bone", "minecraft:gunpowder", "minecraft:rotten_flesh", "minecraft:string", "minecraft:sand"};
+    static int global_item_ids[19] = {ITEM_DIAMOND, ITEM_IRON_INGOT, ITEM_GOLD_INGOT, ITEM_EMERALD, ITEM_BONE, ITEM_SPIDER_EYE, ITEM_ROTTEN_FLESH, ITEM_SADDLE, ITEM_IRON_HORSE_ARMOR, ITEM_GOLDEN_HORSE_ARMOR, ITEM_DIAMOND_HORSE_ARMOR, ITEM_BOOK, ITEM_GOLDEN_APPLE, ITEM_ENCHANTED_GOLDEN_APPLE, ITEM_BONE, ITEM_GUNPOWDER, ITEM_ROTTEN_FLESH, ITEM_STRING, ITEM_SAND};
     static int precomputed_loot__0[232] = {0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 13, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14};
     static int entry_to_item__0[15] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, -1};
     static int entry_functions_count__0[15] = {1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0};
@@ -44,6 +46,7 @@ void init_desert_pyramid_1_13(LootTableContext* context) {
     context->version = MC_1_13;
     context->item_count = 19;
     context->item_names = item_names;
+    context->global_item_ids = global_item_ids;
 
     context->unresolved_subtable_count = 0;
     context->subtable_count = 0;

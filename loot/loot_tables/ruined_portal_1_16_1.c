@@ -3,11 +3,13 @@
 
 #include "../../biomes.h"
 
+#include "../items.h"
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
 void init_ruined_portal_1_16_1(LootTableContext* context) {
     static char* item_names[25] = {"minecraft:obsidian", "minecraft:flint", "minecraft:iron_nugget", "minecraft:flint_and_steel", "minecraft:fire_charge", "minecraft:golden_apple", "minecraft:gold_nugget", "minecraft:golden_sword", "minecraft:golden_axe", "minecraft:golden_hoe", "minecraft:golden_shovel", "minecraft:golden_pickaxe", "minecraft:golden_boots", "minecraft:golden_chestplate", "minecraft:golden_helmet", "minecraft:golden_leggings", "minecraft:glistering_melon_slice", "minecraft:golden_horse_armor", "minecraft:light_weighted_pressure_plate", "minecraft:golden_carrot", "minecraft:clock", "minecraft:gold_ingot", "minecraft:bell", "minecraft:enchanted_golden_apple", "minecraft:gold_block"};
+    static int global_item_ids[25] = {ITEM_OBSIDIAN, ITEM_FLINT, ITEM_IRON_NUGGET, ITEM_FLINT_AND_STEEL, ITEM_FIRE_CHARGE, ITEM_GOLDEN_APPLE, ITEM_GOLD_NUGGET, ITEM_GOLDEN_SWORD, ITEM_GOLDEN_AXE, ITEM_GOLDEN_HOE, ITEM_GOLDEN_SHOVEL, ITEM_GOLDEN_PICKAXE, ITEM_GOLDEN_BOOTS, ITEM_GOLDEN_CHESTPLATE, ITEM_GOLDEN_HELMET, ITEM_GOLDEN_LEGGINGS, ITEM_GLISTERING_MELON_SLICE, ITEM_GOLDEN_HORSE_ARMOR, ITEM_LIGHT_WEIGHTED_PRESSURE_PLATE, ITEM_GOLDEN_CARROT, ITEM_CLOCK, ITEM_GOLD_INGOT, ITEM_BELL, ITEM_ENCHANTED_GOLDEN_APPLE, ITEM_GOLD_BLOCK};
     static int precomputed_loot__0[398] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 20, 20, 20, 20, 20, 21, 21, 21, 21, 21, 22, 23, 24};
     static int entry_to_item__0[25] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
     static int entry_functions_count__0[25] = {1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1};
@@ -28,6 +30,7 @@ void init_ruined_portal_1_16_1(LootTableContext* context) {
     context->version = MC_1_16_1;
     context->item_count = 25;
     context->item_names = item_names;
+    context->global_item_ids = global_item_ids;
 
     context->unresolved_subtable_count = 0;
     context->subtable_count = 0;

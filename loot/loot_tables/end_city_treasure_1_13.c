@@ -3,11 +3,13 @@
 
 #include "../../biomes.h"
 
+#include "../items.h"
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
 void init_end_city_treasure_1_13(LootTableContext* context) {
     static char* item_names[23] = {"minecraft:diamond", "minecraft:iron_ingot", "minecraft:gold_ingot", "minecraft:emerald", "minecraft:beetroot_seeds", "minecraft:saddle", "minecraft:iron_horse_armor", "minecraft:golden_horse_armor", "minecraft:diamond_horse_armor", "minecraft:diamond_sword", "minecraft:diamond_boots", "minecraft:diamond_chestplate", "minecraft:diamond_leggings", "minecraft:diamond_helmet", "minecraft:diamond_pickaxe", "minecraft:diamond_shovel", "minecraft:iron_sword", "minecraft:iron_boots", "minecraft:iron_chestplate", "minecraft:iron_leggings", "minecraft:iron_helmet", "minecraft:iron_pickaxe", "minecraft:iron_shovel"};
+    static int global_item_ids[23] = {ITEM_DIAMOND, ITEM_IRON_INGOT, ITEM_GOLD_INGOT, ITEM_EMERALD, ITEM_BEETROOT_SEEDS, ITEM_SADDLE, ITEM_IRON_HORSE_ARMOR, ITEM_GOLDEN_HORSE_ARMOR, ITEM_DIAMOND_HORSE_ARMOR, ITEM_DIAMOND_SWORD, ITEM_DIAMOND_BOOTS, ITEM_DIAMOND_CHESTPLATE, ITEM_DIAMOND_LEGGINGS, ITEM_DIAMOND_HELMET, ITEM_DIAMOND_PICKAXE, ITEM_DIAMOND_SHOVEL, ITEM_IRON_SWORD, ITEM_IRON_BOOTS, ITEM_IRON_CHESTPLATE, ITEM_IRON_LEGGINGS, ITEM_IRON_HELMET, ITEM_IRON_PICKAXE, ITEM_IRON_SHOVEL};
     static int precomputed_loot__0[85] = {0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 6, 7, 8, 9, 9, 9, 10, 10, 10, 11, 11, 11, 12, 12, 12, 13, 13, 13, 14, 14, 14, 15, 15, 15, 16, 16, 16, 17, 17, 17, 18, 18, 18, 19, 19, 19, 20, 20, 20, 21, 21, 21, 22, 22, 22};
     static int entry_to_item__0[23] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22};
     static int entry_functions_count__0[23] = {1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
@@ -28,6 +30,7 @@ void init_end_city_treasure_1_13(LootTableContext* context) {
     context->version = MC_1_13;
     context->item_count = 23;
     context->item_names = item_names;
+    context->global_item_ids = global_item_ids;
 
     context->unresolved_subtable_count = 0;
     context->subtable_count = 0;
