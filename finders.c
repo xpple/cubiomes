@@ -243,6 +243,137 @@ int getStructureConfig(int structureType, int mc, StructureConfig *sconf)
     }
 }
 
+int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltConfig *ssconf) {
+    static const StructureSaltConfig
+    ss_buried_treasure_113 =         {2,  2},
+    ss_buried_treasure_1161 =        {3,  1},
+    ss_buried_treasure_118 =         {3,  2},
+    ss_buried_treasure_1194 =        {3,  0},
+
+    ss_bastion_remnant_116 =         {4, 12},
+    ss_bastion_remnant_1192 =        {4, 13},
+    ss_bastion_remnant_1194 =        {4,  0},
+
+    ss_desert_pyramid_113 =          {3,  2},
+    ss_desert_pyramid_1161 =         {4,  3},
+    ss_desert_pyramid_1192 =         {4,  1},
+
+    ss_igloo_113 =                   {3,  4},
+    ss_igloo_1161 =                  {4,  4},
+    ss_igloo_1192 =                  {4,  3},
+
+    ss_ruined_portal_1161 =          {4,  5},
+    ss_ruined_portal_118 =           {4, 18},
+    ss_ruined_portal_1192 =          {4, 19},
+    ss_ruined_portal_1194 =          {4, 10},
+
+    ss_ruined_portal_desert_118 =    {4, 19},
+    ss_ruined_portal_desert_1192 =   {4, 20},
+    ss_ruined_portal_desert_1194 =   {4, 11},
+
+    ss_ruined_portal_jungle_118 =    {4, 20},
+    ss_ruined_portal_jungle_1192 =   {4, 21},
+    ss_ruined_portal_jungle_1194 =   {4, 12},
+
+    ss_ruined_portal_swamp_118 =     {4, 21},
+    ss_ruined_portal_swamp_1192 =    {4, 22},
+    ss_ruined_portal_swamp_1194 =    {4, 16},
+
+    ss_ruined_portal_mountain_118 =  {4, 22},
+    ss_ruined_portal_mountain_1192 = {4, 23},
+    ss_ruined_portal_mountain_1194 = {4, 13},
+
+    ss_ruined_portal_ocean_118 =     {4, 23},
+    ss_ruined_portal_ocean_1192 =    {4, 24},
+    ss_ruined_portal_ocean_1194 =    {4, 15},
+
+    ss_ruined_portal_nether_118 =    {4, 24},
+    ss_ruined_portal_nether_1192 =   {4, 25},
+    ss_ruined_portal_nether_1194 =   {4, 14},
+
+    ss_fortress_113 =                {5,  0},
+    ss_fortress_1161 =               {7,  0},
+    ss_fortress_1194 =               {7,  1},
+
+    ss_end_city_113 =                {3,  0},
+    ss_end_city_end_highlands_113 =  {3,  1},
+    ss_end_city_1161 =               {4, 10},
+    ss_end_city_118 =                {4, 11},
+    ss_end_city_1192 =               {4, 12},
+    ss_end_city_1194 =               {4,  2};
+
+    switch (structureType) {
+    case Treasure:
+        if (mc < MC_1_16_1) *ssconf = ss_buried_treasure_113;
+        else if (mc < MC_1_18) *ssconf = ss_buried_treasure_1161;
+        else if (mc < MC_1_19_4) *ssconf = ss_buried_treasure_118;
+        else *ssconf = ss_buried_treasure_1194;
+        return mc >= MC_1_13;
+    case Bastion:
+        if (mc < MC_1_19_2) *ssconf = ss_bastion_remnant_116;
+        else if (mc < MC_1_19_4) *ssconf = ss_bastion_remnant_1192;
+        else *ssconf = ss_bastion_remnant_1194;
+        return mc >= MC_1_16;
+    case Desert_Pyramid:
+        if (mc < MC_1_16_1) *ssconf = ss_desert_pyramid_113;
+        else if (mc < MC_1_19_2) *ssconf = ss_desert_pyramid_1161;
+        else *ssconf = ss_desert_pyramid_1192;
+        return mc >= MC_1_13;
+    case Igloo:
+        if (mc < MC_1_16_1) *ssconf = ss_igloo_113;
+        else if (mc < MC_1_19_2) *ssconf = ss_igloo_1161;
+        else *ssconf = ss_igloo_1192;
+        return mc >= MC_1_13;
+    case Ruined_Portal:
+        if (mc < MC_1_18) *ssconf = ss_ruined_portal_1161;
+        else if (mc < MC_1_19_2) {
+            if (biome == desert) *ssconf = ss_ruined_portal_desert_118;
+            else if (biome == jungle) *ssconf = ss_ruined_portal_jungle_118;
+            else if (biome == swamp) *ssconf = ss_ruined_portal_swamp_118;
+            else if (biome == mountains) *ssconf = ss_ruined_portal_mountain_118;
+            else if (biome == ocean) *ssconf = ss_ruined_portal_ocean_118;
+            else *ssconf = ss_ruined_portal_118;
+        }
+        else if (mc < MC_1_19_4) {
+            if (biome == desert) *ssconf = ss_ruined_portal_desert_1192;
+            else if (biome == jungle) *ssconf = ss_ruined_portal_jungle_1192;
+            else if (biome == swamp) *ssconf = ss_ruined_portal_swamp_1192;
+            else if (biome == mountains) *ssconf = ss_ruined_portal_mountain_1192;
+            else if (biome == ocean) *ssconf = ss_ruined_portal_ocean_1192;
+            else *ssconf = ss_ruined_portal_1192; // assuming biome != deep_dark
+        }
+        else {
+            if (biome == desert) *ssconf = ss_ruined_portal_desert_1194;
+            else if (biome == jungle) *ssconf = ss_ruined_portal_jungle_1194;
+            else if (biome == swamp) *ssconf = ss_ruined_portal_swamp_1194;
+            else if (biome == mountains) *ssconf = ss_ruined_portal_mountain_1194;
+            else if (biome == ocean) *ssconf = ss_ruined_portal_ocean_1194;
+            else *ssconf = ss_ruined_portal_1194; // assuming biome != deep_dark
+        }
+        return mc >= MC_1_16_1;
+    case Ruined_Portal_N:
+        if (mc < MC_1_19_2) *ssconf = ss_ruined_portal_nether_118;
+        else if (mc < MC_1_19_4) *ssconf = ss_ruined_portal_nether_1192;
+        else *ssconf = ss_ruined_portal_nether_1194;
+        return mc >= MC_1_18;
+    case Fortress:
+        if (mc < MC_1_16_1) *ssconf = ss_fortress_113;
+        else if (mc < MC_1_19_4) *ssconf = ss_fortress_1161;
+        else *ssconf = ss_fortress_1194;
+        return mc >= MC_1_13;
+    case End_City:
+        if (mc < MC_1_16_1) *ssconf = biome == end_highlands ? ss_end_city_end_highlands_113 : ss_end_city_113;
+        else if (mc < MC_1_18) *ssconf = ss_end_city_1161;
+        else if (mc < MC_1_19_2) *ssconf = ss_end_city_118;
+        else if (mc < MC_1_19_4) *ssconf = ss_end_city_1192;
+        else *ssconf = ss_end_city_1194;
+        return mc >= MC_1_13;
+    default:
+        fprintf(stderr, "ERR getStructureSaltConfig: unsupported structure type %d\n", structureType);
+        memset(ssconf, 0, sizeof(StructureSaltConfig));
+        return 0;
+    }
+}
 
 // like getFeaturePos(), but modifies the rng seed
 static inline
@@ -3268,7 +3399,59 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
             r->start = 1 + nextInt(&rng, 10);
         }
         r->rotation = nextInt(&rng, 4);
-        r->mirror = nextFloat(&rng) < 0.5f;
+        r->mirror = nextFloat(&rng) >= 0.5f;
+
+        if (r->giant) {
+            switch (r->start) {
+            case 1: sx = 11, sy = 17, sz = 16; break;
+            case 2: sx = 11, sy = 16, sz = 16; break;
+            case 3: sx = 16, sy = 16, sz = 16; break;
+            default: UNREACHABLE();
+            }
+        } else {
+            switch (r->start) {
+            case 1: sx = 6, sy = 10, sz = 6; break;
+            case 2: sx = 9, sy = 12, sz = 9; break;
+            case 3: sx = 8, sy = 9, sz = 9; break;
+            case 4: sx = 8, sy = 9, sz = 9; break;
+            case 5: sx = 10, sy = 7, sz = 7; break;
+            case 6: sx = 5, sy = 7, sz = 7; break;
+            case 7: sx = 9, sy = 7, sz = 9; break;
+            case 8: sx = 14, sy = 9, sz = 9; break;
+            case 9: sx = 10, sy = 8, sz = 9; break;
+            case 10: sx = 12, sy = 8, sz = 10; break;
+            default: UNREACHABLE();
+            }
+        }
+
+        Pos pivotPos = {sx / 2, sz / 2};
+        Pos startPos;
+        switch (r->rotation) { // 0:0, 1:cw90, 2:cw180, 3:cw270=ccw90
+        case 0: startPos = (Pos) {0, 0}; break;
+        case 1: startPos = (Pos) {pivotPos.x + pivotPos.z, pivotPos.z - pivotPos.x}; break;
+        case 2: startPos = (Pos) {pivotPos.x + pivotPos.x, pivotPos.z + pivotPos.z}; break;
+        case 3: startPos = (Pos) {pivotPos.x - pivotPos.z, pivotPos.x + pivotPos.z}; break;
+        default: UNREACHABLE();
+        }
+
+        Pos3 size = {sx, sy, sz};
+        int mirX = size.x;
+        if (r->mirror) {
+            mirX = -mirX;
+        }
+        Pos3 endPos;
+        switch (r->rotation) { // 0:0, 1:cw90, 2:cw180, 3:cw270=ccw90
+        case 0: endPos = (Pos3) {mirX, size.y, size.z}; break;
+        case 1: endPos = (Pos3) {startPos.x - size.z, size.y, startPos.z + mirX}; break;
+        case 2: endPos = (Pos3) {startPos.x - mirX, size.y, startPos.z - size.z}; break;
+        case 3: endPos = (Pos3) {startPos.x + size.z, size.y, startPos.z - mirX}; break;
+        default: UNREACHABLE();
+        }
+
+        r->x = startPos.x;
+        r->z = startPos.z;
+        r->sx = endPos.x - startPos.x;
+        r->sz = endPos.z - startPos.z;
         return 1;
 
     case Monument:
@@ -3377,6 +3560,173 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
     default:
         return 0;
     }
+}
+
+int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf, StructureVariant sv, int mc, uint64_t seed, int posX, int posZ) {
+    if (stype == Ruined_Portal || stype == Ruined_Portal_N) {
+        posX += sv.x + sv.sx / 2;
+        posZ += sv.z + sv.sz / 2;
+    }
+
+    int minBlockX = posX & ~15;
+    int minBlockZ = posZ & ~15;
+    uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
+    RandomSource rnd;
+    if (mc <= MC_1_17) {
+        uint64_t* r = malloc(sizeof(uint64_t));
+        rnd = createJavaRandom(r);
+    } else {
+        Xoroshiro* xr = malloc(sizeof(Xoroshiro));
+        rnd = createXoroshiro(xr);
+    }
+    // set decorator seed
+    rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+    switch (stype) {
+    case Desert_Pyramid: {
+        Piece* p = list;
+        p->name = "TeDP";
+        p->pos = (Pos3) {minBlockX, 64, minBlockZ};
+        p->chestCount = 4;
+        p->lootTable = "desert_pyramid";
+        p->lootSeeds = malloc(p->chestCount * sizeof(uint64_t));
+        rnd.nextInt(rnd.state, 3);
+        for (int i = 0; i < p->chestCount; ++i) {
+            p->lootSeeds[i] = rnd.nextLong(rnd.state);
+        }
+        free(rnd.state);
+        return 1;
+    }
+    case Igloo: {
+        if (!sv.basement) {
+            Piece* p = list;
+            p->name = "igloo/top";
+            p->pos = (Pos3) {minBlockX, 90, minBlockZ};
+            p->chestCount = 0;
+            p->lootSeeds = malloc(p->chestCount * sizeof(uint64_t));
+            free(rnd.state);
+            return 1;
+        }
+        Piece* topPiece = &list[0];
+        topPiece->name = "igloo/top";
+        topPiece->pos = (Pos3) {minBlockX, 90, minBlockZ};
+        topPiece->chestCount = 0;
+        topPiece->lootSeeds = malloc(topPiece->chestCount * sizeof(uint64_t));
+        for (int i = 1; i < sv.size + 1; ++i) {
+            Piece* middlePiece = &list[i];
+            middlePiece->name = "igloo/middle";
+            middlePiece->pos = (Pos3) {minBlockX + 2, 90 - i * 3, minBlockZ + 4};
+            middlePiece->chestCount = 0;
+            middlePiece->lootSeeds = malloc(middlePiece->chestCount * sizeof(uint64_t));
+        }
+        Piece* bottomPiece = &list[sv.size + 1];
+        bottomPiece->name = "igloo/bottom";
+        bottomPiece->pos = (Pos3) {minBlockX, 90 - 3 - sv.size * 3, minBlockZ - 2};
+        bottomPiece->chestCount = 1;
+        bottomPiece->lootTable = "igloo_chest";
+        bottomPiece->lootSeeds = malloc(bottomPiece->chestCount * sizeof(uint64_t));
+        rnd.nextLong(rnd.state); // LootTableSeed from placeInWorld is not used it seems
+        bottomPiece->lootSeeds[0] = rnd.nextLong(rnd.state);
+        free(rnd.state);
+        return sv.size + 2;
+    }
+    case Swamp_Hut: {
+        Piece* p = list;
+        p->name = "TeSH";
+        p->pos = (Pos3) {minBlockX, 64, minBlockZ};
+        p->chestCount = 0;
+        p->lootSeeds = malloc(p->chestCount * sizeof(uint64_t));
+        free(rnd.state);
+        return 1;
+    }
+    case Fortress: {
+        int count = getFortressPieces(list, n, mc, seed, posX >> 4, posZ >> 4);
+        for (int i = 0; i < count; ++i) {
+            Piece* piece = &list[i];
+            switch (piece->type) {
+            case CORRIDOR_TURN_LEFT:
+            case CORRIDOR_TURN_RIGHT:
+                piece->chestCount = 1;
+                piece->lootTable = "nether_bridge";
+                piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
+                piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+                break;
+            case BRIDGE_SPAWNER:
+                rnd.nextInt(rnd.state, 1);
+                // fallthrough
+            default:
+                piece->chestCount = 0;
+                piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
+            }
+        }
+        free(rnd.state);
+        return count;
+    }
+    case End_City: {
+        if (n < END_CITY_PIECES_MAX) {
+            free(rnd.state);
+            return -1;
+        }
+        int count = getEndCityPieces(list, seed, posX >> 4, posZ >> 4);
+        for (int i = 0; i < count; ++i) {
+            Piece* piece = &list[i];
+            switch (piece->type) {
+            case FAT_TOWER_TOP:
+            case END_SHIP:
+                piece->chestCount = 2;
+                piece->lootTable = "end_city_treasure";
+                piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
+                piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+                piece->lootSeeds[1] = rnd.nextLong(rnd.state);
+                break;
+            case THIRD_FLOOR_2:
+                piece->chestCount = 1;
+                piece->lootTable = "end_city_treasure";
+                piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
+                piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+                break;
+            default:
+                piece->chestCount = 0;
+                piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
+                break;
+            }
+        }
+        free(rnd.state);
+        return count;
+    }
+    // structures that have one piece and one chest
+    case Treasure: {
+        Piece* p = list;
+        p->name = "BTP";
+        p->pos = (Pos3) {minBlockX + 9, 90, minBlockZ + 9};
+        p->lootTable = "buried_treasure";
+        break;
+    }
+    case Ruined_Portal:
+    case Ruined_Portal_N: {
+        Piece* p = list;
+        p->name = "RUPO";
+        p->pos = (Pos3) {minBlockX, 0, minBlockZ}; // cannot really do any better
+        p->lootTable = "ruined_portal";
+        break;
+    }
+    default: // unsupported structures
+        free(rnd.state);
+        return -1;
+    }
+    Piece* p = list;
+    p->chestCount = 1;
+    p->lootSeeds = malloc(p->chestCount * sizeof(uint64_t));
+    p->lootSeeds[0] = rnd.nextLong(rnd.state);
+    free(rnd.state);
+    return 1;
+}
+
+void freeStructurePieces(Piece *list, int pieceCount) {
+    for (int i = 0; i < pieceCount; ++i) {
+        Piece* p = &list[i];
+        free(p->lootSeeds);
+    }
+    free(list);
 }
 
 static
