@@ -3,6 +3,7 @@
 
 #include "loot_tables.h"
 #include "loot_table_context.h"
+#include "loot_table_parser.h"
 #include "../biomes.h"
 
 #include "loot_tables/buried_treasure_1_13.h"
@@ -77,8 +78,13 @@ int init_ruined_portal(LootTableContext* context, int version) {
 }
 
 void free_loot_table_pools(LootTableContext* context) {
-    for (int j = 0; j < context->pool_count; ++j) {
-        LootPool* pool = &context->loot_pools[j];
+    for (int i = 0; i < context->pool_count; ++i) {
+        LootPool* pool = &context->loot_pools[i];
+        int last = pool->entry_count - 1;
+        int functionCount = pool->entry_functions_index[last] + pool->entry_functions_count[last];
+        for (int j = 0; j < functionCount; ++j) {
+            free_loot_function(&(pool->loot_functions[j]));
+        }
         free(pool->loot_functions);
     }
     free(context->loot_pools);

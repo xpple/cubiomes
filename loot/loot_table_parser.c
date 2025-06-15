@@ -458,7 +458,7 @@ static int init_loot_pool(const cJSON* pool_data, const int pool_id, LootTableCo
 	return 0;
 }
 
-static void free_loot_function(LootFunction* lf)
+void free_loot_function(LootFunction* lf)
 {
 	if (lf->varparams_int != NULL)
 		free(lf->varparams_int);
