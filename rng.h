@@ -329,6 +329,16 @@ static inline RandomSource createXoroshiro(Xoroshiro *xr)
     };
 }
 
+static inline RandomSource createRandomSource(int legacy) {
+    if (legacy) {
+        uint64_t* r = malloc(sizeof(uint64_t));
+        return createJavaRandom(r);
+    } else {
+        Xoroshiro* xr = malloc(sizeof(Xoroshiro));
+        return createXoroshiro(xr);
+    }
+}
+
 //==============================================================================
 //                              MC Seed Helpers
 //==============================================================================

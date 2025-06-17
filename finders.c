@@ -3563,24 +3563,9 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
 }
 
 int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf, StructureVariant sv, int mc, uint64_t seed, int posX, int posZ) {
-    if (stype == Ruined_Portal || stype == Ruined_Portal_N) {
-        posX += sv.x + sv.sx / 2;
-        posZ += sv.z + sv.sz / 2;
-    }
-
     int minBlockX = posX & ~15;
     int minBlockZ = posZ & ~15;
-    uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
-    RandomSource rnd;
-    if (mc <= MC_1_17) {
-        uint64_t* r = malloc(sizeof(uint64_t));
-        rnd = createJavaRandom(r);
-    } else {
-        Xoroshiro* xr = malloc(sizeof(Xoroshiro));
-        rnd = createXoroshiro(xr);
-    }
-    // set decorator seed
-    rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+    const int legacy = mc <= MC_1_17;
     switch (stype) {
     case Desert_Pyramid: {
         Piece* p = list;
@@ -3589,6 +3574,10 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         p->chestCount = 4;
         p->lootTable = "desert_pyramid";
         p->lootSeeds = malloc(p->chestCount * sizeof(uint64_t));
+        // chests generate in the same chunk as structure
+        uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
+        RandomSource rnd = createRandomSource(legacy);
+        rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
         rnd.nextInt(rnd.state, 3);
         for (int i = 0; i < p->chestCount; ++i) {
             p->lootSeeds[i] = rnd.nextLong(rnd.state);
@@ -3603,7 +3592,6 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             p->pos = (Pos3) {minBlockX, 90, minBlockZ};
             p->chestCount = 0;
             p->lootSeeds = malloc(p->chestCount * sizeof(uint64_t));
-            free(rnd.state);
             return 1;
         }
         Piece* topPiece = &list[0];
@@ -3624,7 +3612,11 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         bottomPiece->chestCount = 1;
         bottomPiece->lootTable = "igloo_chest";
         bottomPiece->lootSeeds = malloc(bottomPiece->chestCount * sizeof(uint64_t));
-        rnd.nextLong(rnd.state); // LootTableSeed from placeInWorld is not used it seems
+        // chest generates in the same chunk as structure
+        uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
+        RandomSource rnd = createRandomSource(legacy);
+        rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+        rnd.nextLong(rnd.state); // LootTableSeed from placeInWorld is not used
         bottomPiece->lootSeeds[0] = rnd.nextLong(rnd.state);
         free(rnd.state);
         return sv.size + 2;
@@ -3635,59 +3627,151 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         p->pos = (Pos3) {minBlockX, 64, minBlockZ};
         p->chestCount = 0;
         p->lootSeeds = malloc(p->chestCount * sizeof(uint64_t));
-        free(rnd.state);
         return 1;
     }
     case Fortress: {
         int count = getFortressPieces(list, n, mc, seed, posX >> 4, posZ >> 4);
+        RandomSource rnd = createRandomSource(legacy);
         for (int i = 0; i < count; ++i) {
             Piece* piece = &list[i];
+            int chestPosX, chestPosZ;
             switch (piece->type) {
-            case CORRIDOR_TURN_LEFT:
+            // TODO: not every corridor has a chest!
+            case CORRIDOR_TURN_LEFT: {
+                piece->chestCount = 1;
+                piece->lootTable = "nether_bridge";
+                piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
+                switch (piece->rot) {
+                case 0: chestPosX = piece->pos.x - 1 + 3; chestPosZ = piece->pos.z - 1 + 3; break; // 0
+                case 1: chestPosX = piece->pos.x - 1 - 3; chestPosZ = piece->pos.z - 1 + 3; break; // 90
+                case 2: chestPosX = piece->pos.x - 1 - 3; chestPosZ = piece->pos.z - 1 - 3; break; // 180
+                case 3: chestPosX = piece->pos.x - 1 + 3; chestPosZ = piece->pos.z - 1 - 3; break; // 270
+                default: UNREACHABLE();
+                }
+                break;
+            }
             case CORRIDOR_TURN_RIGHT:
                 piece->chestCount = 1;
                 piece->lootTable = "nether_bridge";
                 piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
-                piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+                switch (piece->rot) {
+                case 0: chestPosX = piece->pos.x - 1 + 1; chestPosZ = piece->pos.z - 1 + 3; break; // 0
+                case 1: chestPosX = piece->pos.x - 1 - 3; chestPosZ = piece->pos.z - 1 + 1; break; // 90
+                case 2: chestPosX = piece->pos.x - 1 - 1; chestPosZ = piece->pos.z - 1 - 3; break; // 180
+                case 3: chestPosX = piece->pos.x - 1 + 3; chestPosZ = piece->pos.z - 1 - 1; break; // 270
+                default: UNREACHABLE();
+                }
                 break;
-            case BRIDGE_SPAWNER:
-                rnd.nextInt(rnd.state, 1);
-                // fallthrough
             default:
                 piece->chestCount = 0;
                 piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
+                continue;
             }
+            // it is assumed that no two pieces have a chest in the same chunk
+            uint64_t populationSeed = getPopulationSeed(mc, seed, chestPosX & ~15, chestPosZ & ~15);
+            rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+            piece->lootSeeds[0] = rnd.nextLong(rnd.state);
         }
         free(rnd.state);
         return count;
     }
     case End_City: {
         if (n < END_CITY_PIECES_MAX) {
-            free(rnd.state);
             return -1;
         }
         int count = getEndCityPieces(list, seed, posX >> 4, posZ >> 4);
+        RandomSource rnd = createRandomSource(legacy);
         for (int i = 0; i < count; ++i) {
             Piece* piece = &list[i];
+            int chestPos1X, chestPos1Z, chestPos2X, chestPos2Z;
+            int oneChest;
             switch (piece->type) {
-            case FAT_TOWER_TOP:
-            case END_SHIP:
+            case FAT_TOWER_TOP: {
                 piece->chestCount = 2;
                 piece->lootTable = "end_city_treasure";
                 piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
-                piece->lootSeeds[0] = rnd.nextLong(rnd.state);
-                piece->lootSeeds[1] = rnd.nextLong(rnd.state);
+                oneChest = 0;
+                switch (piece->rot) {
+                case 0: chestPos1X = piece->pos.x - 1 + 3; chestPos1Z = piece->pos.z - 1 + 11; break; // 0
+                case 1: chestPos1X = piece->pos.x - 1 - 11; chestPos1Z = piece->pos.z - 1 + 3; break; // 90
+                case 2: chestPos1X = piece->pos.x - 1 - 3; chestPos1Z = piece->pos.z - 1 - 11; break; // 180
+                case 3: chestPos1X = piece->pos.x - 1 + 11; chestPos1Z = piece->pos.z - 1 - 3; break; // 270
+                default: UNREACHABLE();
+                }
+                switch (piece->rot) {
+                case 0: chestPos2X = piece->pos.x - 1 + 5; chestPos2Z = piece->pos.z - 1 + 13; break; // 0
+                case 1: chestPos2X = piece->pos.x - 1 - 13; chestPos2Z = piece->pos.z - 1 + 5; break; // 90
+                case 2: chestPos2X = piece->pos.x - 1 - 5; chestPos2Z = piece->pos.z - 1 - 13; break; // 180
+                case 3: chestPos2X = piece->pos.x - 1 + 13; chestPos2Z = piece->pos.z - 1 - 5; break; // 270
+                default: UNREACHABLE();
+                }
                 break;
-            case THIRD_FLOOR_2:
+            }
+            case END_SHIP: {
+                piece->chestCount = 2;
+                piece->lootTable = "end_city_treasure";
+                piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
+                oneChest = 0;
+                switch (piece->rot) {
+                case 0: chestPos1X = piece->pos.x - 1 + 5; chestPos1Z = piece->pos.z - 1 + 7; break; // 0
+                case 1: chestPos1X = piece->pos.x - 1 - 7; chestPos1Z = piece->pos.z - 1 + 5; break; // 90
+                case 2: chestPos1X = piece->pos.x - 1 - 5; chestPos1Z = piece->pos.z - 1 - 7; break; // 180
+                case 3: chestPos1X = piece->pos.x - 1 + 7; chestPos1Z = piece->pos.z - 1 - 5; break; // 270
+                default: UNREACHABLE();
+                }
+                switch (piece->rot) {
+                case 0: chestPos2X = piece->pos.x - 1 + 7; chestPos2Z = piece->pos.z - 1 + 7; break; // 0
+                case 1: chestPos2X = piece->pos.x - 1 - 7; chestPos2Z = piece->pos.z - 1 + 7; break; // 90
+                case 2: chestPos2X = piece->pos.x - 1 - 7; chestPos2Z = piece->pos.z - 1 - 7; break; // 180
+                case 3: chestPos2X = piece->pos.x - 1 + 7; chestPos2Z = piece->pos.z - 1 - 7; break; // 270
+                default: UNREACHABLE();
+                }
+                break;
+            }
+            case THIRD_FLOOR_2: {
                 piece->chestCount = 1;
                 piece->lootTable = "end_city_treasure";
                 piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
-                piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+                oneChest = 1;
+                switch (piece->rot) {
+                case 0: chestPos1X = piece->pos.x - 1 + 6; chestPos1Z = piece->pos.z - 1 + 2; break; // 0
+                case 1: chestPos1X = piece->pos.x - 1 - 2; chestPos1Z = piece->pos.z - 1 + 6; break; // 90
+                case 2: chestPos1X = piece->pos.x - 1 - 6; chestPos1Z = piece->pos.z - 1 - 2; break; // 180
+                case 3: chestPos1X = piece->pos.x - 1 + 2; chestPos1Z = piece->pos.z - 1 - 6; break; // 270
+                default: UNREACHABLE();
+                }
                 break;
+            }
             default:
                 piece->chestCount = 0;
                 piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
-                break;
+                continue;
+            }
+            // it is assumed that no two pieces have a chest in the same chunk
+            if (oneChest) {
+                uint64_t populationSeed = getPopulationSeed(mc, seed, chestPos1X & ~15, chestPos1Z & ~15);
+                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                printf("%" PRId64 "\n", rnd.nextLong(rnd.state)); // LootTableSeed from placeInWorld is not used
+                piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+            } else {
+                if (chestPos1X >> 4 == chestPos2X >> 4 && chestPos1Z >> 4 == chestPos2Z >> 4) {
+                    uint64_t populationSeed = getPopulationSeed(mc, seed, chestPos1X & ~15, chestPos1Z & ~15);
+                    rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                    rnd.nextLong(rnd.state);
+                    rnd.nextLong(rnd.state);
+                    piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+                    piece->lootSeeds[1] = rnd.nextLong(rnd.state);
+                } else {
+                    uint64_t populationSeed;
+                    populationSeed = getPopulationSeed(mc, seed, chestPos1X & ~15, chestPos1Z & ~15);
+                    rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                    rnd.nextLong(rnd.state);
+                    piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+                    populationSeed = getPopulationSeed(mc, seed, chestPos2X & ~15, chestPos2Z & ~15);
+                    rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                    rnd.nextLong(rnd.state);
+                    piece->lootSeeds[1] = rnd.nextLong(rnd.state);
+                }
             }
         }
         free(rnd.state);
@@ -3703,19 +3787,24 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
     }
     case Ruined_Portal:
     case Ruined_Portal_N: {
+        // chest generates roughly in the same chunk as centre of the template
+        minBlockX = (posX + sv.x + sv.sx / 2) & ~15;
+        minBlockZ = (posZ + sv.z + sv.sz / 2) & ~15;
         Piece* p = list;
         p->name = "RUPO";
-        p->pos = (Pos3) {minBlockX, 0, minBlockZ}; // cannot really do any better
+        p->pos = (Pos3) {minBlockX, 0, minBlockZ};
         p->lootTable = "ruined_portal";
         break;
     }
     default: // unsupported structures
-        free(rnd.state);
         return -1;
     }
     Piece* p = list;
     p->chestCount = 1;
     p->lootSeeds = malloc(p->chestCount * sizeof(uint64_t));
+    RandomSource rnd = createRandomSource(legacy);
+    uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
+    rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
     p->lootSeeds[0] = rnd.nextLong(rnd.state);
     free(rnd.state);
     return 1;
