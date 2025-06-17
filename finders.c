@@ -3751,7 +3751,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             if (oneChest) {
                 uint64_t populationSeed = getPopulationSeed(mc, seed, chestPos1X & ~15, chestPos1Z & ~15);
                 rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
-                printf("%" PRId64 "\n", rnd.nextLong(rnd.state)); // LootTableSeed from placeInWorld is not used
+                rnd.nextLong(rnd.state); // LootTableSeed from placeInWorld is not used
                 piece->lootSeeds[0] = rnd.nextLong(rnd.state);
             } else {
                 if (chestPos1X >> 4 == chestPos2X >> 4 && chestPos1Z >> 4 == chestPos2Z >> 4) {
