@@ -109,13 +109,14 @@ STRUCT(StructureVariant)
 
 STRUCT(Piece)
 {
-    const char *name;   // structure piece name
-    Pos3 pos, bb0, bb1; // position and bounding box limits
-    uint8_t rot;        // rotation
+    const char *name;      // structure piece name
+    Pos3 pos, bb0, bb1;    // position and bounding box limits
+    uint8_t rot;           // rotation
     int8_t depth;
     int8_t type;
     int chestCount;
-    uint64_t* lootSeeds;
+    Pos chestPoses[4];     // assume a maximum of four chests
+    uint64_t lootSeeds[4];
     const char* lootTable; // for now each piece can only have one loot table
     Piece *next;
 };
@@ -664,14 +665,6 @@ int getVariant(StructureVariant *sv, int structType, int mc, uint64_t seed,
  * @return the number of pieces
  */
 int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf, StructureVariant sv, int mc, uint64_t seed, int posX, int posZ);
-
-/**
- * Free the pieces list.
- *
- * @param list the list of pieces to free
- * @param pieceCount the amount of pieces in the list
- */
-void freeStructurePieces(Piece *list, int pieceCount);
 
 /* Generate the structure pieces of an End City. This pieces buffer should be
  * large enough to hold END_CITY_PIECES_MAX elements.

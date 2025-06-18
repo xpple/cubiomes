@@ -3573,7 +3573,10 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         p->pos = (Pos3) {minBlockX, 64, minBlockZ};
         p->chestCount = 4;
         p->lootTable = "desert_pyramid";
-        p->lootSeeds = malloc(p->chestCount * sizeof(uint64_t));
+        p->chestPoses[0] = (Pos) {minBlockX + 8, minBlockZ + 10};
+        p->chestPoses[1] = (Pos) {minBlockX + 10, minBlockZ + 8};
+        p->chestPoses[2] = (Pos) {minBlockX + 10, minBlockZ + 12};
+        p->chestPoses[3] = (Pos) {minBlockX + 12, minBlockZ + 10};
         // chests generate in the same chunk as structure
         uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
         RandomSource rnd = createRandomSource(legacy);
@@ -3591,27 +3594,32 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             p->name = "igloo/top";
             p->pos = (Pos3) {minBlockX, 90, minBlockZ};
             p->chestCount = 0;
-            p->lootSeeds = malloc(p->chestCount * sizeof(uint64_t));
             return 1;
         }
         Piece* topPiece = &list[0];
         topPiece->name = "igloo/top";
         topPiece->pos = (Pos3) {minBlockX, 90, minBlockZ};
         topPiece->chestCount = 0;
-        topPiece->lootSeeds = malloc(topPiece->chestCount * sizeof(uint64_t));
         for (int i = 1; i < sv.size + 1; ++i) {
             Piece* middlePiece = &list[i];
             middlePiece->name = "igloo/middle";
             middlePiece->pos = (Pos3) {minBlockX + 2, 90 - i * 3, minBlockZ + 4};
             middlePiece->chestCount = 0;
-            middlePiece->lootSeeds = malloc(middlePiece->chestCount * sizeof(uint64_t));
         }
         Piece* bottomPiece = &list[sv.size + 1];
         bottomPiece->name = "igloo/bottom";
         bottomPiece->pos = (Pos3) {minBlockX, 90 - 3 - sv.size * 3, minBlockZ - 2};
         bottomPiece->chestCount = 1;
         bottomPiece->lootTable = "igloo_chest";
-        bottomPiece->lootSeeds = malloc(bottomPiece->chestCount * sizeof(uint64_t));
+        int chestPosX, chestPosZ;
+        switch ((sv.rotation << 1) | sv.mirror) {
+        case 0b00: chestPosX = minBlockX + 8 - 7; chestPosZ = minBlockZ + 8 - 4; break; //
+        case 0b01: chestPosX = minBlockX + 8 - 3; chestPosZ = minBlockZ + 8 - 2; break; // mirrored
+        case 0b10: chestPosX = minBlockX + 8 - 4; chestPosZ = minBlockZ + 8 - 5; break; // 90 cw
+        case 0b11: chestPosX = minBlockX + 8 - 6; chestPosZ = minBlockZ + 8 - 1; break; // 90 cw + mirrored
+        default: UNREACHABLE();
+        }
+        bottomPiece->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
         // chest generates in the same chunk as structure
         uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
         RandomSource rnd = createRandomSource(legacy);
@@ -3626,7 +3634,6 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         p->name = "TeSH";
         p->pos = (Pos3) {minBlockX, 64, minBlockZ};
         p->chestCount = 0;
-        p->lootSeeds = malloc(p->chestCount * sizeof(uint64_t));
         return 1;
     }
     case Fortress: {
@@ -3640,7 +3647,6 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             case CORRIDOR_TURN_LEFT: {
                 piece->chestCount = 1;
                 piece->lootTable = "nether_bridge";
-                piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
                 switch (piece->rot) {
                 case 0: chestPosX = piece->pos.x - 1 + 3; chestPosZ = piece->pos.z - 1 + 3; break; // 0
                 case 1: chestPosX = piece->pos.x - 1 - 3; chestPosZ = piece->pos.z - 1 + 3; break; // 90
@@ -3653,7 +3659,6 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             case CORRIDOR_TURN_RIGHT:
                 piece->chestCount = 1;
                 piece->lootTable = "nether_bridge";
-                piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
                 switch (piece->rot) {
                 case 0: chestPosX = piece->pos.x - 1 + 1; chestPosZ = piece->pos.z - 1 + 3; break; // 0
                 case 1: chestPosX = piece->pos.x - 1 - 3; chestPosZ = piece->pos.z - 1 + 1; break; // 90
@@ -3664,9 +3669,9 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
                 break;
             default:
                 piece->chestCount = 0;
-                piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
                 continue;
             }
+            piece->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
             // it is assumed that no two pieces have a chest in the same chunk
             uint64_t populationSeed = getPopulationSeed(mc, seed, chestPosX & ~15, chestPosZ & ~15);
             rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
@@ -3689,7 +3694,6 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             case FAT_TOWER_TOP: {
                 piece->chestCount = 2;
                 piece->lootTable = "end_city_treasure";
-                piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
                 oneChest = 0;
                 switch (piece->rot) {
                 case 0: chestPos1X = piece->pos.x - 1 + 3; chestPos1Z = piece->pos.z - 1 + 11; break; // 0
@@ -3710,7 +3714,6 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             case END_SHIP: {
                 piece->chestCount = 2;
                 piece->lootTable = "end_city_treasure";
-                piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
                 oneChest = 0;
                 switch (piece->rot) {
                 case 0: chestPos1X = piece->pos.x - 1 + 5; chestPos1Z = piece->pos.z - 1 + 7; break; // 0
@@ -3731,7 +3734,6 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             case THIRD_FLOOR_2: {
                 piece->chestCount = 1;
                 piece->lootTable = "end_city_treasure";
-                piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
                 oneChest = 1;
                 switch (piece->rot) {
                 case 0: chestPos1X = piece->pos.x - 1 + 6; chestPos1Z = piece->pos.z - 1 + 2; break; // 0
@@ -3744,16 +3746,18 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             }
             default:
                 piece->chestCount = 0;
-                piece->lootSeeds = malloc(piece->chestCount * sizeof(uint64_t));
                 continue;
             }
             // it is assumed that no two pieces have a chest in the same chunk
             if (oneChest) {
+                piece->chestPoses[0] = (Pos) {chestPos1X, chestPos1Z};
                 uint64_t populationSeed = getPopulationSeed(mc, seed, chestPos1X & ~15, chestPos1Z & ~15);
                 rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
                 rnd.nextLong(rnd.state); // LootTableSeed from placeInWorld is not used
                 piece->lootSeeds[0] = rnd.nextLong(rnd.state);
             } else {
+                piece->chestPoses[0] = (Pos) {chestPos1X, chestPos1Z};
+                piece->chestPoses[1] = (Pos) {chestPos2X, chestPos2Z};
                 if (chestPos1X >> 4 == chestPos2X >> 4 && chestPos1Z >> 4 == chestPos2Z >> 4) {
                     uint64_t populationSeed = getPopulationSeed(mc, seed, chestPos1X & ~15, chestPos1Z & ~15);
                     rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
@@ -3783,6 +3787,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         p->name = "BTP";
         p->pos = (Pos3) {minBlockX + 9, 90, minBlockZ + 9};
         p->lootTable = "buried_treasure";
+        p->chestPoses[0] = (Pos) {p->pos.x, p->pos.z};
         break;
     }
     case Ruined_Portal:
@@ -3794,6 +3799,8 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         p->name = "RUPO";
         p->pos = (Pos3) {minBlockX, 0, minBlockZ};
         p->lootTable = "ruined_portal";
+        // rough estimate
+        p->chestPoses[0] = (Pos) {minBlockX, minBlockZ};
         break;
     }
     default: // unsupported structures
@@ -3801,21 +3808,12 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
     }
     Piece* p = list;
     p->chestCount = 1;
-    p->lootSeeds = malloc(p->chestCount * sizeof(uint64_t));
     RandomSource rnd = createRandomSource(legacy);
     uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
     rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
     p->lootSeeds[0] = rnd.nextLong(rnd.state);
     free(rnd.state);
     return 1;
-}
-
-void freeStructurePieces(Piece *list, int pieceCount) {
-    for (int i = 0; i < pieceCount; ++i) {
-        Piece* p = &list[i];
-        free(p->lootSeeds);
-    }
-    free(list);
 }
 
 static

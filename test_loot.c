@@ -66,7 +66,7 @@ int main() {
 		}
 		free_loot_table_pools(&ctx);
 	}
-	freeStructurePieces(pieces, pieceCount);
+	free(pieces);
 
 	return 0;
 }
