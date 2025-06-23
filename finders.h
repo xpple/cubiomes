@@ -649,6 +649,15 @@ int getVariant(StructureVariant *sv, int structType, int mc, uint64_t seed,
         int blockX, int blockZ, int biomeID);
 
 /**
+ * Get the distinct loot table count for chests in the structure.
+ *
+ * @param structure the structure type
+ * @param mc the Minecraft version
+ * @return the distinct count
+ */
+int getLootTableCountForStructure(int structure, int mc);
+
+/**
  * Get a list of structure pieces for the given structure. Not all structures are supported.
  * For the supported structures, each structure piece has information about the name, (basic)
  * position, chest count, and loot table and seeds for each chest. The number of pieces is returned.

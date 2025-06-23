@@ -3562,6 +3562,38 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
     }
 }
 
+int getLootTableCountForStructure(int structure, int mc) {
+    switch (structure) {
+    case Desert_Pyramid: return 1;
+    case Jungle_Temple: return 2;
+    case Swamp_Hut: return 0;
+    case Igloo: return 1;
+    case Village: return mc <= MC_1_13 ? 1 : 16;
+    case Ocean_Ruin: return 2;
+    case Shipwreck: return 3;
+    case Monument: return 0;
+    case Mansion: return 1;
+    case Outpost: return 1;
+    case Ruined_Portal:
+    case Ruined_Portal_N: return 1;
+    case Ancient_City: return 2;
+    case Treasure: return 1;
+    case Mineshaft: return 1;
+    case Desert_Well: return 0;
+    case Geode: return 0;
+    case Fortress: return 1;
+    case Bastion: return 4;
+    case End_City: return 1;
+    case End_Gateway: return 0;
+    case End_Island: return 0;
+    case Trail_Ruins: return 0;
+    case Trial_Chambers: return 13;
+    default:
+        fprintf(stderr, "getLootTableCountForStructure: not implemented for structure %s.\n", struct2str(structure));
+        exit(1);
+    }
+}
+
 int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf, StructureVariant sv, int mc, uint64_t seed, int posX, int posZ) {
     int minBlockX = posX & ~15;
     int minBlockZ = posZ & ~15;
