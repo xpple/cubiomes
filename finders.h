@@ -54,6 +54,11 @@ STRUCT(StructureConfig)
     float   rarity;
 };
 
+STRUCT(StructureSaltConfig) {
+    int32_t generationStep;
+    int32_t decoratorIndex;
+};
+
 
 STRUCT(Pos)  { int x, z; };
 STRUCT(Pos3) { int x, y, z; };
@@ -104,11 +109,15 @@ STRUCT(StructureVariant)
 
 STRUCT(Piece)
 {
-    const char *name;   // structure piece name
-    Pos3 pos, bb0, bb1; // position and bounding box limits
-    uint8_t rot;        // rotation
+    const char *name;      // structure piece name
+    Pos3 pos, bb0, bb1;    // position and bounding box limits
+    uint8_t rot;           // rotation
     int8_t depth;
     int8_t type;
+    int chestCount;
+    Pos chestPoses[4];     // assume a maximum of four chests
+    uint64_t lootSeeds[4];
+    const char* lootTable; // for now each piece can only have one loot table
     Piece *next;
 };
 
@@ -200,6 +209,19 @@ static inline uint64_t moveStructure(uint64_t baseSeed, int regX, int regZ)
  */
 int getStructureConfig(int structureType, int mc, StructureConfig *sconf);
 
+/**
+ * Get the structure salt config (step and index) for a given feature. Currently
+ * only supports those features for which loot is supported. Returns zero upon
+ * failure (version is below 1.13, or structure does not exist in that version).
+ *
+ * @param structureType the structure type to get the config for
+ * @param mc the Minecraft version
+ * @param biome the biome variant as returned by getVariant, or in <1.18 the biome itself
+ * @param ssconf the output config
+ * @return zero upon failure
+ */
+int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltConfig *ssconf);
+
 /* The library can be compiled to use a custom internal getter for structure
  * configurations. For this, the macro STRUCT_CONFIG_OVERRIDE should be defined
  * as true and the function getStructureConfig_override() should be defined
@@ -250,6 +272,8 @@ Pos getLargeStructureChunkInRegion(StructureConfig config, uint64_t seed, int re
  */
 int getMineshafts(int mc, uint64_t seed, int chunkX, int chunkZ,
         int chunkW, int chunkH, Pos *out, int nout);
+
+uint64_t getPopulationSeed(int mc, uint64_t ws, int x, int z);
 
 // not exacly a structure
 static inline ATTR(const)
@@ -623,6 +647,33 @@ uint64_t chunkGenerateRnd(uint64_t worldSeed, int chunkX, int chunkZ)
  */
 int getVariant(StructureVariant *sv, int structType, int mc, uint64_t seed,
         int blockX, int blockZ, int biomeID);
+
+/**
+ * Get the distinct loot table count for chests in the structure.
+ *
+ * @param structure the structure type
+ * @param mc the Minecraft version
+ * @return the distinct count
+ */
+int getLootTableCountForStructure(int structure, int mc);
+
+/**
+ * Get a list of structure pieces for the given structure. Not all structures are supported.
+ * For the supported structures, each structure piece has information about the name, (basic)
+ * position, chest count, and loot table and seeds for each chest. The number of pieces is returned.
+ *
+ * @param list the output list of pieces
+ * @param n either for fortresses the maximum size of the output list, or for end cities a value at least END_CITY_PIECES_MAX
+ * @param stype the structure type
+ * @param ssconf the structure salt config from getStructureSaltConfig
+ * @param sv the structure variant (if available)
+ * @param mc the Minecraft version
+ * @param seed the world seed
+ * @param posX the block X-coordinate as yielded by getStructurePos
+ * @param posZ the block Z-coordinate as yielded by getStructurePos
+ * @return the number of pieces
+ */
+int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf, StructureVariant sv, int mc, uint64_t seed, int posX, int posZ);
 
 /* Generate the structure pieces of an End City. This pieces buffer should be
  * large enough to hold END_CITY_PIECES_MAX elements.

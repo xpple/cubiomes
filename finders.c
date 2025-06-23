@@ -243,6 +243,137 @@ int getStructureConfig(int structureType, int mc, StructureConfig *sconf)
     }
 }
 
+int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltConfig *ssconf) {
+    static const StructureSaltConfig
+    ss_buried_treasure_113 =         {2,  2},
+    ss_buried_treasure_1161 =        {3,  1},
+    ss_buried_treasure_118 =         {3,  2},
+    ss_buried_treasure_1194 =        {3,  0},
+
+    ss_bastion_remnant_116 =         {4, 12},
+    ss_bastion_remnant_1192 =        {4, 13},
+    ss_bastion_remnant_1194 =        {4,  0},
+
+    ss_desert_pyramid_113 =          {3,  2},
+    ss_desert_pyramid_1161 =         {4,  3},
+    ss_desert_pyramid_1192 =         {4,  1},
+
+    ss_igloo_113 =                   {3,  4},
+    ss_igloo_1161 =                  {4,  4},
+    ss_igloo_1192 =                  {4,  3},
+
+    ss_ruined_portal_1161 =          {4,  5},
+    ss_ruined_portal_118 =           {4, 18},
+    ss_ruined_portal_1192 =          {4, 19},
+    ss_ruined_portal_1194 =          {4, 10},
+
+    ss_ruined_portal_desert_118 =    {4, 19},
+    ss_ruined_portal_desert_1192 =   {4, 20},
+    ss_ruined_portal_desert_1194 =   {4, 11},
+
+    ss_ruined_portal_jungle_118 =    {4, 20},
+    ss_ruined_portal_jungle_1192 =   {4, 21},
+    ss_ruined_portal_jungle_1194 =   {4, 12},
+
+    ss_ruined_portal_swamp_118 =     {4, 21},
+    ss_ruined_portal_swamp_1192 =    {4, 22},
+    ss_ruined_portal_swamp_1194 =    {4, 16},
+
+    ss_ruined_portal_mountain_118 =  {4, 22},
+    ss_ruined_portal_mountain_1192 = {4, 23},
+    ss_ruined_portal_mountain_1194 = {4, 13},
+
+    ss_ruined_portal_ocean_118 =     {4, 23},
+    ss_ruined_portal_ocean_1192 =    {4, 24},
+    ss_ruined_portal_ocean_1194 =    {4, 15},
+
+    ss_ruined_portal_nether_118 =    {4, 24},
+    ss_ruined_portal_nether_1192 =   {4, 25},
+    ss_ruined_portal_nether_1194 =   {4, 14},
+
+    ss_fortress_113 =                {5,  0},
+    ss_fortress_1161 =               {7,  0},
+    ss_fortress_1194 =               {7,  1},
+
+    ss_end_city_113 =                {3,  0},
+    ss_end_city_end_highlands_113 =  {3,  1},
+    ss_end_city_1161 =               {4, 10},
+    ss_end_city_118 =                {4, 11},
+    ss_end_city_1192 =               {4, 12},
+    ss_end_city_1194 =               {4,  2};
+
+    switch (structureType) {
+    case Treasure:
+        if (mc < MC_1_16_1) *ssconf = ss_buried_treasure_113;
+        else if (mc < MC_1_18) *ssconf = ss_buried_treasure_1161;
+        else if (mc < MC_1_19_4) *ssconf = ss_buried_treasure_118;
+        else *ssconf = ss_buried_treasure_1194;
+        return mc >= MC_1_13;
+    case Bastion:
+        if (mc < MC_1_19_2) *ssconf = ss_bastion_remnant_116;
+        else if (mc < MC_1_19_4) *ssconf = ss_bastion_remnant_1192;
+        else *ssconf = ss_bastion_remnant_1194;
+        return mc >= MC_1_16;
+    case Desert_Pyramid:
+        if (mc < MC_1_16_1) *ssconf = ss_desert_pyramid_113;
+        else if (mc < MC_1_19_2) *ssconf = ss_desert_pyramid_1161;
+        else *ssconf = ss_desert_pyramid_1192;
+        return mc >= MC_1_13;
+    case Igloo:
+        if (mc < MC_1_16_1) *ssconf = ss_igloo_113;
+        else if (mc < MC_1_19_2) *ssconf = ss_igloo_1161;
+        else *ssconf = ss_igloo_1192;
+        return mc >= MC_1_13;
+    case Ruined_Portal:
+        if (mc < MC_1_18) *ssconf = ss_ruined_portal_1161;
+        else if (mc < MC_1_19_2) {
+            if (biome == desert) *ssconf = ss_ruined_portal_desert_118;
+            else if (biome == jungle) *ssconf = ss_ruined_portal_jungle_118;
+            else if (biome == swamp) *ssconf = ss_ruined_portal_swamp_118;
+            else if (biome == mountains) *ssconf = ss_ruined_portal_mountain_118;
+            else if (biome == ocean) *ssconf = ss_ruined_portal_ocean_118;
+            else *ssconf = ss_ruined_portal_118;
+        }
+        else if (mc < MC_1_19_4) {
+            if (biome == desert) *ssconf = ss_ruined_portal_desert_1192;
+            else if (biome == jungle) *ssconf = ss_ruined_portal_jungle_1192;
+            else if (biome == swamp) *ssconf = ss_ruined_portal_swamp_1192;
+            else if (biome == mountains) *ssconf = ss_ruined_portal_mountain_1192;
+            else if (biome == ocean) *ssconf = ss_ruined_portal_ocean_1192;
+            else *ssconf = ss_ruined_portal_1192; // assuming biome != deep_dark
+        }
+        else {
+            if (biome == desert) *ssconf = ss_ruined_portal_desert_1194;
+            else if (biome == jungle) *ssconf = ss_ruined_portal_jungle_1194;
+            else if (biome == swamp) *ssconf = ss_ruined_portal_swamp_1194;
+            else if (biome == mountains) *ssconf = ss_ruined_portal_mountain_1194;
+            else if (biome == ocean) *ssconf = ss_ruined_portal_ocean_1194;
+            else *ssconf = ss_ruined_portal_1194; // assuming biome != deep_dark
+        }
+        return mc >= MC_1_16_1;
+    case Ruined_Portal_N:
+        if (mc < MC_1_19_2) *ssconf = ss_ruined_portal_nether_118;
+        else if (mc < MC_1_19_4) *ssconf = ss_ruined_portal_nether_1192;
+        else *ssconf = ss_ruined_portal_nether_1194;
+        return mc >= MC_1_18;
+    case Fortress:
+        if (mc < MC_1_16_1) *ssconf = ss_fortress_113;
+        else if (mc < MC_1_19_4) *ssconf = ss_fortress_1161;
+        else *ssconf = ss_fortress_1194;
+        return mc >= MC_1_13;
+    case End_City:
+        if (mc < MC_1_16_1) *ssconf = biome == end_highlands ? ss_end_city_end_highlands_113 : ss_end_city_113;
+        else if (mc < MC_1_18) *ssconf = ss_end_city_1161;
+        else if (mc < MC_1_19_2) *ssconf = ss_end_city_118;
+        else if (mc < MC_1_19_4) *ssconf = ss_end_city_1192;
+        else *ssconf = ss_end_city_1194;
+        return mc >= MC_1_13;
+    default:
+        fprintf(stderr, "ERR getStructureSaltConfig: unsupported structure type %d\n", structureType);
+        memset(ssconf, 0, sizeof(StructureSaltConfig));
+        return 0;
+    }
+}
 
 // like getFeaturePos(), but modifies the rng seed
 static inline
@@ -3268,7 +3399,59 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
             r->start = 1 + nextInt(&rng, 10);
         }
         r->rotation = nextInt(&rng, 4);
-        r->mirror = nextFloat(&rng) < 0.5f;
+        r->mirror = nextFloat(&rng) >= 0.5f;
+
+        if (r->giant) {
+            switch (r->start) {
+            case 1: sx = 11, sy = 17, sz = 16; break;
+            case 2: sx = 11, sy = 16, sz = 16; break;
+            case 3: sx = 16, sy = 16, sz = 16; break;
+            default: UNREACHABLE();
+            }
+        } else {
+            switch (r->start) {
+            case 1: sx = 6, sy = 10, sz = 6; break;
+            case 2: sx = 9, sy = 12, sz = 9; break;
+            case 3: sx = 8, sy = 9, sz = 9; break;
+            case 4: sx = 8, sy = 9, sz = 9; break;
+            case 5: sx = 10, sy = 7, sz = 7; break;
+            case 6: sx = 5, sy = 7, sz = 7; break;
+            case 7: sx = 9, sy = 7, sz = 9; break;
+            case 8: sx = 14, sy = 9, sz = 9; break;
+            case 9: sx = 10, sy = 8, sz = 9; break;
+            case 10: sx = 12, sy = 8, sz = 10; break;
+            default: UNREACHABLE();
+            }
+        }
+
+        Pos pivotPos = {sx / 2, sz / 2};
+        Pos startPos;
+        switch (r->rotation) { // 0:0, 1:cw90, 2:cw180, 3:cw270=ccw90
+        case 0: startPos = (Pos) {0, 0}; break;
+        case 1: startPos = (Pos) {pivotPos.x + pivotPos.z, pivotPos.z - pivotPos.x}; break;
+        case 2: startPos = (Pos) {pivotPos.x + pivotPos.x, pivotPos.z + pivotPos.z}; break;
+        case 3: startPos = (Pos) {pivotPos.x - pivotPos.z, pivotPos.x + pivotPos.z}; break;
+        default: UNREACHABLE();
+        }
+
+        Pos3 size = {sx, sy, sz};
+        int mirX = size.x;
+        if (r->mirror) {
+            mirX = -mirX;
+        }
+        Pos3 endPos;
+        switch (r->rotation) { // 0:0, 1:cw90, 2:cw180, 3:cw270=ccw90
+        case 0: endPos = (Pos3) {mirX, size.y, size.z}; break;
+        case 1: endPos = (Pos3) {startPos.x - size.z, size.y, startPos.z + mirX}; break;
+        case 2: endPos = (Pos3) {startPos.x - mirX, size.y, startPos.z - size.z}; break;
+        case 3: endPos = (Pos3) {startPos.x + size.z, size.y, startPos.z - mirX}; break;
+        default: UNREACHABLE();
+        }
+
+        r->x = startPos.x;
+        r->z = startPos.z;
+        r->sx = endPos.x - startPos.x;
+        r->sz = endPos.z - startPos.z;
         return 1;
 
     case Monument:
@@ -3377,6 +3560,292 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
     default:
         return 0;
     }
+}
+
+int getLootTableCountForStructure(int structure, int mc) {
+    switch (structure) {
+    case Desert_Pyramid: return 1;
+    case Jungle_Temple: return 2;
+    case Swamp_Hut: return 0;
+    case Igloo: return 1;
+    case Village: return mc <= MC_1_13 ? 1 : 16;
+    case Ocean_Ruin: return 2;
+    case Shipwreck: return 3;
+    case Monument: return 0;
+    case Mansion: return 1;
+    case Outpost: return 1;
+    case Ruined_Portal:
+    case Ruined_Portal_N: return 1;
+    case Ancient_City: return 2;
+    case Treasure: return 1;
+    case Mineshaft: return 1;
+    case Desert_Well: return 0;
+    case Geode: return 0;
+    case Fortress: return 1;
+    case Bastion: return 4;
+    case End_City: return 1;
+    case End_Gateway: return 0;
+    case End_Island: return 0;
+    case Trail_Ruins: return 0;
+    case Trial_Chambers: return 13;
+    default:
+        fprintf(stderr, "getLootTableCountForStructure: not implemented for structure %s.\n", struct2str(structure));
+        exit(1);
+    }
+}
+
+int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf, StructureVariant sv, int mc, uint64_t seed, int posX, int posZ) {
+    int minBlockX = posX & ~15;
+    int minBlockZ = posZ & ~15;
+    const int legacy = mc <= MC_1_17;
+    switch (stype) {
+    case Desert_Pyramid: {
+        Piece* p = list;
+        p->name = "TeDP";
+        p->pos = (Pos3) {minBlockX, 64, minBlockZ};
+        p->chestCount = 4;
+        p->lootTable = "desert_pyramid";
+        p->chestPoses[0] = (Pos) {minBlockX + 8, minBlockZ + 10};
+        p->chestPoses[1] = (Pos) {minBlockX + 10, minBlockZ + 8};
+        p->chestPoses[2] = (Pos) {minBlockX + 10, minBlockZ + 12};
+        p->chestPoses[3] = (Pos) {minBlockX + 12, minBlockZ + 10};
+        // chests generate in the same chunk as structure
+        uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
+        RandomSource rnd = createRandomSource(legacy);
+        rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+        rnd.nextInt(rnd.state, 3);
+        for (int i = 0; i < p->chestCount; ++i) {
+            p->lootSeeds[i] = rnd.nextLong(rnd.state);
+        }
+        free(rnd.state);
+        return 1;
+    }
+    case Igloo: {
+        if (!sv.basement) {
+            Piece* p = list;
+            p->name = "igloo/top";
+            p->pos = (Pos3) {minBlockX, 90, minBlockZ};
+            p->chestCount = 0;
+            return 1;
+        }
+        Piece* topPiece = &list[0];
+        topPiece->name = "igloo/top";
+        topPiece->pos = (Pos3) {minBlockX, 90, minBlockZ};
+        topPiece->chestCount = 0;
+        for (int i = 1; i < sv.size + 1; ++i) {
+            Piece* middlePiece = &list[i];
+            middlePiece->name = "igloo/middle";
+            middlePiece->pos = (Pos3) {minBlockX + 2, 90 - i * 3, minBlockZ + 4};
+            middlePiece->chestCount = 0;
+        }
+        Piece* bottomPiece = &list[sv.size + 1];
+        bottomPiece->name = "igloo/bottom";
+        bottomPiece->pos = (Pos3) {minBlockX, 90 - 3 - sv.size * 3, minBlockZ - 2};
+        bottomPiece->chestCount = 1;
+        bottomPiece->lootTable = "igloo_chest";
+        int chestPosX, chestPosZ;
+        switch ((sv.rotation << 1) | sv.mirror) {
+        case 0b00: chestPosX = minBlockX + 8 - 7; chestPosZ = minBlockZ + 8 - 4; break; //
+        case 0b01: chestPosX = minBlockX + 8 - 3; chestPosZ = minBlockZ + 8 - 2; break; // mirrored
+        case 0b10: chestPosX = minBlockX + 8 - 4; chestPosZ = minBlockZ + 8 - 5; break; // 90 cw
+        case 0b11: chestPosX = minBlockX + 8 - 6; chestPosZ = minBlockZ + 8 - 1; break; // 90 cw + mirrored
+        default: UNREACHABLE();
+        }
+        bottomPiece->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
+        // chest generates in the same chunk as structure
+        uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
+        RandomSource rnd = createRandomSource(legacy);
+        rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+        rnd.nextLong(rnd.state); // LootTableSeed from placeInWorld is not used
+        bottomPiece->lootSeeds[0] = rnd.nextLong(rnd.state);
+        free(rnd.state);
+        return sv.size + 2;
+    }
+    case Swamp_Hut: {
+        Piece* p = list;
+        p->name = "TeSH";
+        p->pos = (Pos3) {minBlockX, 64, minBlockZ};
+        p->chestCount = 0;
+        return 1;
+    }
+    case Fortress: {
+        int count = getFortressPieces(list, n, mc, seed, posX >> 4, posZ >> 4);
+        RandomSource rnd = createRandomSource(legacy);
+        for (int i = 0; i < count; ++i) {
+            Piece* piece = &list[i];
+            int chestPosX, chestPosZ;
+            switch (piece->type) {
+            // TODO: not every corridor has a chest!
+            case CORRIDOR_TURN_LEFT: {
+                piece->chestCount = 1;
+                piece->lootTable = "nether_bridge";
+                switch (piece->rot) {
+                case 0: chestPosX = piece->pos.x - 1 + 3; chestPosZ = piece->pos.z - 1 + 3; break; // 0
+                case 1: chestPosX = piece->pos.x - 1 - 3; chestPosZ = piece->pos.z - 1 + 3; break; // 90
+                case 2: chestPosX = piece->pos.x - 1 - 3; chestPosZ = piece->pos.z - 1 - 3; break; // 180
+                case 3: chestPosX = piece->pos.x - 1 + 3; chestPosZ = piece->pos.z - 1 - 3; break; // 270
+                default: UNREACHABLE();
+                }
+                break;
+            }
+            case CORRIDOR_TURN_RIGHT:
+                piece->chestCount = 1;
+                piece->lootTable = "nether_bridge";
+                switch (piece->rot) {
+                case 0: chestPosX = piece->pos.x - 1 + 1; chestPosZ = piece->pos.z - 1 + 3; break; // 0
+                case 1: chestPosX = piece->pos.x - 1 - 3; chestPosZ = piece->pos.z - 1 + 1; break; // 90
+                case 2: chestPosX = piece->pos.x - 1 - 1; chestPosZ = piece->pos.z - 1 - 3; break; // 180
+                case 3: chestPosX = piece->pos.x - 1 + 3; chestPosZ = piece->pos.z - 1 - 1; break; // 270
+                default: UNREACHABLE();
+                }
+                break;
+            default:
+                piece->chestCount = 0;
+                continue;
+            }
+            piece->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
+            // it is assumed that no two pieces have a chest in the same chunk
+            uint64_t populationSeed = getPopulationSeed(mc, seed, chestPosX & ~15, chestPosZ & ~15);
+            rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+            piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+        }
+        free(rnd.state);
+        return count;
+    }
+    case End_City: {
+        if (n < END_CITY_PIECES_MAX) {
+            return -1;
+        }
+        int count = getEndCityPieces(list, seed, posX >> 4, posZ >> 4);
+        RandomSource rnd = createRandomSource(legacy);
+        for (int i = 0; i < count; ++i) {
+            Piece* piece = &list[i];
+            int chestPos1X, chestPos1Z, chestPos2X, chestPos2Z;
+            int oneChest;
+            switch (piece->type) {
+            case FAT_TOWER_TOP: {
+                piece->chestCount = 2;
+                piece->lootTable = "end_city_treasure";
+                oneChest = 0;
+                switch (piece->rot) {
+                case 0: chestPos1X = piece->pos.x - 1 + 3; chestPos1Z = piece->pos.z - 1 + 11; break; // 0
+                case 1: chestPos1X = piece->pos.x - 1 - 11; chestPos1Z = piece->pos.z - 1 + 3; break; // 90
+                case 2: chestPos1X = piece->pos.x - 1 - 3; chestPos1Z = piece->pos.z - 1 - 11; break; // 180
+                case 3: chestPos1X = piece->pos.x - 1 + 11; chestPos1Z = piece->pos.z - 1 - 3; break; // 270
+                default: UNREACHABLE();
+                }
+                switch (piece->rot) {
+                case 0: chestPos2X = piece->pos.x - 1 + 5; chestPos2Z = piece->pos.z - 1 + 13; break; // 0
+                case 1: chestPos2X = piece->pos.x - 1 - 13; chestPos2Z = piece->pos.z - 1 + 5; break; // 90
+                case 2: chestPos2X = piece->pos.x - 1 - 5; chestPos2Z = piece->pos.z - 1 - 13; break; // 180
+                case 3: chestPos2X = piece->pos.x - 1 + 13; chestPos2Z = piece->pos.z - 1 - 5; break; // 270
+                default: UNREACHABLE();
+                }
+                break;
+            }
+            case END_SHIP: {
+                piece->chestCount = 2;
+                piece->lootTable = "end_city_treasure";
+                oneChest = 0;
+                switch (piece->rot) {
+                case 0: chestPos1X = piece->pos.x - 1 + 5; chestPos1Z = piece->pos.z - 1 + 7; break; // 0
+                case 1: chestPos1X = piece->pos.x - 1 - 7; chestPos1Z = piece->pos.z - 1 + 5; break; // 90
+                case 2: chestPos1X = piece->pos.x - 1 - 5; chestPos1Z = piece->pos.z - 1 - 7; break; // 180
+                case 3: chestPos1X = piece->pos.x - 1 + 7; chestPos1Z = piece->pos.z - 1 - 5; break; // 270
+                default: UNREACHABLE();
+                }
+                switch (piece->rot) {
+                case 0: chestPos2X = piece->pos.x - 1 + 7; chestPos2Z = piece->pos.z - 1 + 7; break; // 0
+                case 1: chestPos2X = piece->pos.x - 1 - 7; chestPos2Z = piece->pos.z - 1 + 7; break; // 90
+                case 2: chestPos2X = piece->pos.x - 1 - 7; chestPos2Z = piece->pos.z - 1 - 7; break; // 180
+                case 3: chestPos2X = piece->pos.x - 1 + 7; chestPos2Z = piece->pos.z - 1 - 7; break; // 270
+                default: UNREACHABLE();
+                }
+                break;
+            }
+            case THIRD_FLOOR_2: {
+                piece->chestCount = 1;
+                piece->lootTable = "end_city_treasure";
+                oneChest = 1;
+                switch (piece->rot) {
+                case 0: chestPos1X = piece->pos.x - 1 + 6; chestPos1Z = piece->pos.z - 1 + 2; break; // 0
+                case 1: chestPos1X = piece->pos.x - 1 - 2; chestPos1Z = piece->pos.z - 1 + 6; break; // 90
+                case 2: chestPos1X = piece->pos.x - 1 - 6; chestPos1Z = piece->pos.z - 1 - 2; break; // 180
+                case 3: chestPos1X = piece->pos.x - 1 + 2; chestPos1Z = piece->pos.z - 1 - 6; break; // 270
+                default: UNREACHABLE();
+                }
+                break;
+            }
+            default:
+                piece->chestCount = 0;
+                continue;
+            }
+            // it is assumed that no two pieces have a chest in the same chunk
+            if (oneChest) {
+                piece->chestPoses[0] = (Pos) {chestPos1X, chestPos1Z};
+                uint64_t populationSeed = getPopulationSeed(mc, seed, chestPos1X & ~15, chestPos1Z & ~15);
+                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                rnd.nextLong(rnd.state); // LootTableSeed from placeInWorld is not used
+                piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+            } else {
+                piece->chestPoses[0] = (Pos) {chestPos1X, chestPos1Z};
+                piece->chestPoses[1] = (Pos) {chestPos2X, chestPos2Z};
+                if (chestPos1X >> 4 == chestPos2X >> 4 && chestPos1Z >> 4 == chestPos2Z >> 4) {
+                    uint64_t populationSeed = getPopulationSeed(mc, seed, chestPos1X & ~15, chestPos1Z & ~15);
+                    rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                    rnd.nextLong(rnd.state);
+                    rnd.nextLong(rnd.state);
+                    piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+                    piece->lootSeeds[1] = rnd.nextLong(rnd.state);
+                } else {
+                    uint64_t populationSeed;
+                    populationSeed = getPopulationSeed(mc, seed, chestPos1X & ~15, chestPos1Z & ~15);
+                    rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                    rnd.nextLong(rnd.state);
+                    piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+                    populationSeed = getPopulationSeed(mc, seed, chestPos2X & ~15, chestPos2Z & ~15);
+                    rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                    rnd.nextLong(rnd.state);
+                    piece->lootSeeds[1] = rnd.nextLong(rnd.state);
+                }
+            }
+        }
+        free(rnd.state);
+        return count;
+    }
+    // structures that have one piece and one chest
+    case Treasure: {
+        Piece* p = list;
+        p->name = "BTP";
+        p->pos = (Pos3) {minBlockX + 9, 90, minBlockZ + 9};
+        p->lootTable = "buried_treasure";
+        p->chestPoses[0] = (Pos) {p->pos.x, p->pos.z};
+        break;
+    }
+    case Ruined_Portal:
+    case Ruined_Portal_N: {
+        // chest generates roughly in the same chunk as centre of the template
+        minBlockX = (posX + sv.x + sv.sx / 2) & ~15;
+        minBlockZ = (posZ + sv.z + sv.sz / 2) & ~15;
+        Piece* p = list;
+        p->name = "RUPO";
+        p->pos = (Pos3) {minBlockX, 0, minBlockZ};
+        p->lootTable = "ruined_portal";
+        // rough estimate
+        p->chestPoses[0] = (Pos) {minBlockX, minBlockZ};
+        break;
+    }
+    default: // unsupported structures
+        return -1;
+    }
+    Piece* p = list;
+    p->chestCount = 1;
+    RandomSource rnd = createRandomSource(legacy);
+    uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
+    rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+    p->lootSeeds[0] = rnd.nextLong(rnd.state);
+    free(rnd.state);
+    return 1;
 }
 
 static
