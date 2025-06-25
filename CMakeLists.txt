@@ -50,7 +50,6 @@ set(SOURCES
 	noise.c
 	util.c
 	quadbase.c
-	test_loot.c
 	loot/items.c
 	loot/loot_functions.c
 	loot/loot_tables.c
