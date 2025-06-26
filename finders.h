@@ -673,7 +673,7 @@ int getLootTableCountForStructure(int structure, int mc);
  * @param posZ the block Z-coordinate as yielded by getStructurePos
  * @return the number of pieces
  */
-int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf, StructureVariant sv, int mc, uint64_t seed, int posX, int posZ);
+int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf, StructureVariant *sv, int mc, uint64_t seed, int posX, int posZ);
 
 /* Generate the structure pieces of an End City. This pieces buffer should be
  * large enough to hold END_CITY_PIECES_MAX elements.

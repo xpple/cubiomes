@@ -3594,7 +3594,7 @@ int getLootTableCountForStructure(int structure, int mc) {
     }
 }
 
-int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf, StructureVariant sv, int mc, uint64_t seed, int posX, int posZ) {
+int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf, StructureVariant *sv, int mc, uint64_t seed, int posX, int posZ) {
     int minBlockX = posX & ~15;
     int minBlockZ = posZ & ~15;
     const int legacy = mc <= MC_1_17;
@@ -3621,7 +3621,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         return 1;
     }
     case Igloo: {
-        if (!sv.basement) {
+        if (!sv->basement) {
             Piece* p = list;
             p->name = "igloo/top";
             p->pos = (Pos3) {minBlockX, 90, minBlockZ};
@@ -3632,19 +3632,19 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         topPiece->name = "igloo/top";
         topPiece->pos = (Pos3) {minBlockX, 90, minBlockZ};
         topPiece->chestCount = 0;
-        for (int i = 1; i < sv.size + 1; ++i) {
+        for (int i = 1; i < sv->size + 1; ++i) {
             Piece* middlePiece = &list[i];
             middlePiece->name = "igloo/middle";
             middlePiece->pos = (Pos3) {minBlockX + 2, 90 - i * 3, minBlockZ + 4};
             middlePiece->chestCount = 0;
         }
-        Piece* bottomPiece = &list[sv.size + 1];
+        Piece* bottomPiece = &list[sv->size + 1];
         bottomPiece->name = "igloo/bottom";
-        bottomPiece->pos = (Pos3) {minBlockX, 90 - 3 - sv.size * 3, minBlockZ - 2};
+        bottomPiece->pos = (Pos3) {minBlockX, 90 - 3 - sv->size * 3, minBlockZ - 2};
         bottomPiece->chestCount = 1;
         bottomPiece->lootTable = "igloo_chest";
         int chestPosX, chestPosZ;
-        switch ((sv.rotation << 1) | sv.mirror) {
+        switch ((sv->rotation << 1) | sv->mirror) {
         case 0b00: chestPosX = minBlockX + 8 - 7; chestPosZ = minBlockZ + 8 - 4; break; //
         case 0b01: chestPosX = minBlockX + 8 - 3; chestPosZ = minBlockZ + 8 - 2; break; // mirrored
         case 0b10: chestPosX = minBlockX + 8 - 4; chestPosZ = minBlockZ + 8 - 5; break; // 90 cw
@@ -3659,7 +3659,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         rnd.nextLong(rnd.state); // LootTableSeed from placeInWorld is not used
         bottomPiece->lootSeeds[0] = rnd.nextLong(rnd.state);
         free(rnd.state);
-        return sv.size + 2;
+        return sv->size + 2;
     }
     case Swamp_Hut: {
         Piece* p = list;
@@ -3825,8 +3825,8 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
     case Ruined_Portal:
     case Ruined_Portal_N: {
         // chest generates roughly in the same chunk as centre of the template
-        minBlockX = (posX + sv.x + sv.sx / 2) & ~15;
-        minBlockZ = (posZ + sv.z + sv.sz / 2) & ~15;
+        minBlockX = (posX + sv->x + sv->sx / 2) & ~15;
+        minBlockZ = (posZ + sv->z + sv->sz / 2) & ~15;
         Piece* p = list;
         p->name = "RUPO";
         p->pos = (Pos3) {minBlockX, 0, minBlockZ};
