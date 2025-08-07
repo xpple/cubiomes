@@ -12,7 +12,7 @@ int biomeExists(int mc, int id)
             return 1;
 
         if (id == pale_garden)
-            return mc >= MC_1_21_WD;
+            return mc >= MC_1_21_4;
 
         if (id == cherry_grove)
             return mc >= MC_1_20;

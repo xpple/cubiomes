@@ -1457,7 +1457,7 @@ int climateToBiome(int mc, const uint64_t np[6], uint64_t *dat)
     const BiomeTree *bt;
     int idx;
 
-    if (mc >= MC_1_21_WD)
+    if (mc >= MC_1_21_4)
         bt = &btree21wd;
     else if (mc >= MC_1_20_6)
         bt = &btree20;
