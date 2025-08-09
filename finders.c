@@ -3638,9 +3638,10 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             Piece* piece = &list[i];
             int chestPosX, chestPosZ;
             switch (piece->type) {
-            // TODO: not every corridor has a chest!
             case CORRIDOR_TURN_LEFT: {
-                piece->chestCount = 1;
+                if (!piece->chestCount) {
+                    continue;
+                }
                 piece->lootTable = "nether_bridge";
                 switch (piece->rot) {
                 case 0: chestPosX = piece->pos.x - 1 + 3; chestPosZ = piece->pos.z - 1 + 3; break; // 0
@@ -3652,7 +3653,9 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
                 break;
             }
             case CORRIDOR_TURN_RIGHT:
-                piece->chestCount = 1;
+                if (!piece->chestCount) {
+                    continue;
+                }
                 piece->lootTable = "nether_bridge";
                 switch (piece->rot) {
                 case 0: chestPosX = piece->pos.x - 1 + 1; chestPosZ = piece->pos.z - 1 + 3; break; // 0
@@ -4077,25 +4080,25 @@ int getEndCityPieces(Piece *list, uint64_t seed, int chunkX, int chunkZ)
 static const struct
 {
     Pos3 offset, size;
-    int skip, repeatable, weight, max;
+    int repeatable, weight, max;
     const char *name;
 }
 fortress_info[] = {
-    {{ 0, 0,0}, {18, 9,18}, 0, 0, 0, 0, "NeStart"}, // FORTRESS_START
-    {{-1,-3,0}, { 4, 9,18}, 0, 1,30, 0, "NeBS"},    // BRIDGE_STRAIGHT
-    {{-8,-3,0}, {18, 9,18}, 0, 0,10, 4, "NeBCr"},   // BRIDGE_CROSSING
-    {{-2, 0,0}, { 6, 8, 6}, 0, 0,10, 4, "NeRC"},    // BRIDGE_FORTIFIED_CROSSING
-    {{-2, 0,0}, { 6,10, 6}, 0, 0,10, 3, "NeSR"},    // BRIDGE_STAIRS
-    {{-2, 0,0}, { 6, 7, 8}, 0, 0, 5, 2, "NeMT"},    // BRIDGE_SPAWNER
-    {{-5,-3,0}, {12,13,12}, 0, 0, 5, 1, "NeCE"},    // BRIDGE_CORRIDOR_ENTRANCE
-    {{-1, 0,0}, { 4, 6, 4}, 0, 1,25, 0, "NeSC"},    // CORRIDOR_STRAIGHT
-    {{-1, 0,0}, { 4, 6, 4}, 0, 0,15, 5, "NeSCSC"},  // CORRIDOR_CROSSING
-    {{-1, 0,0}, { 4, 6, 4}, 1, 0, 5,10, "NeSCRT"},  // CORRIDOR_TURN_RIGHT
-    {{-1, 0,0}, { 4, 6, 4}, 1, 0, 5,10, "NeSCLT"},  // CORRIDOR_TURN_LEFT
-    {{-1,-7,0}, { 4,13, 9}, 0, 1,10, 3, "NeCCS"},   // CORRIDOR_STAIRS
-    {{-3, 0,0}, { 8, 6, 8}, 0, 0, 7, 2, "NeCTB"},   // CORRIDOR_T_CROSSING
-    {{-5,-3,0}, {12,13,12}, 0, 0, 5, 2, "NeCSR"},   // CORRIDOR_NETHER_WART
-    {{-1,-3,0}, { 4, 9, 7}, 1, 0, 0, 0, "NeBEF"},   // FORTRESS_END
+    {{ 0, 0,0}, {18, 9,18}, 0, 0, 0, "NeStart"}, // FORTRESS_START
+    {{-1,-3,0}, { 4, 9,18}, 1,30, 0, "NeBS"},    // BRIDGE_STRAIGHT
+    {{-8,-3,0}, {18, 9,18}, 0,10, 4, "NeBCr"},   // BRIDGE_CROSSING
+    {{-2, 0,0}, { 6, 8, 6}, 0,10, 4, "NeRC"},    // BRIDGE_FORTIFIED_CROSSING
+    {{-2, 0,0}, { 6,10, 6}, 0,10, 3, "NeSR"},    // BRIDGE_STAIRS
+    {{-2, 0,0}, { 6, 7, 8}, 0, 5, 2, "NeMT"},    // BRIDGE_SPAWNER
+    {{-5,-3,0}, {12,13,12}, 0, 5, 1, "NeCE"},    // BRIDGE_CORRIDOR_ENTRANCE
+    {{-1, 0,0}, { 4, 6, 4}, 1,25, 0, "NeSC"},    // CORRIDOR_STRAIGHT
+    {{-1, 0,0}, { 4, 6, 4}, 0,15, 5, "NeSCSC"},  // CORRIDOR_CROSSING
+    {{-1, 0,0}, { 4, 6, 4}, 0, 5,10, "NeSCRT"},  // CORRIDOR_TURN_RIGHT
+    {{-1, 0,0}, { 4, 6, 4}, 0, 5,10, "NeSCLT"},  // CORRIDOR_TURN_LEFT
+    {{-1,-7,0}, { 4,13, 9}, 1,10, 3, "NeCCS"},   // CORRIDOR_STAIRS
+    {{-3, 0,0}, { 8, 6, 8}, 0, 7, 2, "NeCTB"},   // CORRIDOR_T_CROSSING
+    {{-5,-3,0}, {12,13,12}, 0, 5, 2, "NeCSR"},   // CORRIDOR_NETHER_WART
+    {{-1,-3,0}, { 4, 9, 7}, 0, 0, 0, "NeBEF"},   // FORTRESS_END
 };
 
 static
@@ -4146,8 +4149,12 @@ Piece *addFortressPiece(PieceEnv *env, int typ, int x, int y, int z, int depth, 
             return NULL; // collision
         }
     }
+    if (typ == CORRIDOR_TURN_LEFT || typ == CORRIDOR_TURN_RIGHT) {
+        p->chestCount = nextInt(env->rng, 3) == 0;
+    } else if (typ == FORTRESS_END) {
+        skipNextN(env->rng, 1);
+    }
     // accept the piece and append it to the processing front
-    skipNextN(env->rng, fortress_info[typ].skip);
     //int queue = 0;
     if (pending)
     {
