@@ -37,6 +37,9 @@ set(HEADERS
 	loot/loot_tables/igloo_chest_1_13.h
 	loot/loot_tables/nether_bridge_1_13.h
 	loot/loot_tables/nether_bridge_1_20.h
+	loot/loot_tables/pillager_outpost_1_14.h
+	loot/loot_tables/pillager_outpost_1_19_2.h
+	loot/loot_tables/pillager_outpost_1_20.h
 	loot/loot_tables/ruined_portal_1_16_1.h
 	loot/loot_tables/ruined_portal_1_21_5.h
 	loot/cjson/cJSON.h
@@ -64,6 +67,9 @@ set(SOURCES
 	loot/loot_tables/igloo_chest_1_13.c
 	loot/loot_tables/nether_bridge_1_13.c
 	loot/loot_tables/nether_bridge_1_20.c
+	loot/loot_tables/pillager_outpost_1_14.c
+	loot/loot_tables/pillager_outpost_1_19_2.c
+	loot/loot_tables/pillager_outpost_1_20.c
 	loot/loot_tables/ruined_portal_1_16_1.c
 	loot/loot_tables/ruined_portal_1_21_5.c
 	loot/cjson/cJSON.c

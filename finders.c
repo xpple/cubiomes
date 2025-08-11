@@ -262,6 +262,10 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
     ss_igloo_1161 =                  {4,  4},
     ss_igloo_1192 =                  {4,  3},
 
+    ss_pillager_outpost_114 =        {3,  0},
+    ss_pillager_outpost_1161 =       {4,  0},
+    ss_pillager_outpost_1194 =       {4,  9},
+
     ss_ruined_portal_1161 =          {4,  5},
     ss_ruined_portal_118 =           {4, 18},
     ss_ruined_portal_1192 =          {4, 19},
@@ -324,6 +328,11 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
         else if (mc < MC_1_19_2) *ssconf = ss_igloo_1161;
         else *ssconf = ss_igloo_1192;
         return mc >= MC_1_13;
+    case Outpost:
+        if (mc < MC_1_16_1) *ssconf = ss_pillager_outpost_114;
+        else if (mc < MC_1_19_4) *ssconf = ss_pillager_outpost_1161;
+        else *ssconf = ss_pillager_outpost_1194;
+        return mc >= MC_1_14;
     case Ruined_Portal:
         if (mc < MC_1_18) *ssconf = ss_ruined_portal_1161;
         else if (mc < MC_1_19_2) {
@@ -3441,6 +3450,10 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
         }
         return 1;
 
+    case Outpost:
+        r->rotation = nextInt(&rng, 4); // NONE, CLOCKWISE_90, CLOCKWISE_180, COUNTERCLOCKWISE_90
+        return 1;
+
     case Desert_Pyramid:
         sx = 21; sy = 15; sz = 21;
         goto L_rotate_temple;
@@ -3623,6 +3636,29 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         bottomPiece->lootSeeds[0] = rnd.nextLong(rnd.state);
         free(rnd.state);
         return sv->size + 2;
+    }
+    case Outpost: {
+        // TODO: simulate all pieces
+        Piece* p = list;
+        p->name = "pillager_outpost/watchtower";
+        p->pos = (Pos3) {minBlockX, 64, minBlockZ};
+        p->chestCount = 1;
+        p->lootTable = "pillager_outpost";
+        int chestPosX, chestPosZ;
+        switch (sv->rotation) {
+        case 0: chestPosX = p->pos.x + 10; chestPosZ = p->pos.z + 10; break; // 0
+        case 1: chestPosX = p->pos.x - 10; chestPosZ = p->pos.z + 10; break; // 90
+        case 2: chestPosX = p->pos.x - 10; chestPosZ = p->pos.z - 10; break; // 180
+        case 3: chestPosX = p->pos.x + 10; chestPosZ = p->pos.z - 10; break; // 270
+        default: UNREACHABLE();
+        }
+        p->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
+        uint64_t populationSeed = getPopulationSeed(mc, seed, chestPosX & ~15, chestPosZ & ~15);
+        RandomSource rnd = createRandomSource(legacy);
+        rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+        p->lootSeeds[0] = rnd.nextLong(rnd.state);
+        free(rnd.state);
+        return 1;
     }
     case Swamp_Hut: {
         Piece* p = list;
