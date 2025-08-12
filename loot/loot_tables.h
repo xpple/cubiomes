@@ -5,6 +5,8 @@
 
 int init_loot_table_name(LootTableContext* context, const char* loot_table, int version);
 
+int init_bastion_bridge(LootTableContext* context, int version);
+int init_bastion_other(LootTableContext* context, int version);
 int init_buried_treasure(LootTableContext* context, int version);
 int init_desert_pyramid(LootTableContext* context, int version);
 int init_end_city_treasure(LootTableContext * context, int version);

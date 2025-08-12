@@ -6,6 +6,13 @@
 #include "loot_table_parser.h"
 #include "../biomes.h"
 
+#include "loot_tables/bastion_bridge_1_16_1.h"
+#include "loot_tables/bastion_bridge_1_16_5.h"
+#include "loot_tables/bastion_bridge_1_20.h"
+#include "loot_tables/bastion_other_1_16_1.h"
+#include "loot_tables/bastion_other_1_16_5.h"
+#include "loot_tables/bastion_other_1_20.h"
+#include "loot_tables/bastion_other_1_21_1.h"
 #include "loot_tables/buried_treasure_1_13.h"
 #include "loot_tables/buried_treasure_1_18.h"
 #include "loot_tables/desert_pyramid_1_13.h"
@@ -22,6 +29,12 @@
 #include "loot_tables/ruined_portal_1_21_5.h"
 
 int init_loot_table_name(LootTableContext* context, const char* loot_table, int version) {
+    if (strcmp(loot_table, "bastion_bridge") == 0) {
+        return init_bastion_bridge(context, version);
+    }
+    if (strcmp(loot_table, "bastion_other") == 0) {
+        return init_bastion_other(context, version);
+    }
     if (strcmp(loot_table, "buried_treasure") == 0) {
         return init_buried_treasure(context, version);
     }
@@ -46,6 +59,21 @@ int init_loot_table_name(LootTableContext* context, const char* loot_table, int 
     fprintf(stderr, "ERR init_loot_table_name: unsupported loot_table %s\n", loot_table);
     memset(context, 0, sizeof(LootTableContext));
     return 0;
+}
+
+int init_bastion_bridge(LootTableContext* context, int version) {
+    if (version < MC_1_16_5) init_bastion_bridge_1_16_1(context);
+    else if (version < MC_1_20) init_bastion_bridge_1_16_5(context);
+    else init_bastion_bridge_1_20(context);
+    return version > MC_1_15;
+}
+
+int init_bastion_other(LootTableContext* context, int version) {
+    if (version < MC_1_16_5) init_bastion_other_1_16_1(context);
+    else if (version < MC_1_20) init_bastion_other_1_16_5(context);
+    else if (version < MC_1_21_1) init_bastion_other_1_20(context);
+    else init_bastion_other_1_21_1(context);
+    return version > MC_1_15;
 }
 
 int init_buried_treasure(LootTableContext* context, int version) {

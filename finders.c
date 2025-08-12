@@ -3714,6 +3714,114 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         free(rnd.state);
         return count;
     }
+    case Bastion: {
+        // TODO: simulate all pieces
+        // this only simulates bastion pieces that always generate and have a chest
+        RandomSource rnd = createRandomSource(legacy);
+        switch (sv->start) {
+        case 0 /* units/air_base */: {
+            Piece* piece = list;
+            piece->name = "units/walls/wall_base";
+            piece->chestCount = 2;
+            piece->lootTable = "bastion_other";
+            int chestPos1X, chestPos1Z;
+            switch (sv->rotation) {
+            case 0: chestPos1X = minBlockX - 6; chestPos1Z = minBlockZ + 20; break;
+            case 1: chestPos1X = minBlockX - 20; chestPos1Z = minBlockZ - 6; break;
+            case 2: chestPos1X = minBlockX + 6; chestPos1Z = minBlockZ - 20; break;
+            case 3: chestPos1X = minBlockX + 20; chestPos1Z = minBlockZ + 6; break;
+            default: UNREACHABLE();
+            }
+            int chestPos2X, chestPos2Z;
+            switch (sv->rotation) {
+            case 0: chestPos2X = minBlockX - 6; chestPos2Z = minBlockZ + 21; break;
+            case 1: chestPos2X = minBlockX - 21; chestPos2Z = minBlockZ - 6; break;
+            case 2: chestPos2X = minBlockX + 6; chestPos2Z = minBlockZ - 21; break;
+            case 3: chestPos2X = minBlockX + 21; chestPos2Z = minBlockZ + 6; break;
+            default: UNREACHABLE();
+            }
+            piece->chestPoses[0] = (Pos) {chestPos1X, chestPos1Z};
+            piece->chestPoses[1] = (Pos) {chestPos2X, chestPos2Z};
+            // the chests always generate in the same chunk
+            uint64_t populationSeed = getPopulationSeed(mc, seed, chestPos1X & ~15, chestPos1Z & ~15);
+            rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+            piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+            piece->lootSeeds[1] = rnd.nextLong(rnd.state);
+            break;
+        }
+        case 1 /* hoglin_stable/air_base */: {
+            Piece* piece = list;
+            piece->name = "hoglin_stable/ramparts/ramparts_3";
+            piece->chestCount = 1;
+            piece->lootTable = "bastion_other";
+            int chestPosX, chestPosZ;
+            switch (sv->rotation) {
+            case 0: chestPosX = minBlockX - 4; chestPosZ = minBlockZ + 29; break;
+            case 1: chestPosX = minBlockX - 29; chestPosZ = minBlockZ - 4; break;
+            case 2: chestPosX = minBlockX + 4; chestPosZ = minBlockZ - 29; break;
+            case 3: chestPosX = minBlockX + 29; chestPosZ = minBlockZ + 4; break;
+            default: UNREACHABLE();
+            }
+            piece->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
+            uint64_t populationSeed = getPopulationSeed(mc, seed, chestPosX & ~15, chestPosZ & ~15);
+            rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+            piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+            break;
+        }
+        case 2 /* treasure/big_air_full */: {
+            Piece* piece = list;
+            piece->name = "treasure/ramparts/mid_wall_main";
+            piece->chestCount = 2;
+            piece->lootTable = "bastion_other";
+            int chestPos1X, chestPos1Z;
+            switch (sv->rotation) {
+            case 0: chestPos1X = minBlockX + 17; chestPos1Z = minBlockZ - 23; break;
+            case 1: chestPos1X = minBlockX + 23; chestPos1Z = minBlockZ + 17; break;
+            case 2: chestPos1X = minBlockX - 17; chestPos1Z = minBlockZ + 23; break;
+            case 3: chestPos1X = minBlockX - 23; chestPos1Z = minBlockZ - 17; break;
+            default: UNREACHABLE();
+            }
+            int chestPos2X, chestPos2Z;
+            switch (sv->rotation) {
+            case 0: chestPos2X = minBlockX + 19; chestPos2Z = minBlockZ - 25; break;
+            case 1: chestPos2X = minBlockX + 25; chestPos2Z = minBlockZ + 19; break;
+            case 2: chestPos2X = minBlockX - 19; chestPos2Z = minBlockZ + 25; break;
+            case 3: chestPos2X = minBlockX - 25; chestPos2Z = minBlockZ - 19; break;
+            default: UNREACHABLE();
+            }
+            piece->chestPoses[0] = (Pos) {chestPos1X, chestPos1Z};
+            piece->chestPoses[1] = (Pos) {chestPos2X, chestPos2Z};
+            // the chests always generate in the same chunk
+            uint64_t populationSeed = getPopulationSeed(mc, seed, chestPos1X & ~15, chestPos1Z & ~15);
+            rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+            piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+            piece->lootSeeds[1] = rnd.nextLong(rnd.state);
+            break;
+        }
+        case 3 /* bridge/starting_pieces/entrance_base */: {
+            Piece* piece = list;
+            piece->name = "bridge/starting_pieces/entrance";
+            piece->chestCount = 1;
+            piece->lootTable = "bastion_bridge";
+            int chestPosX, chestPosZ;
+            switch (sv->rotation) {
+            case 0: chestPosX = minBlockX + 9; chestPosZ = minBlockZ + 4; break;
+            case 1: chestPosX = minBlockX - 4; chestPosZ = minBlockZ + 9; break;
+            case 2: chestPosX = minBlockX - 9; chestPosZ = minBlockZ - 4; break;
+            case 3: chestPosX = minBlockX + 4; chestPosZ = minBlockZ - 9; break;
+            default: UNREACHABLE();
+            }
+            piece->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
+            uint64_t populationSeed = getPopulationSeed(mc, seed, chestPosX & ~15, chestPosZ & ~15);
+            rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+            piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+            break;
+        }
+        default: UNREACHABLE();
+        }
+        free(rnd.state);
+        return 1;
+    }
     case End_City: {
         if (n < END_CITY_PIECES_MAX) {
             return -1;
