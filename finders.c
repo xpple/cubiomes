@@ -3721,7 +3721,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         switch (sv->start) {
         case 0 /* units/air_base */: {
             Piece* piece = list;
-            piece->name = "units/walls/wall_base";
+            piece->name = "bastion/units/walls/wall_base";
             piece->chestCount = 2;
             piece->lootTable = "bastion_other";
             int chestPos1X, chestPos1Z;
@@ -3751,7 +3751,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         }
         case 1 /* hoglin_stable/air_base */: {
             Piece* piece = list;
-            piece->name = "hoglin_stable/ramparts/ramparts_3";
+            piece->name = "bastion/hoglin_stable/ramparts/ramparts_3";
             piece->chestCount = 1;
             piece->lootTable = "bastion_other";
             int chestPosX, chestPosZ;
@@ -3770,7 +3770,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         }
         case 2 /* treasure/big_air_full */: {
             Piece* piece = list;
-            piece->name = "treasure/ramparts/mid_wall_main";
+            piece->name = "bastion/treasure/ramparts/mid_wall_main";
             piece->chestCount = 2;
             piece->lootTable = "bastion_other";
             int chestPos1X, chestPos1Z;
@@ -3800,7 +3800,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         }
         case 3 /* bridge/starting_pieces/entrance_base */: {
             Piece* piece = list;
-            piece->name = "bridge/starting_pieces/entrance";
+            piece->name = "bastion/bridge/starting_pieces/entrance";
             piece->chestCount = 1;
             piece->lootTable = "bastion_bridge";
             int chestPosX, chestPosZ;
