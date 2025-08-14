@@ -262,6 +262,10 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
     ss_igloo_1161 =                  {4,  4},
     ss_igloo_1192 =                  {4,  3},
 
+    ss_jungle_pyramid_113 =          {3,  3},
+    ss_jungle_pyramid_1161 =         {4,  2},
+    ss_jungle_pyramid_1194 =         {4,  4},
+
     ss_pillager_outpost_114 =        {3,  0},
     ss_pillager_outpost_1161 =       {4,  0},
     ss_pillager_outpost_1194 =       {4,  9},
@@ -327,6 +331,11 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
         if (mc < MC_1_16_1) *ssconf = ss_igloo_113;
         else if (mc < MC_1_19_2) *ssconf = ss_igloo_1161;
         else *ssconf = ss_igloo_1192;
+        return mc >= MC_1_13;
+    case Jungle_Pyramid:
+        if (mc < MC_1_16_1) *ssconf = ss_jungle_pyramid_113;
+        else if (mc < MC_1_19_4) *ssconf = ss_jungle_pyramid_1161;
+        else *ssconf = ss_jungle_pyramid_1194;
         return mc >= MC_1_13;
     case Outpost:
         if (mc < MC_1_16_1) *ssconf = ss_pillager_outpost_114;
@@ -3636,6 +3645,26 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         bottomPiece->lootSeeds[0] = rnd.nextLong(rnd.state);
         free(rnd.state);
         return sv->size + 2;
+    }
+    case Jungle_Pyramid: {
+        Piece* p = list;
+        p->name = "TeJP";
+        p->pos = (Pos3) {minBlockX, 64, minBlockZ};
+        p->chestCount = 2; // TODO: maybe add dispenser loot too
+        p->lootTable = "jungle_temple";
+        p->chestPoses[0] = (Pos) {minBlockX + 1 + 8, minBlockZ + 1 + 3};
+        p->chestPoses[1] = (Pos) {minBlockX + 1 + 7, minBlockZ + 1 + 10};
+        // chests generate in the same chunk as structure
+        uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
+        RandomSource rnd = createRandomSource(legacy);
+        rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+        // replace with logn impl
+        xSkipN(rnd.state, 1515);
+        p->lootSeeds[0] = rnd.nextLong(rnd.state);
+        xSkipN(rnd.state, 1528 - 1515 - 1 - 1);
+        p->lootSeeds[1] = rnd.nextLong(rnd.state);
+        free(rnd.state);
+        return 1;
     }
     case Outpost: {
         // TODO: simulate all pieces

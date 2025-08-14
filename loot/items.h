@@ -6,6 +6,7 @@ enum Item {
     ITEM_ANCIENT_DEBRIS = 0,
     ITEM_APPLE,
     ITEM_ARROW,
+    ITEM_BAMBOO,
     ITEM_BEETROOT_SEEDS,
     ITEM_BELL,
     ITEM_BONE,
@@ -96,6 +97,7 @@ enum Item {
     ITEM_TNT,
     ITEM_TRIPWIRE_HOOK,
     ITEM_WHEAT,
+    ITEM_WILD_ARMOR_TRIM_SMITHING_TEMPLATE,
 };
 
 int item_name2global_id(const char* name);

@@ -20,6 +20,9 @@
 #include "loot_tables/end_city_treasure_1_13.h"
 #include "loot_tables/end_city_treasure_1_20.h"
 #include "loot_tables/igloo_chest_1_13.h"
+#include "loot_tables/jungle_temple_1_13.h"
+#include "loot_tables/jungle_temple_1_14.h"
+#include "loot_tables/jungle_temple_1_20.h"
 #include "loot_tables/nether_bridge_1_13.h"
 #include "loot_tables/nether_bridge_1_20.h"
 #include "loot_tables/pillager_outpost_1_14.h"
@@ -46,6 +49,9 @@ int init_loot_table_name(LootTableContext* context, const char* loot_table, int 
     }
     if (strcmp(loot_table, "igloo_chest") == 0) {
         return init_igloo_chest(context, version);
+    }
+    if (strcmp(loot_table, "jungle_temple") == 0) {
+        return init_jungle_temple(context, version);
     }
     if (strcmp(loot_table, "nether_bridge") == 0) {
         return init_nether_bridge(context, version);
@@ -96,6 +102,13 @@ int init_end_city_treasure(LootTableContext * context, int version) {
 
 int init_igloo_chest(LootTableContext* context, int version) {
     init_igloo_chest_1_13(context);
+    return version > MC_1_12;
+}
+
+int init_jungle_temple(LootTableContext* context, int version) {
+    if (version < MC_1_14) init_jungle_temple_1_13(context);
+    else if (version < MC_1_20) init_jungle_temple_1_14(context);
+    else init_jungle_temple_1_20(context);
     return version > MC_1_12;
 }
 
