@@ -7,6 +7,8 @@
 #include <stddef.h>
 #include <inttypes.h>
 
+#include "xrms.h"
+
 
 ///=============================================================================
 ///                      Compiler and Platform Features
@@ -239,10 +241,38 @@ static inline float xNextFloat(Xoroshiro *xr)
     return (xNextLong(xr) >> (64-24)) * 5.9604645E-8F;
 }
 
+static inline void calcVecMul(const uint64_t m[128][2], Xoroshiro* xr) {
+    // see xradv.c for details
+    uint64_t v[2] = {xr->hi, xr->lo};
+    uint64_t rv[2] = {0};
+
+    for (int r = 0; r < 64; ++r) {
+        int bit = (__builtin_popcountll(m[r][0] & v[0]) & 1) ^ (__builtin_popcountll(m[r][1] & v[1]) & 1);
+        if (bit) {
+            rv[0] |= 1ULL << (64 - r - 1);
+        }
+    }
+    for (int r = 0; r < 64; ++r) {
+        const int bit = (__builtin_popcountll(m[r + 64][0] & v[0]) & 1) ^ (__builtin_popcountll(m[r + 64][1] & v[1]) & 1);
+        if (bit) {
+            rv[1] |= 1ULL << (64 - r - 1);
+        }
+    }
+
+    xr->hi = rv[0];
+    xr->lo = rv[1];
+}
+
 static inline void xSkipN(Xoroshiro *xr, int count)
 {
-    while (count --> 0)
-        xNextLong(xr);
+    int pow = 0;
+    while (count > 0) {
+        if (count & 1) {
+            calcVecMul(xrms[pow], xr);
+        }
+        count >>= 1;
+        ++pow;
+    }
 }
 
 static inline uint64_t xNextLongJ(Xoroshiro *xr)
