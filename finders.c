@@ -3458,11 +3458,19 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
         case 3: r->rotation = 1; r->mirror = 1; r->sx = sz; r->sz = sx; break;
         }
         return 1;
-
+    case Shipwreck:
+        r->biome = biomeID; // to determine isBeached
+        r->rotation = nextInt(&rng, 4); // NONE, CLOCKWISE_90, CLOCKWISE_180, COUNTERCLOCKWISE_90
+        int isBeached = !isOceanic(biomeID);
+        if (isBeached) {
+            r->start = nextInt(&rng, 11);
+        } else {
+            r->start = nextInt(&rng, 20);
+        }
+        return 1;
     case Outpost:
         r->rotation = nextInt(&rng, 4); // NONE, CLOCKWISE_90, CLOCKWISE_180, COUNTERCLOCKWISE_90
         return 1;
-
     case Desert_Pyramid:
         sx = 21; sy = 15; sz = 21;
         goto L_rotate_temple;
