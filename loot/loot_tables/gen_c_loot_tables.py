@@ -71,11 +71,15 @@ class EnchantRandomlyFunction(LootFunction):
     def to_function_call(self, arg: str, version: str):
         if self.enchantments is None:
             return f"create_enchant_randomly({arg}, MC_{version}, get_item_type(\"{self.item_name}\"), 1)"
-        elif len(self.enchantments) == 1:
+        if isinstance(self.enchantments, str):
+            if self.enchantments.startswith("#"): # assume #minecraft:on_random_loot
+                return f"create_enchant_randomly({arg}, MC_{version}, get_item_type(\"{self.item_name}\"), 1)"
+            return f"create_enchant_randomly_one_enchant({arg}, get_enchantment_from_name(\"{self.enchantments}\"))"
+        assert isinstance(self.enchantments, list)
+        if len(self.enchantments) == 1:
             return f"create_enchant_randomly_one_enchant({arg}, get_enchantment_from_name(\"{self.enchantments[0]}\"))"
-        else:
-            enchantments_str = ", ".join(f"get_enchantment_from_name(\"{enchantment}\")" for enchantment in self.enchantments)
-            return f"create_enchant_randomly_list({arg}, (Enchantment[]){{{enchantments_str}}}, {len(self.enchantments)})"
+        enchantments_str = ", ".join(f"get_enchantment_from_name(\"{enchantment}\")" for enchantment in self.enchantments)
+        return f"create_enchant_randomly_list({arg}, (Enchantment[]){{{enchantments_str}}}, {len(self.enchantments)})"
 
 
 class EnchantWithLevelsFunction(LootFunction):
@@ -192,7 +196,7 @@ def parse_loot_function(json_function_entry, entry_name: str) -> LootFunction:
     if json_function == 'set_ominous_bottle_amplifier':
         return SkipCallsFunction(1)
     if json_function == 'enchant_randomly':
-        enchantments = json_function_entry.get("enchantments", None)
+        enchantments = json_function_entry.get("enchantments", json_function_entry.get("options", None))
         return EnchantRandomlyFunction(enchantments, entry_name)
     if json_function == 'enchant_with_levels':
         levels = json_function_entry.get("levels", None)

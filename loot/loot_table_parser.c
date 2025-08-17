@@ -119,20 +119,37 @@ static void parse_enchant_randomly(LootTableContext* ctx, LootFunction* loot_fun
 
     // if the "enchantments" field is present, we need to extract the enchantment name.
     // otherwise, we can simply create the enchant randomly function
-    cJSON* defined_echants = cJSON_GetObjectItem(function_data, "enchantments");
-    if (defined_echants == NULL)
+    cJSON* defined_enchants_legacy = cJSON_GetObjectItem(function_data, "enchantments");
+    cJSON* defined_enchants = cJSON_GetObjectItem(function_data, "options");
+    if (defined_enchants == NULL && defined_enchants_legacy == NULL)
     {
         // no-restriction enchant randomly
         create_enchant_randomly(loot_function, ctx->version, item_type, 1); // FIXME isTreasure is temporarily just set to true
         return;
     }
+    if (defined_enchants == NULL) {
+        defined_enchants = defined_enchants_legacy;
+    }
+    // check if the field actually defines an enchantment (list) or something like #minecraft:on_random_loot
+    if (cJSON_IsString(defined_enchants) && get_enchantment_from_name(defined_enchants->valuestring) == NO_ENCHANTMENT) {
+        create_enchant_randomly(loot_function, ctx->version, item_type, 1); // FIXME isTreasure is temporarily just set to true
+        return;
+    }
 
     // enchant randomly with a given list of enchantments
-    const int ench_count = cJSON_GetArraySize(defined_echants);
+    // sometimes the field's value can be a single enchantment name, handle that case first
+    if (cJSON_IsString(defined_enchants)) {
+        const char* ench_name = defined_enchants->valuestring;
+        const Enchantment ench = get_enchantment_from_name(ench_name);
+        create_enchant_randomly_one_enchant(loot_function, ench);
+        return;
+    }
+
+    const int ench_count = cJSON_GetArraySize(defined_enchants);
     if (ench_count == 1)
     {
         // one-enchant variant
-        const char* ench_name = cJSON_GetArrayItem(defined_echants, 0)->valuestring;
+        const char* ench_name = cJSON_GetArrayItem(defined_enchants, 0)->valuestring;
         const Enchantment ench = get_enchantment_from_name(ench_name);
         create_enchant_randomly_one_enchant(loot_function, ench);
     }
@@ -144,7 +161,7 @@ static void parse_enchant_randomly(LootTableContext* ctx, LootFunction* loot_fun
 
         int i = 0;
         cJSON* element = NULL;
-        cJSON_ArrayForEach(element, defined_echants)
+        cJSON_ArrayForEach(element, defined_enchants)
         {
             const char* ench_name = cJSON_GetStringValue(element);
             const Enchantment ench = get_enchantment_from_name(ench_name);

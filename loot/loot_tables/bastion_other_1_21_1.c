@@ -122,7 +122,7 @@ void init_bastion_other_1_21_1(LootTableContext* context) {
     create_set_count(&(loot_pool__0->loot_functions[9]), 1, 1);
     create_set_count(&(loot_pool__0->loot_functions[10]), 6, 17);
     create_set_count(&(loot_pool__0->loot_functions[11]), 1, 1);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[12]), MC_1_21_1, get_item_type("minecraft:book"), 1);
+    create_enchant_randomly_one_enchant(&(loot_pool__0->loot_functions[12]), get_enchantment_from_name("minecraft:soul_speed"));
     LootPool* loot_pool__1 = &(context->loot_pools[1]);
     loot_pool__1->loot_functions = malloc(18 * sizeof(LootFunction));
     create_skip_calls(&(loot_pool__1->loot_functions[0]), 1);
@@ -130,7 +130,7 @@ void init_bastion_other_1_21_1(LootTableContext* context) {
     create_enchant_randomly(&(loot_pool__1->loot_functions[2]), MC_1_21_1, get_item_type("minecraft:iron_sword"), 1);
     create_set_count(&(loot_pool__1->loot_functions[3]), 1, 1);
     create_set_count(&(loot_pool__1->loot_functions[4]), 1, 1);
-    create_enchant_randomly(&(loot_pool__1->loot_functions[5]), MC_1_21_1, get_item_type("minecraft:golden_boots"), 1);
+    create_enchant_randomly_one_enchant(&(loot_pool__1->loot_functions[5]), get_enchantment_from_name("minecraft:soul_speed"));
     create_set_count(&(loot_pool__1->loot_functions[6]), 1, 1);
     create_enchant_randomly(&(loot_pool__1->loot_functions[7]), MC_1_21_1, get_item_type("minecraft:golden_axe"), 1);
     create_set_count(&(loot_pool__1->loot_functions[8]), 1, 1);
