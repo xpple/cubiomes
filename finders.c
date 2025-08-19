@@ -3666,7 +3666,6 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
         RandomSource rnd = createRandomSource(legacy);
         rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
-        // replace with logn impl
         xSkipN(rnd.state, 1515);
         p->lootSeeds[0] = rnd.nextLong(rnd.state);
         xSkipN(rnd.state, 1528 - 1515 - 1 - 1);
