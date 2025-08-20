@@ -109,15 +109,15 @@ STRUCT(StructureVariant)
 
 STRUCT(Piece)
 {
-    const char *name;      // structure piece name
-    Pos3 pos, bb0, bb1;    // position and bounding box limits
-    uint8_t rot;           // rotation
+    const char *name;         // structure piece name
+    Pos3 pos, bb0, bb1;       // position and bounding box limits
+    uint8_t rot;              // rotation
     int8_t depth;
     int8_t type;
     int chestCount;
-    Pos chestPoses[4];     // assume a maximum of four chests
+    Pos chestPoses[4];        // assume a maximum of four chests
     uint64_t lootSeeds[4];
-    const char* lootTable; // for now each piece can only have one loot table
+    const char* lootTables[4];
     Piece *next;
 };
 

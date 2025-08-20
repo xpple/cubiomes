@@ -12,6 +12,7 @@ int init_desert_pyramid(LootTableContext* context, int version);
 int init_end_city_treasure(LootTableContext * context, int version);
 int init_igloo_chest(LootTableContext* context, int version);
 int init_jungle_temple(LootTableContext* context, int version);
+int init_jungle_temple_dispenser(LootTableContext* context, int version);
 int init_nether_bridge(LootTableContext* context, int version);
 int init_pillager_outpost(LootTableContext* context, int version);
 int init_ruined_portal(LootTableContext* context, int version);

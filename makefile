@@ -30,7 +30,7 @@ release: CFLAGS += -fPIC
 endif
 
 
-libcubiomes: noise.o biomes.o layers.o biomenoise.o generator.o finders.o util.o quadbase.o items.o loot_functions.o loot_table_context.o loot_table_parser.o loot_tables.o cjson.o bastion_bridge_1_16_1.o bastion_bridge_1_16_5.o bastion_bridge_1_20.o bastion_other_1_16_1.o bastion_other_1_16_5.o bastion_other_1_20.o bastion_other_1_21_1.o buried_treasure_1_13.o buried_treasure_1_18.o desert_pyramid_1_13.o desert_pyramid_1_20.o end_city_treasure_1_13.o end_city_treasure_1_20.o igloo_chest_1_13.o jungle_temple_1_13.o jungle_temple_1_14.o jungle_temple_1_20.o nether_bridge_1_13.o nether_bridge_1_20.o pillager_outpost_1_14.o pillager_outpost_1_19_2.o pillager_outpost_1_20.o ruined_portal_1_16_1.o ruined_portal_1_21_5.o
+libcubiomes: noise.o biomes.o layers.o biomenoise.o generator.o finders.o util.o quadbase.o items.o loot_functions.o loot_table_context.o loot_table_parser.o loot_tables.o cjson.o bastion_bridge_1_16_1.o bastion_bridge_1_16_5.o bastion_bridge_1_20.o bastion_other_1_16_1.o bastion_other_1_16_5.o bastion_other_1_20.o bastion_other_1_21_1.o buried_treasure_1_13.o buried_treasure_1_18.o desert_pyramid_1_13.o desert_pyramid_1_20.o end_city_treasure_1_13.o end_city_treasure_1_20.o igloo_chest_1_13.o jungle_temple_1_13.o jungle_temple_1_14.o jungle_temple_1_20.o jungle_temple_dispenser_1_13.o nether_bridge_1_13.o nether_bridge_1_20.o pillager_outpost_1_14.o pillager_outpost_1_19_2.o pillager_outpost_1_20.o ruined_portal_1_16_1.o ruined_portal_1_21_5.o
 	$(AR) $(ARFLAGS) libcubiomes.a $^
 
 finders.o: finders.c finders.h
@@ -124,6 +124,9 @@ jungle_temple_1_14.o: loot/loot_tables/jungle_temple_1_14.c loot/loot_tables/jun
 	$(CC) -c $(CFLAGS) $<
 
 jungle_temple_1_20.o: loot/loot_tables/jungle_temple_1_20.c loot/loot_tables/jungle_temple_1_20.h
+	$(CC) -c $(CFLAGS) $<
+
+jungle_temple_dispenser_1_13.o: loot/loot_tables/jungle_temple_dispenser_1_13.c loot/loot_tables/jungle_temple_dispenser_1_13.h
 	$(CC) -c $(CFLAGS) $<
 
 nether_bridge_1_13.o: loot/loot_tables/nether_bridge_1_13.c loot/loot_tables/nether_bridge_1_13.h

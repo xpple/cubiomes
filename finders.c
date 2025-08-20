@@ -3597,7 +3597,6 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         p->name = "TeDP";
         p->pos = (Pos3) {minBlockX, 64, minBlockZ};
         p->chestCount = 4;
-        p->lootTable = "desert_pyramid";
         p->chestPoses[0] = (Pos) {minBlockX + 8, minBlockZ + 10};
         p->chestPoses[1] = (Pos) {minBlockX + 10, minBlockZ + 8};
         p->chestPoses[2] = (Pos) {minBlockX + 10, minBlockZ + 12};
@@ -3608,6 +3607,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
         rnd.nextInt(rnd.state, 3);
         for (int i = 0; i < p->chestCount; ++i) {
+            p->lootTables[i] = "desert_pyramid";
             p->lootSeeds[i] = rnd.nextLong(rnd.state);
         }
         free(rnd.state);
@@ -3635,7 +3635,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         bottomPiece->name = "igloo/bottom";
         bottomPiece->pos = (Pos3) {minBlockX, 90 - 3 - sv->size * 3, minBlockZ - 2};
         bottomPiece->chestCount = 1;
-        bottomPiece->lootTable = "igloo_chest";
+        bottomPiece->lootTables[0] = "igloo_chest";
         int chestPosX, chestPosZ;
         switch ((sv->rotation << 1) | sv->mirror) {
         case 0b00: chestPosX = minBlockX + 8 - 7; chestPosZ = minBlockZ + 8 - 4; break; //
@@ -3658,18 +3658,27 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         Piece* p = list;
         p->name = "TeJP";
         p->pos = (Pos3) {minBlockX, 64, minBlockZ};
-        p->chestCount = 2; // TODO: maybe add dispenser loot too
-        p->lootTable = "jungle_temple";
-        p->chestPoses[0] = (Pos) {minBlockX + 1 + 8, minBlockZ + 1 + 3};
-        p->chestPoses[1] = (Pos) {minBlockX + 1 + 7, minBlockZ + 1 + 10};
+        p->chestCount = 4;
+        p->lootTables[0] = "jungle_temple_dispenser";
+        p->lootTables[1] = "jungle_temple_dispenser";
+        p->chestPoses[0] = (Pos) {minBlockX + 1 + 3, minBlockZ + 1 + 1};
+        p->chestPoses[1] = (Pos) {minBlockX + 1 + 9, minBlockZ + 1 + 3};
+        p->lootTables[2] = "jungle_temple";
+        p->lootTables[3] = "jungle_temple";
+        p->chestPoses[2] = (Pos) {minBlockX + 1 + 8, minBlockZ + 1 + 3};
+        p->chestPoses[3] = (Pos) {minBlockX + 1 + 7, minBlockZ + 1 + 10};
         // chests generate in the same chunk as structure
         uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
         RandomSource rnd = createRandomSource(legacy);
         rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
-        xSkipN(rnd.state, 1515);
+        xSkipN(rnd.state, 1511);
         p->lootSeeds[0] = rnd.nextLong(rnd.state);
-        xSkipN(rnd.state, 1528 - 1515 - 1 - 1);
+        xSkipN(rnd.state, 1513 - 1511 - 1 - 1);
         p->lootSeeds[1] = rnd.nextLong(rnd.state);
+        xSkipN(rnd.state, 1515 - 1513 - 1 - 1);
+        p->lootSeeds[2] = rnd.nextLong(rnd.state);
+        xSkipN(rnd.state, 1528 - 1515 - 1 - 1);
+        p->lootSeeds[3] = rnd.nextLong(rnd.state);
         free(rnd.state);
         return 1;
     }
@@ -3679,7 +3688,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         p->name = "pillager_outpost/watchtower";
         p->pos = (Pos3) {minBlockX, 64, minBlockZ};
         p->chestCount = 1;
-        p->lootTable = "pillager_outpost";
+        p->lootTables[0] = "pillager_outpost";
         int chestPosX, chestPosZ;
         switch (sv->rotation) {
         case 0: chestPosX = p->pos.x + 10; chestPosZ = p->pos.z + 10; break; // 0
@@ -3714,7 +3723,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
                 if (!piece->chestCount) {
                     continue;
                 }
-                piece->lootTable = "nether_bridge";
+                piece->lootTables[0] = "nether_bridge";
                 switch (piece->rot) {
                 case 0: chestPosX = piece->pos.x - 1 + 3; chestPosZ = piece->pos.z - 1 + 3; break; // 0
                 case 1: chestPosX = piece->pos.x - 1 - 3; chestPosZ = piece->pos.z - 1 + 3; break; // 90
@@ -3728,7 +3737,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
                 if (!piece->chestCount) {
                     continue;
                 }
-                piece->lootTable = "nether_bridge";
+                piece->lootTables[0] = "nether_bridge";
                 switch (piece->rot) {
                 case 0: chestPosX = piece->pos.x - 1 + 1; chestPosZ = piece->pos.z - 1 + 3; break; // 0
                 case 1: chestPosX = piece->pos.x - 1 - 3; chestPosZ = piece->pos.z - 1 + 1; break; // 90
@@ -3759,7 +3768,8 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             Piece* piece = list;
             piece->name = "bastion/units/walls/wall_base";
             piece->chestCount = 2;
-            piece->lootTable = "bastion_other";
+            piece->lootTables[0] = "bastion_other";
+            piece->lootTables[1] = "bastion_other";
             int chestPos1X, chestPos1Z;
             switch (sv->rotation) {
             case 0: chestPos1X = minBlockX - 6; chestPos1Z = minBlockZ + 20; break;
@@ -3789,7 +3799,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             Piece* piece = list;
             piece->name = "bastion/hoglin_stable/ramparts/ramparts_3";
             piece->chestCount = 1;
-            piece->lootTable = "bastion_other";
+            piece->lootTables[0] = "bastion_other";
             int chestPosX, chestPosZ;
             switch (sv->rotation) {
             case 0: chestPosX = minBlockX - 4; chestPosZ = minBlockZ + 29; break;
@@ -3808,7 +3818,8 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             Piece* piece = list;
             piece->name = "bastion/treasure/ramparts/mid_wall_main";
             piece->chestCount = 2;
-            piece->lootTable = "bastion_other";
+            piece->lootTables[0] = "bastion_other";
+            piece->lootTables[1] = "bastion_other";
             int chestPos1X, chestPos1Z;
             switch (sv->rotation) {
             case 0: chestPos1X = minBlockX + 17; chestPos1Z = minBlockZ - 23; break;
@@ -3838,7 +3849,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             Piece* piece = list;
             piece->name = "bastion/bridge/starting_pieces/entrance";
             piece->chestCount = 1;
-            piece->lootTable = "bastion_bridge";
+            piece->lootTables[0] = "bastion_bridge";
             int chestPosX, chestPosZ;
             switch (sv->rotation) {
             case 0: chestPosX = minBlockX + 9; chestPosZ = minBlockZ + 4; break;
@@ -3871,7 +3882,8 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             switch (piece->type) {
             case FAT_TOWER_TOP: {
                 piece->chestCount = 2;
-                piece->lootTable = "end_city_treasure";
+                piece->lootTables[0] = "end_city_treasure";
+                piece->lootTables[1] = "end_city_treasure";
                 oneChest = 0;
                 switch (piece->rot) {
                 case 0: chestPos1X = piece->pos.x - 1 + 3; chestPos1Z = piece->pos.z - 1 + 11; break; // 0
@@ -3891,7 +3903,8 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             }
             case END_SHIP: {
                 piece->chestCount = 2;
-                piece->lootTable = "end_city_treasure";
+                piece->lootTables[0] = "end_city_treasure";
+                piece->lootTables[1] = "end_city_treasure";
                 oneChest = 0;
                 switch (piece->rot) {
                 case 0: chestPos1X = piece->pos.x - 1 + 5; chestPos1Z = piece->pos.z - 1 + 7; break; // 0
@@ -3911,7 +3924,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             }
             case THIRD_FLOOR_2: {
                 piece->chestCount = 1;
-                piece->lootTable = "end_city_treasure";
+                piece->lootTables[0] = "end_city_treasure";
                 oneChest = 1;
                 switch (piece->rot) {
                 case 0: chestPos1X = piece->pos.x - 1 + 6; chestPos1Z = piece->pos.z - 1 + 2; break; // 0
@@ -3964,7 +3977,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         Piece* p = list;
         p->name = "BTP";
         p->pos = (Pos3) {minBlockX + 9, 90, minBlockZ + 9};
-        p->lootTable = "buried_treasure";
+        p->lootTables[0] = "buried_treasure";
         p->chestPoses[0] = (Pos) {p->pos.x, p->pos.z};
         break;
     }
@@ -3976,7 +3989,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         Piece* p = list;
         p->name = "RUPO";
         p->pos = (Pos3) {minBlockX, 0, minBlockZ};
-        p->lootTable = "ruined_portal";
+        p->lootTables[0] = "ruined_portal";
         // rough estimate
         p->chestPoses[0] = (Pos) {minBlockX, minBlockZ};
         break;

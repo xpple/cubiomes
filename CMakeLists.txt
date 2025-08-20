@@ -46,6 +46,7 @@ set(HEADERS
 	loot/loot_tables/jungle_temple_1_13.h
 	loot/loot_tables/jungle_temple_1_14.h
 	loot/loot_tables/jungle_temple_1_20.h
+	loot/loot_tables/jungle_temple_dispenser_1_13.h
 	loot/loot_tables/nether_bridge_1_13.h
 	loot/loot_tables/nether_bridge_1_20.h
 	loot/loot_tables/pillager_outpost_1_14.h
@@ -87,6 +88,7 @@ set(SOURCES
 	loot/loot_tables/jungle_temple_1_13.c
 	loot/loot_tables/jungle_temple_1_14.c
 	loot/loot_tables/jungle_temple_1_20.c
+	loot/loot_tables/jungle_temple_dispenser_1_13.c
 	loot/loot_tables/nether_bridge_1_13.c
 	loot/loot_tables/nether_bridge_1_20.c
 	loot/loot_tables/pillager_outpost_1_14.c
