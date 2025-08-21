@@ -210,6 +210,12 @@ def parse_loot_function(json_function_entry, entry_name: str) -> LootFunction:
             max_level = 0
         is_treasure = json_function_entry.get("is_treasure", True)
         return EnchantWithLevelsFunction(entry_name, int(min_level), int(max_level), int(is_treasure))
+    if json_function == 'exploration_map':
+        warn(f"Ignored loot function 'exploration_map'")
+        return NoOpFunction()
+    if json_function == 'set_name':
+        warn(f"Ignored loot function 'set_name'")
+        return NoOpFunction()
 
     warn(f"Unsupported loot function '{json_function}'")
     return NoOpFunction()

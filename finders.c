@@ -270,6 +270,14 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
     ss_pillager_outpost_1161 =       {4,  0},
     ss_pillager_outpost_1194 =       {4,  9},
 
+    ss_shipwreck_113 =               {3,  5},
+    ss_shipwreck_1161 =              {4,  6},
+    ss_shipwreck_118 =               {4,  5},
+    ss_shipwreck_1194 =              {4, 17},
+
+    ss_shipwreck_beached_118 =       {4,  6},
+    ss_shipwreck_beached_1194 =      {4, 18},
+
     ss_ruined_portal_1161 =          {4,  5},
     ss_ruined_portal_118 =           {4, 18},
     ss_ruined_portal_1192 =          {4, 19},
@@ -342,6 +350,15 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
         else if (mc < MC_1_19_4) *ssconf = ss_pillager_outpost_1161;
         else *ssconf = ss_pillager_outpost_1194;
         return mc >= MC_1_14;
+    case Shipwreck:
+        if (mc < MC_1_16_1) *ssconf = ss_shipwreck_113;
+        else if (mc < MC_1_18) *ssconf = ss_shipwreck_1161;
+        else if (mc < MC_1_19_4) {
+            *ssconf = isOceanic(biome) ? ss_shipwreck_118 : ss_shipwreck_beached_118;
+        } else {
+            *ssconf = isOceanic(biome) ? ss_shipwreck_1194 : ss_shipwreck_beached_1194;
+        }
+        return mc >= MC_1_13;
     case Ruined_Portal:
         if (mc < MC_1_18) *ssconf = ss_ruined_portal_1161;
         else if (mc < MC_1_19_2) {
@@ -3405,34 +3422,34 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
             }
         }
 
-        Pos pivotPos = {sx / 2, sz / 2};
-        Pos startPos;
+        Pos rpPivotPos = {sx / 2, sz / 2};
+        Pos rpStartPos;
         switch (r->rotation) { // 0:0, 1:cw90, 2:cw180, 3:cw270=ccw90
-        case 0: startPos = (Pos) {0, 0}; break;
-        case 1: startPos = (Pos) {pivotPos.x + pivotPos.z, pivotPos.z - pivotPos.x}; break;
-        case 2: startPos = (Pos) {pivotPos.x + pivotPos.x, pivotPos.z + pivotPos.z}; break;
-        case 3: startPos = (Pos) {pivotPos.x - pivotPos.z, pivotPos.x + pivotPos.z}; break;
+        case 0: rpStartPos = (Pos) {0, 0}; break;
+        case 1: rpStartPos = (Pos) {rpPivotPos.x + rpPivotPos.z, rpPivotPos.z - rpPivotPos.x}; break;
+        case 2: rpStartPos = (Pos) {rpPivotPos.x + rpPivotPos.x, rpPivotPos.z + rpPivotPos.z}; break;
+        case 3: rpStartPos = (Pos) {rpPivotPos.x - rpPivotPos.z, rpPivotPos.x + rpPivotPos.z}; break;
         default: UNREACHABLE();
         }
 
-        Pos3 size = {sx, sy, sz};
-        int mirX = size.x;
+        Pos3 rpSize = {sx, sy, sz};
+        int rpMirX = rpSize.x;
         if (r->mirror) {
-            mirX = -mirX;
+            rpMirX = -rpMirX;
         }
-        Pos3 endPos;
+        Pos3 rpEndPos;
         switch (r->rotation) { // 0:0, 1:cw90, 2:cw180, 3:cw270=ccw90
-        case 0: endPos = (Pos3) {mirX, size.y, size.z}; break;
-        case 1: endPos = (Pos3) {startPos.x - size.z, size.y, startPos.z + mirX}; break;
-        case 2: endPos = (Pos3) {startPos.x - mirX, size.y, startPos.z - size.z}; break;
-        case 3: endPos = (Pos3) {startPos.x + size.z, size.y, startPos.z - mirX}; break;
+        case 0: rpEndPos = (Pos3) {rpMirX, rpSize.y, rpSize.z}; break;
+        case 1: rpEndPos = (Pos3) {rpStartPos.x - rpSize.z, rpSize.y, rpStartPos.z + rpMirX}; break;
+        case 2: rpEndPos = (Pos3) {rpStartPos.x - rpMirX, rpSize.y, rpStartPos.z - rpSize.z}; break;
+        case 3: rpEndPos = (Pos3) {rpStartPos.x + rpSize.z, rpSize.y, rpStartPos.z - rpMirX}; break;
         default: UNREACHABLE();
         }
 
-        r->x = startPos.x;
-        r->z = startPos.z;
-        r->sx = endPos.x - startPos.x;
-        r->sz = endPos.z - startPos.z;
+        r->x = rpStartPos.x;
+        r->z = rpStartPos.z;
+        r->sx = rpEndPos.x - rpStartPos.x;
+        r->sz = rpEndPos.z - rpStartPos.z;
         return 1;
 
     case Monument:
@@ -3461,12 +3478,23 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
     case Shipwreck:
         r->biome = biomeID; // to determine isBeached
         r->rotation = nextInt(&rng, 4); // NONE, CLOCKWISE_90, CLOCKWISE_180, COUNTERCLOCKWISE_90
-        int isBeached = !isOceanic(biomeID);
+        int isBeached = !isOceanic(r->biome);
         if (isBeached) {
             r->start = nextInt(&rng, 11);
         } else {
             r->start = nextInt(&rng, 20);
         }
+        Pos swPivotPos = {4, 15};
+        Pos swStartPos;
+        switch (r->rotation) { // 0:0, 1:cw90, 2:cw180, 3:cw270=ccw90
+        case 0: swStartPos = (Pos) {0, 0}; break;
+        case 1: swStartPos = (Pos) {swPivotPos.x + swPivotPos.z, swPivotPos.z - swPivotPos.x}; break;
+        case 2: swStartPos = (Pos) {swPivotPos.x + swPivotPos.x, swPivotPos.z + swPivotPos.z}; break;
+        case 3: swStartPos = (Pos) {swPivotPos.x - swPivotPos.z, swPivotPos.x + swPivotPos.z}; break;
+        default: UNREACHABLE();
+        }
+        r->x = swStartPos.x;
+        r->z = swStartPos.z;
         return 1;
     case Outpost:
         r->rotation = nextInt(&rng, 4); // NONE, CLOCKWISE_90, CLOCKWISE_180, COUNTERCLOCKWISE_90
@@ -3702,6 +3730,214 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         RandomSource rnd = createRandomSource(legacy);
         rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
         p->lootSeeds[0] = rnd.nextLong(rnd.state);
+        free(rnd.state);
+        return 1;
+    }
+    case Shipwreck: {
+        static const struct { const char *name; const int sx, sy, sz; const int chestCount; const char *lootTables[3]; Pos chestPoses[3]; } sw_info[] = {
+        {"shipwreck/with_mast", 9, 21, 28, 3, {"shipwreck_supply", "shipwreck_map", "shipwreck_treasure"}, {(Pos) {4, 9}, (Pos) {5, 18}, (Pos) {6, 24}}},
+        {"shipwreck/upsidedown_full", 9, 9, 28, 3, {"shipwreck_treasure", "shipwreck_map", "shipwreck_supply"}, {(Pos) {2, 24}, (Pos) {3, 17}, (Pos) {4, 8}}},
+        {"shipwreck/upsidedown_fronthalf", 9, 9, 22, 2, {"shipwreck_map", "shipwreck_supply"}, {(Pos) {3, 17}, (Pos) {4, 8}}},
+        {"shipwreck/upsidedown_backhalf", 9, 9, 16, 2, {"shipwreck_treasure", "shipwreck_map"}, {(Pos) {2, 12}, (Pos) {3, 5}}},
+        {"shipwreck/sideways_full", 9, 9, 28, 3, {"shipwreck_treasure", "shipwreck_supply", "shipwreck_map"}, {(Pos) {3, 24}, (Pos) {5, 8}, (Pos) {6, 19}}},
+        {"shipwreck/sideways_fronthalf", 9, 9, 24, 1, {"shipwreck_supply"}, {(Pos) {5, 8}}},
+        {"shipwreck/sideways_backhalf", 9, 9, 17, 2, {"shipwreck_treasure", "shipwreck_map"}, {(Pos) {3, 13}, (Pos) {6, 8}}},
+        {"shipwreck/rightsideup_full", 9, 9, 28, 3, {"shipwreck_supply", "shipwreck_map", "shipwreck_treasure"}, {(Pos) {4, 8}, (Pos) {5, 18}, (Pos) {6, 24}}},
+        {"shipwreck/rightsideup_fronthalf", 9, 9, 24, 1, {"shipwreck_supply"}, {(Pos) {4, 8}}},
+        {"shipwreck/rightsideup_backhalf", 9, 9, 16, 2, {"shipwreck_map", "shipwreck_treasure"}, {(Pos) {5, 6}, (Pos) {6, 12}}},
+        {"shipwreck/with_mast_degraded", 9, 21, 28, 3, {"shipwreck_supply", "shipwreck_map", "shipwreck_treasure"}, {(Pos) {4, 9}, (Pos) {5, 18}, (Pos) {6, 24}}},
+        {"shipwreck/upsidedown_full_degraded", 9, 9, 28, 3, {"shipwreck_treasure", "shipwreck_map", "shipwreck_supply"}, {(Pos) {2, 24}, (Pos) {3, 17}, (Pos) {4, 8}}},
+        {"shipwreck/upsidedown_fronthalf_degraded", 9, 9, 22, 2, {"shipwreck_map", "shipwreck_supply"}, {(Pos) {3, 17}, (Pos) {4, 8}}},
+        {"shipwreck/upsidedown_backhalf_degraded", 9, 9, 16, 2, {"shipwreck_treasure", "shipwreck_map"}, {(Pos) {2, 12}, (Pos) {3, 5}}},
+        {"shipwreck/sideways_full_degraded", 9, 9, 28, 3, {"shipwreck_treasure", "shipwreck_supply", "shipwreck_map"}, {(Pos) {3, 24}, (Pos) {5, 8}, (Pos) {6, 19}}},
+        {"shipwreck/sideways_fronthalf_degraded", 9, 9, 24, 1, {"shipwreck_supply"}, {(Pos) {5, 8}}},
+        {"shipwreck/sideways_backhalf_degraded", 9, 9, 17, 2, {"shipwreck_treasure", "shipwreck_map"}, {(Pos) {3, 13}, (Pos) {6, 8}}},
+        {"shipwreck/rightsideup_full_degraded", 9, 9, 28, 3, {"shipwreck_supply", "shipwreck_map", "shipwreck_treasure"}, {(Pos) {4, 8}, (Pos) {5, 18}, (Pos) {6, 24}}},
+        {"shipwreck/rightsideup_fronthalf_degraded", 9, 9, 24, 1, {"shipwreck_supply"}, {(Pos) {4, 8}}},
+        {"shipwreck/rightsideup_backhalf_degraded", 9, 9, 16, 2, {"shipwreck_map", "shipwreck_treasure"}, {(Pos) {5, 6}, (Pos) {6, 12}}}
+        };
+
+        Piece* p = list;
+        int sw_typ;
+        int biome = sv->biome;
+        int isBeached = !isOceanic(biome);
+        if (isBeached) {
+            switch (sv->start) {
+            case 0: sw_typ = 0; break;
+            case 1: sw_typ = 4; break;
+            case 2: sw_typ = 5; break;
+            case 3: sw_typ = 6; break;
+            case 4: sw_typ = 7; break;
+            case 5: sw_typ = 8; break;
+            case 6: sw_typ = 9; break;
+            case 7: sw_typ = 10; break;
+            case 8: sw_typ = 17; break;
+            case 9: sw_typ = 18; break;
+            case 10: sw_typ = 19; break;
+            default: UNREACHABLE();
+            }
+        } else {
+            sw_typ = sv->start;
+        }
+
+        p->name = sw_info[sw_typ].name;
+        p->pos = (Pos3) {minBlockX + sv->x, 64, minBlockZ + sv->z};
+        p->bb1.y += sw_info[sw_typ].sy;
+        switch (sv->rotation)
+        {
+        case 0: p->bb1.x += sw_info[sw_typ].sx; p->bb1.z += sw_info[sw_typ].sz; break; // 0
+        case 1: p->bb0.x -= sw_info[sw_typ].sz; p->bb1.z += sw_info[sw_typ].sx; break; // 90
+        case 2: p->bb0.x -= sw_info[sw_typ].sx; p->bb0.z -= sw_info[sw_typ].sz; break; // 180
+        case 3: p->bb1.x += sw_info[sw_typ].sz; p->bb0.z -= sw_info[sw_typ].sx; break; // 270
+        default: UNREACHABLE();
+        }
+        p->chestCount = sw_info[sw_typ].chestCount;
+        for (int i = 0; i < p->chestCount; ++i) {
+            p->lootTables[i] = sw_info[sw_typ].lootTables[i];
+            switch (sv->rotation) {
+            case 0: p->chestPoses[i] = (Pos) {p->pos.x + sw_info[sw_typ].chestPoses[i].x, p->pos.z + sw_info[sw_typ].chestPoses[i].z}; break; // 0
+            case 1: p->chestPoses[i] = (Pos) {p->pos.x - sw_info[sw_typ].chestPoses[i].z, p->pos.z + sw_info[sw_typ].chestPoses[i].x}; break; // 90
+            case 2: p->chestPoses[i] = (Pos) {p->pos.x - sw_info[sw_typ].chestPoses[i].x, p->pos.z - sw_info[sw_typ].chestPoses[i].z}; break; // 180
+            case 3: p->chestPoses[i] = (Pos) {p->pos.x + sw_info[sw_typ].chestPoses[i].z, p->pos.z - sw_info[sw_typ].chestPoses[i].x}; break; // 270
+            default: UNREACHABLE();
+            }
+        }
+        RandomSource rnd = createRandomSource(legacy);
+        // sorry...
+        switch (p->chestCount) {
+        case 1: {
+            uint64_t populationSeed = getPopulationSeed(mc, seed, p->chestPoses[0].x & ~15, p->chestPoses[0].z & ~15);
+            rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+            if (isBeached) {
+                rnd.nextInt(rnd.state, 3);
+            }
+            p->lootSeeds[0] = rnd.nextLong(rnd.state);
+            break;
+        }
+        case 2: {
+            if (p->chestPoses[0].x >> 4 == p->chestPoses[1].x >> 4 && p->chestPoses[0].z >> 4 == p->chestPoses[1].z >> 4) {
+                uint64_t populationSeed = getPopulationSeed(mc, seed, p->chestPoses[0].x & ~15, p->chestPoses[0].z & ~15);
+                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                if (isBeached) {
+                    rnd.nextInt(rnd.state, 3);
+                }
+                rnd.nextLong(rnd.state);
+                rnd.nextLong(rnd.state);
+                p->lootSeeds[0] = rnd.nextLong(rnd.state);
+                p->lootSeeds[1] = rnd.nextLong(rnd.state);
+            } else {
+                uint64_t populationSeed;
+                populationSeed = getPopulationSeed(mc, seed, p->chestPoses[0].x & ~15, p->chestPoses[0].z & ~15);
+                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                if (isBeached) {
+                    rnd.nextInt(rnd.state, 3);
+                }
+                rnd.nextLong(rnd.state);
+                p->lootSeeds[0] = rnd.nextLong(rnd.state);
+                populationSeed = getPopulationSeed(mc, seed, p->chestPoses[1].x & ~15, p->chestPoses[1].z & ~15);
+                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                if (isBeached) {
+                    rnd.nextInt(rnd.state, 3);
+                }
+                rnd.nextLong(rnd.state);
+                p->lootSeeds[1] = rnd.nextLong(rnd.state);
+            }
+            break;
+        } case 3: {
+            if (p->chestPoses[0].x >> 4 == p->chestPoses[1].x >> 4 && p->chestPoses[1].x >> 4 == p->chestPoses[2].x >> 4 && p->chestPoses[0].z >> 4 == p->chestPoses[1].z >> 4 && p->chestPoses[1].z >> 4 == p->chestPoses[2].z >> 4) {
+                uint64_t populationSeed = getPopulationSeed(mc, seed, p->chestPoses[0].x & ~15, p->chestPoses[0].z & ~15);
+                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                if (isBeached) {
+                    rnd.nextInt(rnd.state, 3);
+                }
+                rnd.nextLong(rnd.state);
+                rnd.nextLong(rnd.state);
+                rnd.nextLong(rnd.state);
+                p->lootSeeds[0] = rnd.nextLong(rnd.state);
+                p->lootSeeds[1] = rnd.nextLong(rnd.state);
+                p->lootSeeds[2] = rnd.nextLong(rnd.state);
+            } else if (p->chestPoses[0].x >> 4 == p->chestPoses[1].x >> 4 && p->chestPoses[0].z >> 4 == p->chestPoses[1].z >> 4) {
+                uint64_t populationSeed;
+                populationSeed = getPopulationSeed(mc, seed, p->chestPoses[0].x & ~15, p->chestPoses[0].z & ~15);
+                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                if (isBeached) {
+                    rnd.nextInt(rnd.state, 3);
+                }
+                rnd.nextLong(rnd.state);
+                rnd.nextLong(rnd.state);
+                p->lootSeeds[0] = rnd.nextLong(rnd.state);
+                p->lootSeeds[1] = rnd.nextLong(rnd.state);
+                populationSeed = getPopulationSeed(mc, seed, p->chestPoses[2].x & ~15, p->chestPoses[2].z & ~15);
+                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                if (isBeached) {
+                    rnd.nextInt(rnd.state, 3);
+                }
+                rnd.nextLong(rnd.state);
+                p->lootSeeds[2] = rnd.nextLong(rnd.state);
+            } else if (p->chestPoses[1].x >> 4 == p->chestPoses[2].x >> 4 && p->chestPoses[1].z >> 4 == p->chestPoses[2].z >> 4) {
+                uint64_t populationSeed;
+                populationSeed = getPopulationSeed(mc, seed, p->chestPoses[0].x & ~15, p->chestPoses[0].z & ~15);
+                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                if (isBeached) {
+                    rnd.nextInt(rnd.state, 3);
+                }
+                rnd.nextLong(rnd.state);
+                p->lootSeeds[0] = rnd.nextLong(rnd.state);
+                populationSeed = getPopulationSeed(mc, seed, p->chestPoses[1].x & ~15, p->chestPoses[1].z & ~15);
+                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                if (isBeached) {
+                    rnd.nextInt(rnd.state, 3);
+                }
+                rnd.nextLong(rnd.state);
+                rnd.nextLong(rnd.state);
+                p->lootSeeds[1] = rnd.nextLong(rnd.state);
+                p->lootSeeds[2] = rnd.nextLong(rnd.state);
+            } else if (p->chestPoses[0].x >> 4 == p->chestPoses[2].x >> 4 && p->chestPoses[0].z >> 4 == p->chestPoses[2].z >> 4) {
+                uint64_t populationSeed;
+                populationSeed = getPopulationSeed(mc, seed, p->chestPoses[0].x & ~15, p->chestPoses[0].z & ~15);
+                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                if (isBeached) {
+                    rnd.nextInt(rnd.state, 3);
+                }
+                rnd.nextLong(rnd.state);
+                rnd.nextLong(rnd.state);
+                p->lootSeeds[0] = rnd.nextLong(rnd.state);
+                p->lootSeeds[2] = rnd.nextLong(rnd.state);
+                populationSeed = getPopulationSeed(mc, seed, p->chestPoses[1].x & ~15, p->chestPoses[1].z & ~15);
+                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                if (isBeached) {
+                    rnd.nextInt(rnd.state, 3);
+                }
+                rnd.nextLong(rnd.state);
+                p->lootSeeds[1] = rnd.nextLong(rnd.state);
+            } else {
+                uint64_t populationSeed;
+                populationSeed = getPopulationSeed(mc, seed, p->chestPoses[0].x & ~15, p->chestPoses[0].z & ~15);
+                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                if (isBeached) {
+                    rnd.nextInt(rnd.state, 3);
+                }
+                rnd.nextLong(rnd.state);
+                p->lootSeeds[0] = rnd.nextLong(rnd.state);
+                populationSeed = getPopulationSeed(mc, seed, p->chestPoses[1].x & ~15, p->chestPoses[1].z & ~15);
+                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                if (isBeached) {
+                    rnd.nextInt(rnd.state, 3);
+                }
+                rnd.nextLong(rnd.state);
+                p->lootSeeds[1] = rnd.nextLong(rnd.state);
+                populationSeed = getPopulationSeed(mc, seed, p->chestPoses[2].x & ~15, p->chestPoses[2].z & ~15);
+                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                if (isBeached) {
+                    rnd.nextInt(rnd.state, 3);
+                }
+                rnd.nextLong(rnd.state);
+                p->lootSeeds[2] = rnd.nextLong(rnd.state);
+            }
+            break;
+        }
+        default: UNREACHABLE();
+        }
         free(rnd.state);
         return 1;
     }

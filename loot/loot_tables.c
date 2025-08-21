@@ -31,6 +31,15 @@
 #include "loot_tables/pillager_outpost_1_20.h"
 #include "loot_tables/ruined_portal_1_16_1.h"
 #include "loot_tables/ruined_portal_1_21_5.h"
+#include "loot_tables/shipwreck_map_1_13.h"
+#include "loot_tables/shipwreck_map_1_18.h"
+#include "loot_tables/shipwreck_map_1_20.h"
+#include "loot_tables/shipwreck_supply_1_13.h"
+#include "loot_tables/shipwreck_supply_1_14.h"
+#include "loot_tables/shipwreck_supply_1_17.h"
+#include "loot_tables/shipwreck_supply_1_20.h"
+#include "loot_tables/shipwreck_treasure_1_13.h"
+#include "loot_tables/shipwreck_treasure_1_20.h"
 
 int init_loot_table_name(LootTableContext* context, const char* loot_table, int version) {
     if (strcmp(loot_table, "bastion_bridge") == 0) {
@@ -65,6 +74,15 @@ int init_loot_table_name(LootTableContext* context, const char* loot_table, int 
     }
     if (strcmp(loot_table, "ruined_portal") == 0) {
         return init_ruined_portal(context, version);
+    }
+    if (strcmp(loot_table, "shipwreck_map") == 0) {
+        return init_shipwreck_map(context, version);
+    }
+    if (strcmp(loot_table, "shipwreck_supply") == 0) {
+        return init_shipwreck_supply(context, version);
+    }
+    if (strcmp(loot_table, "shipwreck_treasure") == 0) {
+        return init_shipwreck_treasure(context, version);
     }
     fprintf(stderr, "ERR init_loot_table_name: unsupported loot_table %s\n", loot_table);
     memset(context, 0, sizeof(LootTableContext));
@@ -138,6 +156,25 @@ int init_ruined_portal(LootTableContext* context, int version) {
     if (version < MC_1_21_5) init_ruined_portal_1_16_1(context);
     else init_ruined_portal_1_21_5(context);
     return version > MC_1_15;
+}
+
+int init_shipwreck_map(LootTableContext* context, int version) {
+    if (version < MC_1_18) init_shipwreck_map_1_13(context);
+    else if (version < MC_1_20) init_shipwreck_map_1_18(context);
+    else init_shipwreck_map_1_20(context);
+    return version > MC_1_12;
+}
+int init_shipwreck_supply(LootTableContext* context, int version) {
+    if (version < MC_1_14) init_shipwreck_supply_1_13(context);
+    else if (version < MC_1_17) init_shipwreck_supply_1_14(context);
+    else if (version < MC_1_20) init_shipwreck_supply_1_17(context);
+    else init_shipwreck_supply_1_20(context);
+    return version > MC_1_12;
+}
+int init_shipwreck_treasure(LootTableContext* context, int version) {
+    if (version < MC_1_20) init_shipwreck_treasure_1_13(context);
+    else init_shipwreck_treasure_1_20(context);
+    return version > MC_1_12;
 }
 
 void free_loot_table_pools(LootTableContext* context) {
