@@ -2350,6 +2350,35 @@ int32_t getOreVeinBlockAt(int x, int y, int z, OreVeinParameters* params)
 }
 
 //==============================================================================
+// Ravines/canyons
+//==============================================================================
+
+int checkCanyonStart(uint64_t seed, int biome, int chunkX, int chunkZ, int mc)
+{
+    if (mc < MC_1_13) {
+        return -1;
+    }
+    if (mc <= MC_1_17) {
+        const int canyonIdx = 1;
+        uint64_t chunkRnd;
+        chunkRnd = chunkGenerateRnd(seed + canyonIdx, chunkX, chunkZ);
+        int hasCanyon = nextFloat(&chunkRnd) <= 0.02F;
+        int hasUnderwaterCanyon;
+        if (isOceanic(biome)) {
+            const int underwaterCanyonIdx = 0;
+            chunkRnd = chunkGenerateRnd(seed + underwaterCanyonIdx, chunkX, chunkZ);
+            hasUnderwaterCanyon = nextFloat(&chunkRnd) <= 0.02F;
+        } else {
+            hasUnderwaterCanyon = 0;
+        }
+        return hasCanyon | (hasUnderwaterCanyon << 1);
+    }
+    const int canyonIdx = 2;
+    uint64_t chunkRnd = chunkGenerateRnd(seed + canyonIdx, chunkX, chunkZ);
+    return nextFloat(&chunkRnd) <= 0.01F;
+}
+
+//==============================================================================
 // Validating Structure Positions
 //==============================================================================
 
@@ -3734,7 +3763,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         return 1;
     }
     case Shipwreck: {
-        static const struct { const char *name; const int sx, sy, sz; const int chestCount; const char *lootTables[3]; Pos chestPoses[3]; } sw_info[] = {
+        static const struct { const char *name; const int sx, sy, sz; const int chestCount; const char *lootTables[3]; const Pos chestPoses[3]; } sw_info[] = {
         {"shipwreck/with_mast", 9, 21, 28, 3, {"shipwreck_supply", "shipwreck_map", "shipwreck_treasure"}, {(Pos) {4, 9}, (Pos) {5, 18}, (Pos) {6, 24}}},
         {"shipwreck/upsidedown_full", 9, 9, 28, 3, {"shipwreck_treasure", "shipwreck_map", "shipwreck_supply"}, {(Pos) {2, 24}, (Pos) {3, 17}, (Pos) {4, 8}}},
         {"shipwreck/upsidedown_fronthalf", 9, 9, 22, 2, {"shipwreck_map", "shipwreck_supply"}, {(Pos) {3, 17}, (Pos) {4, 8}}},

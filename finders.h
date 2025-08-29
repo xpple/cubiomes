@@ -562,6 +562,18 @@ int initOreVeinNoise(OreVeinParameters *params, uint64_t ws, int mc);
 
 int32_t getOreVeinBlockAt(int x, int y, int z, OreVeinParameters* params);
 
+/**
+ * Check whether the given chunk pos is a canyon (ravine) start. Implemented for >=1.13.
+ *
+ * @param seed the world seed
+ * @param biome the biome at (chunkX << 2, chunkZ << 2) in biome-scale, can be -1 for >=1.18
+ * @param chunkX the chunk X-coordinate
+ * @param chunkZ the chunk Z-coordinate
+ * @param mc the Minecraft version
+ * @return -1 for <1.13, 1 if there is a canyon and 0b1x for <=1.17 if there is an underwater canyon
+ */
+int checkCanyonStart(uint64_t seed, int biome, int chunkX, int chunkZ, int mc);
+
 /* Finds a suitable pseudo-random location in the specified area.
  * This function is used to determine the positions of spawn and strongholds.
  * Warning: accurate, but slow!
