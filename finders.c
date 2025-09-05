@@ -1233,267 +1233,288 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
 
     static const OreConfig
     // overworld
-    o_andesite_113 = {4, 4, 33, 10, AndesiteOre, ANDESITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_andesite_116 = {4, 6, 33, 10, AndesiteOre, ANDESITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_andesite_113 =  {4, 4, 33, 10, providerRange,        0,  0, 80, AndesiteOre, ANDESITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_andesite_1161 = {4, 6, 33, 10, providerRange,        0,  0, 80, AndesiteOre, ANDESITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_andesite_117 =  {4, 6, 33, 10, providerUniformRange, 0, 79, -1, AndesiteOre, ANDESITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_buried_diamond_118 = {20, 6, 8, 4, BuriedDiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 1.0F},
-    o_buried_diamond_120 = {21, 6, 8, 4, BuriedDiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 1.0F},
+    o_buried_diamond_118 = {20, 6, 8, 4, providerTriangleRange, -64 + -80, -64 + 80, -1, BuriedDiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 1.0F},
+    o_buried_diamond_120 = {21, 6, 8, 4, providerTriangleRange, -64 + -80, -64 + 80, -1, BuriedDiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 1.0F},
 
-    o_buried_lapis_118 = {22, 6, 7, 4, BuriedLapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 1.0F},
-    o_buried_lapis_120 = {23, 6, 7, 4, BuriedLapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 1.0F},
+    o_buried_lapis_118 = {22, 6, 7, 4, providerUniformRange, -64, 64, -1, BuriedLapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 1.0F},
+    o_buried_lapis_120 = {23, 6, 7, 4, providerUniformRange, -64, 64, -1, BuriedLapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 1.0F},
 
-    o_clay_118 = {26, 6, 33, 46, ClayOre, CLAY, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_clay_120 = {27, 6, 33, 46, ClayOre, CLAY, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_clay_118 = {26, 6, 33, 46, providerUniformRange, 0, 256, -1, ClayOre, CLAY, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_clay_120 = {27, 6, 33, 46, providerUniformRange, 0, 256, -1, ClayOre, CLAY, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_coal_113 = {5, 4, 17, 20, CoalOre, COAL_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_coal_116 = {5, 6, 17, 20, CoalOre, COAL_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_coal_117 = {7, 6, 17, 20, CoalOre, COAL_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_coal_113 =  {5, 4, 17, 20, providerRange,        0,   0, 128, CoalOre, COAL_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_coal_1161 = {5, 6, 17, 20, providerRange,        0,   0, 128, CoalOre, COAL_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_coal_117 =  {7, 6, 17, 20, providerUniformRange, 0, 127,  -1, CoalOre, COAL_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_copper_117 = {13, 6, 10,  6, CopperOre, COPPER_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_copper_118 = {24, 6, 10, 16, CopperOre, COPPER_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_copper_120 = {25, 6, 10, 16, CopperOre, COPPER_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_copper_117 = {13, 6, 10,  6, providerTriangleRange,   0,  96, -1, CopperOre, COPPER_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_copper_118 = {24, 6, 10, 16, providerTriangleRange, -16, 112, -1, CopperOre, COPPER_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_copper_120 = {25, 6, 10, 16, providerTriangleRange, -16, 112, -1, CopperOre, COPPER_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_deepslate_117 = {6, 6, 64, 2, DeepslateOre, DEEPSLATE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_deepslate_117 = {6, 6, 64, 2, providerUniformRange, 0, 16, -1, DeepslateOre, DEEPSLATE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_diamond_113 = { 9, 4, 8, 1, DiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_diamond_116 = { 9, 6, 8, 1, DiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_diamond_117 = {11, 6, 8, 1, DiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_diamond_118 = {18, 6, 4, 7, DiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
+    o_diamond_113 =  { 9, 4, 8, 1, providerRange, 0, 0, 16, DiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_diamond_1161 = { 9, 6, 8, 1, providerRange, 0, 0, 16, DiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    // maxOffset was 16 in 1.17, changed to 15 in 1.17.1
+    o_diamond_117 =  {11, 6, 8, 1, providerUniformRange,          0,       15, -1, DiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_diamond_118 =  {18, 6, 4, 7, providerTriangleRange, -64 + -80, -64 + 80, -1, DiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
 
-    o_diorite_113 = {3, 4, 33, 10, DioriteOre, DIORITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_diorite_116 = {3, 6, 33, 10, DioriteOre, DIORITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_diorite_113 =  {3, 4, 33, 10, providerRange,        0, 0,  80, DioriteOre, DIORITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_diorite_1161 = {3, 6, 33, 10, providerRange,        0, 0,  80, DioriteOre, DIORITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_diorite_117 =  {3, 6, 33, 10, providerUniformRange, 0, 79, -1, DioriteOre, DIORITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_dirt_113 = {0, 4, 33, 10, DirtOre, DIRT, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_dirt_116 = {0, 6, 33, 10, DirtOre, DIRT, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_dirt_118 = {0, 6, 33,  7, DirtOre, DIRT, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_dirt_113 =  {0, 4, 33, 10, providerRange,        0, 0,  256, DirtOre, DIRT, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_dirt_1161 = {0, 6, 33, 10, providerRange,        0, 0,  256, DirtOre, DIRT, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_dirt_117 =  {0, 6, 33, 10, providerUniformRange, 0, 255, -1, DirtOre, DIRT, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_dirt_118 =  {0, 6, 33,  7, providerUniformRange, 0, 160, -1, DirtOre, DIRT, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_emerald_113 = {14, 4, 1,   1, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 1, STONE_REPLACEABLES, 0.0F},
-    o_emerald_116 = {14, 6, 1,   1, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 1, STONE_REPLACEABLES, 0.0F},
-    o_emerald_117 = {17, 6, 1,   1, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_emerald_118 = {31, 6, 3, 100, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_emerald_119 = {32, 6, 3, 100, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_emerald_120 = {33, 6, 3, 100, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_emerald_113 =  {14, 4, 1,   1, providerEmeraldOre,     -1,  -1, -1, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 1, STONE_REPLACEABLES, 0.0F},
+    o_emerald_1161 = {14, 6, 1,   1, providerEmeraldOre,     -1,  -1, -1, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 1, STONE_REPLACEABLES, 0.0F},
+    o_emerald_117 =  {17, 6, 1,   1, providerUniformRange,    4,  31, -1, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_emerald_118 =  {31, 6, 3, 100, providerTriangleRange, -16, 480, -1, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_emerald_119 =  {32, 6, 3, 100, providerTriangleRange, -16, 480, -1, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_emerald_120 =  {33, 6, 3, 100, providerTriangleRange, -16, 480, -1, EmeraldOre, EMERALD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_extra_gold_113 = {11, 4, 9, 20, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_extra_gold_116 = {11, 6, 9, 20, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_extra_gold_117 = {14, 6, 9, 20, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_extra_gold_118 = {27, 6, 9, 50, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
-    o_extra_gold_120 = {28, 6, 9, 50, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
+    o_extra_gold_113 =  {11, 4, 9, 20, providerRange,        32,  32, 80, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_extra_gold_1161 = {11, 6, 9, 20, providerRange,        32,  32, 80, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_extra_gold_117 =  {14, 6, 9, 20, providerUniformRange, 32,  79, -1, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_extra_gold_118 =  {27, 6, 9, 50, providerUniformRange, 32, 256, -1, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
+    o_extra_gold_120 =  {28, 6, 9, 50, providerUniformRange, 32, 256, -1, ExtraGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
 
-    o_gold_113 = { 7, 4, 9, 2, GoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_gold_116 = { 7, 6, 9, 2, GoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_gold_117 = { 9, 6, 9, 2, GoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_gold_118 = {14, 6, 9, 4, GoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
+    o_gold_113 =  { 7, 4, 9, 2, providerRange,           0,  0, 32, GoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_gold_1161 = { 7, 6, 9, 2, providerRange,           0,  0, 32, GoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_gold_117 =  { 9, 6, 9, 2, providerUniformRange,    0, 31, -1, GoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_gold_118 =  {14, 6, 9, 4, providerTriangleRange, -64, 32, -1, GoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
 
-    o_granite_113 = {2, 4, 33, 10, GraniteOre, GRANITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_granite_116 = {2, 6, 33, 10, GraniteOre, GRANITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_granite_113 =  {2, 4, 33, 10, providerRange,        0,  0, 80, GraniteOre, GRANITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_granite_1161 = {2, 6, 33, 10, providerRange,        0,  0, 80, GraniteOre, GRANITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_granite_117 =  {2, 6, 33, 10, providerUniformRange, 0, 79, -1, GraniteOre, GRANITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_gravel_113 = {1, 4, 33, 8, GravelOre, GRAVEL, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_gravel_116 = {1, 6, 33, 8, GravelOre, GRAVEL, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_gravel_118 = {1, 6, 33, 14, GravelOre, GRAVEL, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_gravel_113 =  {1, 4, 33, 8, providerRange,           0,   0, 256, GravelOre, GRAVEL, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_gravel_1161 = {1, 6, 33, 8, providerRange,           0,   0, 256, GravelOre, GRAVEL, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_gravel_117 =  {1, 6, 33, 8, providerUniformRange,    0, 255,  -1, GravelOre, GRAVEL, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_gravel_118 =  {1, 6, 33, 14, providerUniformRange, -64, 319,  -1, GravelOre, GRAVEL, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_iron_113 = {6, 4, 9, 20, IronOre, IRON_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_iron_116 = {6, 6, 9, 20, IronOre, IRON_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_iron_117 = {8, 6, 9, 20, IronOre, IRON_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_iron_113 =  {6, 4, 9, 20, providerRange,        0,  0, 64, IronOre, IRON_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_iron_1161 = {6, 6, 9, 20, providerRange,        0,  0, 64, IronOre, IRON_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_iron_117 =  {8, 6, 9, 20, providerUniformRange, 0, 63, -1, IronOre, IRON_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_lapis_113 = {10, 4, 7, 1, LapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_lapis_116 = {10, 6, 7, 1, LapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_lapis_117 = {12, 6, 7, 1, LapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_lapis_118 = {21, 6, 7, 2, LapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_lapis_120 = {22, 6, 7, 2, LapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_lapis_113 =  {10, 4, 7, 1, providerDepthAverage,   16, 16, -1, LapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_lapis_1161 = {10, 6, 7, 1, providerDepthAverage,   16, 16, -1, LapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_lapis_117 =  {12, 6, 7, 1, providerTriangleRange,   0, 30, -1, LapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_lapis_118 =  {21, 6, 7, 2, providerTriangleRange, -32, 32, -1, LapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_lapis_120 =  {22, 6, 7, 2, providerTriangleRange, -32, 32, -1, LapisOre, LAPIS_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_large_copper_118 = {23, 6, 20, 16, LargeCopperOre, COPPER_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_large_copper_120 = {24, 6, 20, 16, LargeCopperOre, COPPER_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_large_copper_118 = {23, 6, 20, 16, providerTriangleRange, -16, 112, -1, LargeCopperOre, COPPER_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_large_copper_120 = {24, 6, 20, 16, providerTriangleRange, -16, 112, -1, LargeCopperOre, COPPER_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
     // uses rareOrePlacement
-    o_large_diamond_118 = {19, 6, 12, 9, LargeDiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.7F},
-    o_large_diamond_120 = {20, 6, 12, 9, LargeDiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.7F},
+    o_large_diamond_118 = {19, 6, 12, 9, providerTriangleRange, -64 + -80, -64 + 80, -1, LargeDiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.7F},
+    o_large_diamond_120 = {20, 6, 12, 9, providerTriangleRange, -64 + -80, -64 + 80, -1, LargeDiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.7F},
 
-    o_lower_andesite_118 = {7, 6, 64, 2, LowerAndesiteOre, ANDESITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_lower_andesite_118 = {7, 6, 64, 2, providerUniformRange, 0, 60, -1, LowerAndesiteOre, ANDESITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_lower_coal_118 = {10, 6, 17, 20, LowerCoalOre, COAL_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
+    o_lower_coal_118 = {10, 6, 17, 20, providerTriangleRange, 0, 192, -1, LowerCoalOre, COAL_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
 
-    o_lower_diorite_118 = {5, 6, 64, 2, LowerDioriteOre, DIORITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_lower_diorite_118 = {5, 6, 64, 2, providerUniformRange, 0, 60, -1, LowerDioriteOre, DIORITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
     // uses UniformInt.of(0, 1)
-    o_lower_gold_118 = {15, 6, 9, 1, LowerGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
+    o_lower_gold_118 = {15, 6, 9, 1, providerUniformRange, -64, -48, -1, LowerGoldOre, GOLD_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
 
-    o_lower_granite_118 = {3, 6, 64, 2, LowerGraniteOre, GRANITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_lower_granite_118 = {3, 6, 64, 2, providerUniformRange, 0, 60, -1, LowerGraniteOre, GRANITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_lower_redstone_118 = {17, 6, 8, 8, LowerRedstoneOre, REDSTONE_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_lower_redstone_118 = {17, 6, 8, 8, providerTriangleRange, -64 + -32, -64 + 32, -1, LowerRedstoneOre, REDSTONE_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_medium_diamond_120 = {19, 6, 8, 2, MediumDiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
+    o_medium_diamond_120 = {19, 6, 8, 2, providerUniformRange, -64, -4, -1, MediumDiamondOre, DIAMOND_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.5F},
 
-    o_middle_iron_118 = {12, 6, 9, 10, MiddleIronOre, IRON_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_middle_iron_118 = {12, 6, 9, 10, providerTriangleRange, -24, 56, -1, MiddleIronOre, IRON_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_redstone_113 = { 8, 4, 8, 8, RedstoneOre, REDSTONE_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_redstone_116 = { 8, 6, 8, 8, RedstoneOre, REDSTONE_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_redstone_117 = {10, 6, 8, 8, RedstoneOre, REDSTONE_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_redstone_118 = {16, 6, 8, 4, RedstoneOre, REDSTONE_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_redstone_113 =  { 8, 4, 8, 8, providerRange,          0,  0, 16, RedstoneOre, REDSTONE_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_redstone_1161 = { 8, 6, 8, 8, providerRange,          0,  0, 16, RedstoneOre, REDSTONE_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_redstone_117 =  {10, 6, 8, 8, providerUniformRange,   0, 15, -1, RedstoneOre, REDSTONE_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_redstone_118 =  {16, 6, 8, 4, providerUniformRange, -64, 15, -1, RedstoneOre, REDSTONE_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_small_iron_118 = {13, 6, 4, 10, SmallIronOre, IRON_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_small_iron_118 = {13, 6, 4, 10, providerUniformRange, -64, 72, -1, SmallIronOre, IRON_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_tuff_117 = {5, 6, 33, 1, TuffOre, TUFF, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_tuff_118 = {8, 6, 64, 2, TuffOre, TUFF, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-
-    // uses rareOrePlacement
-    o_upper_andesite_118 = {6, 6, 64, 6, UpperAndesiteOre, ANDESITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-
-    o_upper_coal_118 = {9, 6, 17, 30, UpperCoalOre, COAL_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_tuff_117 = {5, 6, 33, 1, providerUniformRange,   0, 16, -1, TuffOre, TUFF, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_tuff_118 = {8, 6, 64, 2, providerUniformRange, -64,  0, -1, TuffOre, TUFF, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
     // uses rareOrePlacement
-    o_upper_diorite_118 = {4, 6, 64, 6, UpperDioriteOre, DIORITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_upper_andesite_118 = {6, 6, 64, 6, providerUniformRange, 64, 128, -1, UpperAndesiteOre, ANDESITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+
+    o_upper_coal_118 = {9, 6, 17, 30, providerUniformRange, 136, 319, -1, UpperCoalOre, COAL_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
     // uses rareOrePlacement
-    o_upper_granite_118 = {2, 6, 64, 6, UpperGraniteOre, GRANITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_upper_diorite_118 = {4, 6, 64, 6, providerUniformRange, 64, 128, -1, UpperDioriteOre, DIORITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_upper_iron_118 = {11, 6, 9, 90, UpperIronOre, IRON_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    // uses rareOrePlacement
+    o_upper_granite_118 = {2, 6, 64, 6, providerUniformRange, 64, 128, -1, UpperGraniteOre, GRANITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+
+    o_upper_iron_118 = {11, 6, 9, 90, providerTriangleRange, 80, 384, -1, UpperIronOre, IRON_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
     // nether
-    o_blackstone_116 =                {12, 7, 33, 2, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_blackstone_116_crimson_forest = { 9, 7, 33, 2, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_blackstone_116_warped_forest =  {10, 7, 33, 2, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_blackstone_118 =                {18, 7, 33, 2, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_blackstone_1161 =                {12, 7, 33, 2, providerRange,        5, 10, 37, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_blackstone_1161_crimson_forest = { 9, 7, 33, 2, providerRange,        5, 10, 37, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_blackstone_1161_warped_forest =  {10, 7, 33, 2, providerRange,        5, 10, 37, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_blackstone_117 =                 {12, 7, 33, 2, providerUniformRange, 5, 31, -1, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_blackstone_118 =                 {18, 7, 33, 2, providerUniformRange, 5, 31, -1, BlackstoneOre, BLACKSTONE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
 
-    o_deltas_gold_116 =  {13, 7, 10, 20, DeltasGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_deltas_gold_1161 = {13, 7, 10, 20, providerRange,            10,       20, 128, DeltasGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_deltas_gold_117 =  {13, 7, 10, 20, providerUniformRange, 0 + 10, 127 - 10,  -1, DeltasGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
 
-    o_deltas_quartz_116 =  {14, 7, 14, 32, DeltasQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-
-    // scatter ore, no count
-    o_large_debris_116 =                {15, 7, 3, 1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
-    o_large_debris_116_crimson_forest = {12, 7, 3, 1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
-    o_large_debris_116_warped_forest =  {13, 7, 3, 1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
-    o_large_debris_118 =                {21, 7, 3, 1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 1.0F},
-
-    o_magma_113 =                  { 8, 5, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_magma_116 =                  { 9, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_magma_116_soul_sand_valley = { 8, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_magma_116_crimson_forest =   { 6, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_magma_116_warped_forest =    { 7, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_magma_116_basalt_deltas =    {11, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_magma_118 =                  {11, 7, 33, 4, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-
-    o_nether_gold_116 =                {13, 7, 10, 10, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_nether_gold_116_crimson_forest = {10, 7, 10, 10, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_nether_gold_116_warped_forest =  {11, 7, 10, 10, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_nether_gold_118 =                {19, 7, 10, 10, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-
-    o_nether_gravel_116 =                {11, 7, 33, 2, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_nether_gravel_116_crimson_forest = { 8, 7, 33, 2, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_nether_gravel_116_warped_forest =  { 9, 7, 33, 2, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_nether_gravel_118 =                {17, 7, 33, 2, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-
-    o_nether_quartz_113 =                { 7, 5, 14, 16, NetherQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_nether_quartz_116 =                {14, 7, 14, 16, NetherQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_nether_quartz_116_crimson_forest = {11, 7, 14, 16, NetherQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_nether_quartz_116_warped_forest =  {12, 7, 14, 16, NetherQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_nether_quartz_118 =                {20, 7, 14, 16, NetherQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_deltas_quartz_1161 = {14, 7, 14, 32, providerRange,     10,       20, 128, DeltasQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_deltas_quartz_117 =  {14, 7, 14, 32, providerRange, 0 + 10, 127 - 10,  -1, DeltasQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
 
     // scatter ore, no count
-    o_small_debris_116 =                {16, 7, 2, 1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
-    o_small_debris_116_crimson_forest = {13, 7, 2, 1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
-    o_small_debris_116_warped_forest =  {14, 7, 2, 1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
-    o_small_debris_118 =                {22, 7, 2, 1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 1.0F},
+    o_large_debris_1161 =                {15, 7, 3, 1, providerDepthAverage, 16,  8, -1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
+    o_large_debris_1161_crimson_forest = {12, 7, 3, 1, providerDepthAverage, 16,  8, -1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
+    o_large_debris_1161_warped_forest =  {13, 7, 3, 1, providerDepthAverage, 16,  8, -1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
+    o_large_debris_117 =                 {15, 7, 3, 1, providerTriangleRange, 8, 24, -1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
+    o_large_debris_118 =                 {21, 7, 3, 1, providerTriangleRange, 8, 24, -1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 1.0F},
 
-    o_soul_sand_116 = {10, 7, 12, 12, SoulSandOre, SOUL_SAND, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_soul_sand_118 = {16, 7, 12, 12, SoulSandOre, SOUL_SAND, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F}
+    o_magma_113 =                   { 8, 5, 33, 4, providerMagmaOre,     -1, -1, -1, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_magma_1161 =                  { 9, 7, 33, 4, providerMagmaOre,     -1, -1, -1, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_magma_1161_soul_sand_valley = { 8, 7, 33, 4, providerMagmaOre,     -1, -1, -1, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_magma_1161_crimson_forest =   { 6, 7, 33, 4, providerMagmaOre,     -1, -1, -1, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_magma_1161_warped_forest =    { 7, 7, 33, 4, providerMagmaOre,     -1, -1, -1, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_magma_1161_basalt_deltas =    {11, 7, 33, 4, providerMagmaOre,     -1, -1, -1, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_magma_117 =                   { 9, 7, 33, 4, providerUniformRange, 27, 36, -1, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_magma_118 =                   {11, 7, 33, 4, providerUniformRange, 27, 36, -1, MagmaOre, MAGMA_BLOCK, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+
+    o_nether_gold_1161 =                {13, 7, 10, 10, providerRange,            10,       20, 128, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_gold_1161_crimson_forest = {10, 7, 10, 10, providerRange,            10,       20, 128, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_gold_1161_warped_forest =  {11, 7, 10, 10, providerRange,            10,       20, 128, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_gold_117 =                 {13, 7, 10, 10, providerUniformRange, 0 + 10, 127 - 10,  -1, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_gold_118 =                 {19, 7, 10, 10, providerUniformRange, 0 + 10, 127 - 10,  -1, NetherGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+
+    o_nether_gravel_1161 =                {11, 7, 33, 2, providerRange,        5,  0, 37, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_gravel_1161_crimson_forest = { 8, 7, 33, 2, providerRange,        5,  0, 37, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_gravel_1161_warped_forest =  { 9, 7, 33, 2, providerRange,        5,  0, 37, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_gravel_117 =                 {11, 7, 33, 2, providerUniformRange, 5, 41, -1, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_gravel_118 =                 {17, 7, 33, 2, providerUniformRange, 5, 41, -1, NetherGravelOre, GRAVEL, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+
+    o_nether_quartz_113 =                 { 7, 5, 14, 16, providerRange,            10,       20, 128, NetherQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_quartz_1161 =                {14, 7, 14, 16, providerRange,            10,       20, 128, NetherQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_quartz_1161_crimson_forest = {11, 7, 14, 16, providerRange,            10,       20, 128, NetherQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_quartz_1161_warped_forest =  {12, 7, 14, 16, providerRange,            10,       20, 128, NetherQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_quartz_117 =                 {14, 7, 14, 16, providerUniformRange, 0 + 10, 127 - 10,  -1, NetherQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_nether_quartz_118 =                 {20, 7, 14, 16, providerUniformRange, 0 + 10, 127 - 10,  -1, NetherQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+
+    // scatter ore, no count
+    o_small_debris_1161 =                {16, 7, 2, 1, providerRange,        8,      16, 128, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
+    o_small_debris_1161_crimson_forest = {13, 7, 2, 1, providerRange,        8,      16, 128, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
+    o_small_debris_1161_warped_forest =  {14, 7, 2, 1, providerRange,        8,      16, 128, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
+    o_small_debris_117 =                 {16, 7, 2, 1, providerUniformRange, 8, 127 - 8,  -1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
+    o_small_debris_118 =                 {22, 7, 2, 1, providerUniformRange, 8, 127 - 8,  -1, SmallDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 1.0F},
+
+    o_soul_sand_1161 = {10, 7, 12, 12, providerRange,        0,  0, 32, SoulSandOre, SOUL_SAND, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_soul_sand_117 =  {10, 7, 12, 12, providerUniformRange, 0, 31, -1, SoulSandOre, SOUL_SAND, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_soul_sand_118 =  {16, 7, 12, 12, providerUniformRange, 0, 31, -1, SoulSandOre, SOUL_SAND, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F}
     ;
 
     switch (oreType)
     {
     // overworld
     case AndesiteOre:
-        if (mc <= MC_1_15) *oconf = o_andesite_113;
-        else if (mc <= MC_1_17) *oconf = o_andesite_116;
+        if (mc < MC_1_16_1) *oconf = o_andesite_113;
+        else if (mc < MC_1_17) *oconf = o_andesite_1161;
+        else *oconf = o_andesite_117;
         return mc > MC_1_12 && mc <= MC_1_17;
     case BuriedDiamondOre:
-        if (mc <= MC_1_19) *oconf = o_buried_diamond_118;
+        if (mc < MC_1_20) *oconf = o_buried_diamond_118;
         else *oconf = o_buried_diamond_120;
         return mc > MC_1_17;
     case BuriedLapisOre:
-        if (mc <= MC_1_19) *oconf = o_buried_lapis_118;
+        if (mc < MC_1_20) *oconf = o_buried_lapis_118;
         else *oconf = o_buried_lapis_120;
         return mc > MC_1_17;
     case ClayOre:
-        if (mc <= MC_1_19) *oconf = o_clay_118;
+        if (mc < MC_1_20) *oconf = o_clay_118;
         else *oconf = o_clay_120;
         return mc > MC_1_17;
     case CoalOre:
-        if (mc <= MC_1_15) *oconf = o_coal_113;
-        else if (mc <= MC_1_16) *oconf = o_coal_116;
-        else if (mc <= MC_1_17) *oconf = o_coal_117;
+        if (mc < MC_1_16_1) *oconf = o_coal_113;
+        else if (mc < MC_1_17) *oconf = o_coal_1161;
+        else *oconf = o_coal_117;
         return mc > MC_1_12 && mc <= MC_1_17;
     case CopperOre:
-        if (mc <= MC_1_17) *oconf = o_copper_117;
-        else if (mc <= MC_1_19) *oconf = o_copper_118;
+        if (mc < MC_1_18) *oconf = o_copper_117;
+        else if (mc < MC_1_20) *oconf = o_copper_118;
         else *oconf = o_copper_120;
         return mc > MC_1_16;
     case DeepslateOre:
-        if (mc <= MC_1_17) *oconf = o_deepslate_117;
+        *oconf = o_deepslate_117;
         return mc > MC_1_16 && mc <= MC_1_17;
     case DiamondOre:
-        if (mc <= MC_1_15) *oconf = o_diamond_113;
-        else if (mc <= MC_1_16) *oconf = o_diamond_116;
-        else if (mc <= MC_1_17) *oconf = o_diamond_117;
+        if (mc < MC_1_16_1) *oconf = o_diamond_113;
+        else if (mc < MC_1_17) *oconf = o_diamond_1161;
+        else if (mc < MC_1_18) *oconf = o_diamond_117;
         else *oconf = o_diamond_118;
         return mc > MC_1_12;
     case DioriteOre:
-        if (mc <= MC_1_15) *oconf = o_diorite_113;
-        else if (mc <= MC_1_17) *oconf = o_diorite_116;
+        if (mc < MC_1_16_1) *oconf = o_diorite_113;
+        else if (mc < MC_1_17) *oconf = o_diorite_1161;
+        else *oconf = o_diorite_117;
         return mc > MC_1_12 && mc <= MC_1_17;
     case DirtOre:
-        if (mc <= MC_1_15) *oconf = o_dirt_113;
-        else if (mc <= MC_1_17) *oconf = o_dirt_116;
+        if (mc < MC_1_16_1) *oconf = o_dirt_113;
+        else if (mc < MC_1_17) *oconf = o_dirt_1161;
+        else if (mc < MC_1_18) *oconf = o_dirt_117;
         else *oconf = o_dirt_118;
         return mc > MC_1_12;
     case EmeraldOre:
-        if (mc <= MC_1_15) *oconf = o_emerald_113;
-        else if (mc <= MC_1_16) *oconf = o_emerald_116;
-        else if (mc <= MC_1_17) *oconf = o_emerald_117;
-        else if (mc <= MC_1_18) *oconf = o_emerald_118;
-        else if (mc <= MC_1_19) *oconf = o_emerald_119;
+        if (mc < MC_1_16_1) *oconf = o_emerald_113;
+        else if (mc < MC_1_17) *oconf = o_emerald_1161;
+        else if (mc < MC_1_18) *oconf = o_emerald_117;
+        else if (mc < MC_1_19) *oconf = o_emerald_118;
+        else if (mc < MC_1_20) *oconf = o_emerald_119;
         else *oconf = o_emerald_120;
         return mc > MC_1_12;
     case ExtraGoldOre:
-        if (mc <= MC_1_15) *oconf = o_extra_gold_113;
-        else if (mc <= MC_1_16) *oconf = o_extra_gold_116;
-        else if (mc <= MC_1_17) *oconf = o_extra_gold_117;
-        else if (mc <= MC_1_19) *oconf = o_extra_gold_118;
+        if (mc < MC_1_16_1) *oconf = o_extra_gold_113;
+        else if (mc < MC_1_17) *oconf = o_extra_gold_1161;
+        else if (mc < MC_1_18) *oconf = o_extra_gold_117;
+        else if (mc < MC_1_20) *oconf = o_extra_gold_118;
         else *oconf = o_extra_gold_120;
         return mc > MC_1_12;
     case GoldOre:
-        if (mc <= MC_1_15) *oconf = o_gold_113;
-        else if (mc <= MC_1_16) *oconf = o_gold_116;
-        else if (mc <= MC_1_17) *oconf = o_gold_117;
+        if (mc < MC_1_16_1) *oconf = o_gold_113;
+        else if (mc < MC_1_17) *oconf = o_gold_1161;
+        else if (mc < MC_1_18) *oconf = o_gold_117;
         else *oconf = o_gold_118;
         return mc > MC_1_12;
     case GraniteOre:
-        if (mc <= MC_1_15) *oconf = o_granite_113;
-        else if (mc <= MC_1_17) *oconf = o_granite_116;
+        if (mc < MC_1_16_1) *oconf = o_granite_113;
+        else if (mc < MC_1_17) *oconf = o_granite_1161;
+        else *oconf = o_granite_117;
         return mc > MC_1_12 && mc <= MC_1_17;
     case GravelOre:
-        if (mc <= MC_1_15) *oconf = o_gravel_113;
-        else if (mc <= MC_1_17) *oconf = o_gravel_116;
+        if (mc < MC_1_16_1) *oconf = o_gravel_113;
+        else if (mc < MC_1_17) *oconf = o_gravel_1161;
+        else if (mc < MC_1_18) *oconf = o_gravel_117;
         else *oconf = o_gravel_118;
         return mc > MC_1_12;
     case IronOre:
-        if (mc <= MC_1_15) *oconf = o_iron_113;
-        else if (mc <= MC_1_16) *oconf = o_iron_116;
-        else if (mc <= MC_1_17) *oconf = o_iron_117;
+        if (mc < MC_1_16_1) *oconf = o_iron_113;
+        else if (mc < MC_1_17) *oconf = o_iron_1161;
+        else *oconf = o_iron_117;
         return mc > MC_1_12 && mc <= MC_1_17;
     case LapisOre:
-        if (mc <= MC_1_15) *oconf = o_lapis_113;
-        else if (mc <= MC_1_16) *oconf = o_lapis_116;
-        else if (mc <= MC_1_17) *oconf = o_lapis_117;
-        else if (mc <= MC_1_19) *oconf = o_lapis_118;
+        if (mc < MC_1_16_1) *oconf = o_lapis_113;
+        else if (mc < MC_1_17) *oconf = o_lapis_1161;
+        else if (mc < MC_1_18) *oconf = o_lapis_117;
+        else if (mc < MC_1_20) *oconf = o_lapis_118;
         else *oconf = o_lapis_120;
         return mc > MC_1_12;
     case LargeCopperOre:
-        if (mc <= MC_1_19) *oconf = o_large_copper_118;
+        if (mc < MC_1_20) *oconf = o_large_copper_118;
         else *oconf = o_large_copper_120;
         return mc > MC_1_17;
     case LargeDiamondOre:
-        if (mc <= MC_1_19) *oconf = o_large_diamond_118;
+        if (mc < MC_1_20) *oconf = o_large_diamond_118;
         else *oconf = o_large_diamond_120;
         return mc > MC_1_17;
     case LowerAndesiteOre:
@@ -1521,9 +1542,9 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
         *oconf = o_middle_iron_118;
         return mc > MC_1_17;
     case RedstoneOre:
-        if (mc <= MC_1_15) *oconf = o_redstone_113;
-        else if (mc <= MC_1_16) *oconf = o_redstone_116;
-        else if (mc <= MC_1_17) *oconf = o_redstone_117;
+        if (mc < MC_1_16_1) *oconf = o_redstone_113;
+        else if (mc < MC_1_17) *oconf = o_redstone_1161;
+        else if (mc < MC_1_18) *oconf = o_redstone_117;
         else *oconf = o_redstone_118;
         return mc > MC_1_12;
     case SmallIronOre:
@@ -1550,59 +1571,69 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
         return mc > MC_1_17;
     // nether
     case BlackstoneOre:
-        if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_blackstone_116_crimson_forest;
-        else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_blackstone_116_warped_forest;
-        else if (mc <= MC_1_17) *oconf = o_blackstone_116;
+        if (mc < MC_1_17 && biomeID == crimson_forest) *oconf = o_blackstone_1161_crimson_forest;
+        else if (mc < MC_1_17 && biomeID == warped_forest) *oconf = o_blackstone_1161_warped_forest;
+        else if (mc < MC_1_17) *oconf = o_blackstone_1161;
+        else if (mc < MC_1_18) *oconf = o_blackstone_117;
         else *oconf = o_blackstone_118;
         return mc > MC_1_15;
     case DeltasGoldOre:
-        *oconf = o_deltas_gold_116;
+        if (mc < MC_1_17) *oconf = o_deltas_gold_1161;
+        else *oconf = o_deltas_gold_117;
         return mc > MC_1_15;
     case DeltasQuartzOre:
-        *oconf = o_deltas_quartz_116;
+        if (mc < MC_1_17) *oconf = o_deltas_quartz_1161;
+        else *oconf = o_deltas_quartz_117;
         return mc > MC_1_15;
     case LargeDebrisOre:
-        if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_large_debris_116_crimson_forest;
-        else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_large_debris_116_warped_forest;
-        else if (mc <= MC_1_17) *oconf = o_large_debris_116;
+        if (mc < MC_1_17 && biomeID == crimson_forest) *oconf = o_large_debris_1161_crimson_forest;
+        else if (mc < MC_1_17 && biomeID == warped_forest) *oconf = o_large_debris_1161_warped_forest;
+        else if (mc < MC_1_17) *oconf = o_large_debris_1161;
+        else if (mc < MC_1_18) *oconf = o_large_debris_117;
         else *oconf = o_large_debris_118;
         return mc > MC_1_15;
     case MagmaOre:
-        if (mc <= MC_1_15) *oconf = o_magma_113;
-        else if (mc <= MC_1_17 && biomeID == soul_sand_valley) *oconf = o_magma_116_soul_sand_valley;
-        else if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_magma_116_crimson_forest;
-        else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_magma_116_warped_forest;
-        else if (mc <= MC_1_17 && biomeID == basalt_deltas) *oconf = o_magma_116_basalt_deltas;
-        else if (mc <= MC_1_17) *oconf = o_magma_116;
+        if (mc < MC_1_16_1) *oconf = o_magma_113;
+        else if (mc < MC_1_17 && biomeID == soul_sand_valley) *oconf = o_magma_1161_soul_sand_valley;
+        else if (mc < MC_1_17 && biomeID == crimson_forest) *oconf = o_magma_1161_crimson_forest;
+        else if (mc < MC_1_17 && biomeID == warped_forest) *oconf = o_magma_1161_warped_forest;
+        else if (mc < MC_1_17 && biomeID == basalt_deltas) *oconf = o_magma_1161_basalt_deltas;
+        else if (mc < MC_1_17) *oconf = o_magma_1161;
+        else if (mc < MC_1_18) *oconf = o_magma_117;
         else *oconf = o_magma_118;
         return mc > MC_1_12;
     case NetherGoldOre:
-        if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_nether_gold_116_crimson_forest;
-        else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_nether_gold_116_warped_forest;
-        else if (mc <= MC_1_17) *oconf = o_nether_gold_116;
+        if (mc < MC_1_17 && biomeID == crimson_forest) *oconf = o_nether_gold_1161_crimson_forest;
+        else if (mc < MC_1_17 && biomeID == warped_forest) *oconf = o_nether_gold_1161_warped_forest;
+        else if (mc < MC_1_17) *oconf = o_nether_gold_1161;
+        else if (mc < MC_1_18) *oconf = o_nether_gold_117;
         else *oconf = o_nether_gold_118;
         return mc > MC_1_15;
     case NetherGravelOre:
-        if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_nether_gravel_116_crimson_forest;
-        else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_nether_gravel_116_warped_forest;
-        else if (mc <= MC_1_17) *oconf = o_nether_gravel_116;
+        if (mc < MC_1_17 && biomeID == crimson_forest) *oconf = o_nether_gravel_1161_crimson_forest;
+        else if (mc < MC_1_17 && biomeID == warped_forest) *oconf = o_nether_gravel_1161_warped_forest;
+        else if (mc < MC_1_17) *oconf = o_nether_gravel_1161;
+        else if (mc < MC_1_18) *oconf = o_nether_gravel_117;
         else *oconf = o_nether_gravel_118;
         return mc > MC_1_15;
     case NetherQuartzOre:
-        if (mc <= MC_1_15) *oconf = o_nether_quartz_113;
-        else if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_nether_quartz_116_crimson_forest;
-        else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_nether_quartz_116_warped_forest;
-        else if (mc <= MC_1_17) *oconf = o_nether_quartz_116;
+        if (mc < MC_1_16_1) *oconf = o_nether_quartz_113;
+        else if (mc < MC_1_17 && biomeID == crimson_forest) *oconf = o_nether_quartz_1161_crimson_forest;
+        else if (mc < MC_1_17 && biomeID == warped_forest) *oconf = o_nether_quartz_1161_warped_forest;
+        else if (mc < MC_1_17) *oconf = o_nether_quartz_1161;
+        else if (mc < MC_1_18) *oconf = o_nether_quartz_117;
         else *oconf = o_nether_quartz_118;
         return mc > MC_1_12;
     case SmallDebrisOre:
-        if (mc <= MC_1_17 && biomeID == crimson_forest) *oconf = o_small_debris_116_crimson_forest;
-        else if (mc <= MC_1_17 && biomeID == warped_forest) *oconf = o_small_debris_116_warped_forest;
-        else if (mc <= MC_1_17) *oconf = o_small_debris_116;
+        if (mc < MC_1_17 && biomeID == crimson_forest) *oconf = o_small_debris_1161_crimson_forest;
+        else if (mc < MC_1_17 && biomeID == warped_forest) *oconf = o_small_debris_1161_warped_forest;
+        else if (mc < MC_1_17) *oconf = o_small_debris_1161;
+        else if (mc < MC_1_18) *oconf = o_small_debris_117;
         else *oconf = o_small_debris_118;
         return mc > MC_1_15;
     case SoulSandOre:
-        if (mc <= MC_1_17) *oconf = o_soul_sand_116;
+        if (mc < MC_1_17) *oconf = o_soul_sand_1161;
+        else if (mc < MC_1_18) *oconf = o_soul_sand_117;
         else *oconf = o_soul_sand_118;
         return mc > MC_1_15;
     default:
@@ -1755,153 +1786,15 @@ Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, R
     }
     if (mc <= MC_1_14) {
         int blockX = (chunkX << 4) + rnd.nextInt(rnd.state, 16);
-        int blockY = getOreYPos(mc, config.oreType, rnd);
+        int blockY = config.heightProvider(rnd, config.h1, config.h2, config.h3);
         int blockZ = (chunkZ << 4) + rnd.nextInt(rnd.state, 16);
         return (Pos3) {blockX, blockY, blockZ};
     } else {
         int blockX = (chunkX << 4) + rnd.nextInt(rnd.state, 16);
         int blockZ = (chunkZ << 4) + rnd.nextInt(rnd.state, 16);
-        int blockY = getOreYPos(mc, config.oreType, rnd);
+        int blockY = config.heightProvider(rnd, config.h1, config.h2, config.h3);
         return (Pos3) {blockX, blockY, blockZ};
     }
-}
-
-int getOreYPos(int mc, int oreType, RandomSource rnd)
-{
-    switch (oreType) {
-    // overworld
-    case AndesiteOre:
-        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 80);
-        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 79);
-        break;
-    case BuriedDiamondOre:
-        return providerTriangleRange(rnd, -64 + -80, -64 + 80);
-    case BuriedLapisOre:
-        return providerUniformRange(rnd, -64, 64);
-    case ClayOre:
-        return providerUniformRange(rnd, 0, 256);
-    case CoalOre:
-        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 128);
-        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 127);
-        break;
-    case CopperOre:
-        if (mc <= MC_1_17) return providerTriangleRange(rnd, 0, 96);
-        return providerTriangleRange(rnd, -16, 112);
-    case DeepslateOre:
-        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 16);
-        break;
-    case DiamondOre:
-        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 16);
-        // was 16 in 1.17, changed to 15 in 1.17.1
-        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 15);
-        return providerTriangleRange(rnd, -64 + -80, -64 + 80);
-    case DioriteOre:
-        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 80);
-        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 79);
-        break;
-    case DirtOre:
-        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 256);
-        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 255);
-        return providerUniformRange(rnd, 0, 160);
-    case EmeraldOre:
-        if (mc <= MC_1_16) return rnd.nextInt(rnd.state, 28) + 4;
-        if (mc <= MC_1_17) return providerUniformRange(rnd, 4, 31);
-        return providerTriangleRange(rnd, -16, 480);
-    case ExtraGoldOre:
-        if (mc <= MC_1_16) return providerRange(rnd, 32, 32, 80);
-        if (mc <= MC_1_17) return providerUniformRange(rnd, 32, 79);
-        return providerUniformRange(rnd, 32, 256);
-    case GoldOre:
-        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 32);
-        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 31);
-        return providerTriangleRange(rnd, -64, 32);
-    case GraniteOre:
-        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 80);
-        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 79);
-        break;
-    case GravelOre:
-        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 256);
-        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 255);
-        return providerUniformRange(rnd, -64, 319);
-    case IronOre:
-        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 64);
-        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 63);
-        break;
-    case LapisOre:
-        if (mc <= MC_1_16) return providerDepthAverage(rnd, 16, 16);
-        if (mc <= MC_1_17) return providerTriangleRange(rnd, 0, 30);
-        return providerTriangleRange(rnd, -32, 32);
-    case LargeCopperOre:
-        return providerTriangleRange(rnd, -16, 112);
-    case LargeDiamondOre:
-        return providerTriangleRange(rnd, -64 + -80, -64 + 80);
-    case LowerAndesiteOre:
-        return providerUniformRange(rnd, 0, 60);
-    case LowerCoalOre:
-        return providerTriangleRange(rnd, 0, 192);
-    case LowerDioriteOre:
-        return providerUniformRange(rnd, 0, 60);
-    case LowerGoldOre:
-        return providerUniformRange(rnd, -64, -48);
-    case LowerGraniteOre:
-        return providerUniformRange(rnd, 0, 60);
-    case LowerRedstoneOre:
-        return providerTriangleRange(rnd, -64 + -32, -64 + 32);
-    case MediumDiamondOre:
-        return providerUniformRange(rnd, -64, -4);
-    case MiddleIronOre:
-        return providerTriangleRange(rnd, -24, 56);
-    case RedstoneOre:
-        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 16);
-        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 15);
-        return providerUniformRange(rnd, -64, 15);
-    case SmallIronOre:
-        return providerUniformRange(rnd, -64, 72);
-    case TuffOre:
-        if (mc <= MC_1_17) return providerUniformRange(rnd, 0, 16);
-        return providerUniformRange(rnd, -64, 0);
-    case UpperAndesiteOre:
-        return providerUniformRange(rnd, 64, 128);
-    case UpperCoalOre:
-        return providerUniformRange(rnd, 136, 319);
-    case UpperDioriteOre:
-        return providerUniformRange(rnd, 64, 128);
-    case UpperGraniteOre:
-        return providerUniformRange(rnd, 64, 128);
-    case UpperIronOre:
-        return providerTriangleRange(rnd, 80, 384);
-    // nether
-    case BlackstoneOre:
-        if (mc <= MC_1_16) return providerRange(rnd, 5, 10, 37);
-        return providerUniformRange(rnd, 5, 31);
-    case LargeDebrisOre:
-        if (mc <= MC_1_16) return providerDepthAverage(rnd, 16, 8);
-        return providerTriangleRange(rnd, 8, 24);
-    case MagmaOre:
-        if (mc <= MC_1_16) return 32 - 5 + rnd.nextInt(rnd.state, 10);
-        return providerUniformRange(rnd, 27, 36);
-    case DeltasGoldOre:
-    case NetherGoldOre:
-        if (mc <= MC_1_16) return providerRange(rnd, 10, 20, 128);
-        return providerUniformRange(rnd, 0 + 10, 127 - 10);
-    case NetherGravelOre:
-        if (mc <= MC_1_16) return providerRange(rnd, 5, 0, 37);
-        return providerUniformRange(rnd, 5, 41);
-    case DeltasQuartzOre:
-    case NetherQuartzOre:
-        if (mc <= MC_1_16) return providerRange(rnd, 10, 20, 128);
-        return providerUniformRange(rnd, 0 + 10, 127 - 10);
-    case SmallDebrisOre:
-        if (mc <= MC_1_16) return providerRange(rnd, 8, 16, 128);
-        return providerUniformRange(rnd, 8, 127 - 8);
-    case SoulSandOre:
-        if (mc <= MC_1_16) return providerRange(rnd, 0, 0, 32);
-        return providerUniformRange(rnd, 0, 31);
-    default:
-        fprintf(stderr, "getOreYPos: not implemented for ore type %d.\n", oreType);
-        exit(1);
-    }
-    return 0;
 }
 
 Pos3List generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource rnd)
@@ -1924,13 +1817,13 @@ Pos3List generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreCon
         for (int i = 0; i < count; i++) {
             if (mc <= MC_1_14) {
                 int x = pos.x + rnd.nextInt(rnd.state, 16);
-                int y = getOreYPos(mc, config.oreType, rnd);
+                int y = config.heightProvider(rnd, config.h1, config.h2, config.h3);
                 int z = pos.z + rnd.nextInt(rnd.state, 16);
                 appendPos3List(&poses, (Pos3) {x, y, z});
             } else {
                 int x = pos.x + rnd.nextInt(rnd.state, 16);
                 int z = pos.z + rnd.nextInt(rnd.state, 16);
-                int y = getOreYPos(mc, config.oreType, rnd);
+                int y = config.heightProvider(rnd, config.h1, config.h2, config.h3);
                 appendPos3List(&poses, (Pos3) {x, y, z});
             }
         }
