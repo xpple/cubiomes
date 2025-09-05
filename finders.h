@@ -436,6 +436,10 @@ STRUCT(OreConfig)
     int32_t         step;
     int32_t         size;
     int32_t         repeatCount;
+    int           (*heightProvider)(RandomSource rnd, int, int, int);
+    int32_t         h1; // the parameters for the height provider
+    int32_t         h2; // since the provider takes 2 or 3 arguments,
+    int32_t         h3; // the third parameter is sometimes unused
     uint32_t        oreType;
     uint32_t        oreBlock;
     int8_t          dim;
@@ -454,14 +458,24 @@ static inline int providerRange(RandomSource rnd, const int bottomOffset, const 
 }
 
 // <=1.16.5
-static inline int providerDepthAverage(RandomSource rnd, const int baseline, const int spread) {
+static inline int providerDepthAverage(RandomSource rnd, const int baseline, const int spread, const int h3) {
     int a = rnd.nextInt(rnd.state, spread);
     int b = rnd.nextInt(rnd.state, spread);
     return a + b - spread + baseline;
 }
 
+// <=1.16.5
+static inline int providerEmeraldOre(RandomSource rnd, int h1, int h2, int h3) {
+    return rnd.nextInt(rnd.state, 28) + 4;
+}
+
+// <=1.16.5
+static inline int providerMagmaOre(RandomSource rnd, int h1, int h2, int h3) {
+    return 32 - 5 + rnd.nextInt(rnd.state, 10);
+}
+
 // >=1.17
-static inline int providerUniformRange(RandomSource rnd, const int minOffset, const int maxOffset) {
+static inline int providerUniformRange(RandomSource rnd, const int minOffset, const int maxOffset, const int h3) {
     if (minOffset > maxOffset) {
         return minOffset;
     }
@@ -469,7 +483,7 @@ static inline int providerUniformRange(RandomSource rnd, const int minOffset, co
 }
 
 // >=1.17
-static inline int providerTriangleRange(RandomSource rnd, const int minOffset, const int maxOffset) {
+static inline int providerTriangleRange(RandomSource rnd, const int minOffset, const int maxOffset, const int h3) {
     if (minOffset > maxOffset) {
         return minOffset;
     }
@@ -528,8 +542,6 @@ int isViableOreBiome(int mc, int oreType, int biomeID);
 Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig config, int chunkX, int chunkZ);
 
 Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource rnd);
-
-int getOreYPos(int mc, int oreType, RandomSource rnd);
 
 Pos3List generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 bPos, RandomSource rnd);
 
