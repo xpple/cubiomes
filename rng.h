@@ -179,6 +179,10 @@ static inline int nextIntBetween(uint64_t *seed, const int min, const int max)
     return nextInt(seed, max - min + 1) + min;
 }
 
+static inline float nextFloatBetween(uint64_t *seed, const float minInclusive, const float maxExclusive) {
+    return nextFloat(seed) * (maxExclusive - minInclusive) + minInclusive;
+}
+
 
 ///=============================================================================
 ///                               Xoroshiro 128

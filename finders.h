@@ -574,17 +574,151 @@ int initOreVeinNoise(OreVeinParameters *params, uint64_t ws, int mc);
 
 int32_t getOreVeinBlockAt(int x, int y, int z, OreVeinParameters* params);
 
+enum CanyonCarvers {
+    CANYON_CARVER,
+    UNDERWATER_CANYON_CARVER,
+};
+
+STRUCT(CanyonCarverConfig)
+{
+    float probability;
+    int carverIndex;
+    int range;
+    int (*y)(uint64_t*, int, int, int); int minY, maxY, innerY;
+    float yScale;
+    float (*verticalRotation)(uint64_t*, float, float); float minVerRot, maxVerRot;
+    float (*distanceFactor)(uint64_t*, float, float); float minDistance, maxDistance;
+    float (*thickness)(uint64_t*, float, float, float); float minThickness, maxThickness, plateauThickness;
+    int widthSmoothness;
+    float (*horizontalRadiusFactor)(uint64_t*, float, float); float minHorRadius, maxHorRadius;
+    float verticalRadiusDefaultFactor;
+    float verticalRadiusCenterFactor;
+};
+
+enum CaveCarvers {
+    CAVE_CARVER,
+    CAVE_EXTRA_UNDERGROUND_CARVER,
+    OCEAN_CAVE_CARVER,
+    UNDERWATER_CAVE_CARVER,
+    NETHER_CAVE_CARVER,
+};
+
+STRUCT(CaveCarverConfig)
+{
+    int dim;
+    float probability;
+    int carverIndex;
+    int range;
+    int caveBound;
+    float (*thickness)(uint64_t*);
+    double tunnelYScale;
+    int (*y)(uint64_t*, int, int, int); int minY, maxY, innerY;
+    float (*yScale)(uint64_t*, float, float); float minYScale, maxYScale;
+    float (*horizontalRadiusMultiplier)(uint64_t*, float, float); float minHorRadius, maxHorRadius;
+    float (*verticalRadiusMultiplier)(uint64_t*, float, float); float minVerRadius, maxVerRadius;
+    float (*floorLevel)(uint64_t*, float, float); float minFloorLevel, maxFloorLevel;
+};
+
 /**
- * Check whether the given chunk pos is a canyon (ravine) start. Implemented for >=1.13.
- *
- * @param seed the world seed
- * @param biome the biome at (chunkX << 2, chunkZ << 2) in biome-scale, can be -1 for >=1.18
+ * Get the canyon carver configuration for the canyon type. The biome parameter is only used for
+ * UNDERWATER_CANYON_CARVER, which was removed in 1.18. So for >=1.18 the parameter can always be -1.
+ * @param canyonCarverType the canyon carver type
+ * @param mc the Minecraft version
+ * @param biome the biome in biome scale at (chunkX << 2, chunkZ << 2)
+ * @param cconf the config
+ * @return zero if failed
+ */
+int getCanyonCarverConfig(int canyonCarverType, int mc, int biome, CanyonCarverConfig* cconf);
+
+/**
+ * Get the cave carver configuration for the cave type. The biome parameter is used for CAVE_CARVER,
+ * OCEAN_CAVE_CARVER and UNDERWATER_CAVE_CARVER, all only for versions <1.18. So for >=1.18 the parameter
+ * can always be -1.
+ * @param caveCarverType the cave carver type
+ * @param mc the Minecraft version
+ * @param biome the biome in biome scale at (chunkX << 2, chunkZ << 2)
+ * @param cconf the config
+ * @return zero if failed
+ */
+int getCaveCarverConfig(int caveCarverType, int mc, int biome, CaveCarverConfig* cconf);
+
+/**
+ * Check whether the canyon type generates at the given chunk.
+ * @param seed the world seed (structure seed suffices)
  * @param chunkX the chunk X-coordinate
  * @param chunkZ the chunk Z-coordinate
- * @param mc the Minecraft version
- * @return -1 for <1.13, 1 if there is a canyon and 0b1x for <=1.17 if there is an underwater canyon
+ * @param ccc the canyon carver config
+ * @param rnd an uninitialised random instance (used for carveCanyon)
+ * @return 1 if a canyon starts here
  */
-int checkCanyonStart(uint64_t seed, int biome, int chunkX, int chunkZ, int mc);
+int checkCanyonStart(uint64_t seed, int chunkX, int chunkZ, CanyonCarverConfig ccc, uint64_t* rnd);
+
+/**
+ * Check whether the cave type generates at the given chunk.
+ * @param seed the world seed (structure seed suffices)
+ * @param chunkX the chunk X-coordinate
+ * @param chunkZ the chunk Z-coordinate
+ * @param ccc the cave carver config
+ * @param rnd an uninitialised random instance (used for carveCave)
+ * @return 1 if a cave starts here
+ */
+int checkCaveStart(uint64_t seed, int chunkX, int chunkZ, CaveCarverConfig ccc, uint64_t* rnd);
+
+/**
+ * Carve out a canyon at the given chunk. The returned list consists of all carved blocks.
+ * @param seed the world seed (structure seed suffices)
+ * @param chunkX the chunk X-coordinate
+ * @param chunkZ the chunk Z-coordinate
+ * @param ccc the canyon carver config
+ * @return the list of carved blocks
+ */
+Pos3List carveCanyon(uint64_t seed, int chunkX, int chunkZ, CanyonCarverConfig ccc);
+
+/**
+ * Carve out a cave at the given chunk. The returned list consists of all carved blocks.
+ * @param seed the world seed (structure seed suffices)
+ * @param chunkX the chunk X-coordinate
+ * @param chunkZ the chunk Z-coordinate
+ * @param ccc the cave carver config
+ * @return the list of carved blocks
+ */
+Pos3List carveCave(uint64_t seed, int chunkX, int chunkZ, CaveCarverConfig ccc);
+
+//==============================================================================
+// Random providers
+//==============================================================================
+
+static inline int providerUniformIntBetween(uint64_t* rnd, int minInclusive, int maxInclusive, int a3) {
+    if (minInclusive > maxInclusive) {
+        return minInclusive;
+    }
+    return nextInt(rnd, maxInclusive - minInclusive + 1) + minInclusive;
+}
+
+static inline int providerBiasedToBottom(uint64_t* rnd, int minInclusive, int maxInclusive, int inner) {
+    if (maxInclusive - minInclusive - inner + 1 <= 0) {
+        return minInclusive;
+    }
+    int k = nextInt(rnd, maxInclusive - minInclusive - inner + 1);
+    return nextInt(rnd, k + inner) + minInclusive;
+}
+
+static inline float providerConstantFloat(uint64_t* rnd, float value, float a2) {
+    return value;
+}
+
+static inline float providerUniformFloatBetween(uint64_t* rnd, float minInclusive, float maxExclusive) {
+    return nextFloat(rnd) * (maxExclusive - minInclusive) + minInclusive;
+}
+
+static inline float providerTrapezoidFloatBetween(uint64_t* rnd, float min, float max, float plateau) {
+    float f = max - min;
+    float g = (f - plateau) / 2.0F;
+    float h = f - g;
+    float a = nextFloat(rnd);
+    float b = nextFloat(rnd);
+    return min + a * h + b * g;
+}
 
 /* Finds a suitable pseudo-random location in the specified area.
  * This function is used to determine the positions of spawn and strongholds.

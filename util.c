@@ -362,6 +362,29 @@ const char* ore2str(int otype)
     return NULL;
 }
 
+/// get the resource id name for an ore
+const char* canyon2str(int ctype)
+{
+    switch (ctype) {
+    case CANYON_CARVER: return "canyon";
+    case UNDERWATER_CAVE_CARVER: return "underwater_canyon";
+    default: return NULL;
+    }
+}
+
+/// get the resource id name for an ore
+const char* cave2str(int ctype)
+{
+    switch (ctype) {
+    case CAVE_CARVER: return "cave";
+    case CAVE_EXTRA_UNDERGROUND_CARVER: return "cave_extra_underground";
+    case OCEAN_CAVE_CARVER: return "ocean_cave";
+    case UNDERWATER_CAVE_CARVER: return "underwater_cave";
+    case NETHER_CAVE_CARVER: return "nether_cave";
+    default: return NULL;
+    }
+}
+
 static void setColor(unsigned char colors[256][3], int id, uint32_t hex)
 {
     colors[id][0] = (hex >> 16) & 0xff;

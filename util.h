@@ -33,6 +33,12 @@ const char *struct2str(int stype);
 /// get the resource id name for an ore
 const char* ore2str(int otype);
 
+/// get the resource id name for a carver canyon
+const char* canyon2str(int ctype);
+
+/// get the resource id name for a carver cave
+const char* cave2str(int ctype);
+
 /// initialize a biome colormap with some defaults
 void initBiomeColors(unsigned char biomeColors[256][3]);
 void initBiomeTypeColors(unsigned char biomeColors[256][3]);
