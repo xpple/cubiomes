@@ -1,5 +1,6 @@
 #include "finders.h"
 #include "biomes.h"
+#include "util.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -7,8 +8,6 @@
 #include <limits.h>
 #include <float.h>
 #include <math.h>
-
-#include "util.h"
 
 // https://c-faq.com/misc/bitsets.html
 #define BITMASK(b) (1 << ((b) % CHAR_BIT))
@@ -1918,32 +1917,19 @@ Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig conf
         repeatCount = config.repeatCount;
     }
 
-    Pos3List* temp = malloc(repeatCount * sizeof(Pos3List));
-    int size = 0;
+    Pos3List pos3s;
+    // x^2/4 is an approx that works for sizes <= 64, but only works for ores that use this config
+    createPos3List(&pos3s, MAX(8, repeatCount * ((config.size * config.size) >> 2)));
+
     for (int i = 0; i < repeatCount; i++) {
         Pos3 basePos = generateBaseOrePosition(g->mc, config, chunkX, chunkZ, rnd);
         int biome = getBiomeAt(g, 1, basePos.x, basePos.y, basePos.z);
-        Pos3List orePositions;
         if (isViableOreBiome(g->mc, oreType, biome)) {
-            orePositions = generateOrePositions(g, sn, config, basePos, rnd);
-        } else {
-            createPos3List(&orePositions, 0);
+            generateOrePositions(g, sn, config, basePos, rnd, &pos3s);
         }
-        temp[i] = orePositions;
-        size += orePositions.size;
     }
     free(rnd.state);
-    Pos3List poses;
-    createPos3List(&poses, size);
-    int offset = 0;
-    for (int i = 0; i < repeatCount; i++) {
-        memcpy(poses.pos3s + offset, temp[i].pos3s, temp[i].size * sizeof(Pos3));
-        poses.size += temp[i].size;
-        free(temp[i].pos3s);
-        offset += temp[i].size;
-    }
-    free(temp);
-    return poses;
+    return pos3s;
 }
 
 Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource rnd)
@@ -1964,7 +1950,7 @@ Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, R
     }
 }
 
-Pos3List generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource rnd)
+void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource rnd, Pos3List* pos3s)
 {
     int mc = g->mc;
     if ((mc <= MC_1_17 && config.oreType == EmeraldOre) || (mc <= MC_NEWEST && config.oreType == LowerGoldOre)) {
@@ -1979,29 +1965,25 @@ Pos3List generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreCon
         } else {
             count = rnd.nextIntBetween(rnd.state, 0, 1);
         }
-        Pos3List poses;
-        createPos3List(&poses, count);
         for (int i = 0; i < count; i++) {
             if (mc <= MC_1_14) {
                 int x = pos.x + rnd.nextInt(rnd.state, 16);
                 int y = config.heightProvider(rnd, config.h1, config.h2, config.h3);
                 int z = pos.z + rnd.nextInt(rnd.state, 16);
-                appendPos3List(&poses, (Pos3) {x, y, z});
+                appendPos3List(pos3s, (Pos3) {x, y, z});
             } else {
                 int x = pos.x + rnd.nextInt(rnd.state, 16);
                 int z = pos.z + rnd.nextInt(rnd.state, 16);
                 int y = config.heightProvider(rnd, config.h1, config.h2, config.h3);
-                appendPos3List(&poses, (Pos3) {x, y, z});
+                appendPos3List(pos3s, (Pos3) {x, y, z});
             }
         }
-        return poses;
+        return;
     }
 
     // scatter
     if (config.oreType == LargeDebrisOre || config.oreType == SmallDebrisOre) {
         int count = rnd.nextInt(rnd.state, config.size + 1);
-        Pos3List poses;
-        createPos3List(&poses, count);
         for (int i = 0; i < count; ++i) {
             int size = MIN(i, 7);
             float a, b;
@@ -2019,11 +2001,11 @@ Pos3List generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreCon
             // TODO: check if the block at startPos is contained in config.replaceBlocks
             // TODO: and if the block at startPos is not air-exposed
             if (1) {
-                appendPos3List(&poses, startPos);
+                appendPos3List(pos3s, startPos);
             }
         }
 
-        return poses;
+        return;
     }
 
     // regular
@@ -2047,22 +2029,17 @@ Pos3List generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreCon
             float y;
             mapApproxHeight(&y, 0, g, sn, x >> 2, z >> 2, 1, 1);
             if (startY <= (g->dim == DIM_OVERWORLD ? (int) floor(y) : 128)) {
-                return generateVeinPart(mc, config, rnd, offsetXPos, offsetXNeg, offsetZPos, offsetZNeg, offsetYPos, offsetYNeg, startX, startY, startZ, oreSize, radius);
+                generateVeinPart(mc, config, rnd, offsetXPos, offsetXNeg, offsetZPos, offsetZNeg, offsetYPos, offsetYNeg, startX, startY, startZ, oreSize, radius, pos3s);
+                return;
             }
         }
     }
-
-    Pos3List poses;
-    createPos3List(&poses, 0);
-    return poses;
 }
 
-Pos3List generateVeinPart(int mc, OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius)
+void generateVeinPart(int mc, OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List* pos3s)
 {
     const int minBuildHeight = mc <= MC_1_17 ? 0 : -64;
     const int maxBuildHeight = mc <= MC_1_17 ? 256 : 320;
-    Pos3List poses;
-    createPos3List(&poses, 16);
     int slots = BITNSLOTS(oreSize * radius * oreSize);
     char bitSet[slots];
     memset(bitSet, 0, slots);
@@ -2138,17 +2115,15 @@ Pos3List generateVeinPart(int mc, OreConfig config, RandomSource rnd, double off
                             skipAirCheck = chance >= 1.0F ? 0 : rnd.nextFloat(rnd.state) >= chance;
                         }
                         if (skipAirCheck) {
-                            appendPos3List(&poses, pos);
+                            appendPos3List(pos3s, pos);
                         } else if (1) { // TODO: check if the block at pos is not air-exposed
-                            appendPos3List(&poses, pos);
+                            appendPos3List(pos3s, pos);
                         }
                     }
                 }
             }
         }
     }
-
-    return poses;
 }
 
 //==============================================================================

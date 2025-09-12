@@ -543,9 +543,9 @@ Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig conf
 
 Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource rnd);
 
-Pos3List generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 bPos, RandomSource rnd);
+void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource rnd, Pos3List* pos3s);
 
-Pos3List generateVeinPart(int mc, OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius);
+void generateVeinPart(int mc, OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List* pos3s);
 
 enum OreVeins {
     CopperVein,
