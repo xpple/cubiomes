@@ -581,6 +581,7 @@ enum CanyonCarvers {
 
 STRUCT(CanyonCarverConfig)
 {
+    int dim;
     float probability;
     int carverIndex;
     int range;
@@ -620,20 +621,27 @@ STRUCT(CaveCarverConfig)
 };
 
 /**
- * Get the canyon carver configuration for the canyon type. The biome parameter is only used for
- * UNDERWATER_CANYON_CARVER, which was removed in 1.18. So for >=1.18 the parameter can always be -1.
+ * Get the canyon carver configuration for the canyon type.
  * @param canyonCarverType the canyon carver type
  * @param mc the Minecraft version
- * @param biome the biome in biome scale at (chunkX << 2, chunkZ << 2)
  * @param cconf the config
  * @return zero if failed
  */
-int getCanyonCarverConfig(int canyonCarverType, int mc, int biome, CanyonCarverConfig* cconf);
+int getCanyonCarverConfig(int canyonCarverType, int mc, CanyonCarverConfig* cconf);
 
 /**
- * Get the cave carver configuration for the cave type. The biome parameter is used for CAVE_CARVER,
- * OCEAN_CAVE_CARVER and UNDERWATER_CAVE_CARVER, all only for versions <1.18. So for >=1.18 the parameter
- * can always be -1.
+ * Check whether the canyon carver type exists in this biome. The biome is only used for
+ * UNDERWATER_CANYON_CARVER, which was removed in 1.18. So for >=1.18 this function is no
+ * longer needed.
+ * @param canyonCarverType the canyon carver type
+ * @param biome the biome in biome scale at (chunkX << 2, chunkZ << 2)
+ * @return 1 if the canyon carver type exists in this biome
+ */
+int isViableCanyonBiome(int canyonCarverType, int biome);
+
+/**
+ * Get the cave carver configuration for the cave type. The biome is only used for CAVE_CARVER for
+ * versions <1.18. For >=1.18 the biome can always be -1.
  * @param caveCarverType the cave carver type
  * @param mc the Minecraft version
  * @param biome the biome in biome scale at (chunkX << 2, chunkZ << 2)
@@ -641,6 +649,15 @@ int getCanyonCarverConfig(int canyonCarverType, int mc, int biome, CanyonCarverC
  * @return zero if failed
  */
 int getCaveCarverConfig(int caveCarverType, int mc, int biome, CaveCarverConfig* cconf);
+
+/**
+ * Check whether the cave carver type exists in this biome. The biome is used for OCEAN_CAVE_CARVER
+ * and UNDERWATER_CAVE_CARVER, both only for versions <1.18. So for >=1.18 this function is no longer needed.
+ * @param caveCarverType the cave carver type
+ * @param biome the biome in biome scale at (chunkX << 2, chunkZ << 2)
+ * @return 1 if the cave carver type exists in this biome
+ */
+int isViableCaveBiome(int caveCarverType, int biome);
 
 /**
  * Check whether the canyon type generates at the given chunk.

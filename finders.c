@@ -2221,12 +2221,12 @@ int32_t getOreVeinBlockAt(int x, int y, int z, OreVeinParameters* params)
 // Carver caves/canyons
 //==============================================================================
 
-int getCanyonCarverConfig(int canyonCarverType, int mc, int biome, CanyonCarverConfig* cconf) {
+int getCanyonCarverConfig(int canyonCarverType, int mc, CanyonCarverConfig* cconf) {
     static const CanyonCarverConfig
-    c_canyon_carver_113 = {0.02F, 1, 4, providerUniformIntBetween, 10, 67, -1, 3.0F, providerUniformFloatBetween, -0.125F, 0.125F, providerUniformFloatBetween, 0.75F, 1.0F, providerTrapezoidFloatBetween, 0.0F, 6.0F, 2.0F, 3, providerUniformFloatBetween, 0.75F, 1.0F, 1.0F, 0.0F},
-    c_canyon_carver_118 = {0.01F, 2, 4, providerUniformIntBetween, 10, 67, -1, 3.0F, providerUniformFloatBetween, -0.125F, 0.125F, providerUniformFloatBetween, 0.75F, 1.0F, providerTrapezoidFloatBetween, 0.0F, 6.0F, 2.0F, 3, providerUniformFloatBetween, 0.75F, 1.0F, 1.0F, 0.0F},
+    c_canyon_carver_113 = {DIM_OVERWORLD, 0.02F, 1, 4, providerUniformIntBetween, 10, 67, -1, 3.0F, providerUniformFloatBetween, -0.125F, 0.125F, providerUniformFloatBetween, 0.75F, 1.0F, providerTrapezoidFloatBetween, 0.0F, 6.0F, 2.0F, 3, providerUniformFloatBetween, 0.75F, 1.0F, 1.0F, 0.0F},
+    c_canyon_carver_118 = {DIM_OVERWORLD, 0.01F, 2, 4, providerUniformIntBetween, 10, 67, -1, 3.0F, providerUniformFloatBetween, -0.125F, 0.125F, providerUniformFloatBetween, 0.75F, 1.0F, providerTrapezoidFloatBetween, 0.0F, 6.0F, 2.0F, 3, providerUniformFloatBetween, 0.75F, 1.0F, 1.0F, 0.0F},
 
-    c_underwater_canyon_carver_113 = {0.02F, 0, 4, providerBiasedToBottom, 20, 67, 8, 3.0F, providerUniformFloatBetween, -0.125F, 0.125F, providerUniformFloatBetween, 0.75F, 1.0F, providerTrapezoidFloatBetween, 0.0F, 6.0F, 2.0F, 3, providerUniformFloatBetween, 0.75F, 1.0F, 1.0F, 0.0F}
+    c_underwater_canyon_carver_113 = {DIM_OVERWORLD, 0.02F, 0, 4, providerBiasedToBottom, 20, 67, 8, 3.0F, providerUniformFloatBetween, -0.125F, 0.125F, providerUniformFloatBetween, 0.75F, 1.0F, providerTrapezoidFloatBetween, 0.0F, 6.0F, 2.0F, 3, providerUniformFloatBetween, 0.75F, 1.0F, 1.0F, 0.0F}
     ;
 
     switch (canyonCarverType) {
@@ -2236,10 +2236,22 @@ int getCanyonCarverConfig(int canyonCarverType, int mc, int biome, CanyonCarverC
         return mc > MC_1_12_2;
     case UNDERWATER_CANYON_CARVER:
         *cconf = c_underwater_canyon_carver_113;
-        return isOceanic(biome) && mc > MC_1_12 && mc <= MC_1_17_1;
+        return mc > MC_1_12 && mc <= MC_1_17_1;
     default:
         fprintf(stderr, "ERR initCanyonCarverConfig: unsupported canyon carver type %d\n", canyonCarverType);
         memset(cconf, 0, sizeof(CanyonCarverConfig));
+        return 0;
+    }
+}
+
+int isViableCanyonBiome(int canyonCarverType, int biome) {
+    switch (canyonCarverType) {
+    case CANYON_CARVER:
+        return 1;
+    case UNDERWATER_CANYON_CARVER:
+        return isOceanic(biome);
+    default:
+        fprintf(stderr, "ERR isViableCanyonBiome: unsupported canyon carver type %d\n", canyonCarverType);
         return 0;
     }
 }
@@ -2290,16 +2302,32 @@ int getCaveCarverConfig(int caveCarverType, int mc, int biome, CaveCarverConfig*
         return mc > MC_1_17_1;
     case OCEAN_CAVE_CARVER:
         *cconf = c_ocean_cave_1164;
-        return isOceanic(biome) && mc > MC_1_16_1 && mc <= MC_1_17_1;
+        return mc > MC_1_16_1 && mc <= MC_1_17_1;
     case UNDERWATER_CAVE_CARVER:
         *cconf = c_underwater_cave_113;
-        return (isDeepOcean(biome) || biome == frozen_ocean) && mc > MC_1_12_2 && mc <= MC_1_17_1;
+        return mc > MC_1_12_2 && mc <= MC_1_17_1;
     case NETHER_CAVE_CARVER:
         *cconf = c_nether_cave_113;
         return mc > MC_1_12_2;
     default:
         fprintf(stderr, "ERR initCaveCarverConfig: unsupported cave carver type %d\n", caveCarverType);
         memset(cconf, 0, sizeof(CaveCarverConfig));
+        return 0;
+    }
+}
+
+int isViableCaveBiome(int caveCarverType, int biome) {
+    switch (caveCarverType) {
+    case CAVE_CARVER:
+    case CAVE_EXTRA_UNDERGROUND_CARVER:
+    case NETHER_CAVE_CARVER:
+        return 1;
+    case OCEAN_CAVE_CARVER:
+        return isOceanic(biome);
+    case UNDERWATER_CAVE_CARVER:
+        return isDeepOcean(biome) || biome == frozen_ocean;
+    default:
+        fprintf(stderr, "ERR isViableCaveBiome: unsupported cave carver type %d\n", caveCarverType);
         return 0;
     }
 }
