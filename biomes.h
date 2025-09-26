@@ -36,7 +36,8 @@ enum MCVersion
     MC_1_21_3,
     MC_1_21_WD, MC_1_21_4 = MC_1_21_WD,
     MC_1_21_5,
-    MC_1_21 = MC_1_21_5,
+    MC_1_21_9,
+    MC_1_21 = MC_1_21_9,
     MC_NEWEST = MC_1_21,
 };
 

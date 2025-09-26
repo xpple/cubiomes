@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "../biomes.h"
 #include "items.h"
 
 int item_name2global_id(const char* name) {
@@ -64,6 +65,7 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:heart_of_the_sea") == 0) return ITEM_HEART_OF_THE_SEA;
     if (strcmp(name, "minecraft:iron_block") == 0) return ITEM_IRON_BLOCK;
     if (strcmp(name, "minecraft:iron_boots") == 0) return ITEM_IRON_BOOTS;
+    if (strcmp(name, "minecraft:iron_chain") == 0) return ITEM_IRON_CHAIN;
     if (strcmp(name, "minecraft:iron_chestplate") == 0) return ITEM_IRON_CHESTPLATE;
     if (strcmp(name, "minecraft:iron_helmet") == 0) return ITEM_IRON_HELMET;
     if (strcmp(name, "minecraft:iron_horse_armor") == 0) return ITEM_IRON_HORSE_ARMOR;
@@ -116,7 +118,10 @@ int item_name2global_id(const char* name) {
     return ITEM_UNKNOWN;
 }
 
-const char* global_id2item_name(int global_id) {
+const char* global_id2item_name(int global_id, int mc) {
+    if (mc >= MC_1_21_9) {
+        if (global_id == ITEM_IRON_CHAIN) return "minecraft:iron_chain";
+    }
     switch (global_id) {
     case ITEM_ANCIENT_DEBRIS: return "minecraft:ancient_debris";
     case ITEM_APPLE: return "minecraft:apple";

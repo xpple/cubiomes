@@ -14,6 +14,7 @@ enum Item {
     ITEM_BOOK,
     ITEM_CARROT,
     ITEM_CHAIN,
+    ITEM_IRON_CHAIN = ITEM_CHAIN,
     ITEM_CLOCK,
     ITEM_COAL,
     ITEM_COAST_ARMOR_TRIM_SMITHING_TEMPLATE,
@@ -115,6 +116,6 @@ enum Item {
 
 int item_name2global_id(const char* name);
 
-const char* global_id2item_name(int global_id);
+const char* global_id2item_name(int global_id, int mc);
 
 #endif //ITEMS_H

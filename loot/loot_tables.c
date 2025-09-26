@@ -13,6 +13,7 @@
 #include "loot_tables/bastion_other_1_16_5.h"
 #include "loot_tables/bastion_other_1_20.h"
 #include "loot_tables/bastion_other_1_21_1.h"
+#include "loot_tables/bastion_other_1_21_9.h"
 #include "loot_tables/buried_treasure_1_13.h"
 #include "loot_tables/buried_treasure_1_18.h"
 #include "loot_tables/desert_pyramid_1_13.h"
@@ -100,7 +101,8 @@ int init_bastion_other(LootTableContext* context, int version) {
     if (version < MC_1_16_5) init_bastion_other_1_16_1(context);
     else if (version < MC_1_20) init_bastion_other_1_16_5(context);
     else if (version < MC_1_21_1) init_bastion_other_1_20(context);
-    else init_bastion_other_1_21_1(context);
+    else if (version < MC_1_21_9) init_bastion_other_1_21_1(context);
+    else init_bastion_other_1_21_9(context);
     return version > MC_1_15;
 }
 
