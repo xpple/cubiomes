@@ -1919,7 +1919,8 @@ Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig conf
 
     Pos3List pos3s;
     // x^2/4 is an approx that works for sizes <= 64, but only works for ores that use this config
-    createPos3List(&pos3s, MAX(8, repeatCount * ((config.size * config.size) >> 2)));
+    const int approxSize = repeatCount * ((config.size * config.size) >> 2);
+    createPos3List(&pos3s, MAX(8, approxSize));
 
     for (int i = 0; i < repeatCount; i++) {
         Pos3 basePos = generateBaseOrePosition(g->mc, config, chunkX, chunkZ, rnd);
@@ -2077,19 +2078,25 @@ void generateVeinPart(int mc, OreConfig config, RandomSource rnd, double offsetX
     }
 
     for (int i = 0; i < size; ++i) {
-        double offset = store[i * 4 + 3];
+        const double offset = store[i * 4 + 3];
         if (offset < 0.0) continue;
-        double x = store[i * 4];
-        double y = store[i * 4 + 1];
-        double z = store[i * 4 + 2];
+        const double x = store[i * 4];
+        const double y = store[i * 4 + 1];
+        const double z = store[i * 4 + 2];
 
-        int minX = MAX(floor(x - offset), startX);
-        int minY = MAX(floor(y - offset), startY);
-        int minZ = MAX(floor(z - offset), startZ);
+        const int floorMinX = floor(x - offset);
+        const int minX = MAX(floorMinX, startX);
+        const int floorMinY = floor(y - offset);
+        const int minY = MAX(floorMinY, startY);
+        const int floorMinZ = floor(z - offset);
+        const int minZ = MAX(floorMinZ, startZ);
 
-        int maxX = MAX(floor(x + offset), minX);
-        int maxY = MAX(floor(y + offset), minY);
-        int maxZ = MAX(floor(z + offset), minZ);
+        const int floorMaxX = floor(x + offset);
+        const int maxX = MAX(floorMaxX, minX);
+        const int floorMaxY = floor(y + offset);
+        const int maxY = MAX(floorMaxY, minY);
+        const int floorMaxZ = floor(z + offset);
+        const int maxZ = MAX(floorMaxZ, minZ);
 
         for (int X = minX; X <= maxX; ++X) {
             double xSlide = ((double)X + 0.5 - x) / offset;
@@ -2190,7 +2197,9 @@ int32_t getOreVeinBlockAt(int x, int y, int z, OreVeinParameters* params)
     if (y < min_y || y > max_y) {
         return -1;
     }
-    double veinRidgedSample = MAX(fabs(sampleDoublePerlin(&params->oreVeinA, 4 * x, 4 * y, 4 * z)), fabs(sampleDoublePerlin(&params->oreVeinB, 4 * x, 4 * y, 4 * z)));
+    const double oreVeinASample = fabs(sampleDoublePerlin(&params->oreVeinA, 4 * x, 4 * y, 4 * z));
+    const double oreVeinBSample = fabs(sampleDoublePerlin(&params->oreVeinB, 4 * x, 4 * y, 4 * z));
+    double veinRidgedSample = MAX(oreVeinASample, oreVeinBSample);
     if (veinRidgedSample >= 0.08F) {
         return -1;
     }
@@ -2586,36 +2595,42 @@ static void createTunnel(CaveCarverConfig ccc, int sourceChunkX, int sourceChunk
 }
 
 static void carveEllipsoid(int chunkX, int chunkZ, double x, double y, double z, double horizontalRadius, double verticalRadius, int worldMinY, int worldHeight, char carvingMask[], int (*shouldSkip)(double, double, double, int, void*), void* arg, Pos3List* poses) {
-    double d = (chunkX << 4) + 8;
-    double e = (chunkZ << 4) + 8;
+    const int startChunkX = chunkX << 4;
+    const int startChunkZ = chunkZ << 4;
+    const double midChunkX = startChunkX + 8;
+    const double midChunkZ = startChunkZ + 8;
     double f = 16.0 + horizontalRadius * 2.0;
-    if (fabs(x - d) > f || fabs(z - e) > f) {
+    if (fabs(x - midChunkX) > f || fabs(z - midChunkZ) > f) {
         return;
     }
-    int i = chunkX << 4;
-    int j = chunkZ << 4;
-    int k = MAX(floor(x - horizontalRadius) - i - 1, 0);
-    int l = MIN(floor(x + horizontalRadius) - i, 15);
-    int m = MAX(floor(y - verticalRadius) - 1, worldMinY + 1);
+    const double floorMinX = floor(x - horizontalRadius) - startChunkX - 1;
+    const int minX = MAX(floorMinX, 0);
+    const double floorMaxX = floor(x + horizontalRadius) - startChunkX;
+    const int maxX = MIN(floorMaxX, 15);
+    const double floorMinY = floor(y - verticalRadius) - 1;
+    const int minY = MAX(floorMinY, worldMinY + 1);
     int n = 0;
-    int o = MIN(floor(y + verticalRadius) + 1, worldMinY + worldHeight - 1 - n);
-    int p = MAX(floor(z - horizontalRadius) - j - 1, 0);
-    int q = MIN(floor(z + horizontalRadius) - j, 15);
+    const double floorMaxY = floor(y + verticalRadius) + 1;
+    const int maxY = MIN(floorMaxY, worldMinY + worldHeight - 1 - n);
+    const double floorMinZ = floor(z - horizontalRadius) - startChunkZ - 1;
+    const int minZ = MAX(floorMinZ, 0);
+    const double floorMaxZ = floor(z + horizontalRadius) - startChunkZ;
+    const int maxZ = MIN(floorMaxZ, 15);
 
-    for (int r = k; r <= l; r++) {
-        int s = (chunkX << 4) + r;
-        double relativeX = (s + 0.5 - x) / horizontalRadius;
+    for (int relX = minX; relX <= maxX; relX++) {
+        int absX = startChunkX + relX;
+        double relativeX = (absX + 0.5 - x) / horizontalRadius;
 
-        for (int t = p; t <= q; t++) {
-            int u = (chunkZ << 4) + t;
-            double relativeZ = (u + 0.5 - z) / horizontalRadius;
+        for (int relZ = minZ; relZ <= maxZ; relZ++) {
+            int absZ = startChunkZ + relZ;
+            double relativeZ = (absZ + 0.5 - z) / horizontalRadius;
             if (relativeX * relativeX + relativeZ * relativeZ >= 1.0) continue;
 
-            for (int v = o; v > m; v--) {
-                double relativeY = (v - 0.5 - y) / verticalRadius;
-                if (shouldSkip(relativeX, relativeY, relativeZ, v, arg) || getCarveMask(carvingMask, r, v, t, worldMinY)) continue;
-                setCarveMask(carvingMask, r, v, t, worldMinY);
-                appendPos3List(poses, (Pos3) {s, v, u});
+            for (int absY = maxY; absY > minY; absY--) {
+                double relativeY = (absY - 0.5 - y) / verticalRadius;
+                if (shouldSkip(relativeX, relativeY, relativeZ, absY, arg) || getCarveMask(carvingMask, relX, absY, relZ, worldMinY)) continue;
+                setCarveMask(carvingMask, relX, absY, relZ, worldMinY);
+                appendPos3List(poses, (Pos3) {absX, absY, absZ});
             }
         }
     }
