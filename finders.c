@@ -1751,7 +1751,8 @@ Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig conf
 
     Pos3List pos3s;
     // x^2/4 is an approx that works for sizes <= 64, but only works for ores that use this config
-    createPos3List(&pos3s, MAX(8, repeatCount * ((config.size * config.size) >> 2)));
+    const int approxSize = repeatCount * ((config.size * config.size) >> 2);
+    createPos3List(&pos3s, MAX(8, approxSize));
 
     for (int i = 0; i < repeatCount; i++) {
         Pos3 basePos = generateBaseOrePosition(g->mc, config, chunkX, chunkZ, rnd);
@@ -1909,19 +1910,25 @@ void generateVeinPart(int mc, OreConfig config, RandomSource rnd, double offsetX
     }
 
     for (int i = 0; i < size; ++i) {
-        double offset = store[i * 4 + 3];
+        const double offset = store[i * 4 + 3];
         if (offset < 0.0) continue;
-        double x = store[i * 4];
-        double y = store[i * 4 + 1];
-        double z = store[i * 4 + 2];
+        const double x = store[i * 4];
+        const double y = store[i * 4 + 1];
+        const double z = store[i * 4 + 2];
 
-        int minX = MAX(floor(x - offset), startX);
-        int minY = MAX(floor(y - offset), startY);
-        int minZ = MAX(floor(z - offset), startZ);
+        const int floorMinX = floor(x - offset);
+        const int minX = MAX(floorMinX, startX);
+        const int floorMinY = floor(y - offset);
+        const int minY = MAX(floorMinY, startY);
+        const int floorMinZ = floor(z - offset);
+        const int minZ = MAX(floorMinZ, startZ);
 
-        int maxX = MAX(floor(x + offset), minX);
-        int maxY = MAX(floor(y + offset), minY);
-        int maxZ = MAX(floor(z + offset), minZ);
+        const int floorMaxX = floor(x + offset);
+        const int maxX = MAX(floorMaxX, minX);
+        const int floorMaxY = floor(y + offset);
+        const int maxY = MAX(floorMaxY, minY);
+        const int floorMaxZ = floor(z + offset);
+        const int maxZ = MAX(floorMaxZ, minZ);
 
         for (int X = minX; X <= maxX; ++X) {
             double xSlide = ((double)X + 0.5 - x) / offset;
