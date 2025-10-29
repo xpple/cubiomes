@@ -823,9 +823,11 @@ int isStrongholdBiome(int mc, int id)
     case bamboo_jungle_hills:
         // simulate MC-199298
         return mc <= MC_1_15 || mc >= MC_1_18;
+    case cherry_grove:
+        // see MC-278965
+        return mc >= MC_1_21_9;
     case mangrove_swamp:
     case deep_dark:
-    case cherry_grove:
         return 0;
     default:
         return 1;
