@@ -23,6 +23,7 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:cooked_cod") == 0) return ITEM_COOKED_COD;
     if (strcmp(name, "minecraft:cooked_porkchop") == 0) return ITEM_COOKED_PORKCHOP;
     if (strcmp(name, "minecraft:cooked_salmon") == 0) return ITEM_COOKED_SALMON;
+    if (strcmp(name, "minecraft:copper_horse_armor") == 0) return ITEM_COPPER_HORSE_ARMOR;
     if (strcmp(name, "minecraft:crossbow") == 0) return ITEM_CROSSBOW;
     if (strcmp(name, "minecraft:crying_obsidian") == 0) return ITEM_CRYING_OBSIDIAN;
     if (strcmp(name, "minecraft:dark_oak_log") == 0) return ITEM_DARK_OAK_LOG;
@@ -141,6 +142,7 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_COOKED_COD: return "minecraft:cooked_cod";
     case ITEM_COOKED_PORKCHOP: return "minecraft:cooked_porkchop";
     case ITEM_COOKED_SALMON: return "minecraft:cooked_salmon";
+    case ITEM_COPPER_HORSE_ARMOR: return "minecraft:copper_horse_armor";
     case ITEM_CROSSBOW: return "minecraft:crossbow";
     case ITEM_CRYING_OBSIDIAN: return "minecraft:crying_obsidian";
     case ITEM_DARK_OAK_LOG: return "minecraft:dark_oak_log";
