@@ -18,12 +18,14 @@
 #include "loot_tables/buried_treasure_1_18.h"
 #include "loot_tables/desert_pyramid_1_13.h"
 #include "loot_tables/desert_pyramid_1_20.h"
+#include "loot_tables/desert_pyramid_1_21_6.h"
 #include "loot_tables/end_city_treasure_1_13.h"
 #include "loot_tables/end_city_treasure_1_20.h"
 #include "loot_tables/igloo_chest_1_13.h"
 #include "loot_tables/jungle_temple_1_13.h"
 #include "loot_tables/jungle_temple_1_14.h"
 #include "loot_tables/jungle_temple_1_20.h"
+#include "loot_tables/jungle_temple_1_21_6.h"
 #include "loot_tables/jungle_temple_dispenser_1_13.h"
 #include "loot_tables/nether_bridge_1_13.h"
 #include "loot_tables/nether_bridge_1_20.h"
@@ -114,7 +116,8 @@ int init_buried_treasure(LootTableContext* context, int version) {
 
 int init_desert_pyramid(LootTableContext* context, int version) {
     if (version < MC_1_20) init_desert_pyramid_1_13(context);
-    else init_desert_pyramid_1_20(context);
+    else if (version < MC_1_21_6) init_desert_pyramid_1_20(context);
+    else init_desert_pyramid_1_21_6(context);
     return version > MC_1_12;
 }
 
@@ -132,7 +135,8 @@ int init_igloo_chest(LootTableContext* context, int version) {
 int init_jungle_temple(LootTableContext* context, int version) {
     if (version < MC_1_14) init_jungle_temple_1_13(context);
     else if (version < MC_1_20) init_jungle_temple_1_14(context);
-    else init_jungle_temple_1_20(context);
+    else if (version < MC_1_21_6) init_jungle_temple_1_20(context);
+    else init_jungle_temple_1_21_6(context);
     return version > MC_1_12;
 }
 

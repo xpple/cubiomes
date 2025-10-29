@@ -41,12 +41,14 @@ set(HEADERS
 	loot/loot_tables/buried_treasure_1_18.h
 	loot/loot_tables/desert_pyramid_1_13.h
 	loot/loot_tables/desert_pyramid_1_20.h
+	loot/loot_tables/desert_pyramid_1_21_6.h
 	loot/loot_tables/end_city_treasure_1_13.h
 	loot/loot_tables/end_city_treasure_1_20.h
 	loot/loot_tables/igloo_chest_1_13.h
 	loot/loot_tables/jungle_temple_1_13.h
 	loot/loot_tables/jungle_temple_1_14.h
 	loot/loot_tables/jungle_temple_1_20.h
+	loot/loot_tables/jungle_temple_1_21_6.h
 	loot/loot_tables/jungle_temple_dispenser_1_13.h
 	loot/loot_tables/nether_bridge_1_13.h
 	loot/loot_tables/nether_bridge_1_20.h
@@ -93,12 +95,14 @@ set(SOURCES
 	loot/loot_tables/buried_treasure_1_18.c
 	loot/loot_tables/desert_pyramid_1_13.c
 	loot/loot_tables/desert_pyramid_1_20.c
+	loot/loot_tables/desert_pyramid_1_21_6.c
 	loot/loot_tables/end_city_treasure_1_13.c
 	loot/loot_tables/end_city_treasure_1_20.c
 	loot/loot_tables/igloo_chest_1_13.c
 	loot/loot_tables/jungle_temple_1_13.c
 	loot/loot_tables/jungle_temple_1_14.c
 	loot/loot_tables/jungle_temple_1_20.c
+	loot/loot_tables/jungle_temple_1_21_6.c
 	loot/loot_tables/jungle_temple_dispenser_1_13.c
 	loot/loot_tables/nether_bridge_1_13.c
 	loot/loot_tables/nether_bridge_1_20.c
