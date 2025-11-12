@@ -472,6 +472,21 @@ static inline double lerp3(
     return lerp(dz, v000, v001);
 }
 
+static inline double clamp(double value, double min, double max)
+{
+    const double t = value < min ? min : value;
+    return t > max ? max : t;
+}
+
+static inline double inverseLerp(double delta, double start, double end)
+{
+    return (delta - start) / (end - start);
+}
+
+static inline double map(double input, double inputMin, double inputMax, double outputMin, double outputMax) {
+    return lerp(inverseLerp(input, inputMin, inputMax), outputMin, outputMax);
+}
+
 static inline double clampedLerp(double part, double from, double to)
 {
     if (part <= 0) return from;
@@ -480,7 +495,16 @@ static inline double clampedLerp(double part, double from, double to)
 }
 
 static inline double clampedMap(double input, double inputMin, double inputMax, double ouputMin, double outputMax) {
-    return clampedLerp((input - inputMin) / (inputMax - inputMin), ouputMin, outputMax);
+    return clampedLerp(inverseLerp(input, inputMin, inputMax), ouputMin, outputMax);
+}
+
+static inline int floorDiv(int x, int y) {
+    const int q = x / y;
+    // if the signs are different and modulo not zero, round down
+    if ((x ^ y) < 0 && (q * y != x)) {
+        return q - 1;
+    }
+    return q;
 }
 
 /* Find the modular inverse: (1/x) | mod m.
