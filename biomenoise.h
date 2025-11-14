@@ -171,6 +171,8 @@ STRUCT(NoiseCaveParameters)
     BiomeNoise bn;
     BlendedNoise bln;
     SplineStack ss;
+    Spline* factorSpline;
+    Spline* jaggednessSpline;
     PerlinNoise oct[2*41];
     DoublePerlinNoise pillar;
     DoublePerlinNoise pillarRareness;

@@ -2142,6 +2142,8 @@ int initCaveNoise(NoiseCaveParameters *params, uint64_t ws, int mc) {
     initBiomeNoise(&params->bn, mc);
     setBiomeSeed(&params->bn, ws, 0);
     initUnseededBlendedNoise(&params->bln, DIM_OVERWORLD);
+    params->factorSpline = createFactorSpline(&params->ss);
+    params->jaggednessSpline = createJaggednessSpline(&params->ss);
 
     Xoroshiro wsx;
     xSetSeed(&wsx, ws);
@@ -2367,12 +2369,10 @@ double sampleSlopedCheese(NoiseCaveParameters *params, int x, int y, int z) {
     };
 
     double depth = getSpline(params->bn.sp, np_param) + clampedMap(y, -64, 320, 1.5, -1.5) - 0.50375f;
-    Spline* factorSpline = createFactorSpline(&params->ss);
-    double factor = getSpline(factorSpline, np_param);
+    double factor = getSpline(params->factorSpline, np_param);
     double jagged = sampleDoublePerlin(&params->jagged, x * 1500.0, 0, z * 1500.0);
     jagged = jagged >= 0.0 ? jagged : jagged / 2.0;
-    Spline* jaggednessSpline = createJaggednessSpline(&params->ss);
-    jagged *= getSpline(jaggednessSpline, np_param);
+    jagged *= getSpline(params->jaggednessSpline, np_param);
 
     double density = noiseGradientDensity(factor, depth + jagged);
 
