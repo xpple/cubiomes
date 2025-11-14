@@ -154,10 +154,22 @@ STRUCT(BiomeTree)
     uint32_t len;
 };
 
+STRUCT(BlendedNoise)
+{
+    double xzScale, yScale;
+    double xzFactor, yFactor;
+    double xzMultiplier, yMultiplier;
+    double smearScaleMultiplier;
+    OctaveNoise octmin;
+    OctaveNoise octmax;
+    OctaveNoise octmain;
+    PerlinNoise oct[16+16+8];
+};
+
 STRUCT(NoiseCaveParameters)
 {
     BiomeNoise bn;
-    SurfaceNoise sn;
+    BlendedNoise bln;
     SplineStack ss;
     PerlinNoise oct[2*41];
     DoublePerlinNoise pillar;
@@ -331,6 +343,10 @@ int getBiomeDepthAndScale(int id, double *depth, double *scale, int *grass);
 Range getVoronoiSrcRange(Range r);
 
 int initCaveNoise(NoiseCaveParameters *params, uint64_t ws, int mc);
+
+int initUnseededBlendedNoise(BlendedNoise *bn, int dim);
+
+double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z);
 
 double sampleSpaghettiRoughness(NoiseCaveParameters *params, int x, int y, int z);
 

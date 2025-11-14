@@ -55,6 +55,8 @@ double sampleSimplex2D(const PerlinNoise *noise, double x, double y);
 /// Perlin Octaves
 void octaveInit(OctaveNoise *noise, uint64_t *seed, PerlinNoise *octaves,
         int omin, int len);
+void xOctaveLegacyInit(OctaveNoise *noise, Xoroshiro *xr, PerlinNoise *octaves,
+        int omin, int len);
 void octaveInitBeta(OctaveNoise *noise, uint64_t *seed, PerlinNoise *octaves,
         int octcnt, double lac, double lacMul, double persist, double persistMul);
 int xOctaveInit(OctaveNoise *noise, Xoroshiro *xr, PerlinNoise *octaves,

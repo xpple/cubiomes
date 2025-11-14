@@ -372,6 +372,47 @@ void octaveInit(OctaveNoise *noise, uint64_t *seed, PerlinNoise *octaves,
     noise->octcnt = len;
 }
 
+void xOctaveLegacyInit(OctaveNoise *noise, Xoroshiro *xr, PerlinNoise *octaves, int omin, int len)
+{
+    int i;
+    int end = omin+len-1;
+    double persist = 1.0 / ((1LL << len) - 1.0);
+    double lacuna = pow(2.0, end);
+
+    if (len < 1 || end > 0)
+    {
+        printf("xOctaveLegacyInit(): unsupported octave range\n");
+        return;
+    }
+
+    if (end == 0)
+    {
+        xPerlinInit(&octaves[0], xr);
+        octaves[0].amplitude = persist;
+        octaves[0].lacunarity = lacuna;
+        persist *= 2.0;
+        lacuna *= 0.5;
+        i = 1;
+    }
+    else
+    {
+        xSkipN(xr, -end*262);
+        i = 0;
+    }
+
+    for (; i < len; i++)
+    {
+        xPerlinInit(&octaves[i], xr);
+        octaves[i].amplitude = persist;
+        octaves[i].lacunarity = lacuna;
+        persist *= 2.0;
+        lacuna *= 0.5;
+    }
+
+    noise->octaves = octaves;
+    noise->octcnt = len;
+}
+
 void octaveInitBeta(OctaveNoise *noise, uint64_t *seed, PerlinNoise *octaves,
     int octcnt, double lac, double lacMul, double persist, double persistMul)
 {

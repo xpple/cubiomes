@@ -2141,7 +2141,7 @@ int initCaveNoise(NoiseCaveParameters *params, uint64_t ws, int mc) {
 
     initBiomeNoise(&params->bn, mc);
     setBiomeSeed(&params->bn, ws, 0);
-    initSurfaceNoise(&params->sn, DIM_OVERWORLD, ws);
+    initUnseededBlendedNoise(&params->bln, DIM_OVERWORLD);
 
     Xoroshiro wsx;
     xSetSeed(&wsx, ws);
@@ -2191,6 +2191,88 @@ int initCaveNoise(NoiseCaveParameters *params, uint64_t ws, int mc) {
     }
 
     return 1;
+}
+
+int initUnseededBlendedNoise(BlendedNoise *bn, int dim)
+{
+    Xoroshiro xr;
+    xSetSeed(&xr, 0);
+    xOctaveLegacyInit(&bn->octmin, &xr, bn->oct+0, -15, 16);
+    xOctaveLegacyInit(&bn->octmax, &xr, bn->oct+16, -15, 16);
+    xOctaveLegacyInit(&bn->octmain, &xr, bn->oct+32, -7, 8);
+    switch (dim) {
+    case DIM_OVERWORLD:
+        bn->xzScale = 0.25;
+        bn->yScale = 0.125;
+        bn->xzFactor = 80.0;
+        bn->yFactor = 160.0;
+        bn->smearScaleMultiplier = 8.0;
+        break;
+    case DIM_NETHER:
+        bn->xzScale = 0.25;
+        bn->yScale = 0.375;
+        bn->xzFactor = 80.0;
+        bn->yFactor = 60.0;
+        bn->smearScaleMultiplier = 8.0;
+        break;
+    case DIM_END:
+        bn->xzScale = 0.25;
+        bn->yScale = 0.25;
+        bn->xzFactor = 80.0;
+        bn->yFactor = 160.0;
+        bn->smearScaleMultiplier = 4.0;
+        break;
+    default:
+        fprintf(stderr, "ERR initUnseededBlendedNoise: invalid dimension %d\n", dim);
+        memset(bn, 0, sizeof(BlendedNoise));
+        return 0;
+    }
+    bn->xzMultiplier = 684.412 * bn->xzScale;
+    bn->yMultiplier = 684.412 * bn->yScale;
+    return 1;
+}
+
+double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z)
+{
+    const double scaledX = x * bn->xzMultiplier;
+    const double scaledY = y * bn->yMultiplier;
+    const double scaledZ = z * bn->xzMultiplier;
+    const double factoredX = scaledX / bn->xzFactor;
+    const double factoredY = scaledY / bn->yFactor;
+    const double factoredZ = scaledZ / bn->xzFactor;
+    const double smearedYScale = bn->yMultiplier * bn->smearScaleMultiplier;
+    const double factoredSmearedYScale = smearedYScale / bn->yFactor;
+    double minSampleTotal = 0.0;
+    double maxSampleTotal = 0.0;
+    double mainSampleTotal = 0.0;
+    double o = 1.0;
+
+    for (int octaveIdx = 0; octaveIdx < 8; octaveIdx++) {
+        mainSampleTotal += samplePerlin(&bn->octmain.octaves[octaveIdx], maintainPrecision(factoredX * o), maintainPrecision(factoredY * o), maintainPrecision(factoredZ * o), factoredSmearedYScale * o, factoredY * o) / o;
+        o /= 2.0;
+    }
+
+    double q = (mainSampleTotal / 10.0 + 1.0) / 2.0;
+    o = 1.0;
+
+    for (int octaveIdx = 0; octaveIdx < 16; octaveIdx++) {
+        double sampleY = maintainPrecision(scaledY * o);
+        double sampleX = maintainPrecision(scaledX * o);
+        double sampleZ = maintainPrecision(scaledZ * o);
+        double yamp = smearedYScale * o;
+        double ymin = scaledY * o;
+        if (q < 1.0) {
+            minSampleTotal += samplePerlin(&bn->octmin.octaves[octaveIdx], sampleX, sampleY, sampleZ, yamp, ymin) / o;
+        }
+
+        if (q > 0.0) {
+            maxSampleTotal += samplePerlin(&bn->octmax.octaves[octaveIdx], sampleX, sampleY, sampleZ, yamp, ymin) / o;
+        }
+
+        o /= 2.0;
+    }
+
+    return clampedLerp(q, minSampleTotal / 512.0, maxSampleTotal / 512.0) / 128.0;
 }
 
 double getSpaghettiRarity2D(double value) {
@@ -2294,7 +2376,7 @@ double sampleSlopedCheese(NoiseCaveParameters *params, int x, int y, int z) {
 
     double density = noiseGradientDensity(factor, depth + jagged);
 
-    return density + sampleSurfaceNoise(&params->sn, x, y, z);
+    return density + sampleBase3dNoise(&params->bln, x, y, z);
 }
 
 double sampleCaveCheese(NoiseCaveParameters *params, int x, int y, int z, double slopedCheese) {
