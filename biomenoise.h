@@ -154,6 +154,31 @@ STRUCT(BiomeTree)
     uint32_t len;
 };
 
+STRUCT(NoiseCaveParameters)
+{
+    BiomeNoise bn;
+    SurfaceNoise sn;
+    SplineStack ss;
+    PerlinNoise oct[2*41];
+    DoublePerlinNoise pillar;
+    DoublePerlinNoise pillarRareness;
+    DoublePerlinNoise pillarThickness;
+    DoublePerlinNoise spaghetti2d;
+    DoublePerlinNoise spaghetti2dElevation;
+    DoublePerlinNoise spaghetti2dModulator;
+    DoublePerlinNoise spaghetti2dThickness;
+    DoublePerlinNoise spaghetti3d1;
+    DoublePerlinNoise spaghetti3d2;
+    DoublePerlinNoise spaghetti3dRarity;
+    DoublePerlinNoise spaghetti3dThickness;
+    DoublePerlinNoise spaghettiRoughness;
+    DoublePerlinNoise spaghettiRoughnessModulator;
+    DoublePerlinNoise caveEntrance;
+    DoublePerlinNoise caveLayer;
+    DoublePerlinNoise caveCheese;
+    DoublePerlinNoise jagged;
+};
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -305,6 +330,29 @@ int getBiomeDepthAndScale(int id, double *depth, double *scale, int *grass);
 // Gets the range in the parent/source layer which may be accessed by voronoi.
 Range getVoronoiSrcRange(Range r);
 
+int initCaveNoise(NoiseCaveParameters *params, uint64_t ws, int mc);
+
+double sampleSpaghettiRoughness(NoiseCaveParameters *params, int x, int y, int z);
+
+double sampleSpaghetti2dThicknessModulator(NoiseCaveParameters *params, int x, int y, int z);
+
+double sampleSpaghetti2d(NoiseCaveParameters *params, int x, int y, int z);
+
+double sampleSpaghetti3d(NoiseCaveParameters *params, int x, int y, int z);
+
+double sampleCaveEntrance(NoiseCaveParameters *params, int x, int y, int z);
+
+double sampleEntrances(NoiseCaveParameters *params, int x, int y, int z);
+
+double sampleCaveLayer(NoiseCaveParameters *params, int x, int y, int z);
+
+double sampleSlopedCheese(NoiseCaveParameters *params, int x, int y, int z);
+
+double sampleCaveCheese(NoiseCaveParameters *params, int x, int y, int z, double slopedCheese);
+
+double samplePillars(NoiseCaveParameters *params, int x, int y, int z);
+
+double sampleUnderground(NoiseCaveParameters *params, int x, int y, int z, double slopedCheese);
 
 #ifdef __cplusplus
 }

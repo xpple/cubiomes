@@ -10,4 +10,6 @@ docs/LayerSummary.toc
 *.a
 a.out
 
+build
+
 .idea

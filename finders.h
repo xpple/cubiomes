@@ -701,26 +701,6 @@ Pos3List carveCanyon(uint64_t seed, int chunkX, int chunkZ, CanyonCarverConfig c
  */
 Pos3List carveCave(uint64_t seed, int chunkX, int chunkZ, CaveCarverConfig ccc);
 
-STRUCT(NoiseCaveParameters)
-{
-    DoublePerlinNoise pillar;
-    DoublePerlinNoise pillarRareness;
-    DoublePerlinNoise pillarThickness;
-    DoublePerlinNoise spaghetti2d;
-    DoublePerlinNoise spaghetti2dElevation;
-    DoublePerlinNoise spaghetti2dModulator;
-    DoublePerlinNoise spaghetti2dThickness;
-    DoublePerlinNoise spaghetti3d1;
-    DoublePerlinNoise spaghetti3d2;
-    DoublePerlinNoise spaghetti3dRarity;
-    DoublePerlinNoise spaghetti3dThickness;
-    DoublePerlinNoise spaghettiRoughness;
-    DoublePerlinNoise spaghettiRoughnessModulator;
-    DoublePerlinNoise caveEntrance;
-    DoublePerlinNoise caveLayer;
-    DoublePerlinNoise caveCheese;
-};
-
 //==============================================================================
 // Random providers
 //==============================================================================

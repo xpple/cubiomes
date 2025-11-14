@@ -1071,6 +1071,141 @@ static Spline *createLandSpline(
     return sp;
 }
 
+static Spline* createErosionFactorSpline(SplineStack *ss, float value, int higherValues) {
+    Spline *sp = &ss->stack[ss->len++];
+    sp->typ = SP_WEIRDNESS;
+    addSplineVal(sp, -0.2F, createFixSpline(ss, 6.3f), 0.0F);
+    addSplineVal(sp, 0.2F, createFixSpline(ss, value), 0.0F);
+
+    Spline* sp2 = &ss->stack[ss->len++];
+    sp2->typ = SP_WEIRDNESS;
+    addSplineVal(sp2, -0.05f, createFixSpline(ss, 6.3f), 0.0F);
+    addSplineVal(sp2, 0.05f, createFixSpline(ss, 2.67f), 0.0F);
+
+    Spline* sp3 = &ss->stack[ss->len++];
+    sp3->typ = SP_WEIRDNESS;
+    addSplineVal(sp3, -0.05f, createFixSpline(ss, 2.67f), 0.0F);
+    addSplineVal(sp3, 0.05f, createFixSpline(ss, 6.3f), 0.0F);
+
+    Spline* sp4 = &ss->stack[ss->len++];
+    sp4->typ = SP_EROSION;
+    addSplineVal(sp4, -0.6f, sp, 0.0F);
+    addSplineVal(sp4, -0.5f, sp2, 0.0F);
+    addSplineVal(sp4, -0.35f, sp, 0.0F);
+    addSplineVal(sp4, -0.25f, sp, 0.0F);
+    addSplineVal(sp4, -0.1f, sp3, 0.0F);
+    addSplineVal(sp4, 0.03f, sp, 0.0F);
+
+    if (higherValues) {
+        Spline* sp5 = &ss->stack[ss->len++];
+        sp5->typ = SP_WEIRDNESS;
+        addSplineVal(sp5, 0.0f, createFixSpline(ss, value), 0.0F);
+        addSplineVal(sp5, 0.1f, createFixSpline(ss, 0.625f), 0.0F);
+
+        Spline* sp6 = &ss->stack[ss->len++];
+        sp6->typ = SP_RIDGES;
+        addSplineVal(sp6, -0.9f, createFixSpline(ss, value), 0.0F);
+        addSplineVal(sp6, -0.69f, sp5, 0.0F);
+
+        addSplineVal(sp4, 0.35f, createFixSpline(ss, value), 0.0F);
+        addSplineVal(sp4, 0.45f, sp6, 0.0F);
+        addSplineVal(sp4, 0.55f, sp6, 0.0F);
+        addSplineVal(sp4, 0.62f, createFixSpline(ss, value), 0.0F);
+    } else {
+        Spline* sp5 = &ss->stack[ss->len++];
+        sp5->typ = SP_RIDGES;
+        addSplineVal(sp5, -0.7f, sp, 0.0F);
+        addSplineVal(sp5, -0.15f, createFixSpline(ss, 1.37f), 0.0F);
+
+        Spline* sp6 = &ss->stack[ss->len++];
+        sp6->typ = SP_RIDGES;
+        addSplineVal(sp6, 0.45f, sp, 0.0F);
+        addSplineVal(sp6, 0.7f, createFixSpline(ss, 1.56f), 0.0F);
+
+        addSplineVal(sp4, 0.05f, sp6, 0.0F);
+        addSplineVal(sp4, 0.4f, sp6, 0.0F);
+        addSplineVal(sp4, 0.45f, sp5, 0.0F);
+        addSplineVal(sp4, 0.55f, sp5, 0.0F);
+        addSplineVal(sp4, 0.58f, createFixSpline(ss, value), 0.0F);
+    }
+
+    return sp4;
+}
+
+static Spline* createFactorSpline(SplineStack *ss) {
+    Spline *sp = &ss->stack[ss->len++];
+    sp->typ = SP_CONTINENTALNESS;
+    addSplineVal(sp, -0.19F, createFixSpline(ss, 3.95F), 0.0F);
+
+    // TODO apply AMPLIFIED_FACTOR when amplified terrain is enabled
+    addSplineVal(sp, -0.15f, createErosionFactorSpline(ss, 6.25f, 1), 0.0F);
+    addSplineVal(sp, -0.1f, createErosionFactorSpline(ss, 5.47f, 1), 0.0F);
+    addSplineVal(sp, 0.03f, createErosionFactorSpline(ss, 5.08f, 1), 0.0F);
+    addSplineVal(sp, 0.06f, createErosionFactorSpline(ss, 4.69f, 0), 0.0F);
+    return sp;
+}
+
+static Spline* createWeirdnessJaggednessSpline(SplineStack *ss, float magnitude) {
+    float f = 0.63F * magnitude;
+    float g = 0.3F * magnitude;
+    Spline *sp = &ss->stack[ss->len++];
+    sp->typ = SP_RIDGES;
+    addSplineVal(sp, -0.01F, createFixSpline(ss, f), 0.0F);
+    addSplineVal(sp, 0.01F, createFixSpline(ss, g), 0.0F);
+    return sp;
+}
+
+static inline float peaksAndValleys(float weirdness) {
+    return -(fabsf(fabsf(weirdness) - 0.6666667F) - 0.33333334F) * 3.0F;
+}
+
+static Spline* createRidgeJaggednessSpline(SplineStack *ss, float highWeirdnessMagnitude, float midWeirdnessMagnitude) {
+    float f = peaksAndValleys(0.4F);
+    float g = peaksAndValleys(0.56666666F);
+    float h = (f + g) / 2.0F;
+    Spline *sp = &ss->stack[ss->len++];
+    sp->typ = SP_RIDGES; // SP_RIDGES_FOLDED?
+    addSplineVal(sp, f, createFixSpline(ss, 0.0F), 0.0F);
+    if (midWeirdnessMagnitude > 0.0F) {
+        addSplineVal(sp, h, createWeirdnessJaggednessSpline(ss, midWeirdnessMagnitude), 0.0F);
+    } else {
+        addSplineVal(sp, h, createFixSpline(ss, 0.0F), 0.0F);
+    }
+
+    if (highWeirdnessMagnitude > 0.0F) {
+        addSplineVal(sp, 1.0F, createWeirdnessJaggednessSpline(ss, highWeirdnessMagnitude), 0.0F);
+    } else {
+        addSplineVal(sp, 1.0F, createFixSpline(ss, 0.0F), 0.0F);
+    }
+
+    return sp;
+}
+
+static Spline* createErosionJaggednessSpline(SplineStack *ss, float highErosionHighWeirdness, float lowErosionHighWeirdness, float highErosionMidWeirdness, float lowErosionMidWeirdness) {
+    Spline* sp = &ss->stack[ss->len++];
+    sp->typ = SP_EROSION;
+    addSplineVal(sp, -1.0F, createRidgeJaggednessSpline(ss, highErosionHighWeirdness, highErosionMidWeirdness), 0.0F);
+
+    Spline* sp2 = createRidgeJaggednessSpline(ss, lowErosionHighWeirdness, lowErosionMidWeirdness);
+    addSplineVal(sp, -0.78F, sp2, 0.0F);
+    addSplineVal(sp, -0.5775F, sp2, 0.0F);
+    addSplineVal(sp, -0.375F, createFixSpline(ss, 0.0F), 0.0F);
+
+    return sp;
+}
+
+static Spline* createJaggednessSpline(SplineStack *ss) {
+    Spline *sp = &ss->stack[ss->len++];
+    sp->typ = SP_CONTINENTALNESS;
+
+    addSplineVal(sp, -0.11F, createFixSpline(ss, 0.0F), 0.0F);
+
+    // TODO apply AMPLIFIED_FACTOR when amplified terrain is enabled
+    addSplineVal(sp, 0.03F, createErosionJaggednessSpline(ss, 1.0F, 0.5F, 0.0F, 0.0F), 0.0F);
+    addSplineVal(sp, 0.65F, createErosionJaggednessSpline(ss, 1.0F, 1.0F, 1.0F, 0.0F), 0.0F);
+    return sp;
+}
+
 float getSpline(const Spline *sp, const float *vals)
 {
     if (!sp || sp->len <= 0 || sp->len >= 12)
@@ -1164,7 +1299,7 @@ int sampleBiomeNoise(const BiomeNoise *bn, int64_t *np, int x, int y, int z,
     if (!(sample_flags & SAMPLE_NO_DEPTH))
     {
         float np_param[] = {
-            c, e, -3.0F * ( fabsf( fabsf(w) - 0.6666667F ) - 0.33333334F ), w,
+            c, e, peaksAndValleys(w), w,
         };
         double off = getSpline(bn->sp, np_param) + 0.015F;
 
@@ -1517,7 +1652,7 @@ double sampleClimatePara(const BiomeNoise *bn, int64_t *np, double x, double z)
         w = sampleDoublePerlin(bn->climate + NP_WEIRDNESS, x, 0, z);
 
         float np_param[] = {
-            c, e, -3.0F * ( fabsf( fabsf(w) - 0.6666667F ) - 0.33333334F ), w,
+            c, e, peaksAndValleys(w), w,
         };
         double off = getSpline(bn->sp, np_param) + 0.015F;
         int y = 0;
@@ -1972,4 +2107,219 @@ Range getVoronoiSrcRange(Range r)
     return s;
 }
 
+//==============================================================================
+// Cave noise
+//==============================================================================
 
+static inline int initCaveNoiseHelper(DoublePerlinNoise *dpn, const Xoroshiro xr, const uint64_t md5[2], PerlinNoise *oct, const int firstOctave, const double amplitudes[], const int length) {
+    Xoroshiro x = {xr.lo ^ md5[0], xr.hi ^ md5[1]};
+    return xDoublePerlinInit(dpn, &x, oct, amplitudes, firstOctave, length, -1);
+}
+
+int initCaveNoise(NoiseCaveParameters *params, uint64_t ws, int mc) {
+    static const uint64_t md5_pillar[2] = {0xd4defd1400fa5347, 0xccb6785451feaa1c}; // minecraft:pillar
+    static const uint64_t md5_pillar_rareness[2] = {0x8ddd6be7cd4b24d0, 0x0485e8665333197a}; // minecraft:pillar_rareness
+    static const uint64_t md5_pillar_thickness[2] = {0x1a28cb2542f8308d, 0xc4bba10b7fc7168c}; // minecraft:pillar_thickness
+    static const uint64_t md5_spaghetti_2d[2] = {0x34748c98fa19c477, 0x2a02051eb9e9b9cd}; // minecraft:spaghetti_2d
+    static const uint64_t md5_spaghetti_2d_elevation[2] = {0x29dd5fcf38d9edcd, 0x5bb1d7a839f6d4ab}; // minecraft:spaghetti_2d_elevation
+    static const uint64_t md5_spaghetti_2d_modulator[2] = {0x95e07097e4685522, 0x0232deaf95eb5fed}; // minecraft:spaghetti_2d_modulator
+    static const uint64_t md5_spaghetti_2d_thickness[2] = {0x37e5cb432b85f4c8, 0xe5e16b35b407aebc}; // minecraft:spaghetti_2d_thickness
+    static const uint64_t md5_spaghetti_3d_1[2] = {0xa5053f53ce3f5840, 0x834fa38a3ded87b7}; // minecraft:spaghetti_3d_1
+    static const uint64_t md5_spaghetti_3d_2[2] = {0xb9a6367335a0ceef, 0xd61ccfd0fac10ac3}; // minecraft:spaghetti_3d_2
+    static const uint64_t md5_spaghetti_3d_rarity[2] = {0xee4780c98d93a439, 0xbe45d334fdb76d2c}; // minecraft:spaghetti_3d_rarity
+    static const uint64_t md5_spaghetti_3d_thickness[2] = {0x897e1f20ad2d2b27, 0xf4142f5a58d1d5ab}; // minecraft:spaghetti_3d_thickness
+    static const uint64_t md5_spaghetti_roughness[2] = {0x7aed57fd327d6591, 0xd495a3593e4d67bd}; // minecraft:spaghetti_roughness
+    static const uint64_t md5_spaghetti_roughness_modulator[2] = {0xe19387d2ceaf4eaa, 0xcacdcd34e1bc2003}; // minecraft:spaghetti_roughness_modulator
+    static const uint64_t md5_cave_entrance[2] = {0xf1008a17493d9a65, 0xbd1ce09e8bc70ea0}; // minecraft:cave_entrance
+    static const uint64_t md5_cave_layer[2] = {0x4dfe67be2ef51a83, 0x5a4ae8c4423e7206}; // minecraft:cave_layer
+    static const uint64_t md5_cave_cheese[2] = {0xb159093bc7baaa50, 0x53abc45424417c20}; // minecraft:cave_cheese
+    static const uint64_t md5_jagged[2] = {0xf902c0a7c9daa994, 0x71ecd96a8da5e503}; // minecraft:jagged
+
+    if (mc <= MC_1_16) {
+        return 0;
+    }
+
+    initBiomeNoise(&params->bn, mc);
+    setBiomeSeed(&params->bn, ws, 0);
+    initSurfaceNoise(&params->sn, DIM_OVERWORLD, ws);
+
+    Xoroshiro wsx;
+    xSetSeed(&wsx, ws);
+    const uint64_t lo = xNextLong(&wsx);
+    const uint64_t hi = xNextLong(&wsx);
+    const Xoroshiro xr = {lo, hi};
+
+    int n = 0;
+    static const double pillar_amp[2] = {1.0, 1.0};
+    n += initCaveNoiseHelper(&params->pillar, xr, md5_pillar, params->oct + n, -7, pillar_amp, 2);
+    static const double pillar_rareness_amp[1] = {1.0};
+    n += initCaveNoiseHelper(&params->pillarRareness, xr, md5_pillar_rareness, params->oct + n, -8, pillar_rareness_amp, 1);
+    static const double pillar_thickness_amp[1] = {1.0};
+    n += initCaveNoiseHelper(&params->pillarThickness, xr, md5_pillar_thickness, params->oct + n, -8, pillar_thickness_amp, 1);
+    static const double spaghetti_2d_amp[1] = {1.0};
+    n += initCaveNoiseHelper(&params->spaghetti2d, xr, md5_spaghetti_2d, params->oct + n, -7, spaghetti_2d_amp, 1);
+    static const double spaghetti_2d_elevation_amp[1] = {1.0};
+    n += initCaveNoiseHelper(&params->spaghetti2dElevation, xr, md5_spaghetti_2d_elevation, params->oct + n, -8, spaghetti_2d_elevation_amp, 1);
+    static const double spaghetti_2d_modulator_amp[1] = {1.0};
+    n += initCaveNoiseHelper(&params->spaghetti2dModulator, xr, md5_spaghetti_2d_modulator, params->oct + n, -11, spaghetti_2d_modulator_amp, 1);
+    static const double spaghetti_2d_thickness_amp[1] = {1.0};
+    n += initCaveNoiseHelper(&params->spaghetti2dThickness, xr, md5_spaghetti_2d_thickness, params->oct + n, -11, spaghetti_2d_thickness_amp, 1);
+    static const double spaghetti_3d_1_amp[1] = {1.0};
+    n += initCaveNoiseHelper(&params->spaghetti3d1, xr, md5_spaghetti_3d_1, params->oct + n, -7, spaghetti_3d_1_amp, 1);
+    static const double spaghetti_3d_2_amp[1] = {1.0};
+    n += initCaveNoiseHelper(&params->spaghetti3d2, xr, md5_spaghetti_3d_2, params->oct + n, -7, spaghetti_3d_2_amp, 1);
+    static const double spaghetti_3d_rarity_amp[1] = {1.0};
+    n += initCaveNoiseHelper(&params->spaghetti3dRarity, xr, md5_spaghetti_3d_rarity, params->oct + n, -11, spaghetti_3d_rarity_amp, 1);
+    static const double spaghetti_3d_thickness_amp[1] = {1.0};
+    n += initCaveNoiseHelper(&params->spaghetti3dThickness, xr, md5_spaghetti_3d_thickness, params->oct + n, -8, spaghetti_3d_thickness_amp, 1);
+    static const double spaghetti_roughness_amp[1] = {1.0};
+    n += initCaveNoiseHelper(&params->spaghettiRoughness, xr, md5_spaghetti_roughness, params->oct + n, -5, spaghetti_roughness_amp, 1);
+    static const double spaghetti_roughness_modulator_amp[1] = {1.0};
+    n += initCaveNoiseHelper(&params->spaghettiRoughnessModulator, xr, md5_spaghetti_roughness_modulator, params->oct + n, -8, spaghetti_roughness_modulator_amp, 1);
+    static const double cave_entrance_amp[3] = {0.4, 0.5, 1.0};
+    n += initCaveNoiseHelper(&params->caveEntrance, xr, md5_cave_entrance, params->oct + n, -7, cave_entrance_amp, 3);
+    static const double cave_layer_amp[1] = {1.0};
+    n += initCaveNoiseHelper(&params->caveLayer, xr, md5_cave_layer, params->oct + n, -8, cave_layer_amp, 1);
+    static const double cave_cheese_amp[9] = {0.5, 1.0, 2.0, 1.0, 2.0, 1.0, 0.0, 2.0, 0.0};
+    n += initCaveNoiseHelper(&params->caveCheese, xr, md5_cave_cheese, params->oct + n, -8, cave_cheese_amp, 9);
+    static const double jagged_amp[16] = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
+    n += initCaveNoiseHelper(&params->jagged, xr, md5_jagged, params->oct + n, -16, jagged_amp, 16);
+
+    if ((size_t)n > sizeof(params->oct) / sizeof(*params->oct)) {
+        fprintf(stderr, "initCaveNoise(): NoiseCaveParameters is malformed, buffer too small\n");
+        exit(1);
+    }
+
+    return 1;
+}
+
+double getSpaghettiRarity2D(double value) {
+    if (value < -0.75) {
+        return 0.5;
+    } else if (value < -0.5) {
+        return 0.75;
+    } else if (value < 0.5) {
+        return 1.0;
+    } else {
+        return value < 0.75 ? 2.0 : 3.0;
+    }
+}
+
+double getSpaghettiRarity3D(double value) {
+    if (value < -0.5) {
+        return 0.75;
+    } else if (value < 0.0) {
+        return 1.0;
+    } else {
+        return value < 0.5 ? 1.5 : 2.0;
+    }
+}
+
+double sampleSpaghettiRoughness(NoiseCaveParameters *params, int x, int y, int z) {
+    double d = map(sampleDoublePerlin(&params->spaghettiRoughnessModulator, x, y, z), -1.0, 1.0, 0.0, 0.1);
+    return (0.4 - fabs(sampleDoublePerlin(&params->spaghettiRoughness, x, y, z))) * d;
+}
+
+double sampleSpaghetti2dThicknessModulator(NoiseCaveParameters *params, int x, int y, int z) {
+    return map(sampleDoublePerlin(&params->spaghetti2dThickness, x * 2, y, z * 2), -1.0, 1.0, -0.6, -1.3);
+}
+
+double sampleSpaghetti2d(NoiseCaveParameters *params, int x, int y, int z) {
+    double d = sampleDoublePerlin(&params->spaghetti2dModulator, x * 2, y, z * 2);
+    double e = getSpaghettiRarity2D(d);
+    double h = map(sampleDoublePerlin(&params->spaghetti2dThickness, x * 2, y, z * 2), -1.0, 1.0, 0.6, 1.3);
+    double l = sampleDoublePerlin(&params->spaghetti2d, x / e, y / e, z / e);
+    double n = fabs(e * l) - 0.083 * h;
+    int minY = params->bn.mc > MC_1_17 ? -64 : 0;
+    double q = map(sampleDoublePerlin(&params->spaghetti2dElevation, x, 0.0, z), -1.0, 1.0, floorDiv(minY, 8), 8.0);
+    double r = fabs(q - y / 8.0) - h;
+    r = r * r * r;
+    return clamp(fmax(r, n), -1.0, 1.0);
+}
+
+double sampleSpaghetti3d(NoiseCaveParameters *params, int x, int y, int z) {
+    double d = sampleDoublePerlin(&params->spaghetti3dRarity, x * 2, y, z * 2);
+    double e = getSpaghettiRarity3D(d);
+    double h = map(sampleDoublePerlin(&params->spaghetti3dThickness, x, y, z), -1.0, 1.0, 0.065, 0.088);
+    double l = sampleDoublePerlin(&params->spaghetti3d1, x / e, y / e, z / e);
+    double m = fabs(e * l) - h;
+    double n = sampleDoublePerlin(&params->spaghetti3d2, x / e, y / e, z / e);
+    double o = fabs(e * n) - h;
+    return clamp(fmax(m, o), -1.0, 1.0);
+}
+
+double sampleCaveEntrance(NoiseCaveParameters *params, int x, int y, int z) {
+    double a = sampleDoublePerlin(&params->caveEntrance, x * 0.75, y * 0.5, z * 0.75) + 0.37;
+    return a + clampedLerp(0.3, 0.0, (y + 10) / 40.0);
+}
+
+double sampleEntrances(NoiseCaveParameters *params, int x, int y, int z) {
+    double d = sampleSpaghetti3d(params, x, y, z);
+    double e = sampleSpaghettiRoughness(params, x, y, z);
+    double f = sampleCaveEntrance(params, x, y, z);
+    double g = e + d;
+    return fmin(f, g);
+}
+
+double sampleCaveLayer(NoiseCaveParameters *params, int x, int y, int z) {
+    double d = sampleDoublePerlin(&params->caveLayer, x, y * 8, z);
+    return d * d * 4.0;
+}
+
+double noiseGradientDensity(double min, double max) {
+    double f = max * min;
+    return f > 0. ? f * 4. : f;
+}
+
+double sampleSlopedCheese(NoiseCaveParameters *params, int x, int y, int z) {
+    // see sampleBiomeNoise
+    double px = (x >> 2) + sampleDoublePerlin(&params->bn.climate[NP_SHIFT], x, 0, z) * 4.0;
+    double pz = (z >> 2) + sampleDoublePerlin(&params->bn.climate[NP_SHIFT], z, x, 0) * 4.0;
+
+    float c = sampleDoublePerlin(&params->bn.climate[NP_CONTINENTALNESS], px, 0, pz);
+    float e = sampleDoublePerlin(&params->bn.climate[NP_EROSION], px, 0, pz);
+    float w = sampleDoublePerlin(&params->bn.climate[NP_WEIRDNESS], px, 0, pz);
+
+    float np_param[] = {
+        c, e, peaksAndValleys(w), w,
+    };
+
+    double depth = getSpline(params->bn.sp, np_param) + clampedMap(y, -64, 320, 1.5, -1.5) - 0.50375f;
+    Spline* factorSpline = createFactorSpline(&params->ss);
+    double factor = getSpline(factorSpline, np_param);
+    double jagged = sampleDoublePerlin(&params->jagged, x * 1500.0, 0, z * 1500.0);
+    jagged = jagged >= 0.0 ? jagged : jagged / 2.0;
+    Spline* jaggednessSpline = createJaggednessSpline(&params->ss);
+    jagged *= getSpline(jaggednessSpline, np_param);
+
+    double density = noiseGradientDensity(factor, depth + jagged);
+
+    return density + sampleSurfaceNoise(&params->sn, x, y, z);
+}
+
+double sampleCaveCheese(NoiseCaveParameters *params, int x, int y, int z, double slopedCheese) {
+    double d = sampleDoublePerlin(&params->caveCheese, x, y * 0.6666666666666666, z);
+    return clamp(0.27 + d, -1.0, 1.0) + clamp(1.5 + (-0.64 * slopedCheese), 0.0, 0.5);
+}
+
+double samplePillars(NoiseCaveParameters *params, int x, int y, int z) {
+    double d = sampleDoublePerlin(&params->pillar, x * 25, y * 0.3, z * 25);
+    double e = map(sampleDoublePerlin(&params->pillarRareness, x, y, z), -1.0, 1.0, 0.0, -2.0);
+    double f = map(sampleDoublePerlin(&params->pillarThickness, x, y, z), -1.0, 1.0, 0.0, 1.1);
+    double g = d * 2.0 + e;
+    return g * f * f * f;
+}
+
+double sampleUnderground(NoiseCaveParameters *params, int x, int y, int z, double slopedCheese) {
+    double d = sampleSpaghetti2d(params, x, y, z);
+    double e = sampleSpaghettiRoughness(params, x, y, z);
+    double f = sampleCaveLayer(params, x, y, z);
+    double g = f + sampleCaveCheese(params, x, y, z, slopedCheese);
+    double h = sampleEntrances(params, x, y, z);
+    double i = fmin(g, h);
+    double j = d + e;
+    double k = fmin(i, j);
+    double l = samplePillars(params, x, y, z);
+    double m = l >= -1000000.0 && l < 0.03 ? -1000000.0 : l;
+    return fmax(k, m);
+}

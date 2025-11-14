@@ -7,8 +7,6 @@
 
 #define MAT_SIZE sizeof(uint64_t) * 128 * 2
 
-const uint64_t xrms[POWS_OF_2][128][2];
-
 static void calcMatPows(uint64_t m[128][2]);
 static void transpose(uint64_t m[128][2], uint64_t t[128][2]);
 static void calcMatMul(uint64_t m1[128][2], uint64_t m2[128][2], uint64_t m[128][2]);
