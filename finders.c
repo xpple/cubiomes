@@ -2161,29 +2161,24 @@ int initOreVeinNoise(OreVeinParameters *params, uint64_t ws, int mc) {
     ore_x = (Xoroshiro) {a, b};
     params->posRandom = ore_x;
 
+    int n = 0;
     Xoroshiro ore_veininess_x = {lo ^ md5_ore_veininess[0], hi ^ md5_ore_veininess[1]};
-    DoublePerlinNoise ore_veininess_n;
-    const double ore_veininess_amp = {1.0};
-    xDoublePerlinInit(&ore_veininess_n, &ore_veininess_x, malloc(2 * sizeof(PerlinNoise)), &ore_veininess_amp, -8, 1, -1);
-    params->oreVeininess = ore_veininess_n;
-
+    static const double ore_veininess_amp = {1.0};
+    n += xDoublePerlinInit(&params->oreVeininess, &ore_veininess_x, params->oct + n, &ore_veininess_amp, -8, 1, -1);
     Xoroshiro ore_vein_a_x = {lo ^ md5_ore_vein_a[0], hi ^ md5_ore_vein_a[1]};
-    DoublePerlinNoise ore_vein_a_n;
-    const double ore_vein_a_amp = {1.0};
-    xDoublePerlinInit(&ore_vein_a_n, &ore_vein_a_x, malloc(2 * sizeof(PerlinNoise)), &ore_vein_a_amp, -7, 1, -1);
-    params->oreVeinA = ore_vein_a_n;
-
+    static const double ore_vein_a_amp = {1.0};
+    n += xDoublePerlinInit(&params->oreVeinA, &ore_vein_a_x, params->oct + n, &ore_vein_a_amp, -7, 1, -1);
     Xoroshiro ore_vein_b_x = {lo ^ md5_ore_vein_b[0], hi ^ md5_ore_vein_b[1]};
-    DoublePerlinNoise ore_vein_b_n;
-    const double ore_vein_b_amp = {1.0};
-    xDoublePerlinInit(&ore_vein_b_n, &ore_vein_b_x, malloc(2 * sizeof(PerlinNoise)), &ore_vein_b_amp, -7, 1, -1);
-    params->oreVeinB = ore_vein_b_n;
-
+    static const double ore_vein_b_amp = {1.0};
+    n += xDoublePerlinInit(&params->oreVeinB, &ore_vein_b_x, params->oct + n, &ore_vein_b_amp, -7, 1, -1);
     Xoroshiro ore_gap_x = {lo ^ md5_ore_gap[0], hi ^ md5_ore_gap[1]};
-    DoublePerlinNoise ore_gap_n;
-    const double ore_gap_amp = {1.0};
-    xDoublePerlinInit(&ore_gap_n, &ore_gap_x, malloc(2 * sizeof(PerlinNoise)), &ore_gap_amp, -5, 1, -1);
-    params->oreGap = ore_gap_n;
+    static const double ore_gap_amp = {1.0};
+    n += xDoublePerlinInit(&params->oreGap, &ore_gap_x, params->oct + n, &ore_gap_amp, -5, 1, -1);
+
+    if ((size_t)n > sizeof(params->oct) / sizeof(*params->oct)) {
+        fprintf(stderr, "initOreVeinNoise(): OreVeinParameters is malformed, buffer too small\n");
+        exit(1);
+    }
 
     return 1;
 }

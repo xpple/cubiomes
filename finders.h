@@ -563,6 +563,7 @@ STRUCT(OreVeinConfig)
 
 STRUCT(OreVeinParameters)
 {
+    PerlinNoise oct[2*4];
     DoublePerlinNoise oreVeininess;
     DoublePerlinNoise oreVeinA;
     DoublePerlinNoise oreVeinB;
