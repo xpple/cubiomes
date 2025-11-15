@@ -173,7 +173,7 @@ STRUCT(NoiseCaveParameters)
     SplineStack ss;
     Spline* factorSpline;
     Spline* jaggednessSpline;
-    PerlinNoise oct[2*41];
+    PerlinNoise oct[2*45];
     DoublePerlinNoise pillar;
     DoublePerlinNoise pillarRareness;
     DoublePerlinNoise pillarThickness;
@@ -190,6 +190,10 @@ STRUCT(NoiseCaveParameters)
     DoublePerlinNoise caveEntrance;
     DoublePerlinNoise caveLayer;
     DoublePerlinNoise caveCheese;
+    DoublePerlinNoise noodle;
+    DoublePerlinNoise noodleThickness;
+    DoublePerlinNoise noodleRidgeA;
+    DoublePerlinNoise noodleRidgeB;
     DoublePerlinNoise jagged;
 };
 
@@ -346,7 +350,7 @@ Range getVoronoiSrcRange(Range r);
 
 int initCaveNoise(NoiseCaveParameters *params, uint64_t ws, int mc);
 
-int initUnseededBlendedNoise(BlendedNoise *bn, int dim);
+int initBlendedNoise(BlendedNoise *bn, uint64_t lo, uint64_t hi, int dim);
 
 double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z);
 
@@ -370,7 +374,11 @@ double sampleCaveCheese(NoiseCaveParameters *params, int x, int y, int z, double
 
 double samplePillars(NoiseCaveParameters *params, int x, int y, int z);
 
+double sampleNoodle(NoiseCaveParameters *params, int x, int y, int z);
+
 double sampleUnderground(NoiseCaveParameters *params, int x, int y, int z, double slopedCheese);
+
+double sampleFinalDensity(NoiseCaveParameters *params, int x, int y, int z);
 
 #ifdef __cplusplus
 }

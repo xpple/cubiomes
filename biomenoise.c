@@ -2133,23 +2133,29 @@ int initCaveNoise(NoiseCaveParameters *params, uint64_t ws, int mc) {
     static const uint64_t md5_cave_entrance[2] = {0xf1008a17493d9a65, 0xbd1ce09e8bc70ea0}; // minecraft:cave_entrance
     static const uint64_t md5_cave_layer[2] = {0x4dfe67be2ef51a83, 0x5a4ae8c4423e7206}; // minecraft:cave_layer
     static const uint64_t md5_cave_cheese[2] = {0xb159093bc7baaa50, 0x53abc45424417c20}; // minecraft:cave_cheese
+    static const uint64_t md5_noodle[2] = {0xd23ce12b0c37e44b, 0x66b1fdfbf6a474f3}; // minecraft:noodle
+    static const uint64_t md5_noodle_thickness[2] = {0x2fa49bbe949d4212, 0x5f82c95251d19891}; // minecraft:noodle_thickness
+    static const uint64_t md5_noodle_ridge_a[2] = {0x86172ac1315f6026, 0x4a664470c7d7205f}; // minecraft:noodle_ridge_a
+    static const uint64_t md5_noodle_ridge_b[2] = {0xeb232b4b89fdde91, 0x031ee565ead84e5c}; // minecraft:noodle_ridge_b
     static const uint64_t md5_jagged[2] = {0xf902c0a7c9daa994, 0x71ecd96a8da5e503}; // minecraft:jagged
 
     if (mc <= MC_1_16) {
         return 0;
     }
 
-    initBiomeNoise(&params->bn, mc);
-    setBiomeSeed(&params->bn, ws, 0);
-    initUnseededBlendedNoise(&params->bln, DIM_OVERWORLD);
-    params->factorSpline = createFactorSpline(&params->ss);
-    params->jaggednessSpline = createJaggednessSpline(&params->ss);
-
     Xoroshiro wsx;
     xSetSeed(&wsx, ws);
     const uint64_t lo = xNextLong(&wsx);
     const uint64_t hi = xNextLong(&wsx);
     const Xoroshiro xr = {lo, hi};
+
+    initBiomeNoise(&params->bn, mc);
+    setBiomeSeed(&params->bn, ws, 0);
+    if (!initBlendedNoise(&params->bln, lo, hi, DIM_OVERWORLD)) {
+        return 0;
+    }
+    params->factorSpline = createFactorSpline(&params->ss);
+    params->jaggednessSpline = createJaggednessSpline(&params->ss);
 
     int n = 0;
     static const double pillar_amp[2] = {1.0, 1.0};
@@ -2184,6 +2190,14 @@ int initCaveNoise(NoiseCaveParameters *params, uint64_t ws, int mc) {
     n += initCaveNoiseHelper(&params->caveLayer, xr, md5_cave_layer, params->oct + n, -8, cave_layer_amp, 1);
     static const double cave_cheese_amp[9] = {0.5, 1.0, 2.0, 1.0, 2.0, 1.0, 0.0, 2.0, 0.0};
     n += initCaveNoiseHelper(&params->caveCheese, xr, md5_cave_cheese, params->oct + n, -8, cave_cheese_amp, 9);
+    static const double noodle_amp[1] = {1.0};
+    n += initCaveNoiseHelper(&params->noodle, xr, md5_noodle, params->oct + n, -8, noodle_amp, 1);
+    static const double noodle_thickness_amp[1] = {1.0};
+    n += initCaveNoiseHelper(&params->noodleThickness, xr, md5_noodle_thickness, params->oct + n, -8, noodle_thickness_amp, 1);
+    static const double noodle_ridge_a_amp[1] = {1.0};
+    n += initCaveNoiseHelper(&params->noodleRidgeA, xr, md5_noodle_ridge_a, params->oct + n, -7, noodle_ridge_a_amp, 1);
+    static const double noodle_ridge_b_amp[1] = {1.0};
+    n += initCaveNoiseHelper(&params->noodleRidgeB, xr, md5_noodle_ridge_b, params->oct + n, -7, noodle_ridge_b_amp, 1);
     static const double jagged_amp[16] = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
     n += initCaveNoiseHelper(&params->jagged, xr, md5_jagged, params->oct + n, -16, jagged_amp, 16);
 
@@ -2195,10 +2209,11 @@ int initCaveNoise(NoiseCaveParameters *params, uint64_t ws, int mc) {
     return 1;
 }
 
-int initUnseededBlendedNoise(BlendedNoise *bn, int dim)
+int initBlendedNoise(BlendedNoise *bn, uint64_t lo, uint64_t hi, int dim)
 {
-    Xoroshiro xr;
-    xSetSeed(&xr, 0);
+    static const uint64_t md5_terrain[2] = {0x1ee555222ef96f14, 0xe2bedfdbebe43d33}; // minecraft:terrain
+
+    Xoroshiro xr = {lo ^ md5_terrain[0], hi ^ md5_terrain[1]};
     xOctaveLegacyInit(&bn->octmin, &xr, bn->oct+0, -15, 16);
     xOctaveLegacyInit(&bn->octmax, &xr, bn->oct+16, -15, 16);
     xOctaveLegacyInit(&bn->octmain, &xr, bn->oct+32, -7, 8);
@@ -2392,6 +2407,24 @@ double samplePillars(NoiseCaveParameters *params, int x, int y, int z) {
     return g * f * f * f;
 }
 
+static inline double rangeChoice(double input, double minInclusive, double maxExclusive, double whenInRange, double whenOutOfRange) {
+    double d = input;
+    return d >= minInclusive && d < maxExclusive ? whenInRange : whenOutOfRange;
+}
+
+static inline double yLimitedInterpolatable(double input, double whenInRange, int minY, int maxY, int whenOutOfRange) {
+    return rangeChoice(input, minY, maxY + 1, whenInRange, whenOutOfRange);
+}
+
+double sampleNoodle(NoiseCaveParameters *params, int x, int y, int z) {
+    double densityFunction2 = yLimitedInterpolatable(y, sampleDoublePerlin(&params->noodle, x, y, z), -60, 320, -1);
+    double densityFunction3 = yLimitedInterpolatable(y, map(sampleDoublePerlin(&params->noodleThickness, x, y, z), -1.0, 1.0, -0.05, -0.1), -60, 320, 0);
+    double densityFunction4 = yLimitedInterpolatable(y, sampleDoublePerlin(&params->noodleRidgeA, x * 2.6666666666666665, y * 2.6666666666666665, z * 2.6666666666666665), -60, 320, 0);
+    double densityFunction5 = yLimitedInterpolatable(y, sampleDoublePerlin(&params->noodleRidgeB, x * 2.6666666666666665, y * 2.6666666666666665, z * 2.6666666666666665), -60, 320, 0);
+    double densityFunction6 = 1.5 * fmax(fabs(densityFunction4), fabs(densityFunction5));
+    return rangeChoice(densityFunction2, -1000000.0, 0.0, 64.0, densityFunction3 + densityFunction6);
+}
+
 double sampleUnderground(NoiseCaveParameters *params, int x, int y, int z, double slopedCheese) {
     double d = sampleSpaghetti2d(params, x, y, z);
     double e = sampleSpaghettiRoughness(params, x, y, z);
@@ -2404,4 +2437,27 @@ double sampleUnderground(NoiseCaveParameters *params, int x, int y, int z, doubl
     double l = samplePillars(params, x, y, z);
     double m = l >= -1000000.0 && l < 0.03 ? -1000000.0 : l;
     return fmax(k, m);
+}
+
+static inline double postProcess(double densityFunction) {
+    double clamped = clamp(densityFunction * 0.64, -1.0, 1.0);
+    return clamped / 2.0 - clamped * clamped * clamped / 24.0;
+}
+
+static inline double slide(double input, int minY, int height, int topStartOffset, int topEndOffset, double topDelta, int bottomStartOffset, int bottomEndOffset, double bottomDelta, int y) {
+    double densityFunction2 = clampedMap(y, minY + height - topStartOffset, minY + height - topEndOffset, 1.0, 0.0);
+    double densityFunction = lerp(densityFunction2, topDelta, input);
+    double densityFunction3 = clampedMap(y, minY + bottomStartOffset, minY + bottomEndOffset, 0.0, 1.0);
+    return lerp(densityFunction3, bottomDelta, densityFunction);
+}
+
+static inline double slideOverworld(double densityFunction, int y) {
+    return slide(densityFunction, -64, 384, 80, 64, -0.078125, 0, 24, 0.1171875, y);
+}
+
+double sampleFinalDensity(NoiseCaveParameters *params, int x, int y, int z) {
+    double densityFunction13 = sampleSlopedCheese(params, x, y, z);
+    double densityFunction14 = fmin(densityFunction13, 5.0 * sampleEntrances(params, x, y, z));
+    double densityFunction15 = rangeChoice(densityFunction13, -1000000.0, 1.5625, densityFunction14, sampleUnderground(params, x, y, z, densityFunction13));
+    return fmin(postProcess(slideOverworld(densityFunction15, y)), sampleNoodle(params, x, y, z));
 }
