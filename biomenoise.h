@@ -370,13 +370,13 @@ double sampleCaveLayer(TerrainNoiseParameters *params, int x, int y, int z);
 
 double sampleSlopedCheese(TerrainNoiseParameters *params, int x, int y, int z);
 
-double sampleCaveCheese(TerrainNoiseParameters *params, int x, int y, int z, double slopedCheese);
+double sampleCaveCheese(TerrainNoiseParameters *params, int x, int y, int z);
 
 double samplePillars(TerrainNoiseParameters *params, int x, int y, int z);
 
 double sampleNoodle(TerrainNoiseParameters *params, int x, int y, int z);
 
-double sampleUnderground(TerrainNoiseParameters *params, int x, int y, int z, double slopedCheese);
+double sampleUnderground(TerrainNoiseParameters *params, int x, int y, int z);
 
 double sampleFinalDensity(TerrainNoiseParameters *params, int x, int y, int z);
 

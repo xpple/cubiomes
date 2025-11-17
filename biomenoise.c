@@ -2423,8 +2423,9 @@ double sampleSlopedCheese(TerrainNoiseParameters *params, int x, int y, int z) {
     return density + sampleBase3dNoise(&params->bln, x, y, z);
 }
 
-double sampleCaveCheese(TerrainNoiseParameters *params, int x, int y, int z, double slopedCheese) {
+double sampleCaveCheese(TerrainNoiseParameters *params, int x, int y, int z) {
     double caveCheese = sampleDoublePerlin(&params->caveCheese, x, y * 0.6666666666666666, z);
+    double slopedCheese = sampleSlopedCheese(params, x, y, z);
     return clamp(0.27 + caveCheese, -1.0, 1.0) + clamp(1.5 + (-0.64 * slopedCheese), 0.0, 0.5);
 }
 
@@ -2444,12 +2445,12 @@ double sampleNoodle(TerrainNoiseParameters *params, int x, int y, int z) {
     return rangeChoice(noodle, -1000000.0, 0.0, 64.0, noodleThickness + scaledMax);
 }
 
-double sampleUnderground(TerrainNoiseParameters *params, int x, int y, int z, double slopedCheese) {
+double sampleUnderground(TerrainNoiseParameters *params, int x, int y, int z) {
     double spaghetti2d = sampleSpaghetti2d(params, x, y, z);
     double spaghettiRoughness = sampleSpaghettiRoughness(params, x, y, z);
     double caveLayer = sampleCaveLayer(params, x, y, z);
     double entrances = sampleEntrances(params, x, y, z);
-    double a = fmin(caveLayer + sampleCaveCheese(params, x, y, z, slopedCheese), entrances);
+    double a = fmin(caveLayer + sampleCaveCheese(params, x, y, z), entrances);
     double b = fmin(a, spaghetti2d + spaghettiRoughness);
     double pillars = samplePillars(params, x, y, z);
     double c = pillars >= -1000000.0 && pillars < 0.03 ? -1000000.0 : pillars;
@@ -2459,6 +2460,6 @@ double sampleUnderground(TerrainNoiseParameters *params, int x, int y, int z, do
 double sampleFinalDensity(TerrainNoiseParameters *params, int x, int y, int z) {
     double slopedCheese = sampleSlopedCheese(params, x, y, z);
     double a = fmin(slopedCheese, 5.0 * sampleEntrances(params, x, y, z));
-    double b = rangeChoice(slopedCheese, -1000000.0, 1.5625, a, sampleUnderground(params, x, y, z, slopedCheese));
+    double b = rangeChoice(slopedCheese, -1000000.0, 1.5625, a, sampleUnderground(params, x, y, z));
     return fmin(postProcess(slideOverworld(b, y)), sampleNoodle(params, x, y, z));
 }
