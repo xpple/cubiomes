@@ -2292,7 +2292,40 @@ double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z)
     return clampedLerp(q, minSampleTotal / 512.0, maxSampleTotal / 512.0) / 128.0;
 }
 
-double getSpaghettiRarity2D(double value) {
+/// alias for clampedMap
+static inline double yClampedGradient(double y, int fromY, int toY, double fromValue, double toValue) {
+    return clampedMap(y, fromY, toY, fromValue, toValue);
+}
+
+static inline double mapFromUnitTo(double input, double fromY, double toY) {
+    return ((fromY + toY) * 0.5) + (((toY - fromY) * 0.5) * input);
+}
+
+static inline double rangeChoice(double input, double minInclusive, double maxExclusive, double whenInRange, double whenOutOfRange) {
+    return input >= minInclusive && input < maxExclusive ? whenInRange : whenOutOfRange;
+}
+
+static inline double yLimitedInterpolatable(double input, double whenInRange, int minY, int maxY, int whenOutOfRange) {
+    return rangeChoice(input, minY, maxY + 1, whenInRange, whenOutOfRange);
+}
+
+static inline double postProcess(double densityFunction) {
+    double clamped = clamp(densityFunction * 0.64, -1.0, 1.0);
+    return clamped / 2.0 - clamped * clamped * clamped / 24.0;
+}
+
+static inline double slide(double input, int minY, int height, int topStartOffset, int topEndOffset, double topDelta, int bottomStartOffset, int bottomEndOffset, double bottomDelta, int y) {
+    double densityFunction2 = clampedMap(y, minY + height - topStartOffset, minY + height - topEndOffset, 1.0, 0.0);
+    double densityFunction = lerp(densityFunction2, topDelta, input);
+    double densityFunction3 = clampedMap(y, minY + bottomStartOffset, minY + bottomEndOffset, 0.0, 1.0);
+    return lerp(densityFunction3, bottomDelta, densityFunction);
+}
+
+static inline double slideOverworld(double densityFunction, int y) {
+    return slide(densityFunction, -64, 384, 80, 64, -0.078125, 0, 24, 0.1171875, y);
+}
+
+static inline double getSpaghettiRarity2d(double value) {
     if (value < -0.75) {
         return 0.5;
     } else if (value < -0.5) {
@@ -2304,7 +2337,7 @@ double getSpaghettiRarity2D(double value) {
     }
 }
 
-double getSpaghettiRarity3D(double value) {
+static inline double getSpaghettiRarity3d(double value) {
     if (value < -0.5) {
         return 0.75;
     } else if (value < 0.0) {
@@ -2325,7 +2358,7 @@ double sampleSpaghetti2dThicknessModulator(NoiseCaveParameters *params, int x, i
 
 double sampleSpaghetti2d(NoiseCaveParameters *params, int x, int y, int z) {
     double d = sampleDoublePerlin(&params->spaghetti2dModulator, x * 2, y, z * 2);
-    double e = getSpaghettiRarity2D(d);
+    double e = getSpaghettiRarity2d(d);
     double h = map(sampleDoublePerlin(&params->spaghetti2dThickness, x * 2, y, z * 2), -1.0, 1.0, 0.6, 1.3);
     double l = sampleDoublePerlin(&params->spaghetti2d, x / e, y / e, z / e);
     double n = fabs(e * l) - 0.083 * h;
@@ -2337,27 +2370,24 @@ double sampleSpaghetti2d(NoiseCaveParameters *params, int x, int y, int z) {
 }
 
 double sampleSpaghetti3d(NoiseCaveParameters *params, int x, int y, int z) {
-    double d = sampleDoublePerlin(&params->spaghetti3dRarity, x * 2, y, z * 2);
-    double e = getSpaghettiRarity3D(d);
-    double h = map(sampleDoublePerlin(&params->spaghetti3dThickness, x, y, z), -1.0, 1.0, 0.065, 0.088);
-    double l = sampleDoublePerlin(&params->spaghetti3d1, x / e, y / e, z / e);
-    double m = fabs(e * l) - h;
-    double n = sampleDoublePerlin(&params->spaghetti3d2, x / e, y / e, z / e);
-    double o = fabs(e * n) - h;
-    return clamp(fmax(m, o), -1.0, 1.0);
+    double spaghetti3dRarity = sampleDoublePerlin(&params->spaghetti3dRarity, x * 2, y, z * 2);
+    double spaghetti3dThickness = mapFromUnitTo(sampleDoublePerlin(&params->spaghetti3dThickness, x, y, z), -0.065, -0.088);
+    double rarity = getSpaghettiRarity3d(spaghetti3dRarity);
+    double spaghetti3d1 = rarity * fabs(sampleDoublePerlin(&params->spaghetti3d1, x / rarity, y / rarity, z / rarity));
+    double spaghetti3d2 = rarity * fabs(sampleDoublePerlin(&params->spaghetti3d2, x / rarity, y / rarity, z / rarity));
+    return clamp(fmax(spaghetti3d1, spaghetti3d2) + spaghetti3dThickness, -1.0, 1.0);
 }
 
 double sampleCaveEntrance(NoiseCaveParameters *params, int x, int y, int z) {
-    double a = sampleDoublePerlin(&params->caveEntrance, x * 0.75, y * 0.5, z * 0.75) + 0.37;
-    return a + clampedLerp(0.3, 0.0, (y + 10) / 40.0);
+    double caveEntrance = sampleDoublePerlin(&params->caveEntrance, x * 0.75, y * 0.5, z * 0.75);
+    return caveEntrance + 0.37 + yClampedGradient(y, -10, 30, 0.3, 0.0);
 }
 
 double sampleEntrances(NoiseCaveParameters *params, int x, int y, int z) {
-    double d = sampleSpaghetti3d(params, x, y, z);
-    double e = sampleSpaghettiRoughness(params, x, y, z);
-    double f = sampleCaveEntrance(params, x, y, z);
-    double g = e + d;
-    return fmin(f, g);
+    double spaghetti3d = sampleSpaghetti3d(params, x, y, z);
+    double spaghettiRoughness = sampleSpaghettiRoughness(params, x, y, z);
+    double caveEntrance = sampleCaveEntrance(params, x, y, z);
+    return fmin(caveEntrance, spaghettiRoughness + spaghetti3d);
 }
 
 double sampleCaveLayer(NoiseCaveParameters *params, int x, int y, int z) {
@@ -2407,15 +2437,6 @@ double samplePillars(NoiseCaveParameters *params, int x, int y, int z) {
     return g * f * f * f;
 }
 
-static inline double rangeChoice(double input, double minInclusive, double maxExclusive, double whenInRange, double whenOutOfRange) {
-    double d = input;
-    return d >= minInclusive && d < maxExclusive ? whenInRange : whenOutOfRange;
-}
-
-static inline double yLimitedInterpolatable(double input, double whenInRange, int minY, int maxY, int whenOutOfRange) {
-    return rangeChoice(input, minY, maxY + 1, whenInRange, whenOutOfRange);
-}
-
 double sampleNoodle(NoiseCaveParameters *params, int x, int y, int z) {
     double densityFunction2 = yLimitedInterpolatable(y, sampleDoublePerlin(&params->noodle, x, y, z), -60, 320, -1);
     double densityFunction3 = yLimitedInterpolatable(y, map(sampleDoublePerlin(&params->noodleThickness, x, y, z), -1.0, 1.0, -0.05, -0.1), -60, 320, 0);
@@ -2437,22 +2458,6 @@ double sampleUnderground(NoiseCaveParameters *params, int x, int y, int z, doubl
     double l = samplePillars(params, x, y, z);
     double m = l >= -1000000.0 && l < 0.03 ? -1000000.0 : l;
     return fmax(k, m);
-}
-
-static inline double postProcess(double densityFunction) {
-    double clamped = clamp(densityFunction * 0.64, -1.0, 1.0);
-    return clamped / 2.0 - clamped * clamped * clamped / 24.0;
-}
-
-static inline double slide(double input, int minY, int height, int topStartOffset, int topEndOffset, double topDelta, int bottomStartOffset, int bottomEndOffset, double bottomDelta, int y) {
-    double densityFunction2 = clampedMap(y, minY + height - topStartOffset, minY + height - topEndOffset, 1.0, 0.0);
-    double densityFunction = lerp(densityFunction2, topDelta, input);
-    double densityFunction3 = clampedMap(y, minY + bottomStartOffset, minY + bottomEndOffset, 0.0, 1.0);
-    return lerp(densityFunction3, bottomDelta, densityFunction);
-}
-
-static inline double slideOverworld(double densityFunction, int y) {
-    return slide(densityFunction, -64, 384, 80, 64, -0.078125, 0, 24, 0.1171875, y);
 }
 
 double sampleFinalDensity(NoiseCaveParameters *params, int x, int y, int z) {
