@@ -2293,6 +2293,7 @@ int initTerrainNoise(TerrainNoiseParameters *params, uint64_t ws, int mc) {
 }
 
 /// alias for clampedMap
+ATTR(always_inline)
 static inline double yClampedGradient(double y, int fromY, int toY, double fromValue, double toValue) {
     return clampedMap(y, fromY, toY, fromValue, toValue);
 }
@@ -2305,6 +2306,7 @@ static inline double rangeChoice(double input, double minInclusive, double maxEx
     return input >= minInclusive && input < maxExclusive ? whenInRange : whenOutOfRange;
 }
 
+ATTR(always_inline)
 static inline double yLimitedInterpolatable(double input, double whenInRange, int minY, int maxY, int whenOutOfRange) {
     return rangeChoice(input, minY, maxY + 1, whenInRange, whenOutOfRange);
 }
@@ -2345,6 +2347,11 @@ static inline double getSpaghettiRarity3d(double value) {
     } else {
         return value < 0.5 ? 1.5 : 2.0;
     }
+}
+
+static inline double noiseGradientDensity(double min, double max) {
+    double f = max * min;
+    return f > 0. ? f * 4. : f;
 }
 
 double sampleSpaghettiRoughness(TerrainNoiseParameters *params, int x, int y, int z) {
@@ -2392,11 +2399,6 @@ double sampleEntrances(TerrainNoiseParameters *params, int x, int y, int z) {
 double sampleCaveLayer(TerrainNoiseParameters *params, int x, int y, int z) {
     double caveLayer = sampleDoublePerlin(&params->caveLayer, x, y * 8, z);
     return caveLayer * caveLayer * 4.0;
-}
-
-double noiseGradientDensity(double min, double max) {
-    double f = max * min;
-    return f > 0. ? f * 4. : f;
 }
 
 double sampleSlopedCheese(TerrainNoiseParameters *params, int x, int y, int z) {
