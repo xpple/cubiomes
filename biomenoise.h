@@ -166,7 +166,7 @@ STRUCT(BlendedNoise)
     PerlinNoise oct[16+16+8];
 };
 
-STRUCT(NoiseCaveParameters)
+STRUCT(TerrainNoiseParameters)
 {
     BiomeNoise bn;
     BlendedNoise bln;
@@ -348,37 +348,37 @@ int getBiomeDepthAndScale(int id, double *depth, double *scale, int *grass);
 // Gets the range in the parent/source layer which may be accessed by voronoi.
 Range getVoronoiSrcRange(Range r);
 
-int initCaveNoise(NoiseCaveParameters *params, uint64_t ws, int mc);
-
 int initBlendedNoise(BlendedNoise *bn, uint64_t lo, uint64_t hi, int dim);
 
 double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z);
 
-double sampleSpaghettiRoughness(NoiseCaveParameters *params, int x, int y, int z);
+int initTerrainNoise(TerrainNoiseParameters *params, uint64_t ws, int mc);
 
-double sampleSpaghetti2dThicknessModulator(NoiseCaveParameters *params, int x, int y, int z);
+double sampleSpaghettiRoughness(TerrainNoiseParameters *params, int x, int y, int z);
 
-double sampleSpaghetti2d(NoiseCaveParameters *params, int x, int y, int z);
+double sampleSpaghetti2dThicknessModulator(TerrainNoiseParameters *params, int x, int y, int z);
 
-double sampleSpaghetti3d(NoiseCaveParameters *params, int x, int y, int z);
+double sampleSpaghetti2d(TerrainNoiseParameters *params, int x, int y, int z);
 
-double sampleCaveEntrance(NoiseCaveParameters *params, int x, int y, int z);
+double sampleSpaghetti3d(TerrainNoiseParameters *params, int x, int y, int z);
 
-double sampleEntrances(NoiseCaveParameters *params, int x, int y, int z);
+double sampleCaveEntrance(TerrainNoiseParameters *params, int x, int y, int z);
 
-double sampleCaveLayer(NoiseCaveParameters *params, int x, int y, int z);
+double sampleEntrances(TerrainNoiseParameters *params, int x, int y, int z);
 
-double sampleSlopedCheese(NoiseCaveParameters *params, int x, int y, int z);
+double sampleCaveLayer(TerrainNoiseParameters *params, int x, int y, int z);
 
-double sampleCaveCheese(NoiseCaveParameters *params, int x, int y, int z, double slopedCheese);
+double sampleSlopedCheese(TerrainNoiseParameters *params, int x, int y, int z);
 
-double samplePillars(NoiseCaveParameters *params, int x, int y, int z);
+double sampleCaveCheese(TerrainNoiseParameters *params, int x, int y, int z, double slopedCheese);
 
-double sampleNoodle(NoiseCaveParameters *params, int x, int y, int z);
+double samplePillars(TerrainNoiseParameters *params, int x, int y, int z);
 
-double sampleUnderground(NoiseCaveParameters *params, int x, int y, int z, double slopedCheese);
+double sampleNoodle(TerrainNoiseParameters *params, int x, int y, int z);
 
-double sampleFinalDensity(NoiseCaveParameters *params, int x, int y, int z);
+double sampleUnderground(TerrainNoiseParameters *params, int x, int y, int z, double slopedCheese);
+
+double sampleFinalDensity(TerrainNoiseParameters *params, int x, int y, int z);
 
 #ifdef __cplusplus
 }
