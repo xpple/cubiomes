@@ -2315,10 +2315,10 @@ static inline double postProcess(double densityFunction) {
 }
 
 static inline double slide(double input, int minY, int height, int topStartOffset, int topEndOffset, double topDelta, int bottomStartOffset, int bottomEndOffset, double bottomDelta, int y) {
-    double densityFunction2 = clampedMap(y, minY + height - topStartOffset, minY + height - topEndOffset, 1.0, 0.0);
-    double densityFunction = lerp(densityFunction2, topDelta, input);
-    double densityFunction3 = clampedMap(y, minY + bottomStartOffset, minY + bottomEndOffset, 0.0, 1.0);
-    return lerp(densityFunction3, bottomDelta, densityFunction);
+    double a = clampedMap(y, minY + height - topStartOffset, minY + height - topEndOffset, 1.0, 0.0);
+    double b = lerp(a, topDelta, input);
+    double c = clampedMap(y, minY + bottomStartOffset, minY + bottomEndOffset, 0.0, 1.0);
+    return lerp(c, bottomDelta, b);
 }
 
 static inline double slideOverworld(double densityFunction, int y) {
@@ -2348,8 +2348,8 @@ static inline double getSpaghettiRarity3d(double value) {
 }
 
 double sampleSpaghettiRoughness(NoiseCaveParameters *params, int x, int y, int z) {
-    double d = map(sampleDoublePerlin(&params->spaghettiRoughnessModulator, x, y, z), -1.0, 1.0, 0.0, 0.1);
-    return (0.4 - fabs(sampleDoublePerlin(&params->spaghettiRoughness, x, y, z))) * d;
+    double spaghettiRoughnessModulator = map(sampleDoublePerlin(&params->spaghettiRoughnessModulator, x, y, z), -1.0, 1.0, 0.0, 0.1);
+    return (0.4 - fabs(sampleDoublePerlin(&params->spaghettiRoughness, x, y, z))) * spaghettiRoughnessModulator;
 }
 
 double sampleSpaghetti2dThicknessModulator(NoiseCaveParameters *params, int x, int y, int z) {
@@ -2357,16 +2357,15 @@ double sampleSpaghetti2dThicknessModulator(NoiseCaveParameters *params, int x, i
 }
 
 double sampleSpaghetti2d(NoiseCaveParameters *params, int x, int y, int z) {
-    double d = sampleDoublePerlin(&params->spaghetti2dModulator, x * 2, y, z * 2);
-    double e = getSpaghettiRarity2d(d);
-    double h = map(sampleDoublePerlin(&params->spaghetti2dThickness, x * 2, y, z * 2), -1.0, 1.0, 0.6, 1.3);
-    double l = sampleDoublePerlin(&params->spaghetti2d, x / e, y / e, z / e);
-    double n = fabs(e * l) - 0.083 * h;
-    int minY = params->bn.mc > MC_1_17 ? -64 : 0;
-    double q = map(sampleDoublePerlin(&params->spaghetti2dElevation, x, 0.0, z), -1.0, 1.0, floorDiv(minY, 8), 8.0);
-    double r = fabs(q - y / 8.0) - h;
-    r = r * r * r;
-    return clamp(fmax(r, n), -1.0, 1.0);
+    double spaghetti2dModulator = sampleDoublePerlin(&params->spaghetti2dModulator, x * 2, y, z * 2);
+    double rarity = getSpaghettiRarity2d(spaghetti2dModulator);
+    double spaghetti2dThickness = map(sampleDoublePerlin(&params->spaghetti2dThickness, x * 2, y, z * 2), -1.0, 1.0, 0.6, 1.3);
+    double spaghetti2d = sampleDoublePerlin(&params->spaghetti2d, x / rarity, y / rarity, z / rarity);
+    double a = fabs(rarity * spaghetti2d) - 0.083 * spaghetti2dThickness;
+    const int minY = params->bn.mc > MC_1_17 ? -64 : 0;
+    double spaghetti2dElevation = map(sampleDoublePerlin(&params->spaghetti2dElevation, x, 0.0, z), -1.0, 1.0, floorDiv(minY, 8), 8.0);
+    double b = fabs(spaghetti2dElevation - y / 8.0) - spaghetti2dThickness;
+    return clamp(fmax(b * b * b, a), -1.0, 1.0);
 }
 
 double sampleSpaghetti3d(NoiseCaveParameters *params, int x, int y, int z) {
@@ -2391,8 +2390,8 @@ double sampleEntrances(NoiseCaveParameters *params, int x, int y, int z) {
 }
 
 double sampleCaveLayer(NoiseCaveParameters *params, int x, int y, int z) {
-    double d = sampleDoublePerlin(&params->caveLayer, x, y * 8, z);
-    return d * d * 4.0;
+    double caveLayer = sampleDoublePerlin(&params->caveLayer, x, y * 8, z);
+    return caveLayer * caveLayer * 4.0;
 }
 
 double noiseGradientDensity(double min, double max) {
@@ -2425,44 +2424,41 @@ double sampleSlopedCheese(NoiseCaveParameters *params, int x, int y, int z) {
 }
 
 double sampleCaveCheese(NoiseCaveParameters *params, int x, int y, int z, double slopedCheese) {
-    double d = sampleDoublePerlin(&params->caveCheese, x, y * 0.6666666666666666, z);
-    return clamp(0.27 + d, -1.0, 1.0) + clamp(1.5 + (-0.64 * slopedCheese), 0.0, 0.5);
+    double caveCheese = sampleDoublePerlin(&params->caveCheese, x, y * 0.6666666666666666, z);
+    return clamp(0.27 + caveCheese, -1.0, 1.0) + clamp(1.5 + (-0.64 * slopedCheese), 0.0, 0.5);
 }
 
 double samplePillars(NoiseCaveParameters *params, int x, int y, int z) {
-    double d = sampleDoublePerlin(&params->pillar, x * 25, y * 0.3, z * 25);
-    double e = map(sampleDoublePerlin(&params->pillarRareness, x, y, z), -1.0, 1.0, 0.0, -2.0);
-    double f = map(sampleDoublePerlin(&params->pillarThickness, x, y, z), -1.0, 1.0, 0.0, 1.1);
-    double g = d * 2.0 + e;
-    return g * f * f * f;
+    double pillar = sampleDoublePerlin(&params->pillar, x * 25, y * 0.3, z * 25);
+    double pillarRareness = map(sampleDoublePerlin(&params->pillarRareness, x, y, z), -1.0, 1.0, 0.0, -2.0);
+    double pillarThickness = map(sampleDoublePerlin(&params->pillarThickness, x, y, z), -1.0, 1.0, 0.0, 1.1);
+    return (pillar * 2.0 + pillarRareness) * pillarThickness * pillarThickness * pillarThickness;
 }
 
 double sampleNoodle(NoiseCaveParameters *params, int x, int y, int z) {
-    double densityFunction2 = yLimitedInterpolatable(y, sampleDoublePerlin(&params->noodle, x, y, z), -60, 320, -1);
-    double densityFunction3 = yLimitedInterpolatable(y, map(sampleDoublePerlin(&params->noodleThickness, x, y, z), -1.0, 1.0, -0.05, -0.1), -60, 320, 0);
-    double densityFunction4 = yLimitedInterpolatable(y, sampleDoublePerlin(&params->noodleRidgeA, x * 2.6666666666666665, y * 2.6666666666666665, z * 2.6666666666666665), -60, 320, 0);
-    double densityFunction5 = yLimitedInterpolatable(y, sampleDoublePerlin(&params->noodleRidgeB, x * 2.6666666666666665, y * 2.6666666666666665, z * 2.6666666666666665), -60, 320, 0);
-    double densityFunction6 = 1.5 * fmax(fabs(densityFunction4), fabs(densityFunction5));
-    return rangeChoice(densityFunction2, -1000000.0, 0.0, 64.0, densityFunction3 + densityFunction6);
+    double noodle = yLimitedInterpolatable(y, sampleDoublePerlin(&params->noodle, x, y, z), -60, 320, -1);
+    double noodleThickness = yLimitedInterpolatable(y, map(sampleDoublePerlin(&params->noodleThickness, x, y, z), -1.0, 1.0, -0.05, -0.1), -60, 320, 0);
+    double noodleRidgeA = yLimitedInterpolatable(y, sampleDoublePerlin(&params->noodleRidgeA, x * 2.6666666666666665, y * 2.6666666666666665, z * 2.6666666666666665), -60, 320, 0);
+    double noodleRidgeB = yLimitedInterpolatable(y, sampleDoublePerlin(&params->noodleRidgeB, x * 2.6666666666666665, y * 2.6666666666666665, z * 2.6666666666666665), -60, 320, 0);
+    double scaledMax = 1.5 * fmax(fabs(noodleRidgeA), fabs(noodleRidgeB));
+    return rangeChoice(noodle, -1000000.0, 0.0, 64.0, noodleThickness + scaledMax);
 }
 
 double sampleUnderground(NoiseCaveParameters *params, int x, int y, int z, double slopedCheese) {
-    double d = sampleSpaghetti2d(params, x, y, z);
-    double e = sampleSpaghettiRoughness(params, x, y, z);
-    double f = sampleCaveLayer(params, x, y, z);
-    double g = f + sampleCaveCheese(params, x, y, z, slopedCheese);
-    double h = sampleEntrances(params, x, y, z);
-    double i = fmin(g, h);
-    double j = d + e;
-    double k = fmin(i, j);
-    double l = samplePillars(params, x, y, z);
-    double m = l >= -1000000.0 && l < 0.03 ? -1000000.0 : l;
-    return fmax(k, m);
+    double spaghetti2d = sampleSpaghetti2d(params, x, y, z);
+    double spaghettiRoughness = sampleSpaghettiRoughness(params, x, y, z);
+    double caveLayer = sampleCaveLayer(params, x, y, z);
+    double entrances = sampleEntrances(params, x, y, z);
+    double a = fmin(caveLayer + sampleCaveCheese(params, x, y, z, slopedCheese), entrances);
+    double b = fmin(a, spaghetti2d + spaghettiRoughness);
+    double pillars = samplePillars(params, x, y, z);
+    double c = pillars >= -1000000.0 && pillars < 0.03 ? -1000000.0 : pillars;
+    return fmax(b, c);
 }
 
 double sampleFinalDensity(NoiseCaveParameters *params, int x, int y, int z) {
-    double densityFunction13 = sampleSlopedCheese(params, x, y, z);
-    double densityFunction14 = fmin(densityFunction13, 5.0 * sampleEntrances(params, x, y, z));
-    double densityFunction15 = rangeChoice(densityFunction13, -1000000.0, 1.5625, densityFunction14, sampleUnderground(params, x, y, z, densityFunction13));
-    return fmin(postProcess(slideOverworld(densityFunction15, y)), sampleNoodle(params, x, y, z));
+    double slopedCheese = sampleSlopedCheese(params, x, y, z);
+    double a = fmin(slopedCheese, 5.0 * sampleEntrances(params, x, y, z));
+    double b = rangeChoice(slopedCheese, -1000000.0, 1.5625, a, sampleUnderground(params, x, y, z, slopedCheese));
+    return fmin(postProcess(slideOverworld(b, y)), sampleNoodle(params, x, y, z));
 }
