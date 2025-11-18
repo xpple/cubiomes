@@ -143,7 +143,7 @@ double samplePerlin(const PerlinNoise *noise, double d1, double d2, double d3,
 
     if (yamp)
     {
-        double yclamp = ymin < d2 ? ymin : d2;
+        double yclamp = ymin >= 0.0 && ymin < d2 ? ymin : d2;
         d2 -= floor(yclamp / yamp) * yamp;
     }
 
