@@ -1149,7 +1149,7 @@ static Spline* createWeirdnessJaggednessSpline(SplineStack *ss, float magnitude)
     float f = 0.63F * magnitude;
     float g = 0.3F * magnitude;
     Spline *sp = &ss->stack[ss->len++];
-    sp->typ = SP_RIDGES;
+    sp->typ = SP_WEIRDNESS;
     addSplineVal(sp, -0.01F, createFixSpline(ss, f), 0.0F);
     addSplineVal(sp, 0.01F, createFixSpline(ss, g), 0.0F);
     return sp;
@@ -1164,7 +1164,7 @@ static Spline* createRidgeJaggednessSpline(SplineStack *ss, float highWeirdnessM
     float g = peaksAndValleys(0.56666666F);
     float h = (f + g) / 2.0F;
     Spline *sp = &ss->stack[ss->len++];
-    sp->typ = SP_RIDGES; // SP_RIDGES_FOLDED?
+    sp->typ = SP_RIDGES;
     addSplineVal(sp, f, createFixSpline(ss, 0.0F), 0.0F);
     if (midWeirdnessMagnitude > 0.0F) {
         addSplineVal(sp, h, createWeirdnessJaggednessSpline(ss, midWeirdnessMagnitude), 0.0F);
@@ -2403,8 +2403,8 @@ double sampleCaveLayer(TerrainNoiseParameters *params, int x, int y, int z) {
 
 double sampleSlopedCheese(TerrainNoiseParameters *params, int x, int y, int z) {
     // see sampleBiomeNoise
-    double px = (x >> 2) + sampleDoublePerlin(&params->bn.climate[NP_SHIFT], x, 0, z) * 4.0;
-    double pz = (z >> 2) + sampleDoublePerlin(&params->bn.climate[NP_SHIFT], z, x, 0) * 4.0;
+    double px = x * 0.25 + sampleDoublePerlin(&params->bn.climate[NP_SHIFT], x, 0, z);
+    double pz = z * 0.25 + sampleDoublePerlin(&params->bn.climate[NP_SHIFT], z, x, 0);
 
     float c = sampleDoublePerlin(&params->bn.climate[NP_CONTINENTALNESS], px, 0, pz);
     float e = sampleDoublePerlin(&params->bn.climate[NP_EROSION], px, 0, pz);
