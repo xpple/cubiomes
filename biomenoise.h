@@ -160,6 +160,8 @@ STRUCT(BlendedNoise)
     double xzFactor, yFactor;
     double xzMultiplier, yMultiplier;
     double smearScaleMultiplier;
+    double smearedYScale;
+    double factoredSmearedYScale;
     OctaveNoise octmin;
     OctaveNoise octmax;
     OctaveNoise octmain;

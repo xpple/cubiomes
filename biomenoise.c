@@ -1160,9 +1160,9 @@ static inline float peaksAndValleys(float weirdness) {
 }
 
 static Spline* createRidgeJaggednessSpline(SplineStack *ss, float highWeirdnessMagnitude, float midWeirdnessMagnitude) {
-    float f = peaksAndValleys(0.4F);
-    float g = peaksAndValleys(0.56666666F);
-    float h = (f + g) / 2.0F;
+    const float f = peaksAndValleys(0.4F);
+    const float g = peaksAndValleys(0.56666666F);
+    const float h = (f + g) / 2.0F;
     Spline *sp = &ss->stack[ss->len++];
     sp->typ = SP_RIDGES;
     addSplineVal(sp, f, createFixSpline(ss, 0.0F), 0.0F);
@@ -2148,6 +2148,8 @@ int initBlendedNoise(BlendedNoise *bn, uint64_t lo, uint64_t hi, int dim)
     }
     bn->xzMultiplier = 684.412 * bn->xzScale;
     bn->yMultiplier = 684.412 * bn->yScale;
+    bn->smearedYScale = bn->yMultiplier * bn->smearScaleMultiplier;
+    bn->factoredSmearedYScale = bn->smearedYScale / bn->yFactor;
     return 1;
 }
 
@@ -2159,15 +2161,14 @@ double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z)
     const double factoredX = scaledX / bn->xzFactor;
     const double factoredY = scaledY / bn->yFactor;
     const double factoredZ = scaledZ / bn->xzFactor;
-    const double smearedYScale = bn->yMultiplier * bn->smearScaleMultiplier;
-    const double factoredSmearedYScale = smearedYScale / bn->yFactor;
+
     double minSampleTotal = 0.0;
     double maxSampleTotal = 0.0;
     double mainSampleTotal = 0.0;
     double o = 1.0;
 
     for (int octaveIdx = 0; octaveIdx < 8; octaveIdx++) {
-        mainSampleTotal += samplePerlin(&bn->octmain.octaves[octaveIdx], maintainPrecision(factoredX * o), maintainPrecision(factoredY * o), maintainPrecision(factoredZ * o), factoredSmearedYScale * o, factoredY * o) / o;
+        mainSampleTotal += samplePerlin(&bn->octmain.octaves[octaveIdx], maintainPrecision(factoredX * o), maintainPrecision(factoredY * o), maintainPrecision(factoredZ * o), bn->factoredSmearedYScale * o, factoredY * o) / o;
         o /= 2.0;
     }
 
@@ -2178,14 +2179,14 @@ double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z)
         double sampleY = maintainPrecision(scaledY * o);
         double sampleX = maintainPrecision(scaledX * o);
         double sampleZ = maintainPrecision(scaledZ * o);
-        double yamp = smearedYScale * o;
-        double ymin = scaledY * o;
+        double yamp = bn->smearedYScale * o;
+        double ymax = scaledY * o;
         if (q < 1.0) {
-            minSampleTotal += samplePerlin(&bn->octmin.octaves[octaveIdx], sampleX, sampleY, sampleZ, yamp, ymin) / o;
+            minSampleTotal += samplePerlin(&bn->octmin.octaves[octaveIdx], sampleX, sampleY, sampleZ, yamp, ymax) / o;
         }
 
         if (q > 0.0) {
-            maxSampleTotal += samplePerlin(&bn->octmax.octaves[octaveIdx], sampleX, sampleY, sampleZ, yamp, ymin) / o;
+            maxSampleTotal += samplePerlin(&bn->octmax.octaves[octaveIdx], sampleX, sampleY, sampleZ, yamp, ymax) / o;
         }
 
         o /= 2.0;
@@ -2403,8 +2404,8 @@ double sampleCaveLayer(TerrainNoiseParameters *params, int x, int y, int z) {
 
 double sampleSlopedCheese(TerrainNoiseParameters *params, int x, int y, int z) {
     // see sampleBiomeNoise
-    double px = x * 0.25 + sampleDoublePerlin(&params->bn.climate[NP_SHIFT], x * 0.25, 0, z * 0.25) * 4;
-    double pz = z * 0.25 + sampleDoublePerlin(&params->bn.climate[NP_SHIFT], z * 0.25, x * 0.25, 0) * 4;
+    double px = x * 0.25 + sampleDoublePerlin(&params->bn.climate[NP_SHIFT], x * 0.25, 0, z * 0.25) * 4.0;
+    double pz = z * 0.25 + sampleDoublePerlin(&params->bn.climate[NP_SHIFT], z * 0.25, x * 0.25, 0) * 4.0;
 
     float c = sampleDoublePerlin(&params->bn.climate[NP_CONTINENTALNESS], px, 0, pz);
     float e = sampleDoublePerlin(&params->bn.climate[NP_EROSION], px, 0, pz);
