@@ -2403,8 +2403,8 @@ double sampleCaveLayer(TerrainNoiseParameters *params, int x, int y, int z) {
 
 double sampleSlopedCheese(TerrainNoiseParameters *params, int x, int y, int z) {
     // see sampleBiomeNoise
-    double px = x * 0.25 + sampleDoublePerlin(&params->bn.climate[NP_SHIFT], x, 0, z);
-    double pz = z * 0.25 + sampleDoublePerlin(&params->bn.climate[NP_SHIFT], z, x, 0);
+    double px = x * 0.25 + sampleDoublePerlin(&params->bn.climate[NP_SHIFT], x * 0.25, 0, z * 0.25) * 4;
+    double pz = z * 0.25 + sampleDoublePerlin(&params->bn.climate[NP_SHIFT], z * 0.25, x * 0.25, 0) * 4;
 
     float c = sampleDoublePerlin(&params->bn.climate[NP_CONTINENTALNESS], px, 0, pz);
     float e = sampleDoublePerlin(&params->bn.climate[NP_EROSION], px, 0, pz);
