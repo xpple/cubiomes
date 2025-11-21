@@ -2111,9 +2111,14 @@ Range getVoronoiSrcRange(Range r)
 // Terrain noise
 //==============================================================================
 
-int initBlendedNoise(BlendedNoise *bn, uint64_t lo, uint64_t hi, int dim)
+int initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
 {
     static const uint64_t md5_terrain[2] = {0x1ee555222ef96f14, 0xe2bedfdbebe43d33}; // minecraft:terrain
+
+    Xoroshiro wsx;
+    xSetSeed(&wsx, ws);
+    const uint64_t lo = xNextLong(&wsx);
+    const uint64_t hi = xNextLong(&wsx);
 
     Xoroshiro xr = {lo ^ md5_terrain[0], hi ^ md5_terrain[1]};
     xOctaveLegacyInit(&bn->octmin, &xr, bn->oct+0, -15, 16);
@@ -2223,7 +2228,7 @@ int initTerrainNoise(TerrainNoiseParameters *params, uint64_t ws, int mc) {
     static const uint64_t md5_noodle_ridge_b[2] = {0xeb232b4b89fdde91, 0x031ee565ead84e5c}; // minecraft:noodle_ridge_b
     static const uint64_t md5_jagged[2] = {0xf902c0a7c9daa994, 0x71ecd96a8da5e503}; // minecraft:jagged
 
-    if (mc <= MC_1_16) {
+    if (mc <= MC_1_17) {
         return 0;
     }
 
@@ -2235,7 +2240,7 @@ int initTerrainNoise(TerrainNoiseParameters *params, uint64_t ws, int mc) {
 
     initBiomeNoise(&params->bn, mc);
     setBiomeSeed(&params->bn, ws, 0);
-    if (!initBlendedNoise(&params->bln, lo, hi, DIM_OVERWORLD)) {
+    if (!initBlendedNoise(&params->bln, ws, DIM_OVERWORLD)) {
         return 0;
     }
     params->factorSpline = createFactorSpline(&params->ss);
@@ -2377,8 +2382,7 @@ double sampleSpaghetti2d(TerrainNoiseParameters *params, int x, int y, int z) {
     double spaghetti2dThickness = map(sampleDoublePerlin(&params->spaghetti2dThickness, x * 2, y, z * 2), -1.0, 1.0, 0.6, 1.3);
     double spaghetti2d = sampleDoublePerlin(&params->spaghetti2d, x / rarity, y / rarity, z / rarity);
     double a = fabs(rarity * spaghetti2d) - 0.083 * spaghetti2dThickness;
-    const int minY = params->bn.mc > MC_1_17 ? -64 : 0;
-    double spaghetti2dElevation = map(sampleDoublePerlin(&params->spaghetti2dElevation, x, 0.0, z), -1.0, 1.0, floorDiv(minY, 8), 8.0);
+    double spaghetti2dElevation = map(sampleDoublePerlin(&params->spaghetti2dElevation, x, 0.0, z), -1.0, 1.0, floorDiv(-64, 8), 8.0);
     double b = fabs(spaghetti2dElevation - y / 8.0) - spaghetti2dThickness;
     return clamp(fmax(b * b * b, a), -1.0, 1.0);
 }

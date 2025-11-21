@@ -350,7 +350,7 @@ int getBiomeDepthAndScale(int id, double *depth, double *scale, int *grass);
 // Gets the range in the parent/source layer which may be accessed by voronoi.
 Range getVoronoiSrcRange(Range r);
 
-int initBlendedNoise(BlendedNoise *bn, uint64_t lo, uint64_t hi, int dim);
+int initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim);
 
 double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z);
 
