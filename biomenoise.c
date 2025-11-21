@@ -1137,7 +1137,6 @@ static Spline* createFactorSpline(SplineStack *ss) {
     sp->typ = SP_CONTINENTALNESS;
     addSplineVal(sp, -0.19F, createFixSpline(ss, 3.95F), 0.0F);
 
-    // TODO apply AMPLIFIED_FACTOR when amplified terrain is enabled
     addSplineVal(sp, -0.15f, createErosionFactorSpline(ss, 6.25f, 1), 0.0F);
     addSplineVal(sp, -0.1f, createErosionFactorSpline(ss, 5.47f, 1), 0.0F);
     addSplineVal(sp, 0.03f, createErosionFactorSpline(ss, 5.08f, 1), 0.0F);
@@ -1200,7 +1199,6 @@ static Spline* createJaggednessSpline(SplineStack *ss) {
 
     addSplineVal(sp, -0.11F, createFixSpline(ss, 0.0F), 0.0F);
 
-    // TODO apply AMPLIFIED_FACTOR when amplified terrain is enabled
     addSplineVal(sp, 0.03F, createErosionJaggednessSpline(ss, 1.0F, 0.5F, 0.0F, 0.0F), 0.0F);
     addSplineVal(sp, 0.65F, createErosionJaggednessSpline(ss, 1.0F, 1.0F, 1.0F, 0.0F), 0.0F);
     return sp;
