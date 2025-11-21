@@ -49,11 +49,13 @@ void perlinInit(PerlinNoise *noise, uint64_t *seed);
 void xPerlinInit(PerlinNoise *noise, Xoroshiro *xr);
 
 double samplePerlin(const PerlinNoise *noise, double x, double y, double z,
-        double yamp, double ymin);
+        double yamp, double ymax);
 double sampleSimplex2D(const PerlinNoise *noise, double x, double y);
 
 /// Perlin Octaves
 void octaveInit(OctaveNoise *noise, uint64_t *seed, PerlinNoise *octaves,
+        int omin, int len);
+void xOctaveLegacyInit(OctaveNoise *noise, Xoroshiro *xr, PerlinNoise *octaves,
         int omin, int len);
 void octaveInitBeta(OctaveNoise *noise, uint64_t *seed, PerlinNoise *octaves,
         int octcnt, double lac, double lacMul, double persist, double persistMul);

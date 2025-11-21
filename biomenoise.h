@@ -154,6 +154,51 @@ STRUCT(BiomeTree)
     uint32_t len;
 };
 
+STRUCT(BlendedNoise)
+{
+    double xzScale, yScale;
+    double xzFactor, yFactor;
+    double xzMultiplier, yMultiplier;
+    double smearScaleMultiplier;
+    double smearedYScale;
+    double factoredSmearedYScale;
+    OctaveNoise octmin;
+    OctaveNoise octmax;
+    OctaveNoise octmain;
+    PerlinNoise oct[16+16+8];
+};
+
+STRUCT(TerrainNoiseParameters)
+{
+    BiomeNoise bn;
+    BlendedNoise bln;
+    SplineStack ss;
+    Spline* factorSpline;
+    Spline* jaggednessSpline;
+    PerlinNoise oct[2*45];
+    DoublePerlinNoise pillar;
+    DoublePerlinNoise pillarRareness;
+    DoublePerlinNoise pillarThickness;
+    DoublePerlinNoise spaghetti2d;
+    DoublePerlinNoise spaghetti2dElevation;
+    DoublePerlinNoise spaghetti2dModulator;
+    DoublePerlinNoise spaghetti2dThickness;
+    DoublePerlinNoise spaghetti3d1;
+    DoublePerlinNoise spaghetti3d2;
+    DoublePerlinNoise spaghetti3dRarity;
+    DoublePerlinNoise spaghetti3dThickness;
+    DoublePerlinNoise spaghettiRoughness;
+    DoublePerlinNoise spaghettiRoughnessModulator;
+    DoublePerlinNoise caveEntrance;
+    DoublePerlinNoise caveLayer;
+    DoublePerlinNoise caveCheese;
+    DoublePerlinNoise noodle;
+    DoublePerlinNoise noodleThickness;
+    DoublePerlinNoise noodleRidgeA;
+    DoublePerlinNoise noodleRidgeB;
+    DoublePerlinNoise jagged;
+};
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -305,6 +350,196 @@ int getBiomeDepthAndScale(int id, double *depth, double *scale, int *grass);
 // Gets the range in the parent/source layer which may be accessed by voronoi.
 Range getVoronoiSrcRange(Range r);
 
+/**
+ * Initialise a blended noise instance.
+ *
+ * @param bn the blended noise instance
+ * @param ws the world seed
+ * @param dim the dimension
+ * @return 0 on failure
+ */
+int initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim);
+
+/**
+ * Sample `base_3d_noise` using a blended noise instance.
+ *
+ * @param bn the blended noise instance
+ * @param x the world X-coordinate
+ * @param y the world Y-coordinate
+ * @param z the world Z-coordinate
+ * @return the sampled value
+ */
+double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z);
+
+/**
+ * Initialise terrain noise parameters with the world seed.
+ *
+ * @param params the terrain noise parameters
+ * @param ws the world seed
+ * @param mc the Minecraft version
+ * @return 0 on failure
+ */
+int initTerrainNoise(TerrainNoiseParameters *params, uint64_t ws, int mc);
+
+/**
+ * Sample `overworld/caves/spaghetti_roughness_function`.
+ *
+ * @param params the terrain noise parameters
+ * @param x the world X-coordinate
+ * @param y the world Y-coordinate
+ * @param z the world Z-coordinate
+ * @return the sampled value
+ */
+double sampleSpaghettiRoughness(TerrainNoiseParameters *params, int x, int y, int z);
+
+/**
+ * Sample `overworld/caves/spaghetti_2d_thickness_modulator`.
+ *
+ * @param params the terrain noise parameters
+ * @param x the world X-coordinate
+ * @param y the world Y-coordinate
+ * @param z the world Z-coordinate
+ * @return the sampled value
+ */
+double sampleSpaghetti2dThicknessModulator(TerrainNoiseParameters *params, int x, int y, int z);
+
+/**
+ * Sample `overworld/caves/spaghetti_2d`.
+ *
+ * @param params the terrain noise parameters
+ * @param x the world X-coordinate
+ * @param y the world Y-coordinate
+ * @param z the world Z-coordinate
+ * @return the sampled value
+ */
+double sampleSpaghetti2d(TerrainNoiseParameters *params, int x, int y, int z);
+
+/**
+ * Sample `spaghetti_3d`.
+ *
+ * @param params the terrain noise parameters
+ * @param x the world X-coordinate
+ * @param y the world Y-coordinate
+ * @param z the world Z-coordinate
+ * @return the sampled value
+ */
+double sampleSpaghetti3d(TerrainNoiseParameters *params, int x, int y, int z);
+
+/**
+ * Sample `cave_entrance`.
+ *
+ * @param params the terrain noise parameters
+ * @param x the world X-coordinate
+ * @param y the world Y-coordinate
+ * @param z the world Z-coordinate
+ * @return the sampled value
+ */
+double sampleCaveEntrance(TerrainNoiseParameters *params, int x, int y, int z);
+
+/**
+ * Sample `overworld/caves/entrances`.
+ *
+ * @param params the terrain noise parameters
+ * @param x the world X-coordinate
+ * @param y the world Y-coordinate
+ * @param z the world Z-coordinate
+ * @param spaghettiRoughness the value of `overworld/caves/spaghetti_roughness_function`
+ * at the same location
+ * @return the sampled value
+ */
+double sampleEntrances(TerrainNoiseParameters *params, int x, int y, int z, double spaghettiRoughness);
+
+/**
+ * Sample `cave_layer`.
+ *
+ * @param params the terrain noise parameters
+ * @param x the world X-coordinate
+ * @param y the world Y-coordinate
+ * @param z the world Z-coordinate
+ * @return the sampled value
+ */
+double sampleCaveLayer(TerrainNoiseParameters *params, int x, int y, int z);
+
+/**
+ * Sample `overworld/sloped_cheese`.
+ *
+ * @param params the terrain noise parameters
+ * @param x the world X-coordinate
+ * @param y the world Y-coordinate
+ * @param z the world Z-coordinate
+ * @return the sampled value
+ */
+double sampleSlopedCheese(TerrainNoiseParameters *params, int x, int y, int z);
+
+/**
+ * Sample `cave_cheese`.
+ *
+ * @param params the terrain noise parameters
+ * @param x the world X-coordinate
+ * @param y the world Y-coordinate
+ * @param z the world Z-coordinate
+ * @param slopedCheese the value of `overworld/sloped_cheese` at the same location
+ * @return the sampled value
+ */
+double sampleCaveCheese(TerrainNoiseParameters *params, int x, int y, int z, double slopedCheese);
+
+/**
+ * Sample `overworld/caves/pillars`.
+ *
+ * @param params the terrain noise parameters
+ * @param x the world X-coordinate
+ * @param y the world Y-coordinate
+ * @param z the world Z-coordinate
+ * @return the sampled value
+ */
+double samplePillars(TerrainNoiseParameters *params, int x, int y, int z);
+
+/**
+ * Sample `overworld/caves/noodle`.
+ *
+ * @param params the terrain noise parameters
+ * @param x the world X-coordinate
+ * @param y the world Y-coordinate
+ * @param z the world Z-coordinate
+ * @return the sampled value
+ */
+double sampleNoodle(TerrainNoiseParameters *params, int x, int y, int z);
+
+/**
+ * Sample `underground`.
+ *
+ * @param params the terrain noise parameters
+ * @param x the world X-coordinate
+ * @param y the world Y-coordinate
+ * @param z the world Z-coordinate
+ * @param spaghettiRoughness, entrances, slopedCheese the values of `overworld/caves/spaghetti_roughness_function`,
+ * `overworld/caves/entrances` and `overworld/sloped_cheese` at the same location
+ * @return the sampled value
+ */
+double sampleUnderground(TerrainNoiseParameters *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese);
+
+/**
+ * Sample `final_density`.
+ *
+ * @param params the terrain noise parameters
+ * @param x the world X-coordinate
+ * @param y the world Y-coordinate
+ * @param z the world Z-coordinate
+ * @param spaghettiRoughness, entrances, slopedCheese the values of `overworld/caves/spaghetti_roughness_function`,
+ * `overworld/caves/entrances` and `overworld/sloped_cheese` at the same location
+ * @return the sampled value
+ */
+double sampleFinalDensity(TerrainNoiseParameters *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese);
+
+/**
+ * Sample `preliminary_surface_level`.
+ *
+ * @param params the terrain noise parameters
+ * @param x the world X-coordinate
+ * @param z the world Z-coordinate
+ * @return the preliminary surface Y-level
+ */
+int samplePreliminarySurfaceLevel(TerrainNoiseParameters *params, int x, int z);
 
 #ifdef __cplusplus
 }

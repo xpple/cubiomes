@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.15)
 project(cubiomes)
 
 if (NOT CMAKE_BUILD_TYPE)
@@ -136,6 +136,10 @@ set_property(TARGET objects PROPERTY POSITION_INDEPENDENT_CODE 1)
 
 add_library(cubiomes SHARED $<TARGET_OBJECTS:objects>)
 add_library(cubiomes_static STATIC $<TARGET_OBJECTS:objects>)
+
+if (WIN32)
+	set_target_properties(cubiomes PROPERTIES PREFIX "")
+endif()
 
 install(TARGETS cubiomes cubiomes_static DESTINATION lib)
 install(FILES ${HEADERS} DESTINATION include)
