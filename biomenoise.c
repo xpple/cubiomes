@@ -2303,12 +2303,19 @@ static inline double mapFromUnitTo(double input, double fromY, double toY) {
     return ((fromY + toY) * 0.5) + (((toY - fromY) * 0.5) * input);
 }
 
+static inline double remap(double value, double inMin, double inMax, double outMin, double outMax) {
+    const double slope = (outMax - outMin) / (inMax - inMin);
+    const double intercept = outMin - inMin * slope;
+    return value * slope + intercept;
+}
+
 static inline double rangeChoice(double input, double minInclusive, double maxExclusive, double whenInRange, double whenOutOfRange) {
     return input >= minInclusive && input < maxExclusive ? whenInRange : whenOutOfRange;
 }
 
 ATTR(always_inline)
 static inline double yLimitedInterpolatable(double input, double whenInRange, int minY, int maxY, int whenOutOfRange) {
+    // interpolate?
     return rangeChoice(input, minY, maxY + 1, whenInRange, whenOutOfRange);
 }
 
@@ -2390,9 +2397,8 @@ double sampleCaveEntrance(TerrainNoiseParameters *params, int x, int y, int z) {
     return caveEntrance + 0.37 + yClampedGradient(y, -10, 30, 0.3, 0.0);
 }
 
-double sampleEntrances(TerrainNoiseParameters *params, int x, int y, int z) {
+double sampleEntrances(TerrainNoiseParameters *params, int x, int y, int z, double spaghettiRoughness) {
     double spaghetti3d = sampleSpaghetti3d(params, x, y, z);
-    double spaghettiRoughness = sampleSpaghettiRoughness(params, x, y, z);
     double caveEntrance = sampleCaveEntrance(params, x, y, z);
     return fmin(caveEntrance, spaghettiRoughness + spaghetti3d);
 }
@@ -2426,9 +2432,8 @@ double sampleSlopedCheese(TerrainNoiseParameters *params, int x, int y, int z) {
     return density + sampleBase3dNoise(&params->bln, x, y, z);
 }
 
-double sampleCaveCheese(TerrainNoiseParameters *params, int x, int y, int z) {
+double sampleCaveCheese(TerrainNoiseParameters *params, int x, int y, int z, double slopedCheese) {
     double caveCheese = sampleDoublePerlin(&params->caveCheese, x, y * 0.6666666666666666, z);
-    double slopedCheese = sampleSlopedCheese(params, x, y, z);
     return clamp(0.27 + caveCheese, -1.0, 1.0) + clamp(1.5 + (-0.64 * slopedCheese), 0.0, 0.5);
 }
 
@@ -2448,21 +2453,50 @@ double sampleNoodle(TerrainNoiseParameters *params, int x, int y, int z) {
     return rangeChoice(noodle, -1000000.0, 0.0, 64.0, noodleThickness + scaledMax);
 }
 
-double sampleUnderground(TerrainNoiseParameters *params, int x, int y, int z) {
+double sampleUnderground(TerrainNoiseParameters *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese) {
     double spaghetti2d = sampleSpaghetti2d(params, x, y, z);
-    double spaghettiRoughness = sampleSpaghettiRoughness(params, x, y, z);
     double caveLayer = sampleCaveLayer(params, x, y, z);
-    double entrances = sampleEntrances(params, x, y, z);
-    double a = fmin(caveLayer + sampleCaveCheese(params, x, y, z), entrances);
+    double a = fmin(caveLayer + sampleCaveCheese(params, x, y, z, slopedCheese), entrances);
     double b = fmin(a, spaghetti2d + spaghettiRoughness);
     double pillars = samplePillars(params, x, y, z);
     double c = pillars >= -1000000.0 && pillars < 0.03 ? -1000000.0 : pillars;
     return fmax(b, c);
 }
 
-double sampleFinalDensity(TerrainNoiseParameters *params, int x, int y, int z) {
-    double slopedCheese = sampleSlopedCheese(params, x, y, z);
-    double a = fmin(slopedCheese, 5.0 * sampleEntrances(params, x, y, z));
-    double b = rangeChoice(slopedCheese, -1000000.0, 1.5625, a, sampleUnderground(params, x, y, z));
+double sampleFinalDensity(TerrainNoiseParameters *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese) {
+    double a = fmin(slopedCheese, 5.0 * entrances);
+    double b = rangeChoice(slopedCheese, -1000000.0, 1.5625, a, sampleUnderground(params, x, y, z, spaghettiRoughness, entrances, slopedCheese));
     return fmin(postProcess(slideOverworld(b, y)), sampleNoodle(params, x, y, z));
+}
+
+int samplePreliminarySurfaceLevel(TerrainNoiseParameters *params, int x, int z) {
+    double px = x * 0.25 + sampleDoublePerlin(&params->bn.climate[NP_SHIFT], x * 0.25, 0, z * 0.25) * 4.0;
+    double pz = z * 0.25 + sampleDoublePerlin(&params->bn.climate[NP_SHIFT], z * 0.25, x * 0.25, 0) * 4.0;
+
+    float c = sampleDoublePerlin(&params->bn.climate[NP_CONTINENTALNESS], px, 0, pz);
+    float e = sampleDoublePerlin(&params->bn.climate[NP_EROSION], px, 0, pz);
+    float w = sampleDoublePerlin(&params->bn.climate[NP_WEIRDNESS], px, 0, pz);
+
+    float np_param[] = {
+            c, e, peaksAndValleys(w), w,
+    };
+
+    double offset = getSpline(params->bn.sp, np_param) - 0.50375F;
+    double factor = getSpline(params->factorSpline, np_param);
+    double upperBound = clamp(remap(0.2734375 / factor - offset, 1.5, -1.5, -64.0, 320.0), -40.0, 320.0);
+
+    const int lowerBound = -64;
+    const int cellHeight = 2 << 2;
+    const int upperCell = floor(upperBound / cellHeight) * cellHeight;
+    if (upperCell <= lowerBound) {
+        return lowerBound;
+    }
+    for (int y = upperCell; y >= lowerBound; y -= cellHeight) {
+        double depth = offset + yClampedGradient(y, -64, 320, 1.5, -1.5);
+        double density = slideOverworld(clamp(noiseGradientDensity(factor, depth) - 0.703125, -64.0, 64.0), y) - 0.390625;
+        if (density > 0.0) {
+            return y;
+        }
+    }
+    return lowerBound;
 }

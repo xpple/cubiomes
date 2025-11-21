@@ -366,21 +366,23 @@ double sampleSpaghetti3d(TerrainNoiseParameters *params, int x, int y, int z);
 
 double sampleCaveEntrance(TerrainNoiseParameters *params, int x, int y, int z);
 
-double sampleEntrances(TerrainNoiseParameters *params, int x, int y, int z);
+double sampleEntrances(TerrainNoiseParameters *params, int x, int y, int z, double spaghettiRoughness);
 
 double sampleCaveLayer(TerrainNoiseParameters *params, int x, int y, int z);
 
 double sampleSlopedCheese(TerrainNoiseParameters *params, int x, int y, int z);
 
-double sampleCaveCheese(TerrainNoiseParameters *params, int x, int y, int z);
+double sampleCaveCheese(TerrainNoiseParameters *params, int x, int y, int z, double slopedCheese);
 
 double samplePillars(TerrainNoiseParameters *params, int x, int y, int z);
 
 double sampleNoodle(TerrainNoiseParameters *params, int x, int y, int z);
 
-double sampleUnderground(TerrainNoiseParameters *params, int x, int y, int z);
+double sampleUnderground(TerrainNoiseParameters *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese);
 
-double sampleFinalDensity(TerrainNoiseParameters *params, int x, int y, int z);
+double sampleFinalDensity(TerrainNoiseParameters *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese);
+
+int samplePreliminarySurfaceLevel(TerrainNoiseParameters *params, int x, int z);
 
 #ifdef __cplusplus
 }
