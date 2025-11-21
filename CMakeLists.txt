@@ -8,8 +8,17 @@ if (WIN32)
 	set(CMAKE_C_FLAGS "-D_WIN32")
 endif()
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
-set(CMAKE_C_FLAGS_DEBUG "-O0 -g3 -DDEBUG")
+if(MSVC)
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4")
+	set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /O2 /DNDEBUG")
+
+	set(CMAKE_C_FLAGS_DEBUG "/Od /Zi /DDEBUG")
+else()
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
+	set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3 -DNDEBUG")
+
+	set(CMAKE_C_FLAGS_DEBUG "-O0 -g3 -DDEBUG")
+endif()
 
 set(HEADERS
 	finders.h
