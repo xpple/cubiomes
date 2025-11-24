@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.15)
 project(cubiomes)
 
+if (MSVC)
+	message(FATAL_ERROR "MSVC is not supported for this project. Please use MinGW, UCRT64, Clang, or GCC.")
+endif()
+
 if (NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE Release)
 endif()
@@ -8,17 +12,9 @@ if (WIN32)
 	set(CMAKE_C_FLAGS "-D_WIN32")
 endif()
 
-if(MSVC)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4")
-	set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /O2 /DNDEBUG")
-
-	set(CMAKE_C_FLAGS_DEBUG "/Od /Zi /DDEBUG")
-else()
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
-	set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3 -DNDEBUG")
-
-	set(CMAKE_C_FLAGS_DEBUG "-O0 -g3 -DDEBUG")
-endif()
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3 -DNDEBUG")
+set(CMAKE_C_FLAGS_DEBUG "-O0 -g3 -DDEBUG")
 
 set(HEADERS
 	finders.h
