@@ -24,6 +24,7 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:cooked_porkchop") == 0) return ITEM_COOKED_PORKCHOP;
     if (strcmp(name, "minecraft:cooked_salmon") == 0) return ITEM_COOKED_SALMON;
     if (strcmp(name, "minecraft:copper_horse_armor") == 0) return ITEM_COPPER_HORSE_ARMOR;
+    if (strcmp(name, "minecraft:copper_nautilus_armor") == 0) return ITEM_COPPER_NAUTILUS_ARMOR;
     if (strcmp(name, "minecraft:crossbow") == 0) return ITEM_CROSSBOW;
     if (strcmp(name, "minecraft:crying_obsidian") == 0) return ITEM_CRYING_OBSIDIAN;
     if (strcmp(name, "minecraft:dark_oak_log") == 0) return ITEM_DARK_OAK_LOG;
@@ -33,8 +34,10 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:diamond_helmet") == 0) return ITEM_DIAMOND_HELMET;
     if (strcmp(name, "minecraft:diamond_horse_armor") == 0) return ITEM_DIAMOND_HORSE_ARMOR;
     if (strcmp(name, "minecraft:diamond_leggings") == 0) return ITEM_DIAMOND_LEGGINGS;
+    if (strcmp(name, "minecraft:diamond_nautilus_armor") == 0) return ITEM_DIAMOND_NAUTILUS_ARMOR;
     if (strcmp(name, "minecraft:diamond_pickaxe") == 0) return ITEM_DIAMOND_PICKAXE;
     if (strcmp(name, "minecraft:diamond_shovel") == 0) return ITEM_DIAMOND_SHOVEL;
+    if (strcmp(name, "minecraft:diamond_spear") == 0) return ITEM_DIAMOND_SPEAR;
     if (strcmp(name, "minecraft:diamond_sword") == 0) return ITEM_DIAMOND_SWORD;
     if (strcmp(name, "minecraft:dune_armor_trim_smithing_template") == 0) return ITEM_DUNE_ARMOR_TRIM_SMITHING_TEMPLATE;
     if (strcmp(name, "minecraft:emerald") == 0) return ITEM_EMERALD;
@@ -56,6 +59,7 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:golden_hoe") == 0) return ITEM_GOLDEN_HOE;
     if (strcmp(name, "minecraft:golden_horse_armor") == 0) return ITEM_GOLDEN_HORSE_ARMOR;
     if (strcmp(name, "minecraft:golden_leggings") == 0) return ITEM_GOLDEN_LEGGINGS;
+    if (strcmp(name, "minecraft:golden_nautilus_armor") == 0) return ITEM_GOLDEN_NAUTILUS_ARMOR;
     if (strcmp(name, "minecraft:golden_pickaxe") == 0) return ITEM_GOLDEN_PICKAXE;
     if (strcmp(name, "minecraft:golden_shovel") == 0) return ITEM_GOLDEN_SHOVEL;
     if (strcmp(name, "minecraft:golden_sword") == 0) return ITEM_GOLDEN_SWORD;
@@ -72,9 +76,11 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:iron_horse_armor") == 0) return ITEM_IRON_HORSE_ARMOR;
     if (strcmp(name, "minecraft:iron_ingot") == 0) return ITEM_IRON_INGOT;
     if (strcmp(name, "minecraft:iron_leggings") == 0) return ITEM_IRON_LEGGINGS;
+    if (strcmp(name, "minecraft:iron_nautilus_armor") == 0) return ITEM_IRON_NAUTILUS_ARMOR;
     if (strcmp(name, "minecraft:iron_nugget") == 0) return ITEM_IRON_NUGGET;
     if (strcmp(name, "minecraft:iron_pickaxe") == 0) return ITEM_IRON_PICKAXE;
     if (strcmp(name, "minecraft:iron_shovel") == 0) return ITEM_IRON_SHOVEL;
+    if (strcmp(name, "minecraft:iron_spear") == 0) return ITEM_IRON_SPEAR;
     if (strcmp(name, "minecraft:iron_sword") == 0) return ITEM_IRON_SWORD;
     if (strcmp(name, "minecraft:lapis_lazuli") == 0) return ITEM_LAPIS_LAZULI;
     if (strcmp(name, "minecraft:leather") == 0) return ITEM_LEATHER;
@@ -143,6 +149,7 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_COOKED_PORKCHOP: return "minecraft:cooked_porkchop";
     case ITEM_COOKED_SALMON: return "minecraft:cooked_salmon";
     case ITEM_COPPER_HORSE_ARMOR: return "minecraft:copper_horse_armor";
+    case ITEM_COPPER_NAUTILUS_ARMOR: return "minecraft:copper_nautilus_armor";
     case ITEM_CROSSBOW: return "minecraft:crossbow";
     case ITEM_CRYING_OBSIDIAN: return "minecraft:crying_obsidian";
     case ITEM_DARK_OAK_LOG: return "minecraft:dark_oak_log";
@@ -152,8 +159,10 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_DIAMOND_HELMET: return "minecraft:diamond_helmet";
     case ITEM_DIAMOND_HORSE_ARMOR: return "minecraft:diamond_horse_armor";
     case ITEM_DIAMOND_LEGGINGS: return "minecraft:diamond_leggings";
+    case ITEM_DIAMOND_NAUTILUS_ARMOR: return "minecraft:diamond_nautilus_armor";
     case ITEM_DIAMOND_PICKAXE: return "minecraft:diamond_pickaxe";
     case ITEM_DIAMOND_SHOVEL: return "minecraft:diamond_shovel";
+    case ITEM_DIAMOND_SPEAR: return "minecraft:diamond_spear";
     case ITEM_DIAMOND_SWORD: return "minecraft:diamond_sword";
     case ITEM_DUNE_ARMOR_TRIM_SMITHING_TEMPLATE: return "minecraft:dune_armor_trim_smithing_template";
     case ITEM_EMERALD: return "minecraft:emerald";
@@ -175,6 +184,7 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_GOLDEN_HOE: return "minecraft:golden_hoe";
     case ITEM_GOLDEN_HORSE_ARMOR: return "minecraft:golden_horse_armor";
     case ITEM_GOLDEN_LEGGINGS: return "minecraft:golden_leggings";
+    case ITEM_GOLDEN_NAUTILUS_ARMOR: return "minecraft:golden_nautilus_armor";
     case ITEM_GOLDEN_PICKAXE: return "minecraft:golden_pickaxe";
     case ITEM_GOLDEN_SHOVEL: return "minecraft:golden_shovel";
     case ITEM_GOLDEN_SWORD: return "minecraft:golden_sword";
@@ -190,9 +200,11 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_IRON_HORSE_ARMOR: return "minecraft:iron_horse_armor";
     case ITEM_IRON_INGOT: return "minecraft:iron_ingot";
     case ITEM_IRON_LEGGINGS: return "minecraft:iron_leggings";
+    case ITEM_IRON_NAUTILUS_ARMOR: return "minecraft:iron_nautilus_armor";
     case ITEM_IRON_NUGGET: return "minecraft:iron_nugget";
     case ITEM_IRON_PICKAXE: return "minecraft:iron_pickaxe";
     case ITEM_IRON_SHOVEL: return "minecraft:iron_shovel";
+    case ITEM_IRON_SPEAR: return "minecraft:iron_spear";
     case ITEM_IRON_SWORD: return "minecraft:iron_sword";
     case ITEM_LAPIS_LAZULI: return "minecraft:lapis_lazuli";
     case ITEM_LEATHER: return "minecraft:leather";

@@ -30,7 +30,7 @@ release: CFLAGS += -fPIC
 endif
 
 
-libcubiomes: noise.o biomes.o layers.o biomenoise.o generator.o finders.o util.o quadbase.o items.o loot_functions.o loot_table_context.o loot_table_parser.o loot_tables.o cjson.o bastion_bridge_1_16_1.o bastion_bridge_1_16_5.o bastion_bridge_1_20.o bastion_other_1_16_1.o bastion_other_1_16_5.o bastion_other_1_20.o bastion_other_1_21_1.o bastion_other_1_21_9.o buried_treasure_1_13.o buried_treasure_1_18.o desert_pyramid_1_13.o desert_pyramid_1_20.o desert_pyramid_1_21_6.o desert_pyramid_1_21_9.o end_city_treasure_1_13.o end_city_treasure_1_20.o end_city_treasure_1_21_9.o igloo_chest_1_13.o jungle_temple_1_13.o jungle_temple_1_14.o jungle_temple_1_20.o jungle_temple_1_21_6.o jungle_temple_1_21_9.o jungle_temple_dispenser_1_13.o nether_bridge_1_13.o nether_bridge_1_20.o nether_bridge_1_21_9.o pillager_outpost_1_14.o pillager_outpost_1_19_2.o pillager_outpost_1_20.o ruined_portal_1_16_1.o ruined_portal_1_21_5.o shipwreck_map_1_13.o shipwreck_map_1_18.o shipwreck_map_1_20.o shipwreck_supply_1_13.o shipwreck_supply_1_14.o shipwreck_supply_1_17.o shipwreck_supply_1_20.o shipwreck_treasure_1_13.o shipwreck_treasure_1_20.o
+libcubiomes: noise.o biomes.o layers.o biomenoise.o generator.o finders.o util.o quadbase.o items.o loot_functions.o loot_table_context.o loot_table_parser.o loot_tables.o cjson.o bastion_bridge_1_16_1.o bastion_bridge_1_16_5.o bastion_bridge_1_20.o bastion_other_1_16_1.o bastion_other_1_16_5.o bastion_other_1_20.o bastion_other_1_21_1.o bastion_other_1_21_9.o buried_treasure_1_13.o buried_treasure_1_18.o buried_treasure_1_21_11.o desert_pyramid_1_13.o desert_pyramid_1_20.o desert_pyramid_1_21_6.o desert_pyramid_1_21_9.o end_city_treasure_1_13.o end_city_treasure_1_20.o end_city_treasure_1_21_9.o end_city_treasure_1_21_11.o igloo_chest_1_13.o jungle_temple_1_13.o jungle_temple_1_14.o jungle_temple_1_20.o jungle_temple_1_21_6.o jungle_temple_1_21_9.o jungle_temple_dispenser_1_13.o nether_bridge_1_13.o nether_bridge_1_20.o nether_bridge_1_21_9.o pillager_outpost_1_14.o pillager_outpost_1_19_2.o pillager_outpost_1_20.o ruined_portal_1_16_1.o ruined_portal_1_21_5.o shipwreck_map_1_13.o shipwreck_map_1_18.o shipwreck_map_1_20.o shipwreck_map_1_21_11.o shipwreck_supply_1_13.o shipwreck_supply_1_14.o shipwreck_supply_1_17.o shipwreck_supply_1_20.o shipwreck_supply_1_21_11.o shipwreck_treasure_1_13.o shipwreck_treasure_1_20.o shipwreck_treasure_1_21_11.o
 	$(AR) $(ARFLAGS) libcubiomes.a $^
 
 finders.o: finders.c finders.h
@@ -105,6 +105,9 @@ buried_treasure_1_13.o: loot/loot_tables/buried_treasure_1_13.c loot/loot_tables
 buried_treasure_1_18.o: loot/loot_tables/buried_treasure_1_18.c loot/loot_tables/buried_treasure_1_18.h
 	$(CC) -c $(CFLAGS) $<
 
+buried_treasure_1_21_11.o: loot/loot_tables/buried_treasure_1_21_11.c loot/loot_tables/buried_treasure_1_21_11.h
+	$(CC) -c $(CFLAGS) $<
+
 desert_pyramid_1_13.o: loot/loot_tables/desert_pyramid_1_13.c loot/loot_tables/desert_pyramid_1_13.h
 	$(CC) -c $(CFLAGS) $<
 
@@ -124,6 +127,9 @@ end_city_treasure_1_20.o: loot/loot_tables/end_city_treasure_1_20.c loot/loot_ta
 	$(CC) -c $(CFLAGS) $<
 
 end_city_treasure_1_21_9.o: loot/loot_tables/end_city_treasure_1_21_9.c loot/loot_tables/end_city_treasure_1_21_9.h
+	$(CC) -c $(CFLAGS) $<
+
+end_city_treasure_1_21_11.o: loot/loot_tables/end_city_treasure_1_21_11.c loot/loot_tables/end_city_treasure_1_21_11.h
 	$(CC) -c $(CFLAGS) $<
 
 igloo_chest_1_13.o: loot/loot_tables/igloo_chest_1_13.c loot/loot_tables/igloo_chest_1_13.h
@@ -180,6 +186,9 @@ shipwreck_map_1_18.o: loot/loot_tables/shipwreck_map_1_18.c loot/loot_tables/shi
 shipwreck_map_1_20.o: loot/loot_tables/shipwreck_map_1_20.c loot/loot_tables/shipwreck_map_1_20.h
 	$(CC) -c $(CFLAGS) $<
 
+shipwreck_map_1_21_11.o: loot/loot_tables/shipwreck_map_1_21_11.c loot/loot_tables/shipwreck_map_1_21_11.h
+	$(CC) -c $(CFLAGS) $<
+
 shipwreck_supply_1_13.o: loot/loot_tables/shipwreck_supply_1_13.c loot/loot_tables/shipwreck_supply_1_13.h
 	$(CC) -c $(CFLAGS) $<
 
@@ -192,10 +201,16 @@ shipwreck_supply_1_17.o: loot/loot_tables/shipwreck_supply_1_17.c loot/loot_tabl
 shipwreck_supply_1_20.o: loot/loot_tables/shipwreck_supply_1_20.c loot/loot_tables/shipwreck_supply_1_20.h
 	$(CC) -c $(CFLAGS) $<
 
+shipwreck_supply_1_21_11.o: loot/loot_tables/shipwreck_supply_1_21_11.c loot/loot_tables/shipwreck_supply_1_21_11.h
+	$(CC) -c $(CFLAGS) $<
+
 shipwreck_treasure_1_13.o: loot/loot_tables/shipwreck_treasure_1_13.c loot/loot_tables/shipwreck_treasure_1_13.h
 	$(CC) -c $(CFLAGS) $<
 
 shipwreck_treasure_1_20.o: loot/loot_tables/shipwreck_treasure_1_20.c loot/loot_tables/shipwreck_treasure_1_20.h
+	$(CC) -c $(CFLAGS) $<
+
+shipwreck_treasure_1_21_11.o: loot/loot_tables/shipwreck_treasure_1_21_11.c loot/loot_tables/shipwreck_treasure_1_21_11.h
 	$(CC) -c $(CFLAGS) $<
 
 cjson.o: loot/cjson/cJSON.c loot/cjson/cJSON.h

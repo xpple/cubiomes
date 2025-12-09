@@ -16,6 +16,7 @@
 #include "loot_tables/bastion_other_1_21_9.h"
 #include "loot_tables/buried_treasure_1_13.h"
 #include "loot_tables/buried_treasure_1_18.h"
+#include "loot_tables/buried_treasure_1_21_11.h"
 #include "loot_tables/desert_pyramid_1_13.h"
 #include "loot_tables/desert_pyramid_1_20.h"
 #include "loot_tables/desert_pyramid_1_21_6.h"
@@ -23,6 +24,7 @@
 #include "loot_tables/end_city_treasure_1_13.h"
 #include "loot_tables/end_city_treasure_1_20.h"
 #include "loot_tables/end_city_treasure_1_21_9.h"
+#include "loot_tables/end_city_treasure_1_21_11.h"
 #include "loot_tables/igloo_chest_1_13.h"
 #include "loot_tables/jungle_temple_1_13.h"
 #include "loot_tables/jungle_temple_1_14.h"
@@ -41,12 +43,15 @@
 #include "loot_tables/shipwreck_map_1_13.h"
 #include "loot_tables/shipwreck_map_1_18.h"
 #include "loot_tables/shipwreck_map_1_20.h"
+#include "loot_tables/shipwreck_map_1_21_11.h"
 #include "loot_tables/shipwreck_supply_1_13.h"
 #include "loot_tables/shipwreck_supply_1_14.h"
 #include "loot_tables/shipwreck_supply_1_17.h"
 #include "loot_tables/shipwreck_supply_1_20.h"
+#include "loot_tables/shipwreck_supply_1_21_11.h"
 #include "loot_tables/shipwreck_treasure_1_13.h"
 #include "loot_tables/shipwreck_treasure_1_20.h"
+#include "loot_tables/shipwreck_treasure_1_21_11.h"
 
 int init_loot_table_name(LootTableContext* context, const char* loot_table, int version) {
     if (strcmp(loot_table, "bastion_bridge") == 0) {
@@ -114,7 +119,8 @@ int init_bastion_other(LootTableContext* context, int version) {
 
 int init_buried_treasure(LootTableContext* context, int version) {
     if (version < MC_1_18) init_buried_treasure_1_13(context);
-    else init_buried_treasure_1_18(context);
+    else if (version < MC_1_21_11) init_buried_treasure_1_18(context);
+    else init_buried_treasure_1_21_11(context);
     return version > MC_1_12;
 }
 
@@ -129,7 +135,8 @@ int init_desert_pyramid(LootTableContext* context, int version) {
 int init_end_city_treasure(LootTableContext * context, int version) {
     if (version < MC_1_20) init_end_city_treasure_1_13(context);
     else if (version < MC_1_21_9) init_end_city_treasure_1_20(context);
-    else init_end_city_treasure_1_21_9(context);
+    else if (version < MC_1_21_11) init_end_city_treasure_1_21_9(context);
+    else init_end_city_treasure_1_21_11(context);
     return version > MC_1_12;
 }
 
@@ -175,19 +182,22 @@ int init_ruined_portal(LootTableContext* context, int version) {
 int init_shipwreck_map(LootTableContext* context, int version) {
     if (version < MC_1_18) init_shipwreck_map_1_13(context);
     else if (version < MC_1_20) init_shipwreck_map_1_18(context);
-    else init_shipwreck_map_1_20(context);
+    else if (version < MC_1_21_11) init_shipwreck_map_1_20(context);
+    else init_shipwreck_map_1_21_11(context);
     return version > MC_1_12;
 }
 int init_shipwreck_supply(LootTableContext* context, int version) {
     if (version < MC_1_14) init_shipwreck_supply_1_13(context);
     else if (version < MC_1_17) init_shipwreck_supply_1_14(context);
     else if (version < MC_1_20) init_shipwreck_supply_1_17(context);
-    else init_shipwreck_supply_1_20(context);
+    else if (version < MC_1_21_11) init_shipwreck_supply_1_20(context);
+    else init_shipwreck_supply_1_21_11(context);
     return version > MC_1_12;
 }
 int init_shipwreck_treasure(LootTableContext* context, int version) {
     if (version < MC_1_20) init_shipwreck_treasure_1_13(context);
-    else init_shipwreck_treasure_1_20(context);
+    else if (version < MC_1_21_11) init_shipwreck_treasure_1_20(context);
+    else init_shipwreck_treasure_1_21_11(context);
     return version > MC_1_12;
 }
 

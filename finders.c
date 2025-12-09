@@ -2196,7 +2196,7 @@ int32_t getOreVeinBlockAt(int x, int y, int z, OreVeinParameters* params)
     }
     const double oreVeinASample = fabs(sampleDoublePerlin(&params->oreVeinA, 4 * x, 4 * y, 4 * z));
     const double oreVeinBSample = fabs(sampleDoublePerlin(&params->oreVeinB, 4 * x, 4 * y, 4 * z));
-    double veinRidgedSample = MAX(oreVeinASample, oreVeinBSample);
+    double veinRidgedSample = fmax(oreVeinASample, oreVeinBSample);
     if (veinRidgedSample >= 0.08F) {
         return -1;
     }
