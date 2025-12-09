@@ -119,6 +119,7 @@ class LootTableContext:
 
 def main():
     for file_name in glob.glob("*.json"):
+        print(f"Parsing {file_name}...")
         with open(file_name, 'r', encoding='UTF-8') as f:
             data = json.load(f)
 
