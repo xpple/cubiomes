@@ -4,6 +4,6 @@
 
 #include "../loot_table_context.h"
 
-void init_bastion_bridge_1_16_5(LootTableContext* context);
+LootTableContext* init_bastion_bridge_1_16_5();
 
 #endif //BASTION_BRIDGE_1_16_5_H

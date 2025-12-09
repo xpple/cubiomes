@@ -4,6 +4,6 @@
 
 #include "../loot_table_context.h"
 
-void init_igloo_chest_1_13(LootTableContext* context);
+LootTableContext* init_igloo_chest_1_13();
 
 #endif //IGLOO_CHEST_1_13_H

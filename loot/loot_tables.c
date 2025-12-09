@@ -3,7 +3,6 @@
 
 #include "loot_tables.h"
 #include "loot_table_context.h"
-#include "loot_table_parser.h"
 #include "../biomes.h"
 
 #include "loot_tables/bastion_bridge_1_16_1.h"
@@ -53,7 +52,7 @@
 #include "loot_tables/shipwreck_treasure_1_20.h"
 #include "loot_tables/shipwreck_treasure_1_21_11.h"
 
-int init_loot_table_name(LootTableContext* context, const char* loot_table, int version) {
+int init_loot_table_name(LootTableContext** context, const char* loot_table, int version) {
     if (strcmp(loot_table, "bastion_bridge") == 0) {
         return init_bastion_bridge(context, version);
     }
@@ -101,115 +100,104 @@ int init_loot_table_name(LootTableContext* context, const char* loot_table, int 
     return 0;
 }
 
-int init_bastion_bridge(LootTableContext* context, int version) {
-    if (version < MC_1_16_5) init_bastion_bridge_1_16_1(context);
-    else if (version < MC_1_20) init_bastion_bridge_1_16_5(context);
-    else init_bastion_bridge_1_20(context);
+int init_bastion_bridge(LootTableContext** context, int version) {
+    if (version < MC_1_16_5) *context = init_bastion_bridge_1_16_1();
+    else if (version < MC_1_20) *context = init_bastion_bridge_1_16_5();
+    else *context = init_bastion_bridge_1_20();
     return version > MC_1_15;
 }
 
-int init_bastion_other(LootTableContext* context, int version) {
-    if (version < MC_1_16_5) init_bastion_other_1_16_1(context);
-    else if (version < MC_1_20) init_bastion_other_1_16_5(context);
-    else if (version < MC_1_21_1) init_bastion_other_1_20(context);
-    else if (version < MC_1_21_9) init_bastion_other_1_21_1(context);
-    else init_bastion_other_1_21_9(context);
+int init_bastion_other(LootTableContext** context, int version) {
+    if (version < MC_1_16_5) *context = init_bastion_other_1_16_1();
+    else if (version < MC_1_20) *context = init_bastion_other_1_16_5();
+    else if (version < MC_1_21_1) *context = init_bastion_other_1_20();
+    else if (version < MC_1_21_9) *context = init_bastion_other_1_21_1();
+    else *context = init_bastion_other_1_21_9();
     return version > MC_1_15;
 }
 
-int init_buried_treasure(LootTableContext* context, int version) {
-    if (version < MC_1_18) init_buried_treasure_1_13(context);
-    else if (version < MC_1_21_11) init_buried_treasure_1_18(context);
-    else init_buried_treasure_1_21_11(context);
+int init_buried_treasure(LootTableContext** context, int version) {
+    if (version < MC_1_18) *context = init_buried_treasure_1_13();
+    else if (version < MC_1_21_11) *context = init_buried_treasure_1_18();
+    else *context = init_buried_treasure_1_21_11();
     return version > MC_1_12;
 }
 
-int init_desert_pyramid(LootTableContext* context, int version) {
-    if (version < MC_1_20) init_desert_pyramid_1_13(context);
-    else if (version < MC_1_21_6) init_desert_pyramid_1_20(context);
-    else if (version < MC_1_21_9) init_desert_pyramid_1_21_6(context);
-    else init_desert_pyramid_1_21_9(context);
+int init_desert_pyramid(LootTableContext** context, int version) {
+    if (version < MC_1_20) *context = init_desert_pyramid_1_13();
+    else if (version < MC_1_21_6) *context = init_desert_pyramid_1_20();
+    else if (version < MC_1_21_9) *context = init_desert_pyramid_1_21_6();
+    else *context = init_desert_pyramid_1_21_9();
     return version > MC_1_12;
 }
 
-int init_end_city_treasure(LootTableContext * context, int version) {
-    if (version < MC_1_20) init_end_city_treasure_1_13(context);
-    else if (version < MC_1_21_9) init_end_city_treasure_1_20(context);
-    else if (version < MC_1_21_11) init_end_city_treasure_1_21_9(context);
-    else init_end_city_treasure_1_21_11(context);
+int init_end_city_treasure(LootTableContext** context, int version) {
+    if (version < MC_1_20) *context = init_end_city_treasure_1_13();
+    else if (version < MC_1_21_9) *context = init_end_city_treasure_1_20();
+    else if (version < MC_1_21_11) *context = init_end_city_treasure_1_21_9();
+    else *context = init_end_city_treasure_1_21_11();
     return version > MC_1_12;
 }
 
-int init_igloo_chest(LootTableContext* context, int version) {
-    init_igloo_chest_1_13(context);
+int init_igloo_chest(LootTableContext** context, int version) {
+    *context = init_igloo_chest_1_13();
     return version > MC_1_12;
 }
 
-int init_jungle_temple(LootTableContext* context, int version) {
-    if (version < MC_1_14) init_jungle_temple_1_13(context);
-    else if (version < MC_1_20) init_jungle_temple_1_14(context);
-    else if (version < MC_1_21_6) init_jungle_temple_1_20(context);
-    else if (version < MC_1_21_9) init_jungle_temple_1_21_6(context);
-    else init_jungle_temple_1_21_9(context);
+int init_jungle_temple(LootTableContext** context, int version) {
+    if (version < MC_1_14) *context = init_jungle_temple_1_13();
+    else if (version < MC_1_20) *context = init_jungle_temple_1_14();
+    else if (version < MC_1_21_6) *context = init_jungle_temple_1_20();
+    else if (version < MC_1_21_9) *context = init_jungle_temple_1_21_6();
+    else *context = init_jungle_temple_1_21_9();
     return version > MC_1_12;
 }
 
-int init_jungle_temple_dispenser(LootTableContext* context, int version) {
-    init_jungle_temple_dispenser_1_13(context);
+int init_jungle_temple_dispenser(LootTableContext** context, int version) {
+    *context = init_jungle_temple_dispenser_1_13();
     return version > MC_1_12;
 }
 
-int init_nether_bridge(LootTableContext* context, int version) {
-    if (version < MC_1_20) init_nether_bridge_1_13(context);
-    else if (version < MC_1_21_9) init_nether_bridge_1_20(context);
-    else init_nether_bridge_1_21_9(context);
+int init_nether_bridge(LootTableContext** context, int version) {
+    if (version < MC_1_20) *context = init_nether_bridge_1_13();
+    else if (version < MC_1_21_9) *context = init_nether_bridge_1_20();
+    else *context = init_nether_bridge_1_21_9();
     return version > MC_1_12;
 }
 
-int init_pillager_outpost(LootTableContext* context, int version) {
-    if (version < MC_1_19_2) init_pillager_outpost_1_14(context);
-    else if (version < MC_1_20) init_pillager_outpost_1_19_2(context);
-    else init_pillager_outpost_1_20(context);
+int init_pillager_outpost(LootTableContext** context, int version) {
+    if (version < MC_1_19_2) *context = init_pillager_outpost_1_14();
+    else if (version < MC_1_20) *context = init_pillager_outpost_1_19_2();
+    else *context = init_pillager_outpost_1_20();
     return version > MC_1_13;
 }
 
-int init_ruined_portal(LootTableContext* context, int version) {
-    if (version < MC_1_21_5) init_ruined_portal_1_16_1(context);
-    else init_ruined_portal_1_21_5(context);
+int init_ruined_portal(LootTableContext** context, int version) {
+    if (version < MC_1_21_5) *context = init_ruined_portal_1_16_1();
+    else *context = init_ruined_portal_1_21_5();
     return version > MC_1_15;
 }
 
-int init_shipwreck_map(LootTableContext* context, int version) {
-    if (version < MC_1_18) init_shipwreck_map_1_13(context);
-    else if (version < MC_1_20) init_shipwreck_map_1_18(context);
-    else if (version < MC_1_21_11) init_shipwreck_map_1_20(context);
-    else init_shipwreck_map_1_21_11(context);
-    return version > MC_1_12;
-}
-int init_shipwreck_supply(LootTableContext* context, int version) {
-    if (version < MC_1_14) init_shipwreck_supply_1_13(context);
-    else if (version < MC_1_17) init_shipwreck_supply_1_14(context);
-    else if (version < MC_1_20) init_shipwreck_supply_1_17(context);
-    else if (version < MC_1_21_11) init_shipwreck_supply_1_20(context);
-    else init_shipwreck_supply_1_21_11(context);
-    return version > MC_1_12;
-}
-int init_shipwreck_treasure(LootTableContext* context, int version) {
-    if (version < MC_1_20) init_shipwreck_treasure_1_13(context);
-    else if (version < MC_1_21_11) init_shipwreck_treasure_1_20(context);
-    else init_shipwreck_treasure_1_21_11(context);
+int init_shipwreck_map(LootTableContext** context, int version) {
+    if (version < MC_1_18) *context = init_shipwreck_map_1_13();
+    else if (version < MC_1_20) *context = init_shipwreck_map_1_18();
+    else if (version < MC_1_21_11) *context = init_shipwreck_map_1_20();
+    else *context = init_shipwreck_map_1_21_11();
     return version > MC_1_12;
 }
 
-void free_loot_table_pools(LootTableContext* context) {
-    for (int i = 0; i < context->pool_count; ++i) {
-        LootPool* pool = &context->loot_pools[i];
-        int last = pool->entry_count - 1;
-        int functionCount = pool->entry_functions_index[last] + pool->entry_functions_count[last];
-        for (int j = 0; j < functionCount; ++j) {
-            free_loot_function(&(pool->loot_functions[j]));
-        }
-        free(pool->loot_functions);
-    }
-    free(context->loot_pools);
+int init_shipwreck_supply(LootTableContext** context, int version) {
+    if (version < MC_1_14) *context = init_shipwreck_supply_1_13();
+    else if (version < MC_1_17) *context = init_shipwreck_supply_1_14();
+    else if (version < MC_1_20) *context = init_shipwreck_supply_1_17();
+    else if (version < MC_1_21_11) *context = init_shipwreck_supply_1_20();
+    else *context = init_shipwreck_supply_1_21_11();
+    return version > MC_1_12;
+}
+
+int init_shipwreck_treasure(LootTableContext** context, int version) {
+    if (version < MC_1_20) *context = init_shipwreck_treasure_1_13();
+    else if (version < MC_1_21_11) *context = init_shipwreck_treasure_1_20();
+    else *context = init_shipwreck_treasure_1_21_11();
+    return version > MC_1_12;
 }

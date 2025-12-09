@@ -4,6 +4,6 @@
 
 #include "../loot_table_context.h"
 
-void init_buried_treasure_1_21_11(LootTableContext* context);
+LootTableContext* init_buried_treasure_1_21_11();
 
 #endif //BURIED_TREASURE_1_21_11_H

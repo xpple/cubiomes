@@ -4,6 +4,6 @@
 
 #include "../loot_table_context.h"
 
-void init_pillager_outpost_1_14(LootTableContext* context);
+LootTableContext* init_pillager_outpost_1_14();
 
 #endif //PILLAGER_OUTPOST_1_14_H

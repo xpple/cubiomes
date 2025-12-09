@@ -4,6 +4,6 @@
 
 #include "../loot_table_context.h"
 
-void init_nether_bridge_1_13(LootTableContext* context);
+LootTableContext* init_nether_bridge_1_13();
 
 #endif //NETHER_BRIDGE_1_13_H

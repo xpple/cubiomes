@@ -4,6 +4,6 @@
 
 #include "../loot_table_context.h"
 
-void init_end_city_treasure_1_21_9(LootTableContext* context);
+LootTableContext* init_end_city_treasure_1_21_9();
 
 #endif //END_CITY_TREASURE_1_21_9_H

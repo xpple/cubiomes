@@ -4,6 +4,6 @@
 
 #include "../loot_table_context.h"
 
-void init_shipwreck_map_1_18(LootTableContext* context);
+LootTableContext* init_shipwreck_map_1_18();
 
 #endif //SHIPWRECK_MAP_1_18_H

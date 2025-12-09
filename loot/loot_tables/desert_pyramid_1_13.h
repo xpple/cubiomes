@@ -4,6 +4,6 @@
 
 #include "../loot_table_context.h"
 
-void init_desert_pyramid_1_13(LootTableContext* context);
+LootTableContext* init_desert_pyramid_1_13();
 
 #endif //DESERT_PYRAMID_1_13_H

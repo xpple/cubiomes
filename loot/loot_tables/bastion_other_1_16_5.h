@@ -4,6 +4,6 @@
 
 #include "../loot_table_context.h"
 
-void init_bastion_other_1_16_5(LootTableContext* context);
+LootTableContext* init_bastion_other_1_16_5();
 
 #endif //BASTION_OTHER_1_16_5_H

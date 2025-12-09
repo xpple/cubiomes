@@ -4,6 +4,6 @@
 
 #include "../loot_table_context.h"
 
-void init_ruined_portal_1_16_1(LootTableContext* context);
+LootTableContext* init_ruined_portal_1_16_1();
 
 #endif //RUINED_PORTAL_1_16_1_H
