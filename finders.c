@@ -2339,7 +2339,7 @@ int isViableCaveBiome(int caveCarverType, int biome) {
 }
 
 static inline int getCarveMaskIndex(int x, int y, int z, int worldMinY) {
-    return x & 15 | (z & 15) << 4 | y - worldMinY << 8;
+    return (x & 15) | (z & 15) << 4 | (y - worldMinY) << 8;
 }
 
 static inline void setCarveMask(char carvingMask[], int x, int y, int z, int worldMinY) {

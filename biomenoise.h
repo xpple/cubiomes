@@ -541,6 +541,10 @@ double sampleFinalDensity(TerrainNoiseParameters *params, int x, int y, int z, d
  */
 int samplePreliminarySurfaceLevel(TerrainNoiseParameters *params, int x, int z);
 
+void sampleNoiseColumn(TerrainNoiseParameters *params, int cellX, int cellZ, double buffer[48 + 1]);
+
+int generateColumn(TerrainNoiseParameters *params, int x, int z, int blockStates[384], int flag);
+
 #ifdef __cplusplus
 }
 #endif

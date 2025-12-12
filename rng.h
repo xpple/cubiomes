@@ -507,6 +507,15 @@ static inline int floorDiv(int x, int y) {
     return q;
 }
 
+static inline int floorMod(int x, int y) {
+    const int r = x % y;
+    // if the signs are different and modulo not zero, adjust result
+    if ((x ^ y) < 0 && r != 0) {
+        return r + y;
+    }
+    return r;
+}
+
 /* Find the modular inverse: (1/x) | mod m.
  * Assumes x and m are positive (less than 2^63), co-prime.
  */
