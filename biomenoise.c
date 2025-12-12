@@ -2502,3 +2502,65 @@ int samplePreliminarySurfaceLevel(TerrainNoiseParameters *params, int x, int z) 
     }
     return lowerBound;
 }
+
+void sampleNoiseColumn(TerrainNoiseParameters *params, int cellX, int cellZ, double buffer[48 + 1]) {
+    const int minY = -64;
+    const int cellWidth = 1 << 2;
+    const int cellHeight = 2 << 2;
+    int x = cellX * cellWidth, z = cellZ * cellWidth;
+    for (int i = 0; i < 48 + 1; ++i) {
+        int y = minY + i * cellHeight;
+        double spaghettiRoughness = sampleSpaghettiRoughness(params, x, y, z);
+        double entrances = sampleEntrances(params, x, y, z, spaghettiRoughness);
+        double slopedCheese = sampleSlopedCheese(params, x, y, z);
+        double finalDensity = sampleFinalDensity(params, x, y, z, spaghettiRoughness, entrances, slopedCheese);
+        buffer[i] = finalDensity;
+    }
+}
+
+int generateColumn(TerrainNoiseParameters *params, int x, int z, int blockStates[384], int flag) {
+    const int cellHeight = 2 << 2;
+    const int minY = -64;
+    const int heightScaled = floorDiv(384, cellHeight);
+    const int cellWidth = 1 << 2;
+    static const double percentagesXZ[4] = {0.0, 1.0 / cellWidth, 2.0 / cellWidth, 3.0 / cellWidth};
+    static const double percentagesY[8] = {0.0, 1.0 / cellHeight, 2.0 / cellHeight, 3.0 / cellHeight, 4.0 / cellHeight, 5.0 / cellHeight, 6.0 / cellHeight, 7.0 / cellHeight};
+
+    const int cellX = x >> 2; // floorDiv(x, cellWidth)
+    const int cellZ = z >> 2; // floorDiv(z, cellWidth)
+    const int relX = x & 3; // floorMod(x, cellWidth)
+    const int relZ = z & 3; // floorMod(z, cellWidth)
+    const double percentX = percentagesXZ[relX];
+    const double percentZ = percentagesXZ[relZ];
+
+    double ds[2][2][heightScaled + 1];
+    sampleNoiseColumn(params, cellX, cellZ, ds[0][0]);
+    sampleNoiseColumn(params, cellX, cellZ + 1, ds[0][1]);
+    sampleNoiseColumn(params, cellX + 1, cellZ, ds[1][0]);
+    sampleNoiseColumn(params, cellX + 1, cellZ + 1, ds[1][1]);
+
+    for (int cellY = heightScaled - 1; cellY >= 0; --cellY) {
+        const double noise000 = ds[0][0][cellY];
+        const double noise001 = ds[0][1][cellY];
+        const double noise100 = ds[1][0][cellY];
+        const double noise101 = ds[1][1][cellY];
+        const double noise010 = ds[0][0][cellY + 1];
+        const double noise011 = ds[0][1][cellY + 1];
+        const double noise110 = ds[1][0][cellY + 1];
+        const double noise111 = ds[1][1][cellY + 1];
+
+        for (int relY = cellHeight - 1; relY >= 0; --relY) {
+            double percentY = percentagesY[relY];
+            double noise = lerp3(percentX, percentY, percentZ, noise000, noise100, noise010, noise110, noise001, noise101, noise011, noise111);
+            int y = cellY * cellHeight + relY;
+
+            int block = noise > 0.0;
+            blockStates[y] = block;
+
+            if (flag && block) {
+                return y + 1;
+            }
+        }
+    }
+    return minY;
+}
