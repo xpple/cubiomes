@@ -1729,12 +1729,12 @@ Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig conf
 {
     uint64_t populationSeed = getPopulationSeed(g->mc, g->seed, chunkX << 4, chunkZ << 4);
     RandomSource rnd;
+    uint64_t seed;
+    Xoroshiro xr;
     if (g->mc <= MC_1_17) {
-        uint64_t* seed = malloc(sizeof(uint64_t));
-        rnd = createJavaRandom(seed);
+        rnd = createJavaRandom(&seed);
     } else {
-        Xoroshiro* xr = malloc(sizeof(Xoroshiro));
-        rnd = createXoroshiro(xr);
+        rnd = createXoroshiro(&xr);
     }
     // set decorator seed
     rnd.setSeed(rnd.state, populationSeed + config.index + 10000 * config.step);
@@ -1761,7 +1761,6 @@ Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig conf
             generateOrePositions(g, sn, config, basePos, rnd, &pos3s);
         }
     }
-    free(rnd.state);
     return pos3s;
 }
 
