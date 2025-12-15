@@ -1898,14 +1898,7 @@ int getBiomeForOreGen(const Generator *g, int chunkX, int chunkZ, int y)
 Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig config, int chunkX, int chunkZ)
 {
     uint64_t populationSeed = getPopulationSeed(g->mc, g->seed, chunkX << 4, chunkZ << 4);
-    RandomSource rnd;
-    if (g->mc <= MC_1_17) {
-        uint64_t* seed = malloc(sizeof(uint64_t));
-        rnd = createJavaRandom(seed);
-    } else {
-        Xoroshiro* xr = malloc(sizeof(Xoroshiro));
-        rnd = createXoroshiro(xr);
-    }
+    CREATE_RANDOM_SOURCE(rnd, g->mc <= MC_1_17);
     // set decorator seed
     rnd.setSeed(rnd.state, populationSeed + config.index + 10000 * config.step);
 
@@ -1931,7 +1924,6 @@ Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig conf
             generateOrePositions(g, sn, config, basePos, rnd, &pos3s);
         }
     }
-    free(rnd.state);
     return pos3s;
 }
 
@@ -3915,14 +3907,13 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         p->chestPoses[3] = (Pos) {minBlockX + 12, minBlockZ + 10};
         // chests generate in the same chunk as structure
         uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
-        RandomSource rnd = createRandomSource(legacy);
+        CREATE_RANDOM_SOURCE(rnd, legacy);
         rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
         rnd.nextInt(rnd.state, 3);
         for (int i = 0; i < p->chestCount; ++i) {
             p->lootTables[i] = "desert_pyramid";
             p->lootSeeds[i] = rnd.nextLong(rnd.state);
         }
-        free(rnd.state);
         return 1;
     }
     case Igloo: {
@@ -3959,11 +3950,10 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         bottomPiece->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
         // chest generates in the same chunk as structure
         uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
-        RandomSource rnd = createRandomSource(legacy);
+        CREATE_RANDOM_SOURCE(rnd, legacy);
         rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
         rnd.nextLong(rnd.state); // LootTableSeed from placeInWorld is not used
         bottomPiece->lootSeeds[0] = rnd.nextLong(rnd.state);
-        free(rnd.state);
         return sv->size + 2;
     }
     case Jungle_Pyramid: {
@@ -3981,7 +3971,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         p->chestPoses[3] = (Pos) {minBlockX + 1 + 7, minBlockZ + 1 + 10};
         // chests generate in the same chunk as structure
         uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
-        RandomSource rnd = createRandomSource(legacy);
+        CREATE_RANDOM_SOURCE(rnd, legacy);
         rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
         xSkipN(rnd.state, 1511);
         p->lootSeeds[0] = rnd.nextLong(rnd.state);
@@ -3991,7 +3981,6 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         p->lootSeeds[2] = rnd.nextLong(rnd.state);
         xSkipN(rnd.state, 1528 - 1515 - 1 - 1);
         p->lootSeeds[3] = rnd.nextLong(rnd.state);
-        free(rnd.state);
         return 1;
     }
     case Outpost: {
@@ -4011,10 +4000,9 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         }
         p->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
         uint64_t populationSeed = getPopulationSeed(mc, seed, chestPosX & ~15, chestPosZ & ~15);
-        RandomSource rnd = createRandomSource(legacy);
+        CREATE_RANDOM_SOURCE(rnd, legacy);
         rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
         p->lootSeeds[0] = rnd.nextLong(rnd.state);
-        free(rnd.state);
         return 1;
     }
     case Shipwreck: {
@@ -4086,7 +4074,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             default: UNREACHABLE();
             }
         }
-        RandomSource rnd = createRandomSource(legacy);
+        CREATE_RANDOM_SOURCE(rnd, legacy);
         // sorry...
         switch (p->chestCount) {
         case 1: {
@@ -4222,7 +4210,6 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         }
         default: UNREACHABLE();
         }
-        free(rnd.state);
         return 1;
     }
     case Swamp_Hut: {
@@ -4234,7 +4221,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
     }
     case Fortress: {
         int count = getFortressPieces(list, n, mc, seed, posX >> 4, posZ >> 4);
-        RandomSource rnd = createRandomSource(legacy);
+        CREATE_RANDOM_SOURCE(rnd, legacy);
         for (int i = 0; i < count; ++i) {
             Piece* piece = &list[i];
             int chestPosX, chestPosZ;
@@ -4276,13 +4263,12 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
             piece->lootSeeds[0] = rnd.nextLong(rnd.state);
         }
-        free(rnd.state);
         return count;
     }
     case Bastion: {
         // TODO: simulate all pieces
         // this only simulates bastion pieces that always generate and have a chest
-        RandomSource rnd = createRandomSource(legacy);
+        CREATE_RANDOM_SOURCE(rnd, legacy);
         switch (sv->start) {
         case 0 /* units/air_base */: {
             Piece* piece = list;
@@ -4386,7 +4372,6 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         }
         default: UNREACHABLE();
         }
-        free(rnd.state);
         return 1;
     }
     case End_City: {
@@ -4394,7 +4379,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             return -1;
         }
         int count = getEndCityPieces(list, seed, posX >> 4, posZ >> 4);
-        RandomSource rnd = createRandomSource(legacy);
+        CREATE_RANDOM_SOURCE(rnd, legacy);
         for (int i = 0; i < count; ++i) {
             Piece* piece = &list[i];
             int chestPos1X, chestPos1Z, chestPos2X, chestPos2Z;
@@ -4489,7 +4474,6 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
                 }
             }
         }
-        free(rnd.state);
         return count;
     }
     // structures that have one piece and one chest
@@ -4519,11 +4503,10 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
     }
     Piece* p = list;
     p->chestCount = 1;
-    RandomSource rnd = createRandomSource(legacy);
+    CREATE_RANDOM_SOURCE(rnd, legacy);
     uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
     rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
     p->lootSeeds[0] = rnd.nextLong(rnd.state);
-    free(rnd.state);
     return 1;
 }
 

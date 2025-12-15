@@ -58,6 +58,17 @@ static inline uint32_t BSWAP32(uint32_t x) {
 
 #endif
 
+// Use with care
+#define CREATE_RANDOM_SOURCE(name, legacy) \
+    RandomSource name;                     \
+    uint64_t _r;                           \
+    Xoroshiro _xr;                         \
+    if (legacy) {                          \
+        name = createJavaRandom(&_r);      \
+    } else {                               \
+        name = createXoroshiro(&_xr);      \
+    }
+
 /// imitate amd64/x64 rotate instructions
 
 static inline ATTR(const, always_inline, artificial)
@@ -361,16 +372,6 @@ static inline RandomSource createXoroshiro(Xoroshiro *xr)
         .nextDouble = (double (*)(void *)) xNextDoubleJ,
         .nextIntBetween = (int (*)(void *, int, int)) xNextIntJBetween,
     };
-}
-
-static inline RandomSource createRandomSource(int legacy) {
-    if (legacy) {
-        uint64_t* r = malloc(sizeof(uint64_t));
-        return createJavaRandom(r);
-    } else {
-        Xoroshiro* xr = malloc(sizeof(Xoroshiro));
-        return createXoroshiro(xr);
-    }
 }
 
 //==============================================================================
