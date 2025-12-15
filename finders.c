@@ -1876,7 +1876,7 @@ void generateVeinPart(int mc, OreConfig config, RandomSource rnd, double offsetX
     char bitSet[slots];
     memset(bitSet, 0, slots);
     int size = config.size;
-    double* store = malloc(4 * size * sizeof(double));
+    double store[4 * size];
 
     for (int i = 0; i < size; ++i) {
         float percent = (float)i / (float)size;
