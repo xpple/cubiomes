@@ -92,6 +92,13 @@ int32_t floordiv(int32_t a, int32_t b)
     return q - ((a ^ b) < 0 && !!r);
 }
 
+/// integer floor modulo
+static inline ATTR(const, always_inline)
+int32_t floormod(int32_t a, int32_t b) {
+    int32_t r = a % b;
+    return r + ((a ^ b) < 0 && !!r) * b;
+}
+
 ///=============================================================================
 ///                    C implementation of Java Random
 ///=============================================================================
@@ -497,24 +504,6 @@ static inline double clampedLerp(double part, double from, double to)
 
 static inline double clampedMap(double input, double inputMin, double inputMax, double ouputMin, double outputMax) {
     return clampedLerp(inverseLerp(input, inputMin, inputMax), ouputMin, outputMax);
-}
-
-static inline int floorDiv(int x, int y) {
-    const int q = x / y;
-    // if the signs are different and modulo not zero, round down
-    if ((x ^ y) < 0 && (q * y != x)) {
-        return q - 1;
-    }
-    return q;
-}
-
-static inline int floorMod(int x, int y) {
-    const int r = x % y;
-    // if the signs are different and modulo not zero, adjust result
-    if ((x ^ y) < 0 && r != 0) {
-        return r + y;
-    }
-    return r;
 }
 
 /* Find the modular inverse: (1/x) | mod m.

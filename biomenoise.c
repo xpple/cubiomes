@@ -12,6 +12,15 @@
 #include <math.h>
 #include <float.h>
 
+#ifndef BITMASK
+// https://c-faq.com/misc/bitsets.html
+#define BITMASK(b) (1 << ((b) % CHAR_BIT))
+#define BITSLOT(b) ((b) / CHAR_BIT)
+#define BITSET(a, b) ((a)[BITSLOT(b)] |= BITMASK(b))
+#define BITCLEAR(a, b) ((a)[BITSLOT(b)] &= ~BITMASK(b))
+#define BITTEST(a, b) ((a)[BITSLOT(b)] & BITMASK(b))
+#define BITNSLOTS(nb) ((nb + CHAR_BIT - 1) / CHAR_BIT)
+#endif
 
 //==============================================================================
 // Noise
@@ -2380,7 +2389,7 @@ double sampleSpaghetti2d(TerrainNoiseParameters *params, int x, int y, int z) {
     double spaghetti2dThickness = map(sampleDoublePerlin(&params->spaghetti2dThickness, x * 2, y, z * 2), -1.0, 1.0, 0.6, 1.3);
     double spaghetti2d = sampleDoublePerlin(&params->spaghetti2d, x / rarity, y / rarity, z / rarity);
     double a = fabs(rarity * spaghetti2d) - 0.083 * spaghetti2dThickness;
-    double spaghetti2dElevation = map(sampleDoublePerlin(&params->spaghetti2dElevation, x, 0.0, z), -1.0, 1.0, floorDiv(-64, 8), 8.0);
+    double spaghetti2dElevation = map(sampleDoublePerlin(&params->spaghetti2dElevation, x, 0.0, z), -1.0, 1.0, floordiv(-64, 8), 8.0);
     double b = fabs(spaghetti2dElevation - y / 8.0) - spaghetti2dThickness;
     return clamp(fmax(b * b * b, a), -1.0, 1.0);
 }
@@ -2518,36 +2527,28 @@ void sampleNoiseColumn(TerrainNoiseParameters *params, int cellX, int cellZ, dou
     }
 }
 
-int generateColumn(TerrainNoiseParameters *params, int x, int z, int blockStates[384], int flag) {
+int generateColumn(int x, int z, int blocks[384], const double ds00[48 + 1], const double ds01[48 + 1], const double ds10[48 + 1], const double ds11[48 + 1], int flag) {
     const int cellHeight = 2 << 2;
     const int minY = -64;
-    const int heightScaled = floorDiv(384, cellHeight);
+    const int heightScaled = floordiv(384, cellHeight);
     const int cellWidth = 1 << 2;
     static const double percentagesXZ[4] = {0.0, 1.0 / cellWidth, 2.0 / cellWidth, 3.0 / cellWidth};
     static const double percentagesY[8] = {0.0, 1.0 / cellHeight, 2.0 / cellHeight, 3.0 / cellHeight, 4.0 / cellHeight, 5.0 / cellHeight, 6.0 / cellHeight, 7.0 / cellHeight};
 
-    const int cellX = x >> 2; // floorDiv(x, cellWidth)
-    const int cellZ = z >> 2; // floorDiv(z, cellWidth)
-    const int relX = x & 3; // floorMod(x, cellWidth)
-    const int relZ = z & 3; // floorMod(z, cellWidth)
+    const int relX = x & 3; // floormod(x, cellWidth)
+    const int relZ = z & 3; // floormod(z, cellWidth)
     const double percentX = percentagesXZ[relX];
     const double percentZ = percentagesXZ[relZ];
 
-    double ds[2][2][heightScaled + 1];
-    sampleNoiseColumn(params, cellX, cellZ, ds[0][0]);
-    sampleNoiseColumn(params, cellX, cellZ + 1, ds[0][1]);
-    sampleNoiseColumn(params, cellX + 1, cellZ, ds[1][0]);
-    sampleNoiseColumn(params, cellX + 1, cellZ + 1, ds[1][1]);
-
     for (int cellY = heightScaled - 1; cellY >= 0; --cellY) {
-        const double noise000 = ds[0][0][cellY];
-        const double noise001 = ds[0][1][cellY];
-        const double noise100 = ds[1][0][cellY];
-        const double noise101 = ds[1][1][cellY];
-        const double noise010 = ds[0][0][cellY + 1];
-        const double noise011 = ds[0][1][cellY + 1];
-        const double noise110 = ds[1][0][cellY + 1];
-        const double noise111 = ds[1][1][cellY + 1];
+        const double noise000 = ds00[cellY];
+        const double noise001 = ds01[cellY];
+        const double noise100 = ds10[cellY];
+        const double noise101 = ds11[cellY];
+        const double noise010 = ds00[cellY + 1];
+        const double noise011 = ds01[cellY + 1];
+        const double noise110 = ds10[cellY + 1];
+        const double noise111 = ds11[cellY + 1];
 
         for (int relY = cellHeight - 1; relY >= 0; --relY) {
             double percentY = percentagesY[relY];
@@ -2555,7 +2556,7 @@ int generateColumn(TerrainNoiseParameters *params, int x, int z, int blockStates
             int y = cellY * cellHeight + relY;
 
             int block = noise > 0.0;
-            blockStates[y] = block;
+            blocks[y] = block;
 
             if (flag && block) {
                 return y + 1;
@@ -2563,4 +2564,67 @@ int generateColumn(TerrainNoiseParameters *params, int x, int z, int blockStates
         }
     }
     return minY;
+}
+
+void generateRegion(TerrainNoiseParameters *params, int chunkX, int chunkZ, int chunkW, int chunkH, int* blocks, int* ys, int flag) {
+    const int cellWidth = 1 << 2;
+
+    const int blocksH = chunkH << 4;
+
+    const int chunkCellsW = (chunkW << 2) + 1;
+    const int chunkCellsH = (chunkH << 2) + 1;
+    const int minCellX = chunkX << 2;
+    const int minCellZ = chunkZ << 2;
+
+    const int cells = chunkCellsW * chunkCellsH;
+    double (*ds)[48 + 1] = malloc(cells * sizeof(*ds));
+    char* bitSet = calloc(BITNSLOTS(cells), sizeof(char));
+
+    for (int relCellX = 0; relCellX < chunkCellsW - 1; ++relCellX) {
+        const int relBlockX = relCellX << 2;
+        const int cellX = minCellX + relCellX;
+        const int minX = cellX << 2;
+        for (int relCellZ = 0; relCellZ < chunkCellsH - 1; ++relCellZ) {
+            const int relBlockZ = relCellZ << 2;
+            const int cellZ = minCellZ + relCellZ;
+            const int minZ = cellZ << 2;
+
+            int idx;
+            double* ds00 = ds[idx = (relCellX + 0) * chunkCellsW + (relCellZ + 0)];
+            if (!BITTEST(bitSet, idx)) {
+                sampleNoiseColumn(params, cellX, cellZ, ds00);
+                BITSET(bitSet, idx);
+            }
+            double* ds01 = ds[idx = (relCellX + 0) * chunkCellsW + (relCellZ + 1)];
+            if (!BITTEST(bitSet, idx)) {
+                sampleNoiseColumn(params, cellX, cellZ + 1, ds01);
+                BITSET(bitSet, idx);
+            }
+            double* ds10 = ds[idx = (relCellX + 1) * chunkCellsW + (relCellZ + 0)];
+            if (!BITTEST(bitSet, idx)) {
+                sampleNoiseColumn(params, cellX + 1, cellZ, ds10);
+                BITSET(bitSet, idx);
+            }
+            double* ds11 = ds[idx = (relCellX + 1) * chunkCellsW + (relCellZ + 1)];
+            if (!BITTEST(bitSet, idx)) {
+                sampleNoiseColumn(params, cellX + 1, cellZ + 1, ds11);
+                BITSET(bitSet, idx);
+            }
+
+            for (int relX = 0; relX < cellWidth; ++relX) {
+                const int x = minX + relX;
+                for (int relZ = 0; relZ < cellWidth; ++relZ) {
+                    const int z = minZ + relZ;
+                    int xzIdx = (relBlockX + relX) * blocksH + (relBlockZ + relZ);
+                    int yIdx = xzIdx * 384;
+                    int y = generateColumn(x, z, &blocks[yIdx], ds00, ds01, ds10, ds11, flag);
+                    if (ys) {
+                        ys[xzIdx] = y;
+                    }
+                }
+            }
+        }
+    }
+    free(ds);
+    free(bitSet);
 }

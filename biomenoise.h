@@ -541,9 +541,58 @@ double sampleFinalDensity(TerrainNoiseParameters *params, int x, int y, int z, d
  */
 int samplePreliminarySurfaceLevel(TerrainNoiseParameters *params, int x, int z);
 
+/**
+ * Sample the terrain noise column at the given cell coordinates. Minecraft's terrain
+ * generates at 1:4 XZ scale, so cell = block >> 2. The Y buffer is at 1:8 scale, which
+ * is why it has size 384 / 8 = 48, plus one to interpolate the last vertical cell.
+ *
+ * @param params the terrain noise parameters
+ * @param cellX the cell X-coordinate
+ * @param cellZ the cell Z-coordinate
+ * @param buffer the Y buffer
+ */
 void sampleNoiseColumn(TerrainNoiseParameters *params, int cellX, int cellZ, double buffer[48 + 1]);
 
-int generateColumn(TerrainNoiseParameters *params, int x, int z, int blockStates[384], int flag);
+/**
+ * Generate a terrain column at the given block coordinates. The result will be written
+ * to blocks. The dsxz buffers can be obtained through sampleNoiseColumn. If the
+ * flag is set, the generation will stop as soon as a solid block is found, and will
+ * return the Y-coordinate of the above air block.
+ *
+ * @param x the block X-coordinate
+ * @param z the block Z-coordinate
+ * @param blocks the target blocks
+ * @param ds00 the (0, 0) noise column
+ * @param ds01 the (0, 1) noise column
+ * @param ds10 the (1, 0) noise column
+ * @param ds11 the (1, 1) noise column
+ * @param flag the boolean flag for the stop condition
+ * @return the last air block if the flag was set, -64 otherwise
+ */
+int generateColumn(int x, int z, int blocks[384], const double ds00[48 + 1], const double ds01[48 + 1], const double ds10[48 + 1], const double ds11[48 + 1], int flag);
+
+/**
+ * Generate a region of terrain using memoisation to prevent recalculating noise columns.
+ * The blocks array should have a size of (chunkW << 4) * (chunkH << 4) * 384 * sizeof(int).
+ * The blocks are written to in the following way:
+ *
+ * int idx = (relX * blockH + relZ) * 384 + y;
+ *
+ * where blockH = chunkH << 4, relX ranges over [0, chunkW << 4), relZ ranges over [0, chunkH << 4)
+ * and y ranges over [0, 384).
+ *
+ * Similarly (if flag is true), ys are written to like relX * blockH + relZ.
+ *
+ * @param params the terrain noise parameters
+ * @param chunkX the chunk X-coordinate
+ * @param chunkZ the chunk Z-coordinate
+ * @param chunkW the chunk width
+ * @param chunkH the chunk height
+ * @param blocks the target blocks
+ * @param ys the target Y coordinates
+ * @param flag the boolean flag for the stop condition
+ */
+void generateRegion(TerrainNoiseParameters *params, int chunkX, int chunkZ, int chunkW, int chunkH, int* blocks, int* ys, int flag);
 
 #ifdef __cplusplus
 }
