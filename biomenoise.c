@@ -6,6 +6,7 @@
 #include "tables/btree20.h"
 #include "tables/btree21wd.h"
 
+#include "limits.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
