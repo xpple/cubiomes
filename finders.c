@@ -9,6 +9,7 @@
 #include <float.h>
 #include <math.h>
 
+#ifndef BITMASK
 // https://c-faq.com/misc/bitsets.html
 #define BITMASK(b) (1 << ((b) % CHAR_BIT))
 #define BITSLOT(b) ((b) / CHAR_BIT)
@@ -16,6 +17,7 @@
 #define BITCLEAR(a, b) ((a)[BITSLOT(b)] &= ~BITMASK(b))
 #define BITTEST(a, b) ((a)[BITSLOT(b)] & BITMASK(b))
 #define BITNSLOTS(nb) ((nb + CHAR_BIT - 1) / CHAR_BIT)
+#endif
 
 #define PI 3.14159265358979323846
 
@@ -2331,7 +2333,7 @@ int isViableCaveBiome(int caveCarverType, int biome) {
 }
 
 static inline int getCarveMaskIndex(int x, int y, int z, int worldMinY) {
-    return x & 15 | (z & 15) << 4 | y - worldMinY << 8;
+    return (x & 15) | (z & 15) << 4 | (y - worldMinY) << 8;
 }
 
 static inline void setCarveMask(char carvingMask[], int x, int y, int z, int worldMinY) {
