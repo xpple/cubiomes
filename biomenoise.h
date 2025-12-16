@@ -573,12 +573,9 @@ int generateColumn(int x, int z, int blocks[384], const double ds00[48 + 1], con
 
 /**
  * Generate a region of terrain using memoisation to prevent recalculating noise columns.
- * The blocks array should have a size of (chunkW << 4) * (chunkH << 4) * 384 * sizeof(int).
- * The blocks are written to in the following way:
- *
- * int idx = (relX * blockH + relZ) * 384 + y;
- *
- * where blockH = chunkH << 4, relX ranges over [0, chunkW << 4), relZ ranges over [0, chunkH << 4)
+ * One can use int (*blocks)[384] = malloc(blockW * blockH * sizeof(*blocks)); to allocate the
+ * array. Similarly, the blocks can then be accessed using blocks[relX * blocksH + relZ][y].
+ * Here blockH = chunkH << 4, relX ranges over [0, chunkW << 4), relZ ranges over [0, chunkH << 4)
  * and y ranges over [0, 384).
  *
  * Similarly (if flag is true), ys are written to like relX * blockH + relZ.
@@ -592,7 +589,7 @@ int generateColumn(int x, int z, int blocks[384], const double ds00[48 + 1], con
  * @param ys the target Y coordinates
  * @param flag the boolean flag for the stop condition
  */
-void generateRegion(TerrainNoiseParameters *params, int chunkX, int chunkZ, int chunkW, int chunkH, int* blocks, int* ys, int flag);
+void generateRegion(TerrainNoiseParameters *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[384], int* ys, int flag);
 
 #ifdef __cplusplus
 }
