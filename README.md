@@ -3,6 +3,19 @@
 Cubiomes is a standalone library, written in C, that mimics the biome and feature generation of Minecraft Java Edition.
 It is intended as a powerful tool to devise very fast, custom seed-finding applications and large-scale map viewers with minimal memory usage.
 
+## Relationship to upstream
+
+This project is an active fork of [Cubiomes by Cubitect](https://github.com/Cubitect/cubiomes). I will add features to it as I need them. Some of the features I have added, I have also opened PRs for. Others are outside the scope of Cubiomes as indicated by Cubitect. For example, he has said that things like chest loot are not within Cubiomes' scope. These features will just be maintained in this repository. You can see all my PRs [here](https://github.com/Cubitect/cubiomes/issues?q=is%3Apr%20author%3Axpple).
+
+Below is a list of all the major additions:
+
+- Ore generation (1.13+).
+- Ore vein generation (1.18+).
+- Structure loot support (1.13+). At the time of writing, the following structures are supported: Bastions (limited), Buried Treasures, Desert Pyramids, End Cities, Igloos, Jungle Temples, Nether Fortresses, Pillager Outposts, Ruined Portals (OW/NE) and Shipwrecks.
+- Fast Xoroshiro128++ state advancement.
+- Canyon/cave carvers (1.13+).
+- Terrain generation (1.18+).
+- Various bug fixes.
 
 #### Cubiomes-Viewer
 
