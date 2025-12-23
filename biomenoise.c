@@ -2213,7 +2213,7 @@ static inline int initTerrainNoiseHelper(DoublePerlinNoise *dpn, const Xoroshiro
     return xDoublePerlinInit(dpn, &x, oct, amplitudes, firstOctave, length, -1);
 }
 
-int initTerrainNoise(TerrainNoiseParameters *params, uint64_t ws, int mc) {
+int initTerrainNoise(TerrainNoiseParameters *params, uint64_t ws, int mc, int largeBiomes) {
     static const uint64_t md5_pillar[2] = {0xd4defd1400fa5347, 0xccb6785451feaa1c}; // minecraft:pillar
     static const uint64_t md5_pillar_rareness[2] = {0x8ddd6be7cd4b24d0, 0x0485e8665333197a}; // minecraft:pillar_rareness
     static const uint64_t md5_pillar_thickness[2] = {0x1a28cb2542f8308d, 0xc4bba10b7fc7168c}; // minecraft:pillar_thickness
@@ -2247,7 +2247,7 @@ int initTerrainNoise(TerrainNoiseParameters *params, uint64_t ws, int mc) {
     const Xoroshiro xr = {lo, hi};
 
     initBiomeNoise(&params->bn, mc);
-    setBiomeSeed(&params->bn, ws, 0);
+    setBiomeSeed(&params->bn, ws, largeBiomes);
     if (!initBlendedNoise(&params->bln, ws, DIM_OVERWORLD)) {
         return 0;
     }

@@ -377,9 +377,10 @@ double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z);
  * @param params the terrain noise parameters
  * @param ws the world seed
  * @param mc the Minecraft version
+ * @param largeBiomes whether large biomes should be used for the biome noise
  * @return 0 on failure
  */
-int initTerrainNoise(TerrainNoiseParameters *params, uint64_t ws, int mc);
+int initTerrainNoise(TerrainNoiseParameters *params, uint64_t ws, int mc, int largeBiomes);
 
 /**
  * Sample `overworld/caves/spaghetti_roughness_function`.
