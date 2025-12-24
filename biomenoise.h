@@ -286,11 +286,13 @@ enum {
     SAMPLE_NO_DEPTH = 0x2,  // skip depth sampling for vertical biomes
     SAMPLE_NO_BIOME = 0x4,  // do not apply climate noise to biome mapping
 };
+float getSpline(const Spline *sp, const float *vals);
 void initBiomeNoise(BiomeNoise *bn, int mc);
 void setBiomeSeed(BiomeNoise *bn, uint64_t seed, int large);
 void setBetaBiomeSeed(BiomeNoiseBeta *bnb, uint64_t seed);
 int sampleBiomeNoise(const BiomeNoise *bn, int64_t *np, int x, int y, int z,
     uint64_t *dat, uint32_t sample_flags);
+void sampleNoiseParameters(BiomeNoise *bn, int x, int z, float np_param[4]);
 int sampleBiomeNoiseBeta(const BiomeNoiseBeta *bnb, int64_t *np, double *nv,
     int x, int z);
 double approxSurfaceBeta(const BiomeNoiseBeta *bnb, const SurfaceNoiseBeta *snb,
@@ -462,15 +464,18 @@ double sampleEntrances(TerrainNoiseParameters *params, int x, int y, int z, doub
 double sampleCaveLayer(TerrainNoiseParameters *params, int x, int y, int z);
 
 /**
- * Sample `overworld/sloped_cheese`.
+ * Sample `overworld/sloped_cheese`. Use sampleNoiseParameters to sample the splines.
  *
  * @param params the terrain noise parameters
  * @param x the world X-coordinate
  * @param y the world Y-coordinate
  * @param z the world Z-coordinate
+ * @param depth the value of the depth spline
+ * @param factor the value of the factor spline
+ * @param jagged the value of the jagged spline
  * @return the sampled value
  */
-double sampleSlopedCheese(TerrainNoiseParameters *params, int x, int y, int z);
+double sampleSlopedCheese(TerrainNoiseParameters *params, int x, int y, int z, double depth, double factor, double jagged);
 
 /**
  * Sample `cave_cheese`.

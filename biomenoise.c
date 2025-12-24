@@ -1333,6 +1333,20 @@ int sampleBiomeNoise(const BiomeNoise *bn, int64_t *np, int x, int y, int z,
     return id;
 }
 
+void sampleNoiseParameters(BiomeNoise *bn, int x, int z, float np_param[4]) {
+    double px = x + sampleDoublePerlin(&bn->climate[NP_SHIFT], x, 0, z) * 4.0;
+    double pz = z + sampleDoublePerlin(&bn->climate[NP_SHIFT], z, x, 0) * 4.0;
+
+    float c = (float)sampleDoublePerlin(&bn->climate[NP_CONTINENTALNESS], px, 0, pz);
+    float e = (float)sampleDoublePerlin(&bn->climate[NP_EROSION], px, 0, pz);
+    float w = (float)sampleDoublePerlin(&bn->climate[NP_WEIRDNESS], px, 0, pz);
+
+    np_param[0] = c;
+    np_param[1] = e;
+    np_param[2] = peaksAndValleys(w);
+    np_param[3] = w;
+}
+
 // Note: Climate noise is sampled at a 1:1 scale.
 int sampleBiomeNoiseBeta(const BiomeNoiseBeta *bnb, int64_t *np, double *nv,
     int x, int z)
@@ -2420,27 +2434,9 @@ double sampleCaveLayer(TerrainNoiseParameters *params, int x, int y, int z) {
     return caveLayer * caveLayer * 4.0;
 }
 
-double sampleSlopedCheese(TerrainNoiseParameters *params, int x, int y, int z) {
-    // see sampleBiomeNoise
-    double px = x * 0.25 + sampleDoublePerlin(&params->bn.climate[NP_SHIFT], x * 0.25, 0, z * 0.25) * 4.0;
-    double pz = z * 0.25 + sampleDoublePerlin(&params->bn.climate[NP_SHIFT], z * 0.25, x * 0.25, 0) * 4.0;
-
-    float c = sampleDoublePerlin(&params->bn.climate[NP_CONTINENTALNESS], px, 0, pz);
-    float e = sampleDoublePerlin(&params->bn.climate[NP_EROSION], px, 0, pz);
-    float w = sampleDoublePerlin(&params->bn.climate[NP_WEIRDNESS], px, 0, pz);
-
-    float np_param[] = {
-        c, e, peaksAndValleys(w), w,
-    };
-
-    double depth = getSpline(params->bn.sp, np_param) + clampedMap(y, -64, 320, 1.5, -1.5) - 0.50375f;
-    double factor = getSpline(params->factorSpline, np_param);
-    double jagged = sampleDoublePerlin(&params->jagged, x * 1500.0, 0, z * 1500.0);
-    jagged = jagged >= 0.0 ? jagged : jagged / 2.0;
-    jagged *= getSpline(params->jaggednessSpline, np_param);
-
+double sampleSlopedCheese(TerrainNoiseParameters *params, int x, int y, int z, double depth, double factor, double jagged) {
+    depth = depth + clampedMap(y, -64, 320, 1.5, -1.5);
     double density = noiseGradientDensity(factor, depth + jagged);
-
     return density + sampleBase3dNoise(&params->bln, x, y, z);
 }
 
@@ -2518,11 +2514,21 @@ void sampleNoiseColumn(TerrainNoiseParameters *params, int cellX, int cellZ, dou
     const int cellWidth = 1 << 2;
     const int cellHeight = 2 << 2;
     int x = cellX * cellWidth, z = cellZ * cellWidth;
+
+    float np_param[4];
+    sampleNoiseParameters(&params->bn, cellX, cellZ, np_param);
+
+    double depth = getSpline(params->bn.sp, np_param) - 0.50375f;
+    double factor = getSpline(params->factorSpline, np_param);
+    double jagged = sampleDoublePerlin(&params->jagged, x * 1500.0, 0, z * 1500.0);
+    jagged = jagged >= 0.0 ? jagged : jagged / 2.0;
+    jagged *= getSpline(params->jaggednessSpline, np_param);
+
     for (int i = 0; i < 48 + 1; ++i) {
         int y = minY + i * cellHeight;
         double spaghettiRoughness = sampleSpaghettiRoughness(params, x, y, z);
         double entrances = sampleEntrances(params, x, y, z, spaghettiRoughness);
-        double slopedCheese = sampleSlopedCheese(params, x, y, z);
+        double slopedCheese = sampleSlopedCheese(params, x, y, z, depth, factor, jagged);
         double finalDensity = sampleFinalDensity(params, x, y, z, spaghettiRoughness, entrances, slopedCheese);
         buffer[i] = finalDensity;
     }
