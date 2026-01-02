@@ -23,6 +23,7 @@ set(HEADERS
 	biomenoise.h
 	biomes.h
 	noise.h
+	terrainnoise.h
 	rng.h
 	util.h
 	quadbase.h
@@ -89,6 +90,7 @@ set(SOURCES
 	biomenoise.c
 	biomes.c
 	noise.c
+	terrainnoise.c
 	util.c
 	quadbase.c
 	xradv.c
