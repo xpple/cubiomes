@@ -1,0 +1,122 @@
+name: Compile and create Java bindings
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  compile:
+    name: Compile
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile shared library (ubuntu-latest)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --config Release
+      - name: Compile shared library (macos-latest)
+        if: matrix.os == 'macos-latest'
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+          cmake --build build --config Release
+      - name: Set up MSYS2 (windows-latest)
+        if: matrix.os == 'windows-latest'
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: >
+            base-devel
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+      - name: Compile shared library (windows-latest)
+        if: matrix.os == 'windows-latest'
+        shell: msys2 {0}
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --config Release
+
+      - name: Capture shared library (ubuntu-latest)
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: libcubiomes.so
+          path: build/libcubiomes.so
+      - name: Capture shared library (macos-latest)
+        if: matrix.os == 'macos-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: libcubiomes.dylib
+          path: build/libcubiomes.dylib
+      - name: Capture shared library (windows-latest)
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cubiomes.dll
+          path: build/cubiomes.dll
+  create-java-bindings:
+    name: Create Java bindings
+    needs: compile
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    env:
+      LLVM_HOME: /usr/lib/llvm-13
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: java-bindings
+          submodules: 'true'
+      - name: Capture shared library
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+          path: src/main/resources/
+      - name: Update master submodule
+        working-directory: src/main/c/cubiomes
+        run: |
+          git checkout $GITHUB_SHA
+      - name: Validate gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+      - name: Setup JDK 23
+        uses: actions/setup-java@v4
+        with:
+          java-version: 23
+          distribution: 'temurin'
+      - name: Make Gradle wrapper executable
+        run: |
+          chmod +x ./gradlew
+          chmod +x ./jextract/gradlew
+      - name: Install LLVM 13
+        run: |
+          wget --no-verbose https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/clang+llvm-13.0.0-x86_64-linux-gnu-ubuntu-20.04.tar.xz
+          tar -xf clang+llvm-13.0.0-x86_64-linux-gnu-ubuntu-20.04.tar.xz
+          sudo mv clang+llvm-13.0.0-x86_64-linux-gnu-ubuntu-20.04 $LLVM_HOME
+      - name: Compile jextract
+        working-directory: jextract
+        run: ./gradlew --stacktrace -Pjdk_home=$JAVA_HOME -Pllvm_home=$LLVM_HOME clean verify
+      - name: Create Java bindings and build
+        run: ./gradlew build
+      - name: Commit latest changes
+        run: |
+          git config user.name "Frederik van der Els"
+          git config user.email "fred@xpple.dev"
+          git add src/main/c/cubiomes
+          git add src/main/java
+          git commit --allow-empty -m "[ci-skip] Update Java bindings to master@{$GITHUB_SHA}"
+          git push --force
+      - name: Publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          MAVEN_USER: ${{ secrets.MAVEN_USER }}
+          MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
+        run: ./gradlew publish
