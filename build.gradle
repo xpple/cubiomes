@@ -1,0 +1,100 @@
+import com.github.cubiomes.buildscript.CreateJavaBindingsTask
+
+import java.time.Instant
+import java.time.ZoneOffset
+
+plugins {
+	id 'java'
+	id 'maven-publish'
+}
+
+static def createPreReleaseVersion() {
+	def now = Instant.now().atZone(ZoneOffset.UTC)
+	def year = now.year
+	def month = now.monthValue
+	def day = now.dayOfMonth
+	def epochSeconds = now.toEpochSecond()
+
+	def commitHash = System.getenv("GITHUB_SHA")
+	def metaData = commitHash ? "+${commitHash}" : ""
+
+	return "${year}.${month}.${day}.${epochSeconds}${metaData}"
+}
+
+base {
+	archivesName = project.archives_base_name
+	version = "${project.base_version}-${createPreReleaseVersion()}"
+	group = project.maven_group
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	testImplementation platform("org.junit:junit-bom:${project.junit_version}")
+	testImplementation 'org.junit.jupiter:junit-jupiter'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+clean {
+	delete fileTree("${projectDir}/src/main/java/com/github/cubiomes") {
+		exclude 'CubiomesInit.java'
+	}
+}
+
+tasks.register('createJavaBindings', CreateJavaBindingsTask) {}
+compileJava.dependsOn('createJavaBindings')
+
+createJavaBindings.dependsOn(clean)
+
+processResources {
+	from("LICENSE")
+
+	from("LICENSE_cubiomes.txt")
+
+	from("LICENSE_loot_library.h.txt")
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 23
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_23
+	targetCompatibility = JavaVersion.VERSION_23
+
+	withSourcesJar()
+}
+
+test {
+	useJUnitPlatform()
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifactId = project.base.archivesName.get()
+			from components.java
+		}
+	}
+
+	repositories {
+		maven {
+			name = "GitHubPackages"
+			url = "https://maven.pkg.github.com/xpple/cubiomes"
+			credentials {
+				username = System.getenv("GITHUB_ACTOR")
+				password = System.getenv("GITHUB_TOKEN")
+			}
+		}
+		maven {
+			name = "xpple"
+			url = "sftp://xpple.dev:22/maven.xpple.dev/httpdocs/maven2"
+			credentials {
+				username = System.getenv("MAVEN_USER")
+				password = System.getenv("MAVEN_PASS")
+			}
+		}
+	}
+}

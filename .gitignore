@@ -1,0 +1,36 @@
+# gradle
+
+.gradle/
+build/
+out/
+classes/
+
+# eclipse
+
+*.launch
+
+# idea
+
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# vscode
+
+.settings/
+.vscode/
+bin/
+.classpath
+.project
+
+# macos
+
+*.DS_Store
+
+# cubiomes
+src/main/resources/cubiomes.dll
+src/main/resources/libcubiomes.dylib
+src/main/resources/libcubiomes.so
+
+dump_includes.txt
