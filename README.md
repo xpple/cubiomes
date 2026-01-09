@@ -17,6 +17,9 @@ Below is a list of all the major additions:
 - Terrain generation (1.18+).
 - Various bug fixes.
 
+## Java bindings
+I have set up the automatic creation of Java bindings based on commits to the master branch. See the [java-bindings](https://github.com/xpple/cubiomes/tree/java-bindings) branch for more information.
+
 #### Cubiomes-Viewer
 
 If you want to get started without coding, there is now also a [graphical application](https://github.com/Cubitect/cubiomes-viewer) based on this library.
