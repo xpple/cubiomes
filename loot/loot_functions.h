@@ -22,6 +22,7 @@ enum ItemType {
 	BOW,
 	CROSSBOW,
 	TRIDENT,
+	SPEAR,
 	MACE,
 	BOOK
 };
@@ -96,7 +97,11 @@ enum Enchantment {
 	MENDING,
 	UNBREAKING,
 	CURSE_OF_VANISHING,
-	CURSE_OF_BINDING
+	CURSE_OF_BINDING,
+
+	// spears
+
+	LUNGE
 };
 
 typedef enum ItemType ItemType;
@@ -160,7 +165,9 @@ void create_no_op(LootFunction* lf);
 void create_enchant_randomly_one_enchant(LootFunction* lf, const Enchantment enchantment);
 void create_enchant_randomly_list(LootFunction* lf, const Enchantment* list, const int list_length);
 void create_enchant_randomly(LootFunction* lf, const int version, const ItemType item, const int isTreasure);
+void create_enchant_randomly_tag(LootFunction* lf, const int version, const ItemType item, const char* tag, const int allowTreasure);
 void create_enchant_with_levels(LootFunction* lf, const int version, const char* item_name, const ItemType item_type, const int min_level, const int max_level, const int isTreasure);
+void create_enchant_with_levels_tag(LootFunction* lf, const int version, const char* item_name, const ItemType item_type, const int min_level, const int max_level, const char* tag, const int allowTreasure);
 
 const char* get_enchantment_name(const Enchantment enchantment);
 
