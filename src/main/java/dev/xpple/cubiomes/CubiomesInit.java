@@ -1,4 +1,4 @@
-package com.github.cubiomes;
+package dev.xpple.cubiomes;
 
 import java.io.IOException;
 import java.nio.file.Files;

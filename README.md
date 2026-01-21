@@ -7,13 +7,15 @@ There are two ways you can import the bindings.
 1. By importing the bindings as Maven dependency.
 
    ```groovy
-   implementation "com.github:cubiomes:${project.cubiomes_version}"
+   implementation "dev.xpple:cubiomes:${project.cubiomes_version}"
    ```
 
-   You can either add my own Maven server, or use GitHub Packages. Note that GitHub Packages requires authentication with GitHub.
+   You can either use Maven Central, my own Maven server, or use GitHub Packages. Note that GitHub Packages requires authentication with GitHub.
 
    ```groovy
    repositories {
+       // Maven Central
+       mavenCentral()
        // My own
        maven {
            name = 'xpple'

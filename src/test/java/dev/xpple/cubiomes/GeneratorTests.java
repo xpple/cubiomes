@@ -1,4 +1,4 @@
-package com.github.cubiomes;
+package dev.xpple.cubiomes;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
