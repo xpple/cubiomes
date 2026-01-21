@@ -104,7 +104,11 @@ jobs:
         working-directory: jextract
         run: ./gradlew --stacktrace -Pjdk_home=$JAVA_HOME -Pllvm_home=$LLVM_HOME clean verify
       - name: Create Java bindings and build
-        run: ./gradlew build
+        env:
+          ORG_GRADLE_PROJECT_signingKeyId: ${{ vars.ORG_GRADLE_PROJECT_SIGNINGKEYID }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGKEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGPASSWORD }}
+        run: ./gradlew build --stacktrace
       - name: Commit latest changes
         run: |
           git config user.name "Frederik van der Els"
@@ -119,4 +123,11 @@ jobs:
 
           MAVEN_USER: ${{ secrets.MAVEN_USER }}
           MAVEN_PASS: ${{ secrets.MAVEN_PASS }}
-        run: ./gradlew publish
+
+          PORTAL_USER: ${{ secrets.PORTAL_USER }}
+          PORTAL_TOKEN: ${{ secrets.PORTAL_TOKEN }}
+
+          ORG_GRADLE_PROJECT_signingKeyId: ${{ vars.ORG_GRADLE_PROJECT_SIGNINGKEYID }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGKEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGPASSWORD }}
+        run: ./gradlew publish --stacktrace
