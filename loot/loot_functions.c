@@ -78,7 +78,10 @@ static void enchant_randomly_function(uint64_t* rand, ItemStack* is, const void*
     is->enchantments[0].enchantment = varparams_int[2 * enchantmentID + 1];
 
     int maxLevel = varparams_int[2 * enchantmentID + 2];
-    is->enchantments[0].level = nextInt(rand, maxLevel) + 1;
+    if (maxLevel > 1)
+        is->enchantments[0].level = nextInt(rand, maxLevel) + 1;
+    else
+        is->enchantments[0].level = 1;
 }
 
 // enchant with levels helpers
@@ -1137,7 +1140,7 @@ static const char* ENCHANT_NAMES[64] = {
     "unbreaking",
     "curse_of_vanishing",
     "curse_of_binding",
-    "lunge"
+    "lunge",
 };
 
 const char* get_enchantment_name(const Enchantment enchantment)

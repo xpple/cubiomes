@@ -101,7 +101,7 @@ enum Enchantment {
 
 	// spears
 
-	LUNGE
+	LUNGE,
 };
 
 typedef enum ItemType ItemType;
