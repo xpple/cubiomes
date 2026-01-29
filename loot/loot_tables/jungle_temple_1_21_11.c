@@ -83,4 +83,3 @@ LootTableContext* init_jungle_temple_1_21_11() {
     }
     return &context;
 }
-

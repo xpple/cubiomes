@@ -108,7 +108,7 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__3->loot_functions[1]), 2, 7);
     create_set_count(&(loot_pool__3->loot_functions[2]), 1, 3);
     create_set_count(&(loot_pool__3->loot_functions[3]), 1, 3);
-    create_enchant_randomly(&(loot_pool__3->loot_functions[4]), MC_1_14, get_item_type("minecraft:book"), 1);
+    create_enchant_randomly(&(loot_pool__3->loot_functions[4]), MC_1_14, get_item_type("minecraft:book"), 0);
 }
 
 LootTableContext* init_pillager_outpost_1_14() {

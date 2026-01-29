@@ -70,7 +70,7 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__0->loot_functions[4]), 4, 6);
     create_set_count(&(loot_pool__0->loot_functions[5]), 1, 3);
     create_set_count(&(loot_pool__0->loot_functions[6]), 3, 7);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[7]), MC_1_13, get_item_type("minecraft:book"), 1);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[7]), MC_1_13, get_item_type("minecraft:book"), 0);
     LootPool* loot_pool__1 = &(context.loot_pools[1]);
     create_set_count(&(loot_pool__1->loot_functions[0]), 1, 8);
     create_set_count(&(loot_pool__1->loot_functions[1]), 1, 8);

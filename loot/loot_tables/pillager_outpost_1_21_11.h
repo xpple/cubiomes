@@ -7,4 +7,3 @@
 LootTableContext* init_pillager_outpost_1_21_11();
 
 #endif //PILLAGER_OUTPOST_1_21_11_H
-

@@ -115,10 +115,10 @@ static LootTableContext context = {
 static void create_loot_functions() {
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     create_set_count(&(loot_pool__0->loot_functions[0]), 1, 1);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[1]), MC_1_20, get_item_type("minecraft:diamond_pickaxe"), 1);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[1]), MC_1_20, get_item_type("minecraft:diamond_pickaxe"), 0);
     create_set_count(&(loot_pool__0->loot_functions[2]), 1, 1);
     create_skip_calls(&(loot_pool__0->loot_functions[3]), 1);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[4]), MC_1_20, get_item_type("minecraft:crossbow"), 1);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[4]), MC_1_20, get_item_type("minecraft:crossbow"), 0);
     create_set_count(&(loot_pool__0->loot_functions[5]), 1, 1);
     create_set_count(&(loot_pool__0->loot_functions[6]), 1, 1);
     create_set_count(&(loot_pool__0->loot_functions[7]), 10, 22);
@@ -130,12 +130,12 @@ static void create_loot_functions() {
     LootPool* loot_pool__1 = &(context.loot_pools[1]);
     create_skip_calls(&(loot_pool__1->loot_functions[0]), 1);
     create_set_count(&(loot_pool__1->loot_functions[1]), 1, 1);
-    create_enchant_randomly(&(loot_pool__1->loot_functions[2]), MC_1_20, get_item_type("minecraft:iron_sword"), 1);
+    create_enchant_randomly(&(loot_pool__1->loot_functions[2]), MC_1_20, get_item_type("minecraft:iron_sword"), 0);
     create_set_count(&(loot_pool__1->loot_functions[3]), 1, 1);
     create_set_count(&(loot_pool__1->loot_functions[4]), 1, 1);
     create_enchant_randomly_one_enchant(&(loot_pool__1->loot_functions[5]), get_enchantment_from_name("minecraft:soul_speed"));
     create_set_count(&(loot_pool__1->loot_functions[6]), 1, 1);
-    create_enchant_randomly(&(loot_pool__1->loot_functions[7]), MC_1_20, get_item_type("minecraft:golden_axe"), 1);
+    create_enchant_randomly(&(loot_pool__1->loot_functions[7]), MC_1_20, get_item_type("minecraft:golden_axe"), 0);
     create_set_count(&(loot_pool__1->loot_functions[8]), 1, 1);
     create_set_count(&(loot_pool__1->loot_functions[9]), 1, 1);
     create_set_count(&(loot_pool__1->loot_functions[10]), 1, 6);

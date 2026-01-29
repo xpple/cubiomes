@@ -106,4 +106,3 @@ LootTableContext* init_desert_pyramid_1_21_11() {
     }
     return &context;
 }
-
