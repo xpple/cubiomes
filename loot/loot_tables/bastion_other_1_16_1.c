@@ -81,7 +81,7 @@ static LootTableContext context = {
 static void create_loot_functions() {
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     create_skip_calls(&(loot_pool__0->loot_functions[0]), 1);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[1]), MC_1_16_1, get_item_type("minecraft:crossbow"), 1);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[1]), MC_1_16_1, get_item_type("minecraft:crossbow"), 0);
     create_set_count(&(loot_pool__0->loot_functions[2]), 1, 1);
     create_set_count(&(loot_pool__0->loot_functions[3]), 1, 1);
     create_set_count(&(loot_pool__0->loot_functions[4]), 2, 15);

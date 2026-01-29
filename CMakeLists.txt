@@ -50,6 +50,7 @@ set(HEADERS
 	loot/loot_tables/desert_pyramid_1_20.h
 	loot/loot_tables/desert_pyramid_1_21_6.h
 	loot/loot_tables/desert_pyramid_1_21_9.h
+	loot/loot_tables/desert_pyramid_1_21_11.h
 	loot/loot_tables/end_city_treasure_1_13.h
 	loot/loot_tables/end_city_treasure_1_20.h
 	loot/loot_tables/end_city_treasure_1_21_9.h
@@ -60,6 +61,7 @@ set(HEADERS
 	loot/loot_tables/jungle_temple_1_20.h
 	loot/loot_tables/jungle_temple_1_21_6.h
 	loot/loot_tables/jungle_temple_1_21_9.h
+	loot/loot_tables/jungle_temple_1_21_11.h
 	loot/loot_tables/jungle_temple_dispenser_1_13.h
 	loot/loot_tables/nether_bridge_1_13.h
 	loot/loot_tables/nether_bridge_1_20.h
@@ -67,6 +69,7 @@ set(HEADERS
 	loot/loot_tables/pillager_outpost_1_14.h
 	loot/loot_tables/pillager_outpost_1_19_2.h
 	loot/loot_tables/pillager_outpost_1_20.h
+	loot/loot_tables/pillager_outpost_1_21_11.h
 	loot/loot_tables/ruined_portal_1_16_1.h
 	loot/loot_tables/ruined_portal_1_21_5.h
 	loot/loot_tables/shipwreck_map_1_13.h
@@ -114,6 +117,7 @@ set(SOURCES
 	loot/loot_tables/desert_pyramid_1_20.c
 	loot/loot_tables/desert_pyramid_1_21_6.c
 	loot/loot_tables/desert_pyramid_1_21_9.c
+	loot/loot_tables/desert_pyramid_1_21_11.c
 	loot/loot_tables/end_city_treasure_1_13.c
 	loot/loot_tables/end_city_treasure_1_20.c
 	loot/loot_tables/end_city_treasure_1_21_9.c
@@ -124,6 +128,7 @@ set(SOURCES
 	loot/loot_tables/jungle_temple_1_20.c
 	loot/loot_tables/jungle_temple_1_21_6.c
 	loot/loot_tables/jungle_temple_1_21_9.c
+	loot/loot_tables/jungle_temple_1_21_11.c
 	loot/loot_tables/jungle_temple_dispenser_1_13.c
 	loot/loot_tables/nether_bridge_1_13.c
 	loot/loot_tables/nether_bridge_1_20.c
@@ -131,6 +136,7 @@ set(SOURCES
 	loot/loot_tables/pillager_outpost_1_14.c
 	loot/loot_tables/pillager_outpost_1_19_2.c
 	loot/loot_tables/pillager_outpost_1_20.c
+	loot/loot_tables/pillager_outpost_1_21_11.c
 	loot/loot_tables/ruined_portal_1_16_1.c
 	loot/loot_tables/ruined_portal_1_21_5.c
 	loot/loot_tables/shipwreck_map_1_13.c
@@ -160,5 +166,3 @@ endif()
 
 install(TARGETS cubiomes cubiomes_static DESTINATION lib)
 install(FILES ${HEADERS} DESTINATION include)
-
-

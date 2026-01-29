@@ -9,6 +9,7 @@
 #include "logging.h"
 
 #include "cjson/cJSON.h"
+#include "../biomes.h"
 
 
 ItemType get_item_type(const char* item_name)
@@ -18,6 +19,7 @@ ItemType get_item_type(const char* item_name)
     if (strstr(item_name, "_shovel") != NULL) return SHOVEL;
     if (strstr(item_name, "_hoe") != NULL) return HOE;
     if (strstr(item_name, "_sword") != NULL) return SWORD;
+    if (strstr(item_name, "_spear") != NULL) return SPEAR;
     if (strstr(item_name, "_helmet") != NULL) return HELMET;
     if (strstr(item_name, "_chestplate") != NULL) return CHESTPLATE;
     if (strstr(item_name, "_leggings") != NULL) return LEGGINGS;
@@ -77,6 +79,7 @@ Enchantment get_enchantment_from_name(const char* ench)
 
     if (strcmp(ench, "minecraft:luck_of_the_sea") == 0) return LUCK_OF_THE_SEA;
     if (strcmp(ench, "minecraft:lure") == 0) return LURE;
+    if (strcmp(ench, "minecraft:lunge") == 0) return LUNGE;
 
     if (strcmp(ench, "minecraft:density") == 0) return DENSITY;
     if (strcmp(ench, "minecraft:breach") == 0) return BREACH;
@@ -116,6 +119,10 @@ static int parse_set_count(LootFunction* loot_function, const cJSON* function_da
 static void parse_enchant_randomly(LootTableContext* ctx, LootFunction* loot_function, const cJSON* function_data, const char* item_name)
 {
     const ItemType item_type = get_item_type(item_name);
+    int is_treasure = 0;
+    cJSON* treasure = cJSON_GetObjectItem(function_data, "treasure");
+    if (treasure != NULL)
+        is_treasure = (int)cJSON_IsTrue(treasure);
 
     // if the "enchantments" field is present, we need to extract the enchantment name.
     // otherwise, we can simply create the enchant randomly function
@@ -123,16 +130,22 @@ static void parse_enchant_randomly(LootTableContext* ctx, LootFunction* loot_fun
     cJSON* defined_enchants = cJSON_GetObjectItem(function_data, "options");
     if (defined_enchants == NULL && defined_enchants_legacy == NULL)
     {
-        // no-restriction enchant randomly
-        create_enchant_randomly(loot_function, ctx->version, item_type, 1); // FIXME isTreasure is temporarily just set to true
+        if (ctx->version >= MC_1_21_9)
+            create_enchant_randomly_tag(loot_function, ctx->version, item_type, "#minecraft:in_enchanting_table", is_treasure);
+        else
+            create_enchant_randomly(loot_function, ctx->version, item_type, is_treasure);
         return;
     }
     if (defined_enchants == NULL) {
         defined_enchants = defined_enchants_legacy;
     }
     // check if the field actually defines an enchantment (list) or something like #minecraft:on_random_loot
+    if (cJSON_IsString(defined_enchants) && defined_enchants->valuestring && defined_enchants->valuestring[0] == '#') {
+        create_enchant_randomly_tag(loot_function, ctx->version, item_type, defined_enchants->valuestring, is_treasure);
+        return;
+    }
     if (cJSON_IsString(defined_enchants) && get_enchantment_from_name(defined_enchants->valuestring) == NO_ENCHANTMENT) {
-        create_enchant_randomly(loot_function, ctx->version, item_type, 1); // FIXME isTreasure is temporarily just set to true
+        create_enchant_randomly(loot_function, ctx->version, item_type, is_treasure);
         return;
     }
 
@@ -197,6 +210,24 @@ static void parse_enchant_with_levels(LootTableContext* ctx, LootFunction* loot_
     cJSON* treasure = cJSON_GetObjectItem(function_data, "treasure");
     if (treasure != NULL)
         is_treasure = (int)cJSON_IsTrue(treasure);
+
+    cJSON* options = cJSON_GetObjectItem(function_data, "options");
+    if (cJSON_IsString(options))
+    {
+        const char* opt = cJSON_GetStringValue(options);
+        if (opt != NULL && opt[0] == '#')
+        {
+            create_enchant_with_levels_tag(
+                loot_function,
+                ctx->version,
+                item_name, item_type,
+                min_level, max_level,
+                opt,
+                is_treasure
+            );
+            return;
+        }
+    }
 
     create_enchant_with_levels(
         loot_function,

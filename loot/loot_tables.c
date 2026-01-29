@@ -20,6 +20,7 @@
 #include "loot_tables/desert_pyramid_1_20.h"
 #include "loot_tables/desert_pyramid_1_21_6.h"
 #include "loot_tables/desert_pyramid_1_21_9.h"
+#include "loot_tables/desert_pyramid_1_21_11.h"
 #include "loot_tables/end_city_treasure_1_13.h"
 #include "loot_tables/end_city_treasure_1_20.h"
 #include "loot_tables/end_city_treasure_1_21_9.h"
@@ -30,6 +31,7 @@
 #include "loot_tables/jungle_temple_1_20.h"
 #include "loot_tables/jungle_temple_1_21_6.h"
 #include "loot_tables/jungle_temple_1_21_9.h"
+#include "loot_tables/jungle_temple_1_21_11.h"
 #include "loot_tables/jungle_temple_dispenser_1_13.h"
 #include "loot_tables/nether_bridge_1_13.h"
 #include "loot_tables/nether_bridge_1_20.h"
@@ -37,6 +39,7 @@
 #include "loot_tables/pillager_outpost_1_14.h"
 #include "loot_tables/pillager_outpost_1_19_2.h"
 #include "loot_tables/pillager_outpost_1_20.h"
+#include "loot_tables/pillager_outpost_1_21_11.h"
 #include "loot_tables/ruined_portal_1_16_1.h"
 #include "loot_tables/ruined_portal_1_21_5.h"
 #include "loot_tables/shipwreck_map_1_13.h"
@@ -127,7 +130,8 @@ int init_desert_pyramid(LootTableContext** context, int version) {
     if (version < MC_1_20) *context = init_desert_pyramid_1_13();
     else if (version < MC_1_21_6) *context = init_desert_pyramid_1_20();
     else if (version < MC_1_21_9) *context = init_desert_pyramid_1_21_6();
-    else *context = init_desert_pyramid_1_21_9();
+    else if (version < MC_1_21_11) *context = init_desert_pyramid_1_21_9();
+    else *context = init_desert_pyramid_1_21_11();
     return version > MC_1_12;
 }
 
@@ -149,7 +153,8 @@ int init_jungle_temple(LootTableContext** context, int version) {
     else if (version < MC_1_20) *context = init_jungle_temple_1_14();
     else if (version < MC_1_21_6) *context = init_jungle_temple_1_20();
     else if (version < MC_1_21_9) *context = init_jungle_temple_1_21_6();
-    else *context = init_jungle_temple_1_21_9();
+    else if (version < MC_1_21_11) *context = init_jungle_temple_1_21_9();
+    else *context = init_jungle_temple_1_21_11();
     return version > MC_1_12;
 }
 
@@ -168,7 +173,8 @@ int init_nether_bridge(LootTableContext** context, int version) {
 int init_pillager_outpost(LootTableContext** context, int version) {
     if (version < MC_1_19_2) *context = init_pillager_outpost_1_14();
     else if (version < MC_1_20) *context = init_pillager_outpost_1_19_2();
-    else *context = init_pillager_outpost_1_20();
+    else if (version < MC_1_21_9) *context = init_pillager_outpost_1_20();
+    else *context = init_pillager_outpost_1_21_11();
     return version > MC_1_13;
 }
 

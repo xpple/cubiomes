@@ -59,10 +59,10 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__0->loot_functions[10]), 1, 3);
     create_set_count(&(loot_pool__0->loot_functions[11]), 1, 5);
     create_set_count(&(loot_pool__0->loot_functions[12]), 1, 2);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[13]), MC_1_17, get_item_type("minecraft:leather_helmet"), 1);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[14]), MC_1_17, get_item_type("minecraft:leather_chestplate"), 1);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[15]), MC_1_17, get_item_type("minecraft:leather_leggings"), 1);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[16]), MC_1_17, get_item_type("minecraft:leather_boots"), 1);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[13]), MC_1_17, get_item_type("minecraft:leather_helmet"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[14]), MC_1_17, get_item_type("minecraft:leather_chestplate"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[15]), MC_1_17, get_item_type("minecraft:leather_leggings"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[16]), MC_1_17, get_item_type("minecraft:leather_boots"), 0);
 }
 
 LootTableContext* init_shipwreck_supply_1_17() {

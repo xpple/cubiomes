@@ -62,18 +62,27 @@ class NoOpFunction(LootFunction):
 
 
 class EnchantRandomlyFunction(LootFunction):
-    def __init__(self, enchantments: list[str], item_name: str):
+    def __init__(self, enchantments: list[str], item_name: str, treasure: bool):
         super().__init__()
         self.enchantments = enchantments
         self.item_name = item_name
+        self.treasure = treasure
 
 
     def to_function_call(self, arg: str, version: str):
+        def parse_version(v: str):
+            return tuple(int(p) for p in v.split('_'))
+
+        def version_gte(a: str, b: str) -> bool:
+            return parse_version(a) >= parse_version(b)
+
         if self.enchantments is None:
-            return f"create_enchant_randomly({arg}, MC_{version}, get_item_type(\"{self.item_name}\"), 1)"
+            if version_gte(version, "1_21_9"):
+                return f"create_enchant_randomly_tag({arg}, MC_{version}, get_item_type(\"{self.item_name}\"), \"#minecraft:in_enchanting_table\", {int(self.treasure)})"
+            return f"create_enchant_randomly({arg}, MC_{version}, get_item_type(\"{self.item_name}\"), {int(self.treasure)})"
         if isinstance(self.enchantments, str):
-            if self.enchantments.startswith("#"): # assume #minecraft:on_random_loot
-                return f"create_enchant_randomly({arg}, MC_{version}, get_item_type(\"{self.item_name}\"), 1)"
+            if self.enchantments.startswith("#"):
+                return f"create_enchant_randomly_tag({arg}, MC_{version}, get_item_type(\"{self.item_name}\"), \"{self.enchantments}\", {int(self.treasure)})"
             return f"create_enchant_randomly_one_enchant({arg}, get_enchantment_from_name(\"{self.enchantments}\"))"
         assert isinstance(self.enchantments, list)
         if len(self.enchantments) == 1:
@@ -83,15 +92,18 @@ class EnchantRandomlyFunction(LootFunction):
 
 
 class EnchantWithLevelsFunction(LootFunction):
-    def __init__(self, item_name: str, min: int, max: int, is_treasure: int):
+    def __init__(self, item_name: str, min: int, max: int, options: str | None, is_treasure: int):
         super().__init__()
         self.item_name = item_name
         self.min = min
         self.max = max
+        self.options = options
         self.is_treasure = is_treasure
 
 
     def to_function_call(self, arg: str, version: str):
+        if isinstance(self.options, str) and self.options.startswith("#"):
+            return f"create_enchant_with_levels_tag({arg}, MC_{version}, \"{self.item_name}\", get_item_type(\"{self.item_name}\"), {self.min}, {self.max}, \"{self.options}\", {self.is_treasure})"
         return f"create_enchant_with_levels({arg}, MC_{version}, \"{self.item_name}\", get_item_type(\"{self.item_name}\"), {self.min}, {self.max}, {self.is_treasure})"
 
 
@@ -198,7 +210,8 @@ def parse_loot_function(json_function_entry, entry_name: str) -> LootFunction:
         return SkipCallsFunction(1)
     if json_function == 'enchant_randomly':
         enchantments = json_function_entry.get("enchantments", json_function_entry.get("options", None))
-        return EnchantRandomlyFunction(enchantments, entry_name)
+        treasure = json_function_entry.get("treasure", False)
+        return EnchantRandomlyFunction(enchantments, entry_name, bool(treasure))
     if json_function == 'enchant_with_levels':
         levels = json_function_entry.get("levels", None)
         if isinstance(levels, (int, float)):
@@ -209,8 +222,9 @@ def parse_loot_function(json_function_entry, entry_name: str) -> LootFunction:
         else:
             min_level = 0
             max_level = 0
-        is_treasure = json_function_entry.get("is_treasure", True)
-        return EnchantWithLevelsFunction(entry_name, int(min_level), int(max_level), int(is_treasure))
+        options = json_function_entry.get("options", None)
+        is_treasure = json_function_entry.get("treasure", json_function_entry.get("is_treasure", True))
+        return EnchantWithLevelsFunction(entry_name, int(min_level), int(max_level), options, int(is_treasure))
     if json_function == 'exploration_map':
         warn(f"Ignored loot function 'exploration_map'")
         return NoOpFunction()

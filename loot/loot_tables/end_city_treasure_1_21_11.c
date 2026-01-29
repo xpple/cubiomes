@@ -68,21 +68,21 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__0->loot_functions[2]), 2, 7);
     create_set_count(&(loot_pool__0->loot_functions[3]), 2, 6);
     create_set_count(&(loot_pool__0->loot_functions[4]), 1, 10);
-    create_enchant_with_levels(&(loot_pool__0->loot_functions[5]), MC_1_21_11, "minecraft:diamond_sword", get_item_type("minecraft:diamond_sword"), 20, 39, 1);
-    create_enchant_with_levels(&(loot_pool__0->loot_functions[6]), MC_1_21_11, "minecraft:diamond_spear", get_item_type("minecraft:diamond_spear"), 20, 39, 1);
-    create_enchant_with_levels(&(loot_pool__0->loot_functions[7]), MC_1_21_11, "minecraft:diamond_boots", get_item_type("minecraft:diamond_boots"), 20, 39, 1);
-    create_enchant_with_levels(&(loot_pool__0->loot_functions[8]), MC_1_21_11, "minecraft:diamond_chestplate", get_item_type("minecraft:diamond_chestplate"), 20, 39, 1);
-    create_enchant_with_levels(&(loot_pool__0->loot_functions[9]), MC_1_21_11, "minecraft:diamond_leggings", get_item_type("minecraft:diamond_leggings"), 20, 39, 1);
-    create_enchant_with_levels(&(loot_pool__0->loot_functions[10]), MC_1_21_11, "minecraft:diamond_helmet", get_item_type("minecraft:diamond_helmet"), 20, 39, 1);
-    create_enchant_with_levels(&(loot_pool__0->loot_functions[11]), MC_1_21_11, "minecraft:diamond_pickaxe", get_item_type("minecraft:diamond_pickaxe"), 20, 39, 1);
-    create_enchant_with_levels(&(loot_pool__0->loot_functions[12]), MC_1_21_11, "minecraft:diamond_shovel", get_item_type("minecraft:diamond_shovel"), 20, 39, 1);
-    create_enchant_with_levels(&(loot_pool__0->loot_functions[13]), MC_1_21_11, "minecraft:iron_sword", get_item_type("minecraft:iron_sword"), 20, 39, 1);
-    create_enchant_with_levels(&(loot_pool__0->loot_functions[14]), MC_1_21_11, "minecraft:iron_boots", get_item_type("minecraft:iron_boots"), 20, 39, 1);
-    create_enchant_with_levels(&(loot_pool__0->loot_functions[15]), MC_1_21_11, "minecraft:iron_chestplate", get_item_type("minecraft:iron_chestplate"), 20, 39, 1);
-    create_enchant_with_levels(&(loot_pool__0->loot_functions[16]), MC_1_21_11, "minecraft:iron_leggings", get_item_type("minecraft:iron_leggings"), 20, 39, 1);
-    create_enchant_with_levels(&(loot_pool__0->loot_functions[17]), MC_1_21_11, "minecraft:iron_helmet", get_item_type("minecraft:iron_helmet"), 20, 39, 1);
-    create_enchant_with_levels(&(loot_pool__0->loot_functions[18]), MC_1_21_11, "minecraft:iron_pickaxe", get_item_type("minecraft:iron_pickaxe"), 20, 39, 1);
-    create_enchant_with_levels(&(loot_pool__0->loot_functions[19]), MC_1_21_11, "minecraft:iron_shovel", get_item_type("minecraft:iron_shovel"), 20, 39, 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[5]), MC_1_21_11, "minecraft:diamond_sword", get_item_type("minecraft:diamond_sword"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[6]), MC_1_21_11, "minecraft:diamond_spear", get_item_type("minecraft:diamond_spear"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[7]), MC_1_21_11, "minecraft:diamond_boots", get_item_type("minecraft:diamond_boots"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[8]), MC_1_21_11, "minecraft:diamond_chestplate", get_item_type("minecraft:diamond_chestplate"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[9]), MC_1_21_11, "minecraft:diamond_leggings", get_item_type("minecraft:diamond_leggings"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[10]), MC_1_21_11, "minecraft:diamond_helmet", get_item_type("minecraft:diamond_helmet"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[11]), MC_1_21_11, "minecraft:diamond_pickaxe", get_item_type("minecraft:diamond_pickaxe"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[12]), MC_1_21_11, "minecraft:diamond_shovel", get_item_type("minecraft:diamond_shovel"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[13]), MC_1_21_11, "minecraft:iron_sword", get_item_type("minecraft:iron_sword"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[14]), MC_1_21_11, "minecraft:iron_boots", get_item_type("minecraft:iron_boots"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[15]), MC_1_21_11, "minecraft:iron_chestplate", get_item_type("minecraft:iron_chestplate"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[16]), MC_1_21_11, "minecraft:iron_leggings", get_item_type("minecraft:iron_leggings"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[17]), MC_1_21_11, "minecraft:iron_helmet", get_item_type("minecraft:iron_helmet"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[18]), MC_1_21_11, "minecraft:iron_pickaxe", get_item_type("minecraft:iron_pickaxe"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[19]), MC_1_21_11, "minecraft:iron_shovel", get_item_type("minecraft:iron_shovel"), 20, 39, "#minecraft:on_random_loot", 1);
     LootPool* loot_pool__1 = &(context.loot_pools[1]);
 }
 

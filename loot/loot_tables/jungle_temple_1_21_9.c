@@ -71,7 +71,7 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__0->loot_functions[5]), 4, 6);
     create_set_count(&(loot_pool__0->loot_functions[6]), 3, 7);
     create_set_count(&(loot_pool__0->loot_functions[7]), 1, 5);
-    create_enchant_with_levels(&(loot_pool__0->loot_functions[8]), MC_1_21_9, "minecraft:book", get_item_type("minecraft:book"), 30, 30, 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[8]), MC_1_21_9, "minecraft:book", get_item_type("minecraft:book"), 30, 30, "#minecraft:on_random_loot", 1);
     LootPool* loot_pool__1 = &(context.loot_pools[1]);
     create_set_count(&(loot_pool__1->loot_functions[0]), 2, 2);
 }
