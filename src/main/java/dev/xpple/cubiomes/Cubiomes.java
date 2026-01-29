@@ -18403,19 +18403,19 @@ public class Cubiomes {
     public static int TRIDENT() {
         return TRIDENT;
     }
-    private static final int MACE = (int)14L;
+    private static final int MACE = (int)15L;
     /**
      * {@snippet lang=c :
-     * enum ItemType.MACE = 14
+     * enum ItemType.MACE = 15
      * }
      */
     public static int MACE() {
         return MACE;
     }
-    private static final int BOOK = (int)15L;
+    private static final int BOOK = (int)16L;
     /**
      * {@snippet lang=c :
-     * enum ItemType.BOOK = 15
+     * enum ItemType.BOOK = 16
      * }
      */
     public static int BOOK() {
