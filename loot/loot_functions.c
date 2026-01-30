@@ -7,6 +7,49 @@
 #include "../biomes.h"
 #include "../rng.h"
 
+const struct MobEffect MOB_EFFECTS[EFFECT_NUM] = {
+    [EFFECT_SPEED] = {EFFECT_SPEED, "minecraft:speed", 0},
+    [EFFECT_SLOWNESS] = {EFFECT_SLOWNESS, "minecraft:slowness", 0},
+    [EFFECT_HASTE] = {EFFECT_HASTE, "minecraft:haste", 0},
+    [EFFECT_MINING_FATIGUE] = {EFFECT_MINING_FATIGUE, "minecraft:mining_fatigue", 0},
+    [EFFECT_STRENGTH] = {EFFECT_STRENGTH, "minecraft:strength", 0},
+    [EFFECT_INSTANT_HEALTH] = {EFFECT_INSTANT_HEALTH, "minecraft:instant_health", 1},
+    [EFFECT_INSTANT_DAMAGE] = {EFFECT_INSTANT_DAMAGE, "minecraft:instant_damage", 1},
+    [EFFECT_JUMP_BOOST] = {EFFECT_JUMP_BOOST, "minecraft:jump_boost", 0},
+    [EFFECT_NAUSEA] = {EFFECT_NAUSEA, "minecraft:nausea", 0},
+    [EFFECT_REGENERATION] = {EFFECT_REGENERATION, "minecraft:regeneration", 0},
+    [EFFECT_RESISTANCE] = {EFFECT_RESISTANCE, "minecraft:resistance", 0},
+    [EFFECT_FIRE_RESISTANCE] = {EFFECT_FIRE_RESISTANCE, "minecraft:fire_resistance", 0},
+    [EFFECT_WATER_BREATHING] = {EFFECT_WATER_BREATHING, "minecraft:water_breathing", 0},
+    [EFFECT_INVISIBILITY] = {EFFECT_INVISIBILITY, "minecraft:invisibility", 0},
+    [EFFECT_BLINDNESS] = {EFFECT_BLINDNESS, "minecraft:blindness", 0},
+    [EFFECT_NIGHT_VISION] = {EFFECT_NIGHT_VISION, "minecraft:night_vision", 0},
+    [EFFECT_HUNGER] = {EFFECT_HUNGER, "minecraft:hunger", 0},
+    [EFFECT_WEAKNESS] = {EFFECT_WEAKNESS, "minecraft:weakness", 0},
+    [EFFECT_POISON] = {EFFECT_POISON, "minecraft:poison", 0},
+    [EFFECT_WITHER] = {EFFECT_WITHER, "minecraft:wither", 0},
+    [EFFECT_HEALTH_BOOST] = {EFFECT_HEALTH_BOOST, "minecraft:health_boost", 0},
+    [EFFECT_ABSORPTION] = {EFFECT_ABSORPTION, "minecraft:absorption", 0},
+    [EFFECT_SATURATION] = {EFFECT_SATURATION, "minecraft:saturation", 1},
+    [EFFECT_GLOWING] = {EFFECT_GLOWING, "minecraft:glowing", 0},
+    [EFFECT_LEVITATION] = {EFFECT_LEVITATION, "minecraft:levitation", 0},
+    [EFFECT_LUCK] = {EFFECT_LUCK, "minecraft:luck", 0},
+    [EFFECT_UNLUCK] = {EFFECT_UNLUCK, "minecraft:unluck", 0},
+    [EFFECT_SLOW_FALLING] = {EFFECT_SLOW_FALLING, "minecraft:slow_falling", 0},
+    [EFFECT_CONDUIT_POWER] = {EFFECT_CONDUIT_POWER, "minecraft:conduit_power", 0},
+    [EFFECT_DOLPHINS_GRACE] = {EFFECT_DOLPHINS_GRACE, "minecraft:dolphins_grace", 0},
+    [EFFECT_BAD_OMEN] = {EFFECT_BAD_OMEN, "minecraft:bad_omen", 0},
+    [EFFECT_HERO_OF_THE_VILLAGE] = {EFFECT_HERO_OF_THE_VILLAGE, "minecraft:hero_of_the_village", 0},
+    [EFFECT_DARKNESS] = {EFFECT_DARKNESS, "minecraft:darkness", 0},
+    [EFFECT_TRIAL_OMEN] = {EFFECT_TRIAL_OMEN, "minecraft:trial_omen", 0},
+    [EFFECT_RAID_OMEN] = {EFFECT_RAID_OMEN, "minecraft:raid_omen", 0},
+    [EFFECT_WIND_CHARGED] = {EFFECT_WIND_CHARGED, "minecraft:wind_charged", 0},
+    [EFFECT_WEAVING] = {EFFECT_WEAVING, "minecraft:weaving", 0},
+    [EFFECT_OOZING] = {EFFECT_OOZING, "minecraft:oozing", 0},
+    [EFFECT_INFESTED] = {EFFECT_INFESTED, "minecraft:infested", 0},
+    [EFFECT_BREATH_OF_THE_NAUTILUS] = {EFFECT_BREATH_OF_THE_NAUTILUS, "minecraft:breath_of_the_nautilus", 0},
+};
+
 // ----------------------------------------------------------------------------------------
 // the actual loot functions
 
@@ -28,7 +71,17 @@ static void set_count_constant_function(uint64_t* rand, ItemStack* is, const voi
 
 static void set_effect_function(uint64_t* rand, ItemStack* is, const void* params)
 {
-    skipNextN(rand, 2); // effect type, effect duration
+    int* varparams_int = (int*)params;
+    int count = varparams_int[0];
+    int effectOffset = nextInt(rand, count);
+    MobEffectEntry* varparams_mob_effect = (MobEffectEntry *)(varparams_int + 1);
+    MobEffectEntry effect_entry = varparams_mob_effect[effectOffset];
+    is->mob_effect.effect = effect_entry.mob_effect->effect;
+    int duration = nextIntBetween(rand, effect_entry.min, effect_entry.max);
+    if (!effect_entry.mob_effect->is_instantaneous) {
+        duration *= 20;
+    }
+    is->mob_effect.duration = duration;
 }
 
 static void skip_n_calls_function(uint64_t* rand, ItemStack* is, const void* params)
@@ -266,10 +319,13 @@ void create_set_count(LootFunction* lf, const int min, const int max)
     }
 }
 
-void create_set_effect(LootFunction* lf)
+void create_set_effect(LootFunction* lf, const int count, const MobEffectEntry mobEffects[])
 {
     init_function(lf);
-    lf->params = lf->params_int;
+    lf->varparams_int = (int*)malloc(sizeof(int) + (count * sizeof(MobEffectEntry)));
+    lf->params = lf->varparams_int;
+    lf->varparams_int[0] = count;
+    memcpy(lf->varparams_int + 1, mobEffects, count * sizeof(MobEffectEntry));
     lf->fun = set_effect_function;
 }
 

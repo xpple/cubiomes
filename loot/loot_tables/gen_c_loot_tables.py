@@ -26,12 +26,14 @@ class SetCountFunction(LootFunction):
 
 
 class SetEffectFunction(LootFunction):
-    def __init__(self):
+    def __init__(self, effects: list[tuple[str, int, int]]):
         super().__init__()
+        self.effects = effects
 
 
     def to_function_call(self, arg: str, version: str):
-        return f"create_set_effect({arg})"
+        effects_str = ", ".join(f"{{get_mob_effect_from_name(\"{name}\"), {min_dur}, {max_dur}}}" for (name, min_dur, max_dur) in self.effects)
+        return f"create_set_effect({arg}, {len(self.effects)}, (MobEffectEntry[]){{{effects_str}}})"
 
 
 class SetDamageFunction(LootFunction):
@@ -203,7 +205,16 @@ def parse_loot_function(json_function_entry, entry_name: str) -> LootFunction:
             max_rolls = json_count["max"]
         return SetCountFunction(int(min_rolls), int(max_rolls))
     if json_function == 'set_stew_effect':
-        return SetEffectFunction()
+        effects = json_function_entry['effects']
+        mob_effects: list[tuple[str, int, int]] = []
+        for effect_entry in effects:
+            effect_name = effect_entry['type']
+            duration_entry = effect_entry['duration']
+            assert duration_entry.get('type') in (None, 'minecraft:uniform')
+            min_dur = duration_entry['min']
+            max_dur = duration_entry['max']
+            mob_effects.append((effect_name, int(min_dur), int(max_dur)))
+        return SetEffectFunction(mob_effects)
     if json_function == 'set_damage':
         return SetDamageFunction()
     if json_function == 'set_ominous_bottle_amplifier':
