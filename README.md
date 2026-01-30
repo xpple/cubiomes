@@ -60,3 +60,5 @@ There are two ways you can import the bindings.
 Before you can use the bindings, you must call `CubiomesInit.load()`. This will load the native library, so that the native calls are delegated to the binary. The program will crash if you do not do this.
 
 Since the bindings use the FFM API, it is helpful to get yourself familiar with how it works. See [this tutorial](https://dev.java/learn/ffm/) for a brief introduction. I have also written a few exemplary tests in the [`test` source set](https://github.com/xpple/cubiomes/tree/java-bindings/src/test/java/dev/xpple/cubiomes). Should you have any further questions on how to use the bindings, feel free to contact me on Discord.
+
+It is advised to avoid platform-dependent types like `Cubiomes.C_LONG`. Either use `Cubiomes.C_INT` or `Cubiomes.C_LONG_LONG`. Hopefully a future update of jextract will allow me to filter out these types for binding generation.
