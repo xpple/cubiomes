@@ -104,6 +104,69 @@ enum Enchantment {
 	LUNGE,
 };
 
+enum MobEffectType {
+    EFFECT_SPEED,
+    EFFECT_SLOWNESS,
+    EFFECT_HASTE,
+    EFFECT_MINING_FATIGUE,
+    EFFECT_STRENGTH,
+    EFFECT_INSTANT_HEALTH,
+    EFFECT_INSTANT_DAMAGE,
+    EFFECT_JUMP_BOOST,
+    EFFECT_NAUSEA,
+    EFFECT_REGENERATION,
+    EFFECT_RESISTANCE,
+    EFFECT_FIRE_RESISTANCE,
+    EFFECT_WATER_BREATHING,
+    EFFECT_INVISIBILITY,
+    EFFECT_BLINDNESS,
+    EFFECT_NIGHT_VISION,
+    EFFECT_HUNGER,
+    EFFECT_WEAKNESS,
+    EFFECT_POISON,
+    EFFECT_WITHER,
+    EFFECT_HEALTH_BOOST,
+    EFFECT_ABSORPTION,
+    EFFECT_SATURATION,
+    EFFECT_GLOWING,
+    EFFECT_LEVITATION,
+    EFFECT_LUCK,
+    EFFECT_UNLUCK,
+    EFFECT_SLOW_FALLING,
+    EFFECT_CONDUIT_POWER,
+    EFFECT_DOLPHINS_GRACE,
+    EFFECT_BAD_OMEN,
+    EFFECT_HERO_OF_THE_VILLAGE,
+    EFFECT_DARKNESS,
+    EFFECT_TRIAL_OMEN,
+    EFFECT_RAID_OMEN,
+    EFFECT_WIND_CHARGED,
+    EFFECT_WEAVING,
+    EFFECT_OOZING,
+    EFFECT_INFESTED,
+    EFFECT_BREATH_OF_THE_NAUTILUS,
+    EFFECT_NUM
+};
+
+STRUCT(MobEffect) {
+    const int effect;
+    const char* effect_name;
+    const int is_instantaneous;
+};
+
+extern const struct MobEffect MOB_EFFECTS[EFFECT_NUM];
+
+STRUCT(MobEffectEntry) {
+    const MobEffect *mob_effect;
+    int min;
+    int max;
+};
+
+STRUCT(MobEffectInstance) {
+    int effect;
+    int duration;
+};
+
 typedef enum ItemType ItemType;
 typedef enum Enchantment Enchantment;
 
@@ -120,6 +183,8 @@ struct ItemStack {
 
 	int enchantment_count;
 	EnchantInstance enchantments[16]; // 12 is the theoretical maximum for 1.17 and below, 16 should be safe for all versions
+
+    MobEffectInstance mob_effect;
 };
 
 // ----------------------------------------------------------------------------------------
@@ -158,7 +223,7 @@ static inline int roll_count_uniform(uint64_t* rand, const int min, const int ma
 // Loot function initializers
 
 void create_set_count(LootFunction* lf, const int min, const int max);
-void create_set_effect(LootFunction* lf);
+void create_set_effect(LootFunction* lf, const int count, const MobEffectEntry mobEffects[]);
 void create_set_damage(LootFunction* lf);
 void create_skip_calls(LootFunction* lf, const int skip_count);
 void create_no_op(LootFunction* lf);

@@ -51,7 +51,7 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__0->loot_functions[2]), 2, 6);
     create_set_count(&(loot_pool__0->loot_functions[3]), 4, 8);
     create_set_count(&(loot_pool__0->loot_functions[4]), 8, 21);
-    create_set_effect(&(loot_pool__0->loot_functions[5]));
+    create_set_effect(&(loot_pool__0->loot_functions[5]), 6, (MobEffectEntry[]){{get_mob_effect_from_name("minecraft:weakness"), 6, 8}, {get_mob_effect_from_name("minecraft:blindness"), 5, 7}, {get_mob_effect_from_name("minecraft:saturation"), 7, 10}, {get_mob_effect_from_name("minecraft:night_vision"), 7, 10}, {get_mob_effect_from_name("minecraft:jump_boost"), 7, 10}, {get_mob_effect_from_name("minecraft:poison"), 10, 20}});
     create_set_count(&(loot_pool__0->loot_functions[6]), 2, 8);
     create_set_count(&(loot_pool__0->loot_functions[7]), 5, 24);
     create_set_count(&(loot_pool__0->loot_functions[8]), 1, 3);

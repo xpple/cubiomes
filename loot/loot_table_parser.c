@@ -35,6 +35,16 @@ ItemType get_item_type(const char* item_name)
     return NO_ITEM;
 }
 
+const MobEffect* get_mob_effect_from_name(const char* mob_effect)
+{
+    for (int i = 0; i < EFFECT_NUM; ++i)
+    {
+        if (strcmp(mob_effect, MOB_EFFECTS[i].effect_name) == 0) return &MOB_EFFECTS[i];
+    }
+    fprintf(stderr, "ERR get_mob_effect_from_name: Unknown mob effect %s\n", mob_effect);
+    return NULL;
+}
+
 Enchantment get_enchantment_from_name(const char* ench)
 {
     // I'm sorry.
@@ -114,6 +124,43 @@ static int parse_set_count(LootFunction* loot_function, const cJSON* function_da
         create_set_count(loot_function, min, max);
         return 0;
     }
+}
+
+static void parse_set_effect(LootFunction* loot_function, const cJSON* function_data)
+{
+    cJSON* effects = cJSON_GetObjectItem(function_data, "effects");
+    if (!cJSON_IsArray(effects)) {
+        fprintf(stderr, "effects must be array\n");
+        return;
+    }
+    int effectCount = cJSON_GetArraySize(effects);
+    MobEffectEntry mobEffects[effectCount];
+    for (int i = 0; i < effectCount; ++i) {
+        cJSON* effect_entry = cJSON_GetArrayItem(effects, i);
+        if (!cJSON_IsObject(effect_entry)) {
+            fprintf(stderr, "effect entry must be object\n");
+            return;
+        }
+        const char* effect_name = cJSON_GetStringValue(cJSON_GetObjectItem(effect_entry, "type"));
+        mobEffects[i].mob_effect = get_mob_effect_from_name(effect_name);
+
+        cJSON* duration_entry = cJSON_GetObjectItem(effect_entry, "duration");
+        if (!cJSON_IsObject(effect_entry)) {
+            fprintf(stderr, "duration entry must be object\n");
+            return;
+        }
+
+        const char* duration_type = cJSON_GetStringValue(cJSON_GetObjectItem(duration_entry, "type"));
+        if (strcmp(duration_type, "minecraft:uniform") != 0) {
+            fprintf(stderr, "unexpected duration type '%s'\n", duration_type);
+            return;
+        }
+
+        mobEffects[i].min = cJSON_GetObjectItem(duration_entry, "min")->valueint;
+        mobEffects[i].max = cJSON_GetObjectItem(duration_entry, "max")->valueint;
+    }
+
+    create_set_effect(loot_function, effectCount, mobEffects);
 }
 
 static void parse_enchant_randomly(LootTableContext* ctx, LootFunction* loot_function, const cJSON* function_data, const char* item_name)
@@ -434,7 +481,7 @@ static void init_entry_functions(const cJSON* entry_data, LootPool* pool, const 
             create_set_damage(loot_function);
         }
         else if (strcmp(function_name, "minecraft:set_stew_effect") == 0) {
-            create_set_effect(loot_function);
+            parse_set_effect(loot_function, function_data);
         }
         else if (strcmp(function_name, "minecraft:set_ominous_bottle_amplifier") == 0) {
             create_skip_calls(loot_function, 1);

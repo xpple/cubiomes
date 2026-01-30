@@ -93,6 +93,7 @@ static void generate_loot_pool(LootTableContext* context, int pool_index)
         item_stack->item = item;
         item_stack->count = 1;
         item_stack->enchantment_count = 0;
+        item_stack->mob_effect = (MobEffectInstance) {-1, -1};
 
         // sequentially apply all the loot functions to the item stack
         const int function_count = pool->entry_functions_count[entry];
