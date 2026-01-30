@@ -19,6 +19,7 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
  *     int count;
  *     int enchantment_count;
  *     EnchantInstance enchantments[16];
+ *     MobEffectInstance mob_effect;
  * }
  * }
  */
@@ -32,7 +33,8 @@ public class ItemStack {
         Cubiomes.C_INT.withName("item"),
         Cubiomes.C_INT.withName("count"),
         Cubiomes.C_INT.withName("enchantment_count"),
-        MemoryLayout.sequenceLayout(16, EnchantInstance.layout()).withName("enchantments")
+        MemoryLayout.sequenceLayout(16, EnchantInstance.layout()).withName("enchantments"),
+        MobEffectInstance.layout().withName("mob_effect")
     ).withName("ItemStack");
 
     /**
@@ -253,6 +255,50 @@ public class ItemStack {
      */
     public static void enchantments(MemorySegment struct, long index0, MemorySegment fieldValue) {
         MemorySegment.copy(fieldValue, 0L, enchantments(struct, index0), 0L, EnchantInstance.layout().byteSize());
+    }
+
+    private static final GroupLayout mob_effect$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("mob_effect"));
+
+    /**
+     * Layout for field:
+     * {@snippet lang=c :
+     * MobEffectInstance mob_effect
+     * }
+     */
+    public static final GroupLayout mob_effect$layout() {
+        return mob_effect$LAYOUT;
+    }
+
+    private static final long mob_effect$OFFSET = $LAYOUT.byteOffset(groupElement("mob_effect"));
+
+    /**
+     * Offset for field:
+     * {@snippet lang=c :
+     * MobEffectInstance mob_effect
+     * }
+     */
+    public static final long mob_effect$offset() {
+        return mob_effect$OFFSET;
+    }
+
+    /**
+     * Getter for field:
+     * {@snippet lang=c :
+     * MobEffectInstance mob_effect
+     * }
+     */
+    public static MemorySegment mob_effect(MemorySegment struct) {
+        return struct.asSlice(mob_effect$OFFSET, mob_effect$LAYOUT.byteSize());
+    }
+
+    /**
+     * Setter for field:
+     * {@snippet lang=c :
+     * MobEffectInstance mob_effect
+     * }
+     */
+    public static void mob_effect(MemorySegment struct, MemorySegment fieldValue) {
+        MemorySegment.copy(fieldValue, 0L, struct, mob_effect$OFFSET, mob_effect$LAYOUT.byteSize());
     }
 
     /**
