@@ -64,7 +64,7 @@ jobs:
           name: cubiomes.dll
           path: build/cubiomes.dll
   create-java-bindings:
-    if: github.repository == 'xpple/cubiomes'
+    if: github.repository == 'xpple/cubiomes' && github.event_name == 'push'
     name: Create Java bindings
     needs: compile
     runs-on: ubuntu-latest
