@@ -99,7 +99,7 @@ int init_loot_table_name(LootTableContext** context, const char* loot_table, int
         return init_shipwreck_treasure(context, version);
     }
     fprintf(stderr, "ERR init_loot_table_name: unsupported loot_table %s\n", loot_table);
-    memset(context, 0, sizeof(LootTableContext));
+    *context = NULL;
     return 0;
 }
 
