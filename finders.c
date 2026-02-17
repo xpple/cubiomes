@@ -3911,7 +3911,9 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
         CREATE_RANDOM_SOURCE(rnd, legacy);
         rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
-        rnd.nextInt(rnd.state, 3);
+        if (mc > MC_1_17_1) {
+            rnd.nextInt(rnd.state, 3); // updateHeightPositionToLowestGroundHeight call in >=1.18
+        }
         for (int i = 0; i < p->chestCount; ++i) {
             p->lootTables[i] = "desert_pyramid";
             p->lootSeeds[i] = rnd.nextLong(rnd.state);
