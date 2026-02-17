@@ -3977,13 +3977,13 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
         CREATE_RANDOM_SOURCE(rnd, legacy);
         rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
-        xSkipN(rnd.state, 1511);
+        rnd.skipN(rnd.state, 1511);
         p->lootSeeds[0] = rnd.nextLong(rnd.state);
-        xSkipN(rnd.state, 1513 - 1511 - 1 - 1);
+        rnd.skipN(rnd.state, 1513 - 1511 - 1 - 1);
         p->lootSeeds[1] = rnd.nextLong(rnd.state);
-        xSkipN(rnd.state, 1515 - 1513 - 1 - 1);
+        rnd.skipN(rnd.state, 1515 - 1513 - 1 - 1);
         p->lootSeeds[2] = rnd.nextLong(rnd.state);
-        xSkipN(rnd.state, 1528 - 1515 - 1 - 1);
+        rnd.skipN(rnd.state, 1528 - 1515 - 1 - 1);
         p->lootSeeds[3] = rnd.nextLong(rnd.state);
         return 1;
     }

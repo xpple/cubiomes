@@ -285,7 +285,7 @@ static inline void calcVecMul(const uint64_t m[128][2], Xoroshiro* xr) {
     xr->lo = rv[1];
 }
 
-static inline void xSkipN(Xoroshiro *xr, int count)
+static inline void xSkipN(Xoroshiro *xr, uint64_t count)
 {
     int pow = 0;
     while (count > 0) {
@@ -353,6 +353,7 @@ STRUCT(RandomSource)
     float (*nextFloat)(void *state);
     double (*nextDouble)(void *state);
     int (*nextIntBetween)(void *state, int min, int max);
+    void (*skipN)(void *state, uint64_t n);
 };
 
 static inline RandomSource createJavaRandom(uint64_t *seed)
@@ -365,6 +366,7 @@ static inline RandomSource createJavaRandom(uint64_t *seed)
         .nextFloat = (float (*)(void *)) nextFloat,
         .nextDouble = (double (*)(void *)) nextDouble,
         .nextIntBetween = (int (*)(void *, int, int)) nextIntBetween,
+        .skipN = (void (*)(void *, uint64_t)) skipNextN,
     };
 }
 
@@ -378,6 +380,7 @@ static inline RandomSource createXoroshiro(Xoroshiro *xr)
         .nextFloat = (float (*)(void *)) xNextFloat,
         .nextDouble = (double (*)(void *)) xNextDoubleJ,
         .nextIntBetween = (int (*)(void *, int, int)) xNextIntJBetween,
+        .skipN = (void (*)(void *, uint64_t)) xSkipN,
     };
 }
 
