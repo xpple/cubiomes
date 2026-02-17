@@ -22,6 +22,7 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
  *     float (*nextFloat)(void *);
  *     double (*nextDouble)(void *);
  *     int (*nextIntBetween)(void *, int, int);
+ *     void (*skipN)(void *, uint64_t);
  * }
  * }
  */
@@ -38,7 +39,8 @@ public class RandomSource {
         Cubiomes.C_POINTER.withName("nextInt"),
         Cubiomes.C_POINTER.withName("nextFloat"),
         Cubiomes.C_POINTER.withName("nextDouble"),
-        Cubiomes.C_POINTER.withName("nextIntBetween")
+        Cubiomes.C_POINTER.withName("nextIntBetween"),
+        Cubiomes.C_POINTER.withName("skipN")
     ).withName("RandomSource");
 
     /**
@@ -681,6 +683,104 @@ public class RandomSource {
      */
     public static void nextIntBetween(MemorySegment struct, MemorySegment fieldValue) {
         struct.set(nextIntBetween$LAYOUT, nextIntBetween$OFFSET, fieldValue);
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void (*skipN)(void *, uint64_t)
+     * }
+     */
+    public static class skipN {
+
+        skipN() {
+            // Should not be called directly
+        }
+
+        /**
+         * The function pointer signature, expressed as a functional interface
+         */
+        public interface Function {
+            void apply(MemorySegment _x0, long _x1);
+        }
+
+        private static final FunctionDescriptor $DESC = FunctionDescriptor.ofVoid(
+            Cubiomes.C_POINTER,
+            Cubiomes.C_LONG
+        );
+
+        /**
+         * The descriptor of this function pointer
+         */
+        public static FunctionDescriptor descriptor() {
+            return $DESC;
+        }
+
+        private static final MethodHandle UP$MH = Cubiomes.upcallHandle(skipN.Function.class, "apply", $DESC);
+
+        /**
+         * Allocates a new upcall stub, whose implementation is defined by {@code fi}.
+         * The lifetime of the returned segment is managed by {@code arena}
+         */
+        public static MemorySegment allocate(skipN.Function fi, Arena arena) {
+            return Linker.nativeLinker().upcallStub(UP$MH.bindTo(fi), $DESC, arena);
+        }
+
+        private static final MethodHandle DOWN$MH = Linker.nativeLinker().downcallHandle($DESC);
+
+        /**
+         * Invoke the upcall stub {@code funcPtr}, with given parameters
+         */
+        public static void invoke(MemorySegment funcPtr,MemorySegment _x0, long _x1) {
+            try {
+                 DOWN$MH.invokeExact(funcPtr, _x0, _x1);
+            } catch (Throwable ex$) {
+                throw new AssertionError("should not reach here", ex$);
+            }
+        }
+    }
+
+    private static final AddressLayout skipN$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("skipN"));
+
+    /**
+     * Layout for field:
+     * {@snippet lang=c :
+     * void (*skipN)(void *, uint64_t)
+     * }
+     */
+    public static final AddressLayout skipN$layout() {
+        return skipN$LAYOUT;
+    }
+
+    private static final long skipN$OFFSET = $LAYOUT.byteOffset(groupElement("skipN"));
+
+    /**
+     * Offset for field:
+     * {@snippet lang=c :
+     * void (*skipN)(void *, uint64_t)
+     * }
+     */
+    public static final long skipN$offset() {
+        return skipN$OFFSET;
+    }
+
+    /**
+     * Getter for field:
+     * {@snippet lang=c :
+     * void (*skipN)(void *, uint64_t)
+     * }
+     */
+    public static MemorySegment skipN(MemorySegment struct) {
+        return struct.get(skipN$LAYOUT, skipN$OFFSET);
+    }
+
+    /**
+     * Setter for field:
+     * {@snippet lang=c :
+     * void (*skipN)(void *, uint64_t)
+     * }
+     */
+    public static void skipN(MemorySegment struct, MemorySegment fieldValue) {
+        struct.set(skipN$LAYOUT, skipN$OFFSET, fieldValue);
     }
 
     /**
