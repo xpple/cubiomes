@@ -2014,7 +2014,7 @@ int initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
         bn->smearScaleMultiplier = 4.0;
         break;
     default:
-        fprintf(stderr, "ERR initUnseededBlendedNoise: invalid dimension %d\n", dim);
+        fprintf(stderr, "ERR initBlendedNoise: invalid dimension %d\n", dim);
         memset(bn, 0, sizeof(BlendedNoise));
         return 0;
     }
