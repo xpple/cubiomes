@@ -122,7 +122,7 @@ jobs:
           git config user.email "fred@xpple.dev"
           git add src/main/c/cubiomes
           git add src/main/java
-          git commit --allow-empty -m "[ci-skip] Update Java bindings to master@{$GITHUB_SHA}"
+          git commit --allow-empty -m "[ci skip] Update Java bindings to master@{$GITHUB_SHA}"
           git push --force
       - name: Publish
         env:
