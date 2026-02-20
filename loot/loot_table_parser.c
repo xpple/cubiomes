@@ -1,25 +1,27 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "../biomes.h"
 
 #include "items.h"
 #include "mc_loot.h"
+
 #include "loot_functions.h"
 #include "loot_table_parser.h"
 #include "logging.h"
+#include <stdio.h>
+#include <stdlib.h>
 
+#include <string.h>
+#include <ctype.h>
 #include "cjson/cJSON.h"
-#include "../biomes.h"
 
 
 ItemType get_item_type(const char* item_name)
 {
+    if (strstr(item_name, "_spear") != NULL) return SPEAR;
     if (strstr(item_name, "_pickaxe") != NULL) return PICKAXE;
     if (strstr(item_name, "_axe") != NULL) return AXE;
     if (strstr(item_name, "_shovel") != NULL) return SHOVEL;
     if (strstr(item_name, "_hoe") != NULL) return HOE;
     if (strstr(item_name, "_sword") != NULL) return SWORD;
-    if (strstr(item_name, "_spear") != NULL) return SPEAR;
     if (strstr(item_name, "_helmet") != NULL) return HELMET;
     if (strstr(item_name, "_chestplate") != NULL) return CHESTPLATE;
     if (strstr(item_name, "_leggings") != NULL) return LEGGINGS;
@@ -89,11 +91,12 @@ Enchantment get_enchantment_from_name(const char* ench)
 
     if (strcmp(ench, "minecraft:luck_of_the_sea") == 0) return LUCK_OF_THE_SEA;
     if (strcmp(ench, "minecraft:lure") == 0) return LURE;
-    if (strcmp(ench, "minecraft:lunge") == 0) return LUNGE;
 
     if (strcmp(ench, "minecraft:density") == 0) return DENSITY;
     if (strcmp(ench, "minecraft:breach") == 0) return BREACH;
     if (strcmp(ench, "minecraft:wind_burst") == 0) return WIND_BURST;
+
+    if (strcmp(ench, "minecraft:lunge") == 0) return LUNGE;
 
     if (strcmp(ench, "minecraft:mending") == 0) return MENDING;
     if (strcmp(ench, "minecraft:unbreaking") == 0) return UNBREAKING;
@@ -259,29 +262,24 @@ static void parse_enchant_with_levels(LootTableContext* ctx, LootFunction* loot_
         is_treasure = (int)cJSON_IsTrue(treasure);
 
     cJSON* options = cJSON_GetObjectItem(function_data, "options");
-    if (cJSON_IsString(options))
-    {
-        const char* opt = cJSON_GetStringValue(options);
-        if (opt != NULL && opt[0] == '#')
-        {
-            create_enchant_with_levels_tag(
+    if (cJSON_IsString(options) && options->valuestring != NULL && options->valuestring[0] == '#') {
+        create_enchant_with_levels_tag(
                 loot_function,
                 ctx->version,
                 item_name, item_type,
                 min_level, max_level,
-                opt,
+                options->valuestring,
                 is_treasure
-            );
-            return;
-        }
+        );
+        return;
     }
 
     create_enchant_with_levels(
-        loot_function,
-        ctx->version,
-        item_name, item_type,
-        min_level, max_level,
-        is_treasure
+            loot_function,
+            ctx->version,
+            item_name, item_type,
+            min_level, max_level,
+            is_treasure
     );
 }
 
@@ -598,7 +596,7 @@ static char* get_loot_table_from_file(FILE* file)
     for (char c = getc(file); c != EOF; c = getc(file))
         file_size++;
 
-    fseek(file, 0, SEEK_SET);        // go back to the beginning of the file
+    fseek(file, 0, SEEK_SET); // go back to the beginning of the file
 
     // allocate memory for file contents
     char* file_content = (char*)malloc(file_size + 1); // 1

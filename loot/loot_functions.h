@@ -1,107 +1,106 @@
 #ifndef _LOOT_FUNCTIONS_H
 #define _LOOT_FUNCTIONS_H
 
+#include "../rng.h"
 #include <inttypes.h>
 
-#include "../rng.h"
-
 // ----------------------------------------------------------------------------------------
+// Enums
 
 enum ItemType {
-	NO_ITEM,
-	HELMET,
-	CHESTPLATE,
-	LEGGINGS,
-	BOOTS,
-	SWORD,
-	PICKAXE,
-	SHOVEL,
-	AXE,
-	HOE,
-	FISHING_ROD,
-	BOW,
-	CROSSBOW,
-	TRIDENT,
-	SPEAR,
-	MACE,
-	BOOK
+    NO_ITEM,
+    HELMET,
+    CHESTPLATE,
+    LEGGINGS,
+    BOOTS,
+    SWORD,
+    PICKAXE,
+    SHOVEL,
+    AXE,
+    HOE,
+    FISHING_ROD,
+    BOW,
+    CROSSBOW,
+    TRIDENT,
+    MACE,
+    BOOK,
+    SPEAR
 };
 
 enum Enchantment {
-	NO_ENCHANTMENT = 0,
+    NO_ENCHANTMENT = 0,
 
-	// armor
+    // armor
 
-	PROTECTION,
-	FIRE_PROTECTION,
-	BLAST_PROTECTION,
-	PROJECTILE_PROTECTION,
-	RESPIRATION,
-	AQUA_AFFINITY,
-	THORNS,
-	SWIFT_SNEAK,
-	FEATHER_FALLING,
-	DEPTH_STRIDER,
-	FROST_WALKER,
-	SOUL_SPEED,
+    PROTECTION,
+    FIRE_PROTECTION,
+    BLAST_PROTECTION,
+    PROJECTILE_PROTECTION,
+    RESPIRATION,
+    AQUA_AFFINITY,
+    THORNS,
+    SWIFT_SNEAK,
+    FEATHER_FALLING,
+    DEPTH_STRIDER,
+    FROST_WALKER,
+    SOUL_SPEED,
 
-	// swords
+    // swords
 
-	SHARPNESS,
-	SMITE,
-	BANE_OF_ARTHROPODS,
-	KNOCKBACK,
-	FIRE_ASPECT,
-	LOOTING,
-	SWEEPING_EDGE,
+    SHARPNESS,
+    SMITE,
+    BANE_OF_ARTHROPODS,
+    KNOCKBACK,
+    FIRE_ASPECT,
+    LOOTING,
+    SWEEPING_EDGE,
 
-	// tools
+    // tools
 
-	EFFICIENCY,
-	SILK_TOUCH,
-	FORTUNE,
+    EFFICIENCY,
+    SILK_TOUCH,
+    FORTUNE,
 
-	// fishing rods
+    // fishing rods
 
-	LUCK_OF_THE_SEA,
-	LURE,
+    LUCK_OF_THE_SEA,
+    LURE,
 
-	// bows
+    // bows
 
-	POWER,
-	PUNCH,
-	FLAME,
-	INFINITY_ENCHANTMENT,
+    POWER,
+    PUNCH,
+    FLAME,
+    INFINITY_ENCHANTMENT,
 
-	// crossbows
+    // crossbows
 
-	QUICK_CHARGE,
-	MULTISHOT,
-	PIERCING,
+    QUICK_CHARGE,
+    MULTISHOT,
+    PIERCING,
 
-	// tridents
+    // tridents
 
-	IMPALING,
-	RIPTIDE,
-	LOYALTY,
-	CHANNELING,
+    IMPALING,
+    RIPTIDE,
+    LOYALTY,
+    CHANNELING,
 
-	// maces
+    // maces
 
-	DENSITY,
-	BREACH,
-	WIND_BURST,
+    DENSITY,
+    BREACH,
+    WIND_BURST,
 
-	// general
+    // general
 
-	MENDING,
-	UNBREAKING,
-	CURSE_OF_VANISHING,
-	CURSE_OF_BINDING,
+    MENDING,
+    UNBREAKING,
+    CURSE_OF_VANISHING,
+    CURSE_OF_BINDING,
 
-	// spears
-
-	LUNGE,
+    // 1.21.11+
+    LUNGE
 };
 
 enum MobEffectType {
@@ -148,6 +147,11 @@ enum MobEffectType {
     EFFECT_NUM
 };
 
+typedef enum ItemType ItemType;
+typedef enum Enchantment Enchantment;
+
+// ----------------------------------------------------------------------------------------
+
 STRUCT(MobEffect) {
     const int effect;
     const char* effect_name;
@@ -167,22 +171,19 @@ STRUCT(MobEffectInstance) {
     int duration;
 };
 
-typedef enum ItemType ItemType;
-typedef enum Enchantment Enchantment;
-
 typedef struct EnchantInstance EnchantInstance;
 struct EnchantInstance {
-	int enchantment;
-	int level;
+    int enchantment;
+    int level;
 };
 
 typedef struct ItemStack ItemStack;
 struct ItemStack {
-	int item;
-	int count;
+    int item;
+    int count;
 
-	int enchantment_count;
-	EnchantInstance enchantments[16]; // 12 is the theoretical maximum for 1.17 and below, 16 should be safe for all versions
+    int enchantment_count;
+    EnchantInstance enchantments[16]; // 12 is the theoretical maximum for 1.17 and below, 16 should be safe for all versions
 
     MobEffectInstance mob_effect;
 };
@@ -193,16 +194,16 @@ typedef int (*RollCountFunction)(uint64_t*, const int, const int);
 
 typedef struct LootFunction LootFunction;
 struct LootFunction {
-	// actual function pointer
-	void (*fun)(uint64_t* rand, ItemStack* is, const void* params);
-	// pointer to the param array used by the function
-	const void* params;
+    // actual function pointer
+    void (*fun)(uint64_t* rand, ItemStack* is, const void* params);
+    // pointer to the param array used by the function
+    const void* params;
 
-	// predefined function parameter arrays
-	int params_int[2];			// for simple functions
-	int* varparams_int;			// for enchantRandomly
-	int** varparams_int_arr;	// for enchantWithLevels
-	int varparams_int_arr_size;	// for cleaning up after enchantWithLevels
+    // predefined function parameter arrays
+    int params_int[2];          // for simple functions
+    int* varparams_int;         // for enchantRandomly
+    int** varparams_int_arr;    // for enchantWithLevels
+    int varparams_int_arr_size; // for cleaning up after enchantWithLevels
 };
 
 // ----------------------------------------------------------------------------------------
@@ -210,13 +211,13 @@ struct LootFunction {
 
 static inline int roll_count_constant(uint64_t* rand, const int min, const int max)
 {
-	return min;
+    return min;
 }
 
 static inline int roll_count_uniform(uint64_t* rand, const int min, const int max)
 {
-	const int bound = max - min + 1;
-	return nextInt(rand, bound) + min;
+    const int bound = max - min + 1;
+    return nextInt(rand, bound) + min;
 }
 
 // ----------------------------------------------------------------------------------------
@@ -233,7 +234,6 @@ void create_enchant_randomly(LootFunction* lf, const int version, const ItemType
 void create_enchant_randomly_tag(LootFunction* lf, const int version, const ItemType item, const char* tag, const int allowTreasure);
 void create_enchant_with_levels(LootFunction* lf, const int version, const char* item_name, const ItemType item_type, const int min_level, const int max_level, const int isTreasure);
 void create_enchant_with_levels_tag(LootFunction* lf, const int version, const char* item_name, const ItemType item_type, const int min_level, const int max_level, const char* tag, const int allowTreasure);
-
 const char* get_enchantment_name(const Enchantment enchantment);
 
 // test TODO remove
