@@ -1535,8 +1535,8 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
     o_deltas_gold_1161 = {13, 7, 10, 20, providerRange,            10,       20, 128, DeltasGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
     o_deltas_gold_117 =  {13, 7, 10, 20, providerUniformRange, 0 + 10, 127 - 10,  -1, DeltasGoldOre, NETHER_GOLD_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
 
-    o_deltas_quartz_1161 = {14, 7, 14, 32, providerRange,     10,       20, 128, DeltasQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
-    o_deltas_quartz_117 =  {14, 7, 14, 32, providerRange, 0 + 10, 127 - 10,  -1, DeltasQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_deltas_quartz_1161 = {14, 7, 14, 32, providerRange,            10,       20, 128, DeltasQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
+    o_deltas_quartz_117 =  {14, 7, 14, 32, providerUniformRange, 0 + 10, 127 - 10,  -1, DeltasQuartzOre, NETHER_QUARTZ_ORE, DIM_NETHER, 1, NETHERRACK_REPLACEABLES, 0.0F},
 
     // scatter ore, no count
     o_large_debris_1161 =                {15, 7, 3, 1, providerDepthAverage, 16,  8, -1, LargeDebrisOre, ANCIENT_DEBRIS, DIM_NETHER, 3, BASE_STONE_NETHER_REPLACEABLES, 0.0F},
