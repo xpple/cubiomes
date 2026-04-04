@@ -332,6 +332,7 @@
 --include-function getPopulationSeed
 --include-function getPossibleBiomesForLimits
 --include-function getSpawn
+--include-function getStrongholdPieces
 --include-function getStructureConfig
 --include-function getStructurePieces
 --include-function getStructurePos
@@ -482,6 +483,19 @@
 --include-constant SECOND_FLOOR_1
 --include-constant SECOND_FLOOR_2
 --include-constant SECOND_ROOF
+--include-constant SH_STRAIGHT
+--include-constant SH_PRISON_HALL
+--include-constant SH_LEFT_TURN
+--include-constant SH_RIGHT_TURN
+--include-constant SH_ROOM_CROSSING
+--include-constant SH_STRAIGHT_STAIRS_DOWN
+--include-constant SH_STAIRS_DOWN
+--include-constant SH_FIVE_CROSSING
+--include-constant SH_CHEST_CORRIDOR
+--include-constant SH_LIBRARY
+--include-constant SH_PORTAL_ROOM
+--include-constant SH_FILLER_CORRIDOR
+--include-constant SH_PIECE_COUNT
 --include-constant SOUL_SAND
 --include-constant STONE
 --include-constant Shipwreck
