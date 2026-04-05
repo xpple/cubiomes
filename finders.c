@@ -5089,7 +5089,7 @@ static inline void updateGenerationStatus(StrongholdPieceEnv *env) {
             return;
         }
     }
-    env->generationStopped = true;
+    env->generationStopped = 1;
 }
 
 static inline void orientBox(Pos3 pos, Pos3 offset, Pos3 size, int facing, Pos3 *b0, Pos3 *b1) {
