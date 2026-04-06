@@ -11,7 +11,8 @@ Below is a list of all the major additions:
 
 - Ore generation (1.13+).
 - Ore vein generation (1.18+).
-- Structure loot support (1.13+). At the time of writing, the following structures are supported: Bastions (limited), Buried Treasures, Desert Pyramids, End Cities, Igloos, Jungle Temples, Nether Fortresses, Pillager Outposts, Ruined Portals (OW/NE) and Shipwrecks.
+- Stronghold generation (1.8+).
+- Structure loot support (1.13+). At the time of writing, the following structures are supported: Bastions (limited), Buried Treasures, Desert Pyramids, End Cities, Igloos, Jungle Temples, Nether Fortresses, Pillager Outposts, Ruined Portals (OW/NE), Shipwrecks and Strongholds.
 - Fast Xoroshiro128++ state advancement.
 - Canyon/cave carvers (1.13+).
 - Terrain generation (1.18+).

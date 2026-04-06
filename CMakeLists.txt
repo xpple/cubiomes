@@ -28,6 +28,7 @@ set(HEADERS
 	util.h
 	quadbase.h
 	xrms.h
+	features/stronghold.h
 	loot/items.h
 	loot/logging.h
 	loot/loot_functions.h
@@ -84,6 +85,14 @@ set(HEADERS
 	loot/loot_tables/shipwreck_treasure_1_13.h
 	loot/loot_tables/shipwreck_treasure_1_20.h
 	loot/loot_tables/shipwreck_treasure_1_21_11.h
+	loot/loot_tables/stronghold_corridor_1_13.h
+	loot/loot_tables/stronghold_corridor_1_18.h
+	loot/loot_tables/stronghold_corridor_1_20.h
+	loot/loot_tables/stronghold_corridor_1_21_6.h
+	loot/loot_tables/stronghold_corridor_1_21_9.h
+	loot/loot_tables/stronghold_crossing_1_13.h
+	loot/loot_tables/stronghold_library_1_13.h
+	loot/loot_tables/stronghold_library_1_20.h
 	loot/cjson/cJSON.h
 )
 set(SOURCES
@@ -97,6 +106,7 @@ set(SOURCES
 	util.c
 	quadbase.c
 	xradv.c
+	features/stronghold.c
 	loot/items.c
 	loot/loot_functions.c
 	loot/loot_tables.c
@@ -151,6 +161,14 @@ set(SOURCES
 	loot/loot_tables/shipwreck_treasure_1_13.c
 	loot/loot_tables/shipwreck_treasure_1_20.c
 	loot/loot_tables/shipwreck_treasure_1_21_11.c
+	loot/loot_tables/stronghold_corridor_1_13.c
+	loot/loot_tables/stronghold_corridor_1_18.c
+	loot/loot_tables/stronghold_corridor_1_20.c
+	loot/loot_tables/stronghold_corridor_1_21_6.c
+	loot/loot_tables/stronghold_corridor_1_21_9.c
+	loot/loot_tables/stronghold_crossing_1_13.c
+	loot/loot_tables/stronghold_library_1_13.c
+	loot/loot_tables/stronghold_library_1_20.c
 	loot/cjson/cJSON.c
 )
 

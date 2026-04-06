@@ -1,6 +1,7 @@
 #include "finders.h"
 #include "biomes.h"
 #include "util.h"
+#include "features/stronghold.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -304,6 +305,11 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
     ss_ruined_portal_ocean_1192 =    {4, 24},
     ss_ruined_portal_ocean_1194 =    {4, 15},
 
+    ss_stronghold_113 =              {2,  1},
+    ss_stronghold_116 =              {5,  0},
+    ss_stronghold_1192 =             {4,  8},
+    ss_stronghold_1194 =             {4, 19},
+
     ss_ruined_portal_nether_118 =    {4, 24},
     ss_ruined_portal_nether_1192 =   {4, 25},
     ss_ruined_portal_nether_1194 =   {4, 14},
@@ -387,6 +393,12 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
             else *ssconf = ss_ruined_portal_1194; // assuming biome != deep_dark
         }
         return mc >= MC_1_16_1;
+    case Stronghold:
+        if (mc < MC_1_16_1) *ssconf = ss_stronghold_113;
+        else if (mc < MC_1_19_2) *ssconf = ss_stronghold_116;
+        else if (mc < MC_1_19_4) *ssconf = ss_stronghold_1192;
+        else *ssconf = ss_stronghold_1194;
+        return mc >= MC_1_13;
     case Ruined_Portal_N:
         if (mc < MC_1_19_2) *ssconf = ss_ruined_portal_nether_118;
         else if (mc < MC_1_19_4) *ssconf = ss_ruined_portal_nether_1192;
@@ -4480,6 +4492,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         }
         return count;
     }
+    case Stronghold: return getStrongholdLoot(list, n, ssconf, mc, seed, posX >> 4, posZ >> 4);
     // structures that have one piece and one chest
     case Treasure: {
         Piece* p = list;
@@ -4842,10 +4855,7 @@ Piece *addFortressPiece(PieceEnv *env, int typ, int x, int y, int z, int depth, 
     for (i = 0; i < n; i++)
     {
         Piece *q = env->list + i;
-        if (q->bb1.x >= p->bb0.x && q->bb0.x <= p->bb1.x &&
-            q->bb1.z >= p->bb0.z && q->bb0.z <= p->bb1.z &&
-            q->bb1.y >= p->bb0.y && q->bb0.y <= p->bb1.y)
-        {
+        if (hasIntersection(q->bb0, q->bb1, p->bb0, p->bb1)) {
             return NULL; // collision
         }
     }
@@ -5034,7 +5044,6 @@ int getFortressPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, int
     }
     return count;
 }
-
 
 uint64_t getHouseList(int *out, uint64_t seed, int chunkX, int chunkZ)
 {

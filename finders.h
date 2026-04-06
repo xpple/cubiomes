@@ -39,6 +39,7 @@ enum StructureType
     End_Island,
     Trail_Ruins,
     Trial_Chambers,
+    Stronghold, // not like the other structures, but nice to have a constant for it
     FEATURE_NUM
 };
 
@@ -62,6 +63,41 @@ STRUCT(StructureSaltConfig) {
 
 STRUCT(Pos)  { int x, z; };
 STRUCT(Pos3) { int x, y, z; };
+
+static inline void orientBox(Pos3 pos, Pos3 offset, Pos3 size, int facing, Pos3 *b0, Pos3 *b1) {
+    *b0 = pos, *b1 = pos;
+    Pos3 d0 = offset, d1 = size;
+    b0->y += d0.y;
+    b1->y += d0.y+d1.y-1;
+
+    switch (facing) {
+    case 0: // 0, north
+        b0->x += d0.x;       b0->z += d0.z-d1.z+1;
+        b1->x += d0.x+d1.x-1;  b1->z += d0.z;
+        break;
+    case 1: // 90, east
+        b0->x += d0.z;       b0->z += d0.x;
+        b1->x += d0.z+d1.z-1;  b1->z += d0.x+d1.x-1;
+        break;
+    case 2: // 180, south
+        b0->x += d0.x;       b0->z += d0.z;
+        b1->x += d0.x+d1.x-1;  b1->z += d0.z+d1.z-1;
+        break;
+    case 3: // 270, west
+        b0->x += d0.z-d1.z+1;  b0->z += d0.x;
+        b1->x += d0.z;       b1->z += d0.x+d1.x-1;
+        break;
+    default: UNREACHABLE();
+    }
+}
+
+ATTR(always_inline)
+static inline int hasIntersection(Pos3 bmin0, Pos3 bmax0, Pos3 bmin1, Pos3 bmax1) {
+    return bmax0.x >= bmin1.x && bmin0.x <= bmax1.x &&
+           bmax0.z >= bmin1.z && bmin0.z <= bmax1.z &&
+           bmax0.y >= bmin1.y && bmin0.y <= bmax1.y;
+}
+
 STRUCT(Pos3List)
 {
     Pos3* pos3s;
@@ -118,6 +154,7 @@ STRUCT(Piece)
     Pos chestPoses[4];        // assume a maximum of four chests
     uint64_t lootSeeds[4];
     const char* lootTables[4];
+    int additionalData;
     Piece *next;
 };
 
