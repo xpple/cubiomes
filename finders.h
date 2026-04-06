@@ -948,30 +948,6 @@ enum
     PIECE_COUNT,
 };
 
-/* Generate the structure pieces of a Stronghold. The maximum number of pieces
- * that are generated is limited to 'n'. A buffer length of around 400 should
- * be sufficient in practice, but a fortress can in theory contain many more
- * than that. The number of generated pieces is given by the return value.
- */
-int getStrongholdPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, int chunkZ);
-
-enum
-{   // Stronghold piece types
-    SH_STRAIGHT = 0,
-    SH_PRISON_HALL,
-    SH_LEFT_TURN,
-    SH_RIGHT_TURN,
-    SH_ROOM_CROSSING,
-    SH_STRAIGHT_STAIRS_DOWN,
-    SH_STAIRS_DOWN,
-    SH_FIVE_CROSSING,
-    SH_CHEST_CORRIDOR,
-    SH_LIBRARY,
-    SH_PORTAL_ROOM,
-    SH_FILLER_CORRIDOR,
-    SH_PIECE_COUNT,
-};
-
 /* Find the 20 fixed inner positions where End Gateways generate upon defeating
  * the Dragon. The positions are written to 'src' in generation order.
  */
