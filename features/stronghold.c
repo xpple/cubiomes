@@ -470,19 +470,33 @@ int getStrongholdPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, i
     return *env.n;
 }
 
-static void generateBox(int x0, int y0, int z0, int x1, int y1, int z1, int skipAir, RandomSource rnd) {
-    // skip edges as they don't produce a random call
-
-    if (!skipAir) {
-        rnd.skipN(rnd.state, (y1-(y0+1)) * (x1-(x0+1)) * (z1-(z0+1)));
-        return;
+static inline void rotPos(Pos3 bb0, Pos3 bb1, int *x, int *z, int rot) {
+    int posX, posZ;
+    switch (rot) {
+    case 0: posX = bb0.x + *x, posZ = bb1.z - *z; break;
+    case 1: posX = bb0.x + *z, posZ = bb0.z + *x; break;
+    case 2: posX = bb0.x + *x, posZ = bb0.z + *z; break;
+    case 3: posX = bb1.x - *z, posZ = bb0.z + *x; break;
+    default: UNREACHABLE();
     }
+    *x = posX, *z = posZ;
+}
 
-    for (int y = y0+1; y < y1; y++) {
-        for (int x = x0+1; x < x1; x++) {
-            for (int z = z0+1; z < z1; z++) {
-                if (1 /*!this.getBlock(level, x, y, z, chunkBB).isAir()*/) {
+static void generateBox(Piece *p, int cx, int cz, int x0, int y0, int z0, int x1, int y1, int z1, int skipAir, RandomSource rnd) {
+    // TODO optimise
+    for (int y = y0; y <= y1; y++) {
+        for (int x = x0; x <= x1; x++) {
+            for (int z = z0; z <= z1; z++) {
+                if (!skipAir) {
                     rnd.nextFloat(rnd.state);
+                    continue;
+                }
+                int tx = x, tz = z;
+                rotPos(p->bb0, p->bb1, &tx, &tz, p->rot);
+                if (tx >= cx && tx < cx + 16 && tz >= cz && tz < cz + 16) {
+                    if (y == y0 || y == y1 || x == x0 || x == x1 || z == z0 || z == z1) {
+                        rnd.nextFloat(rnd.state);
+                    }
                 }
             }
         }
@@ -491,7 +505,14 @@ static void generateBox(int x0, int y0, int z0, int x1, int y1, int z1, int skip
 
 ATTR(always_inline)
 static inline void generateMaybeBox(int x0, int y0, int z0, int x1, int y1, int z1, RandomSource rnd) {
-    rnd.skipN(rnd.state, (y1-y0+1) * (x1-x0+1) * (z1-z0+1));
+    // TODO optimise
+    for (int y = y0; y <= y1; y++) {
+        for (int x = x0; x <= x1; x++) {
+            for (int z = z0; z <= z1; z++) {
+                rnd.nextFloat(rnd.state);
+            }
+        }
+    }
 }
 
 static const Pos eye_positions[] = {
@@ -539,13 +560,13 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
             rnd.setSeed(rnd.state, populationSeed + ssconf.generationStep * 10000 + ssconf.decoratorIndex);
             for (int i = 0; i < count; ++i) {
                 Piece *p = &list[i];
-                if (!(p->bb1.x >= cx && p->bb0.x <= cx + 16 &&
-                      p->bb1.z >= cz && p->bb0.z <= cz + 16)) {
+                if (!(p->bb1.x >= cx && p->bb0.x <= cx + 15 &&
+                      p->bb1.z >= cz && p->bb0.z <= cz + 15)) {
                     continue;
                 }
                 switch (p->type) {
                 case SH_STRAIGHT:
-                    generateBox(0, 0, 0, 4, 4, 6, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 4, 4, 6, 1, rnd);
                     rnd.nextFloat(rnd.state);
                     rnd.nextFloat(rnd.state);
                     rnd.nextFloat(rnd.state);
@@ -553,33 +574,27 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                     p->chestCount = 0;
                     break;
                 case SH_PRISON_HALL:
-                    generateBox(0, 0, 0, 8, 4, 10, 1, rnd);
-                    generateBox(4, 1, 1, 4, 3, 1, 0, rnd);
-                    generateBox(4, 1, 3, 4, 3, 3, 0, rnd);
-                    generateBox(4, 1, 7, 4, 3, 7, 0, rnd);
-                    generateBox(4, 1, 9, 4, 3, 9, 0, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 8, 4, 10, 1, rnd);
+                    generateBox(p, cx, cz, 4, 1, 1, 4, 3, 1, 0, rnd);
+                    generateBox(p, cx, cz, 4, 1, 3, 4, 3, 3, 0, rnd);
+                    generateBox(p, cx, cz, 4, 1, 7, 4, 3, 7, 0, rnd);
+                    generateBox(p, cx, cz, 4, 1, 9, 4, 3, 9, 0, rnd);
                     p->chestCount = 0;
                     break;
                 case SH_LEFT_TURN:
                 case SH_RIGHT_TURN:
-                    generateBox(0, 0, 0, 4, 4, 4, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 4, 4, 4, 1, rnd);
                     p->chestCount = 0;
                     break;
                 case SH_ROOM_CROSSING: {
-                    generateBox(0, 0, 0, 10, 6, 10, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 10, 6, 10, 1, rnd);
                     if (!p->additionalData) {
                         p->chestCount = 0;
                         break;
                     }
 
-                    int chestPosX, chestPosZ;
-                    switch (p->rot) {
-                    case 0: chestPosX = p->bb0.x + 3, chestPosZ = p->bb1.z - 8; break;
-                    case 1: chestPosX = p->bb0.x + 8, chestPosZ = p->bb0.z + 3; break;
-                    case 2: chestPosX = p->bb0.x + 3, chestPosZ = p->bb0.z + 8; break;
-                    case 3: chestPosX = p->bb1.x - 8, chestPosZ = p->bb0.z + 3; break;
-                    default: UNREACHABLE();
-                    }
+                    int chestPosX = 3, chestPosZ = 8;
+                    rotPos(p->bb0, p->bb1, &chestPosX, &chestPosZ, p->rot);
                     if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
                         p->chestCount = 1;
                         p->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
@@ -589,33 +604,27 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                     break;
                 }
                 case SH_STRAIGHT_STAIRS_DOWN:
-                    generateBox(0, 0, 0, 4, 10, 7, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 4, 10, 7, 1, rnd);
                     p->chestCount = 0;
                     break;
                 case SH_STAIRS_DOWN:
-                    generateBox(0, 0, 0, 4, 10, 4, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 4, 10, 4, 1, rnd);
                     p->chestCount = 0;
                     break;
                 case SH_FIVE_CROSSING:
-                    generateBox(0, 0, 0, 9, 8, 10, 1, rnd);
-                    generateBox(1, 2, 1, 8, 2, 6, 0, rnd);
-                    generateBox(4, 1, 5, 4, 4, 9, 0, rnd);
-                    generateBox(8, 1, 5, 8, 4, 9, 0, rnd);
-                    generateBox(1, 4, 7, 3, 4, 9, 0, rnd);
-                    generateBox(1, 3, 5, 3, 3, 6, 0, rnd);
-                    generateBox(5, 1, 7, 7, 1, 8, 0, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 9, 8, 10, 1, rnd);
+                    generateBox(p, cx, cz, 1, 2, 1, 8, 2, 6, 0, rnd);
+                    generateBox(p, cx, cz, 4, 1, 5, 4, 4, 9, 0, rnd);
+                    generateBox(p, cx, cz, 8, 1, 5, 8, 4, 9, 0, rnd);
+                    generateBox(p, cx, cz, 1, 4, 7, 3, 4, 9, 0, rnd);
+                    generateBox(p, cx, cz, 1, 3, 5, 3, 3, 6, 0, rnd);
+                    generateBox(p, cx, cz, 5, 1, 7, 7, 1, 8, 0, rnd);
                     p->chestCount = 0;
                     break;
                 case SH_CHEST_CORRIDOR: {
-                    generateBox(0, 0, 0, 4, 4, 6, 1, rnd);
-                    int chestPosX, chestPosZ;
-                    switch (p->rot) {
-                    case 0: chestPosX = p->bb0.x + 3, chestPosZ = p->bb1.z - 3; break;
-                    case 1: chestPosX = p->bb0.x + 3, chestPosZ = p->bb0.z + 3; break;
-                    case 2: chestPosX = p->bb0.x + 3, chestPosZ = p->bb0.z + 3; break;
-                    case 3: chestPosX = p->bb1.x - 3, chestPosZ = p->bb0.z + 3; break;
-                    default: UNREACHABLE();
-                    }
+                    generateBox(p, cx, cz, 0, 0, 0, 4, 4, 6, 1, rnd);
+                    int chestPosX = 3, chestPosZ = 3;
+                    rotPos(p->bb0, p->bb1, &chestPosX, &chestPosZ, p->rot);
                     if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
                         p->chestCount = 1;
                         p->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
@@ -635,29 +644,18 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                         p->chestCount = 1;
                     }
 
-                    generateBox(0, 0, 0, 13, currentHeight - 1, 14, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 13, currentHeight - 1, 14, 1, rnd);
                     generateMaybeBox(2, 1, 1, 11, 4, 13, rnd);
-                    int chestPosX, chestPosZ;
-                    switch (p->rot) {
-                    case 0: chestPosX = p->bb0.x + 3, chestPosZ = p->bb1.z - 5; break;
-                    case 1: chestPosX = p->bb0.x + 5, chestPosZ = p->bb0.z + 3; break;
-                    case 2: chestPosX = p->bb0.x + 3, chestPosZ = p->bb0.z + 5; break;
-                    case 3: chestPosX = p->bb1.x - 5, chestPosZ = p->bb0.z + 3; break;
-                    default: UNREACHABLE();
-                    }
+                    int chestPosX = 3, chestPosZ = 5;
+                    rotPos(p->bb0, p->bb1, &chestPosX, &chestPosZ, p->rot);
                     if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
                         p->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
                         p->lootTables[0] = "stronghold_library";
                         p->lootSeeds[0] = rnd.nextLong(rnd.state);
                     }
                     if (isTall) {
-                        switch (p->rot) {
-                        case 0: chestPosX = p->bb0.x + 12, chestPosZ = p->bb1.z - 1; break;
-                        case 1: chestPosX = p->bb0.x + 1, chestPosZ = p->bb0.z + 12; break;
-                        case 2: chestPosX = p->bb0.x + 12, chestPosZ = p->bb0.z + 1; break;
-                        case 3: chestPosX = p->bb1.x - 1, chestPosZ = p->bb0.z + 12; break;
-                        default: UNREACHABLE();
-                        }
+                        chestPosX = 12, chestPosZ = 1;
+                        rotPos(p->bb0, p->bb1, &chestPosX, &chestPosZ, p->rot);
                         if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
                             p->chestPoses[1] = (Pos) {chestPosX, chestPosZ};
                             p->lootTables[1] = "stronghold_library";
@@ -669,29 +667,23 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                 case SH_PORTAL_ROOM:
                     // the famous 760 skips
                     rnd.skipN(rnd.state, 760);
-                    // generateBox(0, 0, 0, 10, 7, 15, 0, rnd);
-                    // generateBox(1, 6, 1, 1, 6, 14, 0, rnd);
-                    // generateBox(9, 6, 1, 9, 6, 14, 0, rnd);
-                    // generateBox(2, 6, 1, 8, 6, 2, 0, rnd);
-                    // generateBox(2, 6, 14, 8, 6, 14, 0, rnd);
-                    // generateBox(1, 1, 1, 2, 1, 4, 0, rnd);
-                    // generateBox(8, 1, 1, 9, 1, 4, 0, rnd);
-                    // generateBox(3, 1, 8, 7, 1, 12, 0, rnd);
-                    // generateBox(4, 1, 5, 6, 1, 7, 0, rnd);
-                    // generateBox(4, 2, 6, 6, 2, 7, 0, rnd);
-                    // generateBox(4, 3, 7, 6, 3, 7, 0, rnd);
+                    // generateBox(p, cx, cz, 0, 0, 0, 10, 7, 15, 0, rnd);
+                    // generateBox(p, cx, cz, 1, 6, 1, 1, 6, 14, 0, rnd);
+                    // generateBox(p, cx, cz, 9, 6, 1, 9, 6, 14, 0, rnd);
+                    // generateBox(p, cx, cz, 2, 6, 1, 8, 6, 2, 0, rnd);
+                    // generateBox(p, cx, cz, 2, 6, 14, 8, 6, 14, 0, rnd);
+                    // generateBox(p, cx, cz, 1, 1, 1, 2, 1, 4, 0, rnd);
+                    // generateBox(p, cx, cz, 8, 1, 1, 9, 1, 4, 0, rnd);
+                    // generateBox(p, cx, cz, 3, 1, 8, 7, 1, 12, 0, rnd);
+                    // generateBox(p, cx, cz, 4, 1, 5, 6, 1, 7, 0, rnd);
+                    // generateBox(p, cx, cz, 4, 2, 6, 6, 2, 7, 0, rnd);
+                    // generateBox(p, cx, cz, 4, 3, 7, 6, 3, 7, 0, rnd);
 
                     for (int j = 0; j < 12; j++) {
                         if (rnd.nextFloat(rnd.state) > 0.9F) {
                             Pos relPos = eye_positions[j];
-                            int eyePosX, eyePosZ;
-                            switch (p->rot) {
-                            case 0: eyePosX = p->bb0.x + relPos.x, eyePosZ = p->bb1.z - relPos.z; break;
-                            case 1: eyePosX = p->bb0.x + relPos.z, eyePosZ = p->bb0.z + relPos.x; break;
-                            case 2: eyePosX = p->bb0.x + relPos.x, eyePosZ = p->bb0.z + relPos.z; break;
-                            case 3: eyePosX = p->bb1.x - relPos.z, eyePosZ = p->bb0.z + relPos.x; break;
-                            default: UNREACHABLE();
-                            }
+                            int eyePosX = relPos.x, eyePosZ = relPos.z;
+                            rotPos(p->bb0, p->bb1, &eyePosX, &eyePosZ, p->rot);
                             if (eyePosX >= cx && eyePosX < cx + 16 && eyePosZ >= cz && eyePosZ < cz + 16) {
                                 p->additionalData |= (1 << j);
                             }
