@@ -19,5 +19,8 @@ int init_ruined_portal(LootTableContext** context, int version);
 int init_shipwreck_map(LootTableContext** context, int version);
 int init_shipwreck_supply(LootTableContext** context, int version);
 int init_shipwreck_treasure(LootTableContext** context, int version);
+int init_stronghold_corridor(LootTableContext** context, int version);
+int init_stronghold_crossing(LootTableContext** context, int version);
+int init_stronghold_library(LootTableContext** context, int version);
 
 #endif //LOOT_TABLES_H
