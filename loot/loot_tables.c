@@ -54,14 +54,14 @@
 #include "loot_tables/shipwreck_treasure_1_13.h"
 #include "loot_tables/shipwreck_treasure_1_20.h"
 #include "loot_tables/shipwreck_treasure_1_21_11.h"
-#include "loot_tables/stronghold_library_1_20.h"
-#include "loot_tables/stronghold_library_1_13.h"
-#include "loot_tables/stronghold_crossing_1_13.h"
-#include "loot_tables/stronghold_corridor_1_21_9.h"
-#include "loot_tables/stronghold_corridor_1_21_6.h"
-#include "loot_tables/stronghold_corridor_1_20.h"
-#include "loot_tables/stronghold_corridor_1_18.h"
 #include "loot_tables/stronghold_corridor_1_13.h"
+#include "loot_tables/stronghold_corridor_1_18.h"
+#include "loot_tables/stronghold_corridor_1_20.h"
+#include "loot_tables/stronghold_corridor_1_21_6.h"
+#include "loot_tables/stronghold_corridor_1_21_9.h"
+#include "loot_tables/stronghold_crossing_1_13.h"
+#include "loot_tables/stronghold_library_1_13.h"
+#include "loot_tables/stronghold_library_1_20.h"
 
 int init_loot_table_name(LootTableContext** context, const char* loot_table, int version) {
     if (strcmp(loot_table, "bastion_bridge") == 0) {
