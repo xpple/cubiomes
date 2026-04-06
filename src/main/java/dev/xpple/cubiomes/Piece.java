@@ -26,6 +26,7 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
  *     Pos chestPoses[4];
  *     uint64_t lootSeeds[4];
  *     const char *lootTables[4];
+ *     int additionalData;
  *     Piece *next;
  * }
  * }
@@ -50,6 +51,8 @@ public class Piece {
         MemoryLayout.paddingLayout(4),
         MemoryLayout.sequenceLayout(4, Cubiomes.C_LONG).withName("lootSeeds"),
         MemoryLayout.sequenceLayout(4, Cubiomes.C_POINTER).withName("lootTables"),
+        Cubiomes.C_INT.withName("additionalData"),
+        MemoryLayout.paddingLayout(4),
         Cubiomes.C_POINTER.withName("next")
     ).withName("Piece");
 
@@ -645,6 +648,50 @@ public class Piece {
      */
     public static void lootTables(MemorySegment struct, long index0, MemorySegment fieldValue) {
         lootTables$ELEM_HANDLE.set(struct, 0L, index0, fieldValue);
+    }
+
+    private static final OfInt additionalData$LAYOUT = (OfInt)$LAYOUT.select(groupElement("additionalData"));
+
+    /**
+     * Layout for field:
+     * {@snippet lang=c :
+     * int additionalData
+     * }
+     */
+    public static final OfInt additionalData$layout() {
+        return additionalData$LAYOUT;
+    }
+
+    private static final long additionalData$OFFSET = $LAYOUT.byteOffset(groupElement("additionalData"));
+
+    /**
+     * Offset for field:
+     * {@snippet lang=c :
+     * int additionalData
+     * }
+     */
+    public static final long additionalData$offset() {
+        return additionalData$OFFSET;
+    }
+
+    /**
+     * Getter for field:
+     * {@snippet lang=c :
+     * int additionalData
+     * }
+     */
+    public static int additionalData(MemorySegment struct) {
+        return struct.get(additionalData$LAYOUT, additionalData$OFFSET);
+    }
+
+    /**
+     * Setter for field:
+     * {@snippet lang=c :
+     * int additionalData
+     * }
+     */
+    public static void additionalData(MemorySegment struct, int fieldValue) {
+        struct.set(additionalData$LAYOUT, additionalData$OFFSET, fieldValue);
     }
 
     private static final AddressLayout next$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("next"));
