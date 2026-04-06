@@ -304,6 +304,11 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
     ss_ruined_portal_ocean_1192 =    {4, 24},
     ss_ruined_portal_ocean_1194 =    {4, 15},
 
+    ss_stronghold_113 =              {2,  1},
+    ss_stronghold_116 =              {5,  0},
+    ss_stronghold_1192 =             {4,  8},
+    ss_stronghold_1194 =             {4, 19},
+
     ss_ruined_portal_nether_118 =    {4, 24},
     ss_ruined_portal_nether_1192 =   {4, 25},
     ss_ruined_portal_nether_1194 =   {4, 14},
@@ -387,6 +392,12 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
             else *ssconf = ss_ruined_portal_1194; // assuming biome != deep_dark
         }
         return mc >= MC_1_16_1;
+    case Stronghold:
+        if (mc < MC_1_16_1) *ssconf = ss_stronghold_113;
+        else if (mc < MC_1_19_2) *ssconf = ss_stronghold_116;
+        else if (mc < MC_1_19_4) *ssconf = ss_stronghold_1192;
+        else *ssconf = ss_stronghold_1194;
+        return mc >= MC_1_13;
     case Ruined_Portal_N:
         if (mc < MC_1_19_2) *ssconf = ss_ruined_portal_nether_118;
         else if (mc < MC_1_19_4) *ssconf = ss_ruined_portal_nether_1192;
@@ -3893,6 +3904,45 @@ int getLootTableCountForStructure(int structure, int mc) {
     }
 }
 
+static void generateBox(int x0, int y0, int z0, int x1, int y1, int z1, int skipAir, RandomSource rnd) {
+    // skip edges as they don't produce a random call
+
+    if (!skipAir) {
+        rnd.skipN(rnd.state, (y1-(y0+1)) * (x1-(x0+1)) * (z1-(z0+1)));
+        return;
+    }
+
+    for (int y = y0+1; y < y1; y++) {
+        for (int x = x0+1; x < x1; x++) {
+            for (int z = z0+1; z < z1; z++) {
+                if (1 /*!this.getBlock(level, x, y, z, chunkBB).isAir()*/) {
+                    rnd.nextFloat(rnd.state);
+                }
+            }
+        }
+    }
+}
+
+ATTR(always_inline)
+static inline void generateMaybeBox(int x0, int y0, int z0, int x1, int y1, int z1, RandomSource rnd) {
+    rnd.skipN(rnd.state, (y1-y0+1) * (x1-x0+1) * (z1-z0+1));
+}
+
+static const Pos eye_positions[] = {
+    {4, 8},
+    {5, 8},
+    {6, 8},
+    {4, 12},
+    {5, 12},
+    {6, 12},
+    {3, 9},
+    {3, 10},
+    {3, 11},
+    {7, 9},
+    {7, 10},
+    {7, 11},
+};
+
 int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf, StructureVariant *sv, int mc, uint64_t seed, int posX, int posZ) {
     int minBlockX = posX & ~15;
     int minBlockZ = posZ & ~15;
@@ -4480,6 +4530,205 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         }
         return count;
     }
+    case Stronghold: {
+        int count = getStrongholdPieces(list, n, mc, seed, posX >> 4, posZ >> 4);
+        if (!count) {
+            return 0;
+        }
+        int minX = list->bb0.x;
+        int minZ = list->bb0.z;
+        int maxX = list->bb1.x;
+        int maxZ = list->bb1.z;
+        for (int i = 0; i < count; ++i) {
+            Piece *p = &list[i];
+            minX = MIN(minX, p->bb0.x);
+            minZ = MIN(minZ, p->bb0.z);
+            maxX = MAX(maxX, p->bb1.x);
+            maxZ = MAX(maxZ, p->bb1.z);
+        }
+        int cMinX = minX & ~15;
+        int cMinZ = minZ & ~15;
+        int cMaxX = maxX & ~15;
+        int cMaxZ = maxZ & ~15;
+
+        // slow code ahead
+        for (int cx = cMinX; cx <= cMaxX; cx += 16) {
+            for (int cz = cMinZ; cz <= cMaxZ; cz += 16) {
+                CREATE_RANDOM_SOURCE(rnd, legacy);
+                uint64_t populationSeed = getPopulationSeed(mc, seed, cx, cz);
+                rnd.setSeed(rnd.state, populationSeed + ssconf.generationStep * 10000 + ssconf.decoratorIndex);
+                for (int i = 0; i < count; ++i) {
+                    Piece *p = &list[i];
+                    if (!(p->bb1.x >= cx && p->bb0.x <= cx + 16 &&
+                          p->bb1.z >= cz && p->bb0.z <= cz + 16)) {
+                        continue;
+                    }
+                    switch (p->type) {
+                    case SH_STRAIGHT:
+                        generateBox(0, 0, 0, 4, 4, 6, 1, rnd);
+                        rnd.nextFloat(rnd.state);
+                        rnd.nextFloat(rnd.state);
+                        rnd.nextFloat(rnd.state);
+                        rnd.nextFloat(rnd.state);
+                        p->chestCount = 0;
+                        break;
+                    case SH_PRISON_HALL:
+                        generateBox(0, 0, 0, 8, 4, 10, 1, rnd);
+                        generateBox(4, 1, 1, 4, 3, 1, 0, rnd);
+                        generateBox(4, 1, 3, 4, 3, 3, 0, rnd);
+                        generateBox(4, 1, 7, 4, 3, 7, 0, rnd);
+                        generateBox(4, 1, 9, 4, 3, 9, 0, rnd);
+                        p->chestCount = 0;
+                        break;
+                    case SH_LEFT_TURN:
+                    case SH_RIGHT_TURN:
+                        generateBox(0, 0, 0, 4, 4, 4, 1, rnd);
+                        p->chestCount = 0;
+                        break;
+                    case SH_ROOM_CROSSING: {
+                        generateBox(0, 0, 0, 10, 6, 10, 1, rnd);
+                        if (!p->additionalData) {
+                            p->chestCount = 0;
+                            break;
+                        }
+
+                        int chestPosX, chestPosZ;
+                        switch (p->rot) {
+                        case 0: chestPosX = p->bb0.x + 3, chestPosZ = p->bb1.z - 8; break;
+                        case 1: chestPosX = p->bb0.x + 8, chestPosZ = p->bb0.z + 3; break;
+                        case 2: chestPosX = p->bb0.x + 3, chestPosZ = p->bb0.z + 8; break;
+                        case 3: chestPosX = p->bb1.x - 8, chestPosZ = p->bb0.z + 3; break;
+                        default: UNREACHABLE();
+                        }
+                        if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
+                            p->chestCount = 1;
+                            p->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
+                            p->lootTables[0] = "stronghold_crossing";
+                            p->lootSeeds[0] = rnd.nextLong(rnd.state);
+                        }
+                        break;
+                    }
+                    case SH_STRAIGHT_STAIRS_DOWN:
+                        generateBox(0, 0, 0, 4, 10, 7, 1, rnd);
+                        p->chestCount = 0;
+                        break;
+                    case SH_STAIRS_DOWN:
+                        generateBox(0, 0, 0, 4, 10, 4, 1, rnd);
+                        p->chestCount = 0;
+                        break;
+                    case SH_FIVE_CROSSING:
+                        generateBox(0, 0, 0, 9, 8, 10, 1, rnd);
+                        generateBox(1, 2, 1, 8, 2, 6, 0, rnd);
+                        generateBox(4, 1, 5, 4, 4, 9, 0, rnd);
+                        generateBox(8, 1, 5, 8, 4, 9, 0, rnd);
+                        generateBox(1, 4, 7, 3, 4, 9, 0, rnd);
+                        generateBox(1, 3, 5, 3, 3, 6, 0, rnd);
+                        generateBox(5, 1, 7, 7, 1, 8, 0, rnd);
+                        p->chestCount = 0;
+                        break;
+                    case SH_CHEST_CORRIDOR: {
+                        generateBox(0, 0, 0, 4, 4, 6, 1, rnd);
+                        int chestPosX, chestPosZ;
+                        switch (p->rot) {
+                        case 0: chestPosX = p->bb0.x + 3, chestPosZ = p->bb1.z - 3; break;
+                        case 1: chestPosX = p->bb0.x + 3, chestPosZ = p->bb0.z + 3; break;
+                        case 2: chestPosX = p->bb0.x + 3, chestPosZ = p->bb0.z + 3; break;
+                        case 3: chestPosX = p->bb1.x - 3, chestPosZ = p->bb0.z + 3; break;
+                        default: UNREACHABLE();
+                        }
+                        if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
+                            p->chestCount = 1;
+                            p->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
+                            p->lootTables[0] = "stronghold_corridor";
+                            p->lootSeeds[0] = rnd.nextLong(rnd.state);
+                        }
+                        break;
+                    }
+                    case SH_LIBRARY: {
+                        int isTall = p->bb1.y - p->bb0.y + 1 > 6;
+                        int currentHeight;
+                        if (isTall) {
+                            currentHeight = 11;
+                            p->chestCount = 2;
+                        } else {
+                            currentHeight = 6;
+                            p->chestCount = 1;
+                        }
+
+                        generateBox(0, 0, 0, 13, currentHeight - 1, 14, 1, rnd);
+                        generateMaybeBox(2, 1, 1, 11, 4, 13, rnd);
+                        int chestPosX, chestPosZ;
+                        switch (p->rot) {
+                        case 0: chestPosX = p->bb0.x + 3, chestPosZ = p->bb1.z - 5; break;
+                        case 1: chestPosX = p->bb0.x + 5, chestPosZ = p->bb0.z + 3; break;
+                        case 2: chestPosX = p->bb0.x + 3, chestPosZ = p->bb0.z + 5; break;
+                        case 3: chestPosX = p->bb1.x - 5, chestPosZ = p->bb0.z + 3; break;
+                        default: UNREACHABLE();
+                        }
+                        if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
+                            p->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
+                            p->lootTables[0] = "stronghold_library";
+                            p->lootSeeds[0] = rnd.nextLong(rnd.state);
+                        }
+                        if (isTall) {
+                            switch (p->rot) {
+                            case 0: chestPosX = p->bb0.x + 12, chestPosZ = p->bb1.z - 1; break;
+                            case 1: chestPosX = p->bb0.x + 1, chestPosZ = p->bb0.z + 12; break;
+                            case 2: chestPosX = p->bb0.x + 12, chestPosZ = p->bb0.z + 1; break;
+                            case 3: chestPosX = p->bb1.x - 1, chestPosZ = p->bb0.z + 12; break;
+                            default: UNREACHABLE();
+                            }
+                            if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
+                                p->chestPoses[1] = (Pos) {chestPosX, chestPosZ};
+                                p->lootTables[1] = "stronghold_library";
+                                p->lootSeeds[1] = rnd.nextLong(rnd.state);
+                            }
+                        }
+                        break;
+                    }
+                    case SH_PORTAL_ROOM:
+                        // the famous 760 skips
+                        rnd.skipN(rnd.state, 760);
+                        // generateBox(0, 0, 0, 10, 7, 15, 0, rnd);
+                        // generateBox(1, 6, 1, 1, 6, 14, 0, rnd);
+                        // generateBox(9, 6, 1, 9, 6, 14, 0, rnd);
+                        // generateBox(2, 6, 1, 8, 6, 2, 0, rnd);
+                        // generateBox(2, 6, 14, 8, 6, 14, 0, rnd);
+                        // generateBox(1, 1, 1, 2, 1, 4, 0, rnd);
+                        // generateBox(8, 1, 1, 9, 1, 4, 0, rnd);
+                        // generateBox(3, 1, 8, 7, 1, 12, 0, rnd);
+                        // generateBox(4, 1, 5, 6, 1, 7, 0, rnd);
+                        // generateBox(4, 2, 6, 6, 2, 7, 0, rnd);
+                        // generateBox(4, 3, 7, 6, 3, 7, 0, rnd);
+
+                        for (int j = 0; j < 12; j++) {
+                            if (rnd.nextFloat(rnd.state) > 0.9F) {
+                                Pos relPos = eye_positions[j];
+                                int eyePosX, eyePosZ;
+                                switch (p->rot) {
+                                case 0: eyePosX = p->bb0.x + relPos.x, eyePosZ = p->bb1.z - relPos.z; break;
+                                case 1: eyePosX = p->bb0.x + relPos.z, eyePosZ = p->bb0.z + relPos.x; break;
+                                case 2: eyePosX = p->bb0.x + relPos.x, eyePosZ = p->bb0.z + relPos.z; break;
+                                case 3: eyePosX = p->bb1.x - relPos.z, eyePosZ = p->bb0.z + relPos.x; break;
+                                default: UNREACHABLE();
+                                }
+                                if (eyePosX >= cx && eyePosX < cx + 16 && eyePosZ >= cz && eyePosZ < cz + 16) {
+                                    p->additionalData |= (1 << j);
+                                }
+                            }
+                        }
+                        p->chestCount = 0;
+                        break;
+                    case SH_FILLER_CORRIDOR:
+                        p->chestCount = 0;
+                        break;
+                    default: UNREACHABLE();
+                    }
+                }
+            }
+        }
+        return count;
+    }
     // structures that have one piece and one chest
     case Treasure: {
         Piece* p = list;
@@ -4842,10 +5091,7 @@ Piece *addFortressPiece(PieceEnv *env, int typ, int x, int y, int z, int depth, 
     for (i = 0; i < n; i++)
     {
         Piece *q = env->list + i;
-        if (q->bb1.x >= p->bb0.x && q->bb0.x <= p->bb1.x &&
-            q->bb1.z >= p->bb0.z && q->bb0.z <= p->bb1.z &&
-            q->bb1.y >= p->bb0.y && q->bb0.y <= p->bb1.y)
-        {
+        if (hasIntersection(q->bb0, q->bb1, p->bb0, p->bb1)) {
             return NULL; // collision
         }
     }
@@ -5092,40 +5338,11 @@ static inline void updateGenerationStatus(StrongholdPieceEnv *env) {
     env->generationStopped = 1;
 }
 
-static inline void orientBox(Pos3 pos, Pos3 offset, Pos3 size, int facing, Pos3 *b0, Pos3 *b1) {
-    *b0 = pos, *b1 = pos;
-    Pos3 d0 = offset, d1 = size;
-    b0->y += d0.y;
-    b1->y += d0.y+d1.y-1;
-
-    switch (facing) {
-    case 0: // 0, north
-        b0->x += d0.x;       b0->z += d0.z-d1.z+1;
-        b1->x += d0.x+d1.x-1;  b1->z += d0.z;
-        break;
-    case 1: // 90, east
-        b0->x += d0.z;       b0->z += d0.x;
-        b1->x += d0.z+d1.z-1;  b1->z += d0.x+d1.x-1;
-        break;
-    case 2: // 180, south
-        b0->x += d0.x;       b0->z += d0.z;
-        b1->x += d0.x+d1.x-1;  b1->z += d0.z+d1.z-1;
-        break;
-    case 3: // 270, west
-        b0->x += d0.z-d1.z+1;  b0->z += d0.x;
-        b1->x += d0.z;       b1->z += d0.x+d1.x-1;
-        break;
-    default: UNREACHABLE();
-    }
-}
-
 static inline Piece* strongholdHasCollision(StrongholdPieceEnv *env, Pos3 b0, Pos3 b1) {
     int i, n = *env->n;
     for (i = 0; i < n; i++) {
         Piece *q = env->list + i;
-        if (q->bb1.x >= b0.x && q->bb0.x <= b1.x &&
-            q->bb1.z >= b0.z && q->bb0.z <= b1.z &&
-            q->bb1.y >= b0.y && q->bb0.y <= b1.y) {
+        if (hasIntersection(q->bb0, q->bb1, b0, b1)) {
             return q;
         }
     }
@@ -5175,9 +5392,7 @@ static int addStrongholdPiece(StrongholdPieceEnv *env, int typ, int x, int y, in
         for (int i = 2; i >= minI; --i) {
             size.z = i;
             orientBox(pos, offset, size, facing, &b0, &b1);
-            if (p->bb1.x >= b0.x && p->bb0.x <= b1.x &&
-                p->bb1.z >= b0.z && p->bb0.z <= b1.z &&
-                p->bb1.y >= b0.y && p->bb0.y <= b1.y) {
+            if (hasIntersection(p->bb0, p->bb1, b0, b1)) {
                 continue;
             }
             size.z = i + 1;
@@ -5225,7 +5440,7 @@ L_box_end:
         break;
     case SH_ROOM_CROSSING:
         nextInt(env->rng, 5);
-        nextInt(env->rng, 5);
+        additionalData |= (nextInt(env->rng, 5) == 2) << 0;
         break;
     case SH_FIVE_CROSSING:
         nextInt(env->rng, 5);
@@ -5493,6 +5708,8 @@ int getStrongholdPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, i
             extendStrongholdPiece(&env, q);
         }
 
+        // necessary for <=1.12.2 to simulate random calls
+        // optional for >1.12.2, could add flag for accurate heights
         if (mc <= MC_1_12_2 && !env.portal) {
             int minY = p->bb0.y;
             int maxY = p->bb1.y;

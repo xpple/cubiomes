@@ -502,6 +502,7 @@
 --include-constant SmallDebrisOre
 --include-constant SmallIronOre
 --include-constant SoulSandOre
+--include-constant Stronghold
 --include-constant Swamp_Hut
 --include-constant THIRD_FLOOR_1
 --include-constant THIRD_FLOOR_2
