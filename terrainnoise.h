@@ -257,7 +257,7 @@ int generateColumn(int x, int z, int blocks[384], const double ds00[48 + 1], con
 /**
  * Generate a region of terrain using memoisation to prevent recalculating noise columns.
  * One can use int (*blocks)[384] = malloc(blockW * blockH * sizeof(*blocks)); to allocate the
- * array. Similarly, the blocks can then be accessed using blocks[relX * blocksH + relZ][y].
+ * array. Similarly, the blocks can then be accessed using blocks[relX * blockH + relZ][y].
  * Here blockH = chunkH << 4, relX ranges over [0, chunkW << 4), relZ ranges over [0, chunkH << 4)
  * and y ranges over [0, 384). Similarly (if flag is true), ys are written to like relX * blockH +
  * relZ.
