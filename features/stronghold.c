@@ -191,7 +191,10 @@ L_box_end:
         q = q->next; //queue++;
     }
     q->next = p;
-
+    
+    if (*env->n >= env->nmax){
+        env->generationStopped = 1;
+    }
     return 1;
 }
 
