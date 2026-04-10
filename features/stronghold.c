@@ -578,10 +578,11 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                     break;
                 case SH_PRISON_HALL:
                     generateBox(p, cx, cz, 0, 0, 0, 8, 4, 10, 1, rnd);
-                    generateBox(p, cx, cz, 4, 1, 1, 4, 3, 1, 0, rnd);
-                    generateBox(p, cx, cz, 4, 1, 3, 4, 3, 3, 0, rnd);
-                    generateBox(p, cx, cz, 4, 1, 7, 4, 3, 7, 0, rnd);
-                    generateBox(p, cx, cz, 4, 1, 9, 4, 3, 9, 0, rnd);
+                    rnd.skipN(rnd.state, 12);
+                    // generateBox(p, cx, cz, 4, 1, 1, 4, 3, 1, 0, rnd);
+                    // generateBox(p, cx, cz, 4, 1, 3, 4, 3, 3, 0, rnd);
+                    // generateBox(p, cx, cz, 4, 1, 7, 4, 3, 7, 0, rnd);
+                    // generateBox(p, cx, cz, 4, 1, 9, 4, 3, 9, 0, rnd);
                     p->chestCount = 0;
                     break;
                 case SH_LEFT_TURN:
@@ -616,12 +617,13 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                     break;
                 case SH_FIVE_CROSSING:
                     generateBox(p, cx, cz, 0, 0, 0, 9, 8, 10, 1, rnd);
-                    generateBox(p, cx, cz, 1, 2, 1, 8, 2, 6, 0, rnd);
-                    generateBox(p, cx, cz, 4, 1, 5, 4, 4, 9, 0, rnd);
-                    generateBox(p, cx, cz, 8, 1, 5, 8, 4, 9, 0, rnd);
-                    generateBox(p, cx, cz, 1, 4, 7, 3, 4, 9, 0, rnd);
-                    generateBox(p, cx, cz, 1, 3, 5, 3, 3, 6, 0, rnd);
-                    generateBox(p, cx, cz, 5, 1, 7, 7, 1, 8, 0, rnd);
+                    rnd.skipN(rnd.state, 109);
+                    // generateBox(p, cx, cz, 1, 2, 1, 8, 2, 6, 0, rnd);
+                    // generateBox(p, cx, cz, 4, 1, 5, 4, 4, 9, 0, rnd);
+                    // generateBox(p, cx, cz, 8, 1, 5, 8, 4, 9, 0, rnd);
+                    // generateBox(p, cx, cz, 1, 4, 7, 3, 4, 9, 0, rnd);
+                    // generateBox(p, cx, cz, 1, 3, 5, 3, 3, 6, 0, rnd);
+                    // generateBox(p, cx, cz, 5, 1, 7, 7, 1, 8, 0, rnd);
                     p->chestCount = 0;
                     break;
                 case SH_CHEST_CORRIDOR: {
