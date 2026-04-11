@@ -310,6 +310,13 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
     ss_stronghold_1192 =             {4,  8},
     ss_stronghold_1194 =             {4, 19},
 
+    ss_mineshaft_113 =               {2,  0},
+    ss_mineshaft_1161 =              {3,  0},
+    ss_mineshaft_1194 =              {3,  1},
+
+    ss_mineshaft_mesa_118 =          {3,  1},
+    ss_mineshaft_mesa_1194 =         {3,  2},
+
     ss_ruined_portal_nether_118 =    {4, 24},
     ss_ruined_portal_nether_1192 =   {4, 25},
     ss_ruined_portal_nether_1194 =   {4, 14},
@@ -398,6 +405,18 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
         else if (mc < MC_1_19_2) *ssconf = ss_stronghold_116;
         else if (mc < MC_1_19_4) *ssconf = ss_stronghold_1192;
         else *ssconf = ss_stronghold_1194;
+        return mc >= MC_1_13;
+    case Mineshaft:
+        if (mc < MC_1_16_1) *ssconf = ss_mineshaft_113;
+        else if (mc < MC_1_18) *ssconf = ss_mineshaft_1161;
+        else if (mc < MC_1_19_4) {
+            if (getCategory(mc, biome) == mesa) *ssconf = ss_mineshaft_mesa_118;
+            else *ssconf = ss_mineshaft_1161;
+        }
+        else {
+            if (getCategory(mc, biome) == mesa) *ssconf = ss_mineshaft_mesa_1194;
+            else *ssconf = ss_mineshaft_1194;
+        }
         return mc >= MC_1_13;
     case Ruined_Portal_N:
         if (mc < MC_1_19_2) *ssconf = ss_ruined_portal_nether_118;
