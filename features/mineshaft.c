@@ -335,11 +335,11 @@ static int isSupportingBox(Piece *p, int cx, int cz, int x0, int x1, int z0) {
         int tx = x, tz = z0;
         rotPos(p->bb0, p->bb1, &tx, &tz, p->rot);
         if (tx < cx || tx >= cx + 16 || tz < cz || tz >= cz + 16) {
-            return false;
+            return 0;
         }
     }
 
-    return true;
+    return 1;
 }
 
 static void placeSupport(Piece *p, int cx, int cz, int x0, int z, int x1, RandomSource rnd) {
