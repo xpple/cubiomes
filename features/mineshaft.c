@@ -302,7 +302,9 @@ int getMineshaftPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, in
     int z = (chunkZ << 4) + 2;
 
     uint64_t rng = chunkGenerateRnd(seed, chunkX, chunkZ);
-    nextDouble(&rng);
+    if (mc > MC_1_18_2) {
+        nextDouble(&rng);
+    }
 
     int count = 1;
 
