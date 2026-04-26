@@ -3008,8 +3008,10 @@ L_feature:
         if (g->mc <= MC_1_15)
         {
             g->entry = &g->ls.layers[L_VORONOI_1];
-            sampleX = chunkX * 16 + 9;
-            sampleZ = chunkZ * 16 + 9;
+            // check is done at (8, 8) in 1.8.9 and below, after that at (9, 9)
+            int post189 = g->mc > MC_1_8_9;
+            sampleX = chunkX * 16 + 8 + post189;
+            sampleZ = chunkZ * 16 + 8 + post189;
         }
         else
         {
@@ -5022,7 +5024,17 @@ int getFortressPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, int
     p->bb1.x += fortress_info[0].size.x;
     p->bb1.y += fortress_info[0].size.y;
     p->bb1.z += fortress_info[0].size.z;
-    p->rot = nextInt(&rng, 4);
+    if (mc <= MC_1_7_10) {
+        switch(nextInt(&rng, 4)) {
+        case 0: p->rot = 2; break;
+        case 1: p->rot = 3; break;
+        case 2: p->rot = 0; break;
+        case 3: p->rot = 1; break;
+        default: UNREACHABLE();
+        }
+    } else {
+        p->rot = nextInt(&rng, 4);
+    }
     p->depth = 0;
     p->type = 0;
     p->next = NULL;
