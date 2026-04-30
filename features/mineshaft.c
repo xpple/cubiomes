@@ -192,33 +192,33 @@ static void extendMineshaftPiece(MineshaftPieceEnv *env, Piece *piece) {
         break;
     }
     case MS_CROSSING: {
-		switch (piece->rot) {
-		case 0:
-			extendMineshaft(env, piece->bb0.x + 1, piece->bb0.y, piece->bb0.z - 1, 0, piece->depth);
-			extendMineshaft(env, piece->bb0.x - 1, piece->bb0.y, piece->bb0.z + 1, 3, piece->depth);
-			extendMineshaft(env, piece->bb1.x + 1, piece->bb0.y, piece->bb0.z + 1, 1, piece->depth);
-			break;
-		case 1:
-		    extendMineshaft(env, piece->bb0.x + 1, piece->bb0.y, piece->bb0.z - 1, 0, piece->depth);
-		    extendMineshaft(env, piece->bb0.x + 1, piece->bb0.y, piece->bb1.z + 1, 2, piece->depth);
-		    extendMineshaft(env, piece->bb1.x + 1, piece->bb0.y, piece->bb0.z + 1, 1, piece->depth);
-		    break;
-		case 2:
-			extendMineshaft(env, piece->bb0.x + 1, piece->bb0.y, piece->bb1.z + 1, 2, piece->depth);
-			extendMineshaft(env, piece->bb0.x - 1, piece->bb0.y, piece->bb0.z + 1, 3, piece->depth);
-			extendMineshaft(env, piece->bb1.x + 1, piece->bb0.y, piece->bb0.z + 1, 1, piece->depth);
-			break;
-		case 3:
-			extendMineshaft(env, piece->bb0.x + 1, piece->bb0.y, piece->bb0.z - 1, 0, piece->depth);
-			extendMineshaft(env, piece->bb0.x + 1, piece->bb0.y, piece->bb1.z + 1, 2, piece->depth);
-			extendMineshaft(env, piece->bb0.x - 1, piece->bb0.y, piece->bb0.z + 1, 3, piece->depth);
-			break;
-		default: UNREACHABLE();
-		}
+        switch (piece->rot) {
+        case 0:
+            extendMineshaft(env, piece->bb0.x + 1, piece->bb0.y, piece->bb0.z - 1, 0, piece->depth);
+            extendMineshaft(env, piece->bb0.x - 1, piece->bb0.y, piece->bb0.z + 1, 3, piece->depth);
+            extendMineshaft(env, piece->bb1.x + 1, piece->bb0.y, piece->bb0.z + 1, 1, piece->depth);
+            break;
+        case 1:
+            extendMineshaft(env, piece->bb0.x + 1, piece->bb0.y, piece->bb0.z - 1, 0, piece->depth);
+            extendMineshaft(env, piece->bb0.x + 1, piece->bb0.y, piece->bb1.z + 1, 2, piece->depth);
+            extendMineshaft(env, piece->bb1.x + 1, piece->bb0.y, piece->bb0.z + 1, 1, piece->depth);
+            break;
+        case 2:
+            extendMineshaft(env, piece->bb0.x + 1, piece->bb0.y, piece->bb1.z + 1, 2, piece->depth);
+            extendMineshaft(env, piece->bb0.x - 1, piece->bb0.y, piece->bb0.z + 1, 3, piece->depth);
+            extendMineshaft(env, piece->bb1.x + 1, piece->bb0.y, piece->bb0.z + 1, 1, piece->depth);
+            break;
+        case 3:
+            extendMineshaft(env, piece->bb0.x + 1, piece->bb0.y, piece->bb0.z - 1, 0, piece->depth);
+            extendMineshaft(env, piece->bb0.x + 1, piece->bb0.y, piece->bb1.z + 1, 2, piece->depth);
+            extendMineshaft(env, piece->bb0.x - 1, piece->bb0.y, piece->bb0.z + 1, 3, piece->depth);
+            break;
+        default: UNREACHABLE();
+        }
 
         int isTwoFloored = piece->bb1.y - piece->bb0.y + 1 > 3;
-		if (!isTwoFloored) {
-		    break;
+        if (!isTwoFloored) {
+            break;
         }
         if (next(env->rng, 1)) {
             extendMineshaft(env, piece->bb0.x + 1, piece->bb0.y + 3 + 1, piece->bb0.z - 1, 0, piece->depth);
@@ -374,6 +374,8 @@ int getMineshaftLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, uin
         minZ = MIN(minZ, p->bb0.z);
         maxX = MAX(maxX, p->bb1.x);
         maxZ = MAX(maxZ, p->bb1.z);
+
+        p->chestCount = 0;
     }
     int cMinX = minX & ~15;
     int cMinZ = minZ & ~15;
@@ -406,8 +408,6 @@ int getMineshaftLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, uin
                     if ((p->additionalData >> 1) & 1) {
                         generateMaybeBox(0, 0, 0, 2, 1, length, rnd);
                     }
-
-                    p->chestCount = 0;
 
                     for (int section = 0; section < numSections; section++) {
                         int z = 2 + section * 5;
@@ -458,6 +458,7 @@ int getMineshaftLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, uin
                         }
                     }
 
+                    // this.hasRails
                     if ((p->additionalData >> 0) & 1) {
                         for (int zx = 0; zx <= length; zx++) {
                             int tx = 1, tz = zx;
@@ -472,7 +473,6 @@ int getMineshaftLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, uin
                 case MS_CROSSING:
                 case MS_ROOM:
                 case MS_STAIRS:
-                    p->chestCount = 0;
                     break;
                 default: UNREACHABLE();
                 }
