@@ -12021,6 +12021,15 @@ public class Cubiomes {
     public static int UNDERWATER_CANYON_CARVER() {
         return UNDERWATER_CANYON_CARVER;
     }
+    private static final int CANYON_CARVER_NUM = (int)2L;
+    /**
+     * {@snippet lang=c :
+     * enum CanyonCarvers.CANYON_CARVER_NUM = 2
+     * }
+     */
+    public static int CANYON_CARVER_NUM() {
+        return CANYON_CARVER_NUM;
+    }
     private static final int CAVE_CARVER = (int)0L;
     /**
      * {@snippet lang=c :
@@ -12065,6 +12074,15 @@ public class Cubiomes {
      */
     public static int NETHER_CAVE_CARVER() {
         return NETHER_CAVE_CARVER;
+    }
+    private static final int CAVE_CARVER_NUM = (int)5L;
+    /**
+     * {@snippet lang=c :
+     * enum CaveCarvers.CAVE_CARVER_NUM = 5
+     * }
+     */
+    public static int CAVE_CARVER_NUM() {
+        return CAVE_CARVER_NUM;
     }
 
     private static class getCanyonCarverConfig {
@@ -12431,12 +12449,15 @@ public class Cubiomes {
     }
 
     private static class carveCanyon {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Pos3List.layout(),
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
             Cubiomes.C_LONG,
             Cubiomes.C_INT,
             Cubiomes.C_INT,
-            CanyonCarverConfig.layout()
+            Cubiomes.C_INT,
+            CanyonCarverConfig.layout(),
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_POINTER
         );
 
         public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("carveCanyon");
@@ -12447,7 +12468,7 @@ public class Cubiomes {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * Pos3List carveCanyon(uint64_t seed, int chunkX, int chunkZ, CanyonCarverConfig ccc)
+     * void carveCanyon(uint64_t seed, int mc, int chunkX, int chunkZ, CanyonCarverConfig ccc, int canyonCarverType, int biomes[17][17], Pos3List *poses)
      * }
      */
     public static FunctionDescriptor carveCanyon$descriptor() {
@@ -12457,7 +12478,7 @@ public class Cubiomes {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * Pos3List carveCanyon(uint64_t seed, int chunkX, int chunkZ, CanyonCarverConfig ccc)
+     * void carveCanyon(uint64_t seed, int mc, int chunkX, int chunkZ, CanyonCarverConfig ccc, int canyonCarverType, int biomes[17][17], Pos3List *poses)
      * }
      */
     public static MethodHandle carveCanyon$handle() {
@@ -12467,7 +12488,7 @@ public class Cubiomes {
     /**
      * Address for:
      * {@snippet lang=c :
-     * Pos3List carveCanyon(uint64_t seed, int chunkX, int chunkZ, CanyonCarverConfig ccc)
+     * void carveCanyon(uint64_t seed, int mc, int chunkX, int chunkZ, CanyonCarverConfig ccc, int canyonCarverType, int biomes[17][17], Pos3List *poses)
      * }
      */
     public static MemorySegment carveCanyon$address() {
@@ -12476,28 +12497,31 @@ public class Cubiomes {
 
     /**
      * {@snippet lang=c :
-     * Pos3List carveCanyon(uint64_t seed, int chunkX, int chunkZ, CanyonCarverConfig ccc)
+     * void carveCanyon(uint64_t seed, int mc, int chunkX, int chunkZ, CanyonCarverConfig ccc, int canyonCarverType, int biomes[17][17], Pos3List *poses)
      * }
      */
-    public static MemorySegment carveCanyon(SegmentAllocator allocator, long seed, int chunkX, int chunkZ, MemorySegment ccc) {
+    public static void carveCanyon(long seed, int mc, int chunkX, int chunkZ, MemorySegment ccc, int canyonCarverType, MemorySegment biomes, MemorySegment poses) {
         var mh$ = carveCanyon.HANDLE;
         try {
             if (TRACE_DOWNCALLS) {
-                traceDowncall("carveCanyon", allocator, seed, chunkX, chunkZ, ccc);
+                traceDowncall("carveCanyon", seed, mc, chunkX, chunkZ, ccc, canyonCarverType, biomes, poses);
             }
-            return (MemorySegment)mh$.invokeExact(allocator, seed, chunkX, chunkZ, ccc);
+            mh$.invokeExact(seed, mc, chunkX, chunkZ, ccc, canyonCarverType, biomes, poses);
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
     }
 
     private static class carveCave {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Pos3List.layout(),
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
             Cubiomes.C_LONG,
             Cubiomes.C_INT,
             Cubiomes.C_INT,
-            CaveCarverConfig.layout()
+            Cubiomes.C_INT,
+            CaveCarverConfig.layout(),
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_POINTER
         );
 
         public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("carveCave");
@@ -12508,7 +12532,7 @@ public class Cubiomes {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * Pos3List carveCave(uint64_t seed, int chunkX, int chunkZ, CaveCarverConfig ccc)
+     * void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, CaveCarverConfig ccc, int caveCarverType, int biomes[17][17], Pos3List *poses)
      * }
      */
     public static FunctionDescriptor carveCave$descriptor() {
@@ -12518,7 +12542,7 @@ public class Cubiomes {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * Pos3List carveCave(uint64_t seed, int chunkX, int chunkZ, CaveCarverConfig ccc)
+     * void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, CaveCarverConfig ccc, int caveCarverType, int biomes[17][17], Pos3List *poses)
      * }
      */
     public static MethodHandle carveCave$handle() {
@@ -12528,7 +12552,7 @@ public class Cubiomes {
     /**
      * Address for:
      * {@snippet lang=c :
-     * Pos3List carveCave(uint64_t seed, int chunkX, int chunkZ, CaveCarverConfig ccc)
+     * void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, CaveCarverConfig ccc, int caveCarverType, int biomes[17][17], Pos3List *poses)
      * }
      */
     public static MemorySegment carveCave$address() {
@@ -12537,16 +12561,16 @@ public class Cubiomes {
 
     /**
      * {@snippet lang=c :
-     * Pos3List carveCave(uint64_t seed, int chunkX, int chunkZ, CaveCarverConfig ccc)
+     * void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, CaveCarverConfig ccc, int caveCarverType, int biomes[17][17], Pos3List *poses)
      * }
      */
-    public static MemorySegment carveCave(SegmentAllocator allocator, long seed, int chunkX, int chunkZ, MemorySegment ccc) {
+    public static void carveCave(long seed, int mc, int chunkX, int chunkZ, MemorySegment ccc, int caveCarverType, MemorySegment biomes, MemorySegment poses) {
         var mh$ = carveCave.HANDLE;
         try {
             if (TRACE_DOWNCALLS) {
-                traceDowncall("carveCave", allocator, seed, chunkX, chunkZ, ccc);
+                traceDowncall("carveCave", seed, mc, chunkX, chunkZ, ccc, caveCarverType, biomes, poses);
             }
-            return (MemorySegment)mh$.invokeExact(allocator, seed, chunkX, chunkZ, ccc);
+            mh$.invokeExact(seed, mc, chunkX, chunkZ, ccc, caveCarverType, biomes, poses);
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
