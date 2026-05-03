@@ -2500,16 +2500,13 @@ static void carveCanyonInner(CanyonCarverConfig ccc, int mc, uint64_t *rnd, int 
     }
 }
 
-static void carveCaveInner(CaveCarverConfig ccc, uint64_t* rnd, int sourceChunkX, int sourceChunkZ, int chunkX, int chunkZ, int worldMinY, int worldHeight, char carvingMask[], Pos3List* poses);
+static void carveCaveInner(CaveCarverConfig ccc, uint64_t* rnd, int sourceChunkX, int sourceChunkZ, int chunkX, int chunkZ, int mc, char carvingMask[], Pos3List* poses);
 
 void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, CaveCarverConfig ccc, int caveCarverType, int biomes[17][17], Pos3List* poses) {
-    int worldMinY;
     int worldHeight;
     if (mc > MC_1_17_1) {
-        worldMinY = ccc.dim == DIM_OVERWORLD ? -64 : 0;
         worldHeight = ccc.dim == DIM_OVERWORLD ? 384 : 128;
     } else {
-        worldMinY = 0;
         worldHeight = ccc.dim == DIM_OVERWORLD ? 256 : 128;
     }
     int slots = BITNSLOTS(256 * worldHeight);
@@ -2528,7 +2525,7 @@ void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, CaveCarverConfig c
             if (!checkCaveStart(seed, offsetChunkX, offsetChunkZ, ccc, &rnd)) {
                 continue;
             }
-            carveCaveInner(ccc, &rnd, chunkX, chunkZ, offsetChunkX, offsetChunkZ, worldMinY, worldHeight, carvingMask, poses);
+            carveCaveInner(ccc, &rnd, chunkX, chunkZ, offsetChunkX, offsetChunkZ, mc, carvingMask, poses);
         }
     }
 }
@@ -2537,7 +2534,17 @@ static void createRoom(int sourceChunkX, int sourceChunkZ, double x, double y, d
 
 static void createTunnel(CaveCarverConfig ccc, int sourceChunkX, int sourceChunkZ, uint64_t seed, double x, double y, double z, double horizontalRadiusMultiplier, double verticalRadiusMultiplier, float thickness, float yaw, float pitch, int branchIndex, int branchCount, double horizontalVerticalRatio, int worldMinY, int worldHeight, char carvingMask[], double floorLevel, Pos3List* poses);
 
-static void carveCaveInner(CaveCarverConfig ccc, uint64_t* rnd, int sourceChunkX, int sourceChunkZ, int chunkX, int chunkZ, int worldMinY, int worldHeight, char carvingMask[], Pos3List* poses) {
+static void carveCaveInner(CaveCarverConfig ccc, uint64_t* rnd, int sourceChunkX, int sourceChunkZ, int chunkX, int chunkZ, int mc, char carvingMask[], Pos3List* poses) {
+    int worldMinY;
+    int worldHeight;
+    if (mc > MC_1_17_1) {
+        worldMinY = ccc.dim == DIM_OVERWORLD ? -64 : 0;
+        worldHeight = ccc.dim == DIM_OVERWORLD ? 384 : 128;
+    } else {
+        worldMinY = 0;
+        worldHeight = ccc.dim == DIM_OVERWORLD ? 256 : 128;
+    }
+
     int range = (ccc.range * 2 - 1) << 4;
 
     int r1 = nextInt(rnd, ccc.caveBound);
@@ -2555,7 +2562,9 @@ static void carveCaveInner(CaveCarverConfig ccc, uint64_t* rnd, int sourceChunkX
         if (nextInt(rnd, 4) == 0) {
             double yScale = ccc.yScale(rnd, ccc.minYScale, ccc.maxYScale);
             float radius = 1.0F + nextFloat(rnd) * 6.0F;
-            nextLong(rnd);
+            if (mc <= MC_1_17_1) {
+                nextLong(rnd);
+            }
             createRoom(sourceChunkX, sourceChunkZ, x, y, z, radius, yScale, worldMinY, worldHeight, carvingMask, floorLevel, poses);
             m += nextInt(rnd, 4);
         }
