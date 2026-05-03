@@ -382,7 +382,9 @@
 --include-constant BuriedLapisOre
 --include-constant Butcher
 --include-constant CANYON_CARVER
+--include-constant CANYON_CARVER_NUM
 --include-constant CAVE_CARVER
+--include-constant CAVE_CARVER_NUM
 --include-constant CAVE_EXTRA_UNDERGROUND_CARVER
 --include-constant CLAY
 --include-constant COAL_ORE
