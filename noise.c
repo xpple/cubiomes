@@ -457,7 +457,7 @@ int xOctaveInit(OctaveNoise *noise, Xoroshiro *xr, PerlinNoise *octaves,
     };
     static const double persist_ini[] = { // len = 4..16
         0, 1, 2./3, 4./7, 8./15, 16./31, 32./63, 64./127, 128./255, 256./511, 512./1023,
-	1024./2047, 2048./4095, 4096./8191, 8192./16383, 16384./32767, 32768./65535
+        1024./2047, 2048./4095, 4096./8191, 8192./16383, 16384./32767, 32768./65535
     };
 #if DEBUG
     if (-omin < 0 || -omin >= (int) (sizeof(lacuna_ini)/sizeof(double)) ||
@@ -600,7 +600,7 @@ int xDoublePerlinInit(DoublePerlinNoise *noise, Xoroshiro *xr,
         len--;
     static const double amp_ini[] = { // (5 ./ 3) * len / (len + 1), len = 2..16
         0, 5./6, 10./9, 15./12, 20./15, 25./18, 30./21, 35./24, 40./27, 45./30,
-	50./33, 55./36, 60./39, 65./42, 70./45, 75./48, 80./51
+        50./33, 55./36, 60./39, 65./42, 70./45, 75./48, 80./51
     };
     noise->amplitude = amp_ini[len];
     return n;
