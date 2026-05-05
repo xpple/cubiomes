@@ -2235,7 +2235,8 @@ int32_t getOreVeinBlockAt(int x, int y, int z, OreVeinParameters* params)
 
 int getCanyonCarverConfig(int canyonCarverType, int mc, CanyonCarverConfig* cconf) {
     static const CanyonCarverConfig
-    c_canyon_carver_113 = {DIM_OVERWORLD, 0.02F, 1, 4, providerBiasedToBottom, 20, 67, 8, 3.0F, providerUniformFloatBetween, -0.125F, 0.125F, providerUniformFloatBetween, 0.75F, 1.0F, providerTrapezoidFloatBetween, 0.0F, 6.0F, 2.0F, 3, providerUniformFloatBetween, 0.75F, 1.0F, 1.0F, 0.0F},
+    c_canyon_carver_113 = {DIM_OVERWORLD, 0.02F, 1, 4, providerBiasedToBottom, 20, 67, 8, 3.0F, providerUniformFloatBetween, -0.125F, 0.125F, NULL, -1.0F, -1.0F, providerTrapezoidFloatBetween, 0.0F, 6.0F, 2.0F, 3, providerUniformFloatBetween, 0.75F, 1.0F, 1.0F, 0.0F},
+    c_canyon_carver_117 = {DIM_OVERWORLD, 0.02F, 1, 4, providerBiasedToBottom, 20, 67, 8, 3.0F, providerUniformFloatBetween, -0.125F, 0.125F, providerUniformFloatBetween, 0.75F, 1.0F, providerTrapezoidFloatBetween, 0.0F, 6.0F, 2.0F, 3, providerUniformFloatBetween, 0.75F, 1.0F, 1.0F, 0.0F},
     c_canyon_carver_118 = {DIM_OVERWORLD, 0.01F, 2, 4, providerUniformIntBetween, 10, 67, -1, 3.0F, providerUniformFloatBetween, -0.125F, 0.125F, providerUniformFloatBetween, 0.75F, 1.0F, providerTrapezoidFloatBetween, 0.0F, 6.0F, 2.0F, 3, providerUniformFloatBetween, 0.75F, 1.0F, 1.0F, 0.0F},
 
     c_underwater_canyon_carver_113 = {DIM_OVERWORLD, 0.02F, 0, 4, providerBiasedToBottom, 20, 67, 8, 3.0F, providerUniformFloatBetween, -0.125F, 0.125F, providerUniformFloatBetween, 0.75F, 1.0F, providerTrapezoidFloatBetween, 0.0F, 6.0F, 2.0F, 3, providerUniformFloatBetween, 0.75F, 1.0F, 1.0F, 0.0F}
@@ -2243,7 +2244,8 @@ int getCanyonCarverConfig(int canyonCarverType, int mc, CanyonCarverConfig* ccon
 
     switch (canyonCarverType) {
     case CANYON_CARVER:
-        if (mc <= MC_1_17_1) *cconf = c_canyon_carver_113;
+        if (mc <= MC_1_16_5) *cconf = c_canyon_carver_113;
+        else if (mc <= MC_1_17_1) *cconf = c_canyon_carver_117;
         else *cconf = c_canyon_carver_118;
         return mc > MC_1_12_2;
     case UNDERWATER_CANYON_CARVER:
@@ -2453,7 +2455,13 @@ static void carveCanyonInner(CanyonCarverConfig ccc, int mc, uint64_t *rnd, int 
     float pitch = ccc.verticalRotation(rnd, ccc.minVerRot, ccc.maxVerRot);
     double horizontalVerticalRatio = ccc.yScale;
     float thickness = ccc.thickness(rnd, ccc.minThickness, ccc.maxThickness, ccc.plateauThickness);
-    int branchCount = (int)(range * ccc.distanceFactor(rnd, ccc.minDistance, ccc.maxDistance));
+    int branchCount;
+    // one could reuse `distanceFactor` for this and interpret the float bits as int bits, decided against it
+    if (mc <= MC_1_16_5) {
+        branchCount = range - nextInt(rnd, range / 4);
+    } else {
+        branchCount = (int)(range * ccc.distanceFactor(rnd, ccc.minDistance, ccc.maxDistance));
+    }
     uint64_t seed = nextLong(rnd);
     setSeed(rnd, seed);
     int worldMinY;
