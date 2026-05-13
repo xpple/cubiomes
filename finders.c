@@ -2696,6 +2696,70 @@ static void carveEllipsoid(int chunkX, int chunkZ, double x, double y, double z,
     }
 }
 
+void applyAllCarvers(Generator *g, int chunkX, int chunkZ, Pos3List* poses) {
+    int worldHeight;
+    if (g->mc > MC_1_17_1) {
+        worldHeight = g->dim == DIM_OVERWORLD ? 384 : 128;
+    } else {
+        worldHeight = g->dim == DIM_OVERWORLD ? 256 : 128;
+    }
+    int slots = BITNSLOTS(256 * worldHeight);
+    char carvingMask[slots];
+    memset(carvingMask, 0, slots);
+
+    // TODO: replace with genBiomes?
+    int biomes[17][17];
+    for (int relChunkX = -8; relChunkX <= 8; ++relChunkX) {
+        for (int relChunkZ = -8; relChunkZ <= 8; ++relChunkZ) {
+            biomes[relChunkZ + 8][relChunkX + 8] = getBiomeAt(g, 4, relChunkX << 2, 0, relChunkZ << 2);
+        }
+    }
+
+    for (int relChunkX = -8; relChunkX <= 8; ++relChunkX) {
+        for (int relChunkZ = -8; relChunkZ <= 8; ++relChunkZ) {
+            int offsetChunkX = chunkX + relChunkX;
+            int offsetChunkZ = chunkZ + relChunkZ;
+            int biome = biomes[relChunkZ + 8][relChunkX + 8];
+
+            for (int canyonCarverType = 0; canyonCarverType < CANYON_CARVER_NUM; ++canyonCarverType) {
+                CanyonCarverConfig ccc;
+                if (!getCanyonCarverConfig(canyonCarverType, g->mc, &ccc)) {
+                    continue;
+                }
+                if (ccc.dim != g->dim) {
+                    continue;
+                }
+                if (!isViableCanyonBiome(canyonCarverType, biome)) {
+                    continue;
+                }
+                uint64_t rnd;
+                if (!checkCanyonStart(g->seed, offsetChunkX, offsetChunkZ, ccc, &rnd)) {
+                    continue;
+                }
+                carveCanyonInner(ccc, g->mc, &rnd, chunkX, chunkZ, offsetChunkX, offsetChunkZ, carvingMask, poses);
+            }
+
+            for (int caveCarverType = 0; caveCarverType < CAVE_CARVER_NUM; ++caveCarverType) {
+                CaveCarverConfig ccc;
+                if (!getCaveCarverConfig(caveCarverType, g->mc, biome, &ccc)) {
+                    continue;
+                }
+                if (ccc.dim != g->dim) {
+                    continue;
+                }
+                if (!isViableCaveBiome(caveCarverType, biome)) {
+                    continue;
+                }
+                uint64_t rnd;
+                if (!checkCaveStart(g->seed, offsetChunkX, offsetChunkZ, ccc, &rnd)) {
+                    continue;
+                }
+                carveCaveInner(ccc, &rnd, chunkX, chunkZ, offsetChunkX, offsetChunkZ, g->mc, carvingMask, poses);
+            }
+        }
+    }
+}
+
 //==============================================================================
 // Validating Structure Positions
 //==============================================================================

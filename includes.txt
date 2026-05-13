@@ -292,6 +292,7 @@
 --include-struct StructureSaltConfig
 --include-struct StructureVariant
 --include-function appendPos3List
+--include-function applyAllCarvers
 --include-function canBiomeGenerate
 --include-function carveCanyon
 --include-function carveCave
