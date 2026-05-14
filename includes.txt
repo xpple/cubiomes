@@ -363,6 +363,7 @@
 --include-constant BF_APPROX
 --include-constant BF_FORCED_OCEAN
 --include-constant BLACKSTONE
+--include-constant BLOCK_NUM
 --include-constant BRIDGE_CORRIDOR_ENTRANCE
 --include-constant BRIDGE_CROSSING
 --include-constant BRIDGE_END
@@ -473,6 +474,7 @@
 --include-constant NetherGravelOre
 --include-constant NetherQuartzOre
 --include-constant OCEAN_CAVE_CARVER
+--include-constant ORE_NUM
 --include-constant Ocean_Ruin
 --include-constant Outpost
 --include-constant PIECE_COUNT
@@ -1062,6 +1064,7 @@
 
 --include-function biome2str
 --include-function biomesToImage
+--include-function block2str
 --include-function initBiomeColors
 --include-function initBiomeTypeColors
 --include-function loadSavedSeeds

@@ -11020,6 +11020,15 @@ public class Cubiomes {
     public static int TUFF() {
         return TUFF;
     }
+    private static final int BLOCK_NUM = (int)27L;
+    /**
+     * {@snippet lang=c :
+     * enum Blocks.BLOCK_NUM = 27
+     * }
+     */
+    public static int BLOCK_NUM() {
+        return BLOCK_NUM;
+    }
     private static final int AndesiteOre = (int)0L;
     /**
      * {@snippet lang=c :
@@ -11424,6 +11433,15 @@ public class Cubiomes {
      */
     public static int UpperIronOre() {
         return UpperIronOre;
+    }
+    private static final int ORE_NUM = (int)45L;
+    /**
+     * {@snippet lang=c :
+     * enum Ores.ORE_NUM = 45
+     * }
+     */
+    public static int ORE_NUM() {
+        return ORE_NUM;
     }
 
     private static class getOreConfig {
@@ -16471,6 +16489,64 @@ public class Cubiomes {
                 traceDowncall("struct2str", stype);
             }
             return (MemorySegment)mh$.invokeExact(stype);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class block2str {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("block2str");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * const char *block2str(int btype)
+     * }
+     */
+    public static FunctionDescriptor block2str$descriptor() {
+        return block2str.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * const char *block2str(int btype)
+     * }
+     */
+    public static MethodHandle block2str$handle() {
+        return block2str.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * const char *block2str(int btype)
+     * }
+     */
+    public static MemorySegment block2str$address() {
+        return block2str.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * const char *block2str(int btype)
+     * }
+     */
+    public static MemorySegment block2str(int btype) {
+        var mh$ = block2str.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("block2str", btype);
+            }
+            return (MemorySegment)mh$.invokeExact(btype);
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
