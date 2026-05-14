@@ -313,6 +313,39 @@ const char* struct2str(int stype)
     return NULL;
 }
 
+const char* block2str(int btype) {
+    switch (btype) {
+    case ANCIENT_DEBRIS:      return "ancient_debris";
+    case ANDESITE:            return "andesite";
+    case BASALT:              return "basalt";
+    case BLACKSTONE:          return "blackstone";
+    case CLAY:                return "clay";
+    case COAL_ORE:            return "coal_ore";
+    case COPPER_ORE:          return "copper_ore";
+    case DEEPSLATE:           return "deepslate";
+    case DIAMOND_ORE:         return "diamond_ore";
+    case DIORITE:             return "diorite";
+    case DIRT:                return "dirt";
+    case EMERALD_ORE:         return "emerald_ore";
+    case GOLD_ORE:            return "gold_ore";
+    case GRANITE:             return "granite";
+    case GRAVEL:              return "gravel";
+    case IRON_ORE:            return "iron_ore";
+    case LAPIS_ORE:           return "lapis_ore";
+    case MAGMA_BLOCK:         return "magma_block";
+    case NETHERRACK:          return "netherrack";
+    case NETHER_GOLD_ORE:     return "nether_gold_ore";
+    case NETHER_QUARTZ_ORE:   return "nether_quartz_ore";
+    case RAW_COPPER_BLOCK:    return "raw_copper_block";
+    case RAW_IRON_BLOCK:      return "raw_iron_block";
+    case REDSTONE_ORE:        return "redstone_ore";
+    case SOUL_SAND:           return "soul_sand";
+    case STONE:               return "stone";
+    case TUFF:                return "tuff";
+    default: return NULL;
+    }
+}
+
 const char* ore2str(int otype)
 {
     switch (otype)
@@ -362,8 +395,8 @@ const char* ore2str(int otype)
     case UpperDioriteOre:    return "ore_diorite_upper";
     case UpperGraniteOre:    return "ore_granite_upper";
     case UpperIronOre:       return "ore_iron_upper";
+    default: return NULL;
     }
-    return NULL;
 }
 
 /// get the resource id name for an ore

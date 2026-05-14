@@ -1402,13 +1402,13 @@ Pos getSpawn(const Generator *g)
 // Simulating ore generation
 //==============================================================================
 
-static const uint32_t BASE_STONE_OVERWORLD_REPLACEABLES[] = {STONE, GRANITE, DIORITE, ANDESITE, DEEPSLATE, TUFF};
-static const uint32_t BASE_STONE_NETHER_REPLACEABLES[] = {NETHERRACK, BASALT, BLACKSTONE};
-static const uint32_t STONE_REPLACEABLES[] = {STONE};
-static const uint32_t NETHERRACK_REPLACEABLES[] = {NETHERRACK};
-
 int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
 {
+    static const uint32_t BASE_STONE_OVERWORLD_REPLACEABLES[] = {STONE, GRANITE, DIORITE, ANDESITE, DEEPSLATE, TUFF};
+    static const uint32_t BASE_STONE_NETHER_REPLACEABLES[] = {NETHERRACK, BASALT, BLACKSTONE};
+    static const uint32_t STONE_REPLACEABLES[] = {STONE};
+    static const uint32_t NETHERRACK_REPLACEABLES[] = {NETHERRACK};
+
     // check the step in BiomeDefaultFeatures.java
     // check the size and discardChanceOnAirExposure in OreFeatures.java
     // check the repeatCount in OrePlacements.java
