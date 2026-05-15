@@ -332,6 +332,7 @@
 --include-function getPopulationSeed
 --include-function getPossibleBiomesForLimits
 --include-function getSpawn
+--include-function getStrongholdLoot
 --include-function getStrongholdPieces
 --include-function getStructureConfig
 --include-function getStructurePieces
