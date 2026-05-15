@@ -305,12 +305,13 @@ const char* struct2str(int stype)
     case Ancient_City:      return "ancient_city";
     case Trail_Ruins:       return "trail_ruins";
     case Trial_Chambers:    return "trial_chambers";
+    case Stronghold:        return "stronghold";
     case Fortress:          return "fortress";
     case Bastion:           return "bastion_remnant";
     case End_City:          return "end_city";
     case End_Gateway:       return "end_gateway";
+    default:                return NULL;
     }
-    return NULL;
 }
 
 const char* block2str(int btype) {

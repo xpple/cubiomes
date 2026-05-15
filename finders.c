@@ -3939,6 +3939,7 @@ int getLootTableCountForStructure(int structure, int mc) {
     case End_Island: return 0;
     case Trail_Ruins: return 0;
     case Trial_Chambers: return 13;
+    case Stronghold: return 3;
     default:
         fprintf(stderr, "getLootTableCountForStructure: not implemented for structure %s.\n", struct2str(structure));
         exit(1);
