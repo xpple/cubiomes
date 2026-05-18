@@ -45,6 +45,10 @@
 #include <ctype.h>
 #include <float.h>
 
+#ifndef ENABLE_LOCALES
+#define ENABLE_LOCALES
+#endif
+
 #ifdef ENABLE_LOCALES
 #include <locale.h>
 #endif
