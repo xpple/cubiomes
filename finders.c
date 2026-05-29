@@ -3514,6 +3514,12 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
 
     switch (structType)
     {
+    case Ocean_Ruin:
+        if (!isOceanic(biomeID))
+            return 0;
+        r->biome = biomeID;
+        return 1;
+
     case Village:
         if (mc <= MC_1_9)
             return 0;
@@ -4138,6 +4144,8 @@ static int getOceanRuinLoot(Piece *list, int n, StructureSaltConfig ssconf,
     int biome = sv ? sv->biome : -1;
     int isWarm = biome == warm_ocean || biome == lukewarm_ocean ||
         biome == deep_lukewarm_ocean || biome == deep_warm_ocean;
+    if (biome == -1)
+        isWarm = ssconf.generationStep == 4 && ssconf.decoratorIndex == 8;
 
     uint64_t pieceRng = chunkGenerateRnd(seed, posX >> 4, posZ >> 4);
     int rotation = nextInt(&pieceRng, 4);
@@ -8117,4 +8125,3 @@ int getLargestRec(int match, const int *ids, int sx, int sz, Pos *p0, Pos *p1)
     free(meta);
     return ret;
 }
-
