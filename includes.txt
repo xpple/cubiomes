@@ -22,6 +22,7 @@
 --include-function genEndScaled
 --include-function genNetherScaled
 --include-function getBiomeDepthAndScale
+--include-function getBiomeNoise
 --include-function getEndSurfaceHeight
 --include-function getNetherBiome
 --include-function getOldBetaBiome
@@ -738,6 +739,7 @@
 --include-constant ITEM_EYE_ARMOR_TRIM_SMITHING_TEMPLATE
 --include-constant ITEM_FEATHER
 --include-constant ITEM_FIRE_CHARGE
+--include-constant ITEM_FISHING_ROD
 --include-constant ITEM_FLINT
 --include-constant ITEM_FLINT_AND_STEEL
 --include-constant ITEM_GILDED_BLACKSTONE
@@ -810,6 +812,7 @@
 --include-constant ITEM_SPIDER_EYE
 --include-constant ITEM_SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE
 --include-constant ITEM_STONE_AXE
+--include-constant ITEM_STONE_SPEAR
 --include-constant ITEM_STRING
 --include-constant ITEM_SUSPICIOUS_STEW
 --include-constant ITEM_TNT
