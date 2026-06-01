@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "../finders.h"
+#include "../piece.h"
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
@@ -470,18 +471,6 @@ int getStrongholdPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, i
     } while (!*env.portal);
 
     return *env.n;
-}
-
-static inline void rotPos(Pos3 bb0, Pos3 bb1, int *x, int *z, int rot) {
-    int posX, posZ;
-    switch (rot) {
-    case 0: posX = bb0.x + *x, posZ = bb1.z - *z; break;
-    case 1: posX = bb0.x + *z, posZ = bb0.z + *x; break;
-    case 2: posX = bb0.x + *x, posZ = bb0.z + *z; break;
-    case 3: posX = bb1.x - *z, posZ = bb0.z + *x; break;
-    default: UNREACHABLE();
-    }
-    *x = posX, *z = posZ;
 }
 
 static void generateBox(Piece *p, int cx, int cz, int x0, int y0, int z0, int x1, int y1, int z1, int skipAir, RandomSource rnd) {

@@ -23,6 +23,7 @@ set(HEADERS
 	biomenoise.h
 	biomes.h
 	noise.h
+	piece.h
 	terrainnoise.h
 	rng.h
 	util.h

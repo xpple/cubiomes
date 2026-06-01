@@ -355,7 +355,7 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
         *ssconf = biome == warm_ocean || biome == lukewarm_ocean ||
             biome == deep_lukewarm_ocean || biome == deep_warm_ocean
             ? ss_ocean_ruin_warm_1194 : ss_ocean_ruin_cold_1194;
-        return mc == MC_1_21_11 && isOceanic(biome);
+        return mc >= MC_1_21_11;
     case Jungle_Pyramid:
         if (mc < MC_1_16_1) *ssconf = ss_jungle_pyramid_113;
         else if (mc < MC_1_19_4) *ssconf = ss_jungle_pyramid_1161;
@@ -3516,8 +3516,6 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
     switch (structType)
     {
     case Ocean_Ruin:
-        if (!isOceanic(biomeID))
-            return 0;
         r->biome = biomeID;
         return 1;
 

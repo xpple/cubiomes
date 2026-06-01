@@ -255,10 +255,10 @@ int init_stronghold_library(LootTableContext** context, int version) {
 
 int init_underwater_ruin_big(LootTableContext** context, int version) {
     *context = init_underwater_ruin_big_1_21_11();
-    return version == MC_1_21_11;
+    return version >= MC_1_21_11;
 }
 
 int init_underwater_ruin_small(LootTableContext** context, int version) {
     *context = init_underwater_ruin_small_1_21_11();
-    return version == MC_1_21_11;
+    return version >= MC_1_21_11;
 }

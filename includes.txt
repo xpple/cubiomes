@@ -325,6 +325,8 @@
 --include-function getLinkedGatewayPos
 --include-function getLootTableCountForStructure
 --include-function getMineshafts
+--include-function getOceanRuinLoot
+--include-function getOceanRuinPieces
 --include-function getOreConfig
 --include-function getOreVeinBlockAt
 --include-function getParaDescent
