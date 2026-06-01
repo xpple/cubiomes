@@ -22,7 +22,6 @@
 --include-function genEndScaled
 --include-function genNetherScaled
 --include-function getBiomeDepthAndScale
---include-function getBiomeNoise
 --include-function getEndSurfaceHeight
 --include-function getNetherBiome
 --include-function getOldBetaBiome

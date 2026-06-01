@@ -4,9 +4,6 @@
 
 #include "../biomes.h"
 
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
-
 typedef struct
 {
     const char *name;
@@ -14,12 +11,6 @@ typedef struct
     int hasChest;
 }
 OceanRuinTemplateInfo;
-
-typedef struct
-{
-    int x0, z0, x1, z1;
-}
-OceanRuinBox;
 
 typedef struct
 {
@@ -78,33 +69,51 @@ static int isWarmOceanRuin(StructureSaltConfig ssconf, StructureVariant *sv)
     return ssconf.generationStep == 4 && ssconf.decoratorIndex == 8;
 }
 
-static Pos transformTemplatePos(Pos pos, int rotation)
+static void initOceanRuinPiece(Piece *piece, const char *name, Pos origin,
+        int rotation, int isLarge)
 {
+    memset(piece, 0, sizeof(*piece));
+    piece->name = name;
+    piece->pos = (Pos3) {origin.x, 0, origin.z};
+    piece->rot = rotation;
+
+    Pos span = isLarge ? (Pos) {15, 15} : (Pos) {5, 6};
+    Pos3 offset = {0, 0, 0};
+    Pos3 size = {span.x + 1, 1, span.z + 1};
+    int facing;
+
     switch (rotation)
     {
-    case 0: return pos;
-    case 1: return (Pos) {-pos.z, pos.x};
-    case 2: return (Pos) {-pos.x, -pos.z};
-    case 3: return (Pos) {pos.z, -pos.x};
+    case 0:
+        facing = 2;
+        break;
+    case 1:
+        facing = 3;
+        break;
+    case 2:
+        facing = 0;
+        offset.x = -span.x;
+        break;
+    case 3:
+        facing = 1;
+        offset.x = -span.x;
+        break;
     default: UNREACHABLE();
     }
+
+    orientBox(piece->pos, offset, size, facing, &piece->bb0, &piece->bb1);
 }
 
-static OceanRuinBox getRotatedBox(Pos pos, Pos span, int rotation)
+static Pos getOceanRuinChestPos(Piece piece, Pos chest)
 {
-    Pos transformed = transformTemplatePos(span, rotation);
-    OceanRuinBox box = {
-        MIN(pos.x, pos.x + transformed.x),
-        MIN(pos.z, pos.z + transformed.z),
-        MAX(pos.x, pos.x + transformed.x),
-        MAX(pos.z, pos.z + transformed.z)
-    };
-    return box;
-}
-
-static int intersects(OceanRuinBox a, OceanRuinBox b)
-{
-    return a.x0 <= b.x1 && a.x1 >= b.x0 && a.z0 <= b.z1 && a.z1 >= b.z0;
+    switch (piece.rot)
+    {
+    case 0: return (Pos) {piece.pos.x + chest.x, piece.pos.z + chest.z};
+    case 1: return (Pos) {piece.pos.x - chest.z, piece.pos.z + chest.x};
+    case 2: return (Pos) {piece.pos.x - chest.x, piece.pos.z - chest.z};
+    case 3: return (Pos) {piece.pos.x + chest.z, piece.pos.z - chest.x};
+    default: UNREACHABLE();
+    }
 }
 
 static uint64_t nextLootSeed(OceanRuinLootRng *rngs, int *rngCount, int maxRngs,
@@ -130,19 +139,22 @@ static uint64_t nextLootSeed(OceanRuinLootRng *rngs, int *rngCount, int maxRngs,
 }
 
 static int recordChest(Piece *list, int n, int *count,
-        const char *name, int rotation, Pos chestPos, const char *lootTable, uint64_t lootSeed)
+        Piece piece, Pos chestPos, const char *lootTable, uint64_t lootSeed)
 {
     for (int i = 0; i < *count; i++)
     {
-        Piece *piece = &list[i];
-        if (piece->chestCount == 1 &&
-            piece->chestPoses[0].x == chestPos.x &&
-            piece->chestPoses[0].z == chestPos.z)
+        Piece *existing = &list[i];
+        if (existing->chestCount == 1 &&
+            existing->chestPoses[0].x == chestPos.x &&
+            existing->chestPoses[0].z == chestPos.z)
         {
-            piece->name = name;
-            piece->rot = rotation;
-            piece->lootTables[0] = lootTable;
-            piece->lootSeeds[0] = lootSeed;
+            existing->name = piece.name;
+            existing->pos = piece.pos;
+            existing->bb0 = piece.bb0;
+            existing->bb1 = piece.bb1;
+            existing->rot = piece.rot;
+            existing->lootTables[0] = lootTable;
+            existing->lootSeeds[0] = lootSeed;
             return 1;
         }
     }
@@ -150,15 +162,12 @@ static int recordChest(Piece *list, int n, int *count,
     if (*count >= n)
         return 0;
 
-    Piece *piece = &list[(*count)++];
-    memset(piece, 0, sizeof(*piece));
-    piece->name = name;
-    piece->pos = (Pos3) {chestPos.x, 0, chestPos.z};
-    piece->rot = rotation;
-    piece->chestCount = 1;
-    piece->chestPoses[0] = chestPos;
-    piece->lootSeeds[0] = lootSeed;
-    piece->lootTables[0] = lootTable;
+    Piece *out = &list[(*count)++];
+    *out = piece;
+    out->chestCount = 1;
+    out->chestPoses[0] = chestPos;
+    out->lootSeeds[0] = lootSeed;
+    out->lootTables[0] = lootTable;
     return 1;
 }
 
@@ -170,10 +179,11 @@ static int addTemplate(Piece *list, int n, int *count,
     if (!info.hasChest)
         return 1;
 
-    Pos transformed = transformTemplatePos(info.chest, rotation);
-    Pos chestPos = {origin.x + transformed.x, origin.z + transformed.z};
+    Piece piece;
+    initOceanRuinPiece(&piece, info.name, origin, rotation, isLarge);
+    Pos chestPos = getOceanRuinChestPos(piece, info.chest);
     uint64_t lootSeed = nextLootSeed(rngs, rngCount, 32, ssconf, mc, seed, chestPos);
-    return recordChest(list, n, count, info.name, rotation, chestPos,
+    return recordChest(list, n, count, piece, chestPos,
             isLarge ? "underwater_ruin_big" : "underwater_ruin_small", lootSeed);
 }
 
@@ -199,19 +209,26 @@ static int addPiece(Piece *list, int n, int *count,
     return 1;
 }
 
-static void removeCandidate(Pos *candidates, int *candidateCount, int idx)
+static int getAvailableCandidateIndex(uint8_t removedMask, int idx)
 {
-    for (int i = idx; i < *candidateCount - 1; i++)
-        candidates[i] = candidates[i + 1];
-    (*candidateCount)--;
+    for (int i = 0; i < 8; i++)
+    {
+        if (removedMask & (1 << i))
+            continue;
+        if (idx-- == 0)
+            return i;
+    }
+    UNREACHABLE();
 }
 
 static int addClusterRuins(Piece *list, int n, int *count,
         OceanRuinLootRng *rngs, int *rngCount, StructureSaltConfig ssconf,
         int mc, uint64_t seed, uint64_t *pieceRng, Pos origin, int mainRotation, int isWarm)
 {
-    OceanRuinBox mainBox = getRotatedBox(origin, (Pos) {15, 15}, mainRotation);
-    Pos minCorner = {mainBox.x0, mainBox.z0};
+    Piece mainPiece;
+    initOceanRuinPiece(&mainPiece, NULL, origin, mainRotation, 1);
+
+    Pos minCorner = {mainPiece.bb0.x, mainPiece.bb0.z};
     Pos candidates[8] = {
         {minCorner.x - 16 + nextIntBetween(pieceRng, 1, 8), minCorner.z + 16 + nextIntBetween(pieceRng, 1, 7)},
         {minCorner.x - 16 + nextIntBetween(pieceRng, 1, 8), minCorner.z + nextIntBetween(pieceRng, 1, 7)},
@@ -222,18 +239,21 @@ static int addClusterRuins(Piece *list, int n, int *count,
         {minCorner.x + 16 + nextIntBetween(pieceRng, 1, 7), minCorner.z + nextIntBetween(pieceRng, 1, 7)},
         {minCorner.x + 16 + nextIntBetween(pieceRng, 1, 7), minCorner.z - 16 + nextIntBetween(pieceRng, 4, 8)},
     };
+    uint8_t removedMask = 0;
     int candidateCount = 8;
     int clusterCount = nextIntBetween(pieceRng, 4, 8);
 
     for (int i = 0; i < clusterCount && candidateCount > 0; i++)
     {
-        int candidateIdx = nextInt(pieceRng, candidateCount);
+        int candidateIdx = getAvailableCandidateIndex(removedMask, nextInt(pieceRng, candidateCount));
         Pos clusterOrigin = candidates[candidateIdx];
-        removeCandidate(candidates, &candidateCount, candidateIdx);
+        removedMask |= 1 << candidateIdx;
+        candidateCount--;
 
         int clusterRotation = nextInt(pieceRng, 4);
-        OceanRuinBox clusterBox = getRotatedBox(clusterOrigin, (Pos) {5, 6}, clusterRotation);
-        if (intersects(clusterBox, mainBox))
+        Piece clusterPiece;
+        initOceanRuinPiece(&clusterPiece, NULL, clusterOrigin, clusterRotation, 0);
+        if (hasIntersection(clusterPiece.bb0, clusterPiece.bb1, mainPiece.bb0, mainPiece.bb1))
             continue;
 
         if (!addPiece(list, n, count, rngs, rngCount, ssconf,

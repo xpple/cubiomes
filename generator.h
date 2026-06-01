@@ -21,16 +21,6 @@ STRUCT(Generator)
     uint64_t sha;
 
     union {
-#if JEXTRACT
-        // jextract cannot lay out anonymous structs nested inside an anonymous union.
-        struct { // MC 1.0 - 1.17
-            LayerStack ls;
-            Layer xlayer[5]; // buffer for custom entry layers @{1,4,16,64,256}
-            Layer *entry;
-        } legacy;
-        BiomeNoise bn; // MC 1.18
-        BiomeNoiseBeta bnb; // MC A1.2 - B1.7
-#else
         struct { // MC 1.0 - 1.17
             LayerStack ls;
             Layer xlayer[5]; // buffer for custom entry layers @{1,4,16,64,256}
@@ -43,7 +33,6 @@ STRUCT(Generator)
             BiomeNoiseBeta bnb;
             //SurfaceNoiseBeta snb;
         };
-#endif
     };
     NetherNoise nn; // MC 1.16
     EndNoise en; // MC 1.9
@@ -65,8 +54,6 @@ extern "C"
  * scales higher than normal.
  */
 void setupGenerator(Generator *g, int mc, uint32_t flags);
-
-BiomeNoise *getBiomeNoise(Generator *g);
 
 /**
  * Initializes the generator for a given dimension and seed.
@@ -156,3 +143,4 @@ int mapApproxHeight(float *y, int *ids, const Generator *g,
 #endif
 
 #endif /* GENERATOR_H_ */
+

@@ -97,11 +97,6 @@ void setupGenerator(Generator *g, int mc, uint32_t flags)
     }
 }
 
-BiomeNoise *getBiomeNoise(Generator *g)
-{
-    return &g->bn;
-}
-
 void applySeed(Generator *g, int dim, uint64_t seed)
 {
     g->dim = dim;
@@ -770,6 +765,7 @@ int mapApproxHeight(float *y, int *ids, const Generator *g, const SurfaceNoise *
     free(depth);
     return 0;
 }
+
 
 
 
