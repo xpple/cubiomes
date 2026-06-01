@@ -28,6 +28,7 @@ set(HEADERS
 	util.h
 	quadbase.h
 	xrms.h
+	features/ocean_ruin.h
 	features/stronghold.h
 	loot/items.h
 	loot/logging.h
@@ -108,6 +109,7 @@ set(SOURCES
 	util.c
 	quadbase.c
 	xradv.c
+	features/ocean_ruin.c
 	features/stronghold.c
 	loot/items.c
 	loot/loot_functions.c
