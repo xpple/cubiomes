@@ -307,7 +307,7 @@ int getOceanRuinLoot(Piece *list, int n, StructureSaltConfig ssconf,
     {
         Piece piece = attempts[i];
         if (piece.chestCount == 1)
-            piece.lootSeeds[0] = getLootSeedForAttempt(attempts, i, ssconf, mc, seed)
+            piece.lootSeeds[0] = getLootSeedForAttempt(attempts, i, ssconf, mc, seed);
         if (!recordPiece(list, n, &count, piece))
             return -1;
     }
