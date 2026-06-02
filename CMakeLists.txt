@@ -23,12 +23,12 @@ set(HEADERS
 	biomenoise.h
 	biomes.h
 	noise.h
-	piece.h
 	terrainnoise.h
 	rng.h
 	util.h
 	quadbase.h
 	xrms.h
+	features/piece.h
 	features/ocean_ruin.h
 	features/stronghold.h
 	loot/items.h

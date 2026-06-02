@@ -2,8 +2,7 @@
 
 #include <string.h>
 
-#include "../biomes.h"
-#include "../piece.h"
+#include "piece.h"
 
 STRUCT(OceanRuinTemplateInfo)
 {
@@ -51,8 +50,12 @@ static const OceanRuinTemplateInfo coldBig[4][3] = {
 
 static int isWarmOceanRuinBiome(int biome)
 {
-    return biome == warm_ocean || biome == lukewarm_ocean ||
-        biome == deep_lukewarm_ocean || biome == deep_warm_ocean;
+    const uint64_t warm_bits = (1ULL << warm_ocean)
+                             | (1ULL << lukewarm_ocean)
+                             | (1ULL << deep_lukewarm_ocean)
+                             | (1ULL << deep_warm_ocean);
+
+    return (uint32_t) biome < 64 && ((1ULL << biome) & warm_bits);
 }
 
 enum {

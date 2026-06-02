@@ -2,8 +2,7 @@
 
 #include <string.h>
 
-#include "../finders.h"
-#include "../piece.h"
+#include "piece.h"
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
