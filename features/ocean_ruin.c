@@ -59,7 +59,7 @@ static int isWarmOceanRuinBiome(int biome)
 }
 
 enum {
-    OCEAN_RUIN_MAX_CHEST_ATTEMPTS = 32,
+    OCEAN_RUIN_MAX_PIECE_ATTEMPTS = 32,
 };
 
 static Pos getOceanRuinSpan(int isLarge)
@@ -119,7 +119,7 @@ static int recordPiece(Piece *list, int n, int *count, Piece piece)
     for (int i = 0; i < *count; i++)
     {
         Piece *existing = &list[i];
-        if (existing->chestCount == 1 &&
+        if (existing->chestCount == 1 && piece.chestCount == 1 &&
             existing->chestPoses[0].x == piece.chestPoses[0].x &&
             existing->chestPoses[0].z == piece.chestPoses[0].z)
         {
@@ -138,16 +138,17 @@ static int recordPiece(Piece *list, int n, int *count, Piece piece)
 static int addTemplateAttempt(Piece *list, int n, int *count,
         Pos origin, int rotation, int isLarge, const OceanRuinTemplateInfo *info)
 {
-    if (!info->hasChest)
-        return 1;
     if (*count >= n)
         return 0;
 
     Piece piece;
     initOceanRuinPiece(&piece, info, origin, rotation, isLarge);
-    piece.chestCount = 1;
-    piece.chestPoses[0] = getOceanRuinMarkerPos(piece, info->chest, isLarge);
-    piece.lootTables[0] = isLarge ? "underwater_ruin_big" : "underwater_ruin_small";
+    if (info->hasChest)
+    {
+        piece.chestCount = 1;
+        piece.chestPoses[0] = getOceanRuinMarkerPos(piece, info->chest, isLarge);
+        piece.lootTables[0] = isLarge ? "underwater_ruin_big" : "underwater_ruin_small";
+    }
     list[(*count)++] = piece;
     return 1;
 }
@@ -253,8 +254,8 @@ static int getOceanRuinPieceAttempts(Piece *list, int n, StructureVariant *sv,
 int getOceanRuinPieces(Piece *list, int n, StructureVariant *sv,
         int mc, uint64_t seed, int posX, int posZ)
 {
-    Piece attempts[OCEAN_RUIN_MAX_CHEST_ATTEMPTS];
-    int attemptCount = getOceanRuinPieceAttempts(attempts, OCEAN_RUIN_MAX_CHEST_ATTEMPTS,
+    Piece attempts[OCEAN_RUIN_MAX_PIECE_ATTEMPTS];
+    int attemptCount = getOceanRuinPieceAttempts(attempts, OCEAN_RUIN_MAX_PIECE_ATTEMPTS,
             sv, mc, seed, posX, posZ);
     if (attemptCount < 0)
         return -1;
@@ -278,7 +279,8 @@ static uint64_t getLootSeedForAttempt(Piece *attempts, int attemptIdx,
     for (int i = 0; i < attemptIdx; i++)
     {
         Pos prevChestPos = attempts[i].chestPoses[0];
-        if ((prevChestPos.x & ~15) == chunkX && (prevChestPos.z & ~15) == chunkZ)
+        if (attempts[i].chestCount == 1 &&
+            (prevChestPos.x & ~15) == chunkX && (prevChestPos.z & ~15) == chunkZ)
             callIdx++;
     }
 
@@ -294,8 +296,8 @@ static uint64_t getLootSeedForAttempt(Piece *attempts, int attemptIdx,
 int getOceanRuinLoot(Piece *list, int n, StructureSaltConfig ssconf,
         StructureVariant *sv, int mc, uint64_t seed, int posX, int posZ)
 {
-    Piece attempts[OCEAN_RUIN_MAX_CHEST_ATTEMPTS];
-    int attemptCount = getOceanRuinPieceAttempts(attempts, OCEAN_RUIN_MAX_CHEST_ATTEMPTS,
+    Piece attempts[OCEAN_RUIN_MAX_PIECE_ATTEMPTS];
+    int attemptCount = getOceanRuinPieceAttempts(attempts, OCEAN_RUIN_MAX_PIECE_ATTEMPTS,
             sv, mc, seed, posX, posZ);
     if (attemptCount < 0)
         return -1;
@@ -304,7 +306,8 @@ int getOceanRuinLoot(Piece *list, int n, StructureSaltConfig ssconf,
     for (int i = 0; i < attemptCount; i++)
     {
         Piece piece = attempts[i];
-        piece.lootSeeds[0] = getLootSeedForAttempt(attempts, i, ssconf, mc, seed);
+        if (piece.chestCount == 1)
+            piece.lootSeeds[0] = getLootSeedForAttempt(attempts, i, ssconf, mc, seed)
         if (!recordPiece(list, n, &count, piece))
             return -1;
     }

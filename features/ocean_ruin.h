@@ -60,8 +60,8 @@ enum {
 };
 
 /**
- * Generate ocean ruin pieces that contain loot chests. The returned pieces
- * include chest positions and loot tables, but not loot seeds.
+ * Generate ocean ruin pieces. The returned pieces include chest positions and
+ * loot tables for pieces that contain loot chests, but not loot seeds.
  *
  * @param list the output list of pieces
  * @param n the maximum number of pieces to generate
@@ -76,8 +76,8 @@ int getOceanRuinPieces(Piece *list, int n, StructureVariant *sv,
         int mc, uint64_t seed, int posX, int posZ);
 
 /**
- * Generate ocean ruin pieces that contain loot chests. The returned pieces
- * include chest positions, loot tables and loot seeds.
+ * Generate ocean ruin pieces. The returned pieces include chest positions,
+ * loot tables and loot seeds for pieces that contain loot chests.
  *
  * @param list the output list of pieces
  * @param n the maximum number of pieces to generate
