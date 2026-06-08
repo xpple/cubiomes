@@ -95,7 +95,11 @@ set(HEADERS
 	loot/loot_tables/stronghold_crossing_1_13.h
 	loot/loot_tables/stronghold_library_1_13.h
 	loot/loot_tables/stronghold_library_1_20.h
+	loot/loot_tables/underwater_ruin_big_1_13.h
+	loot/loot_tables/underwater_ruin_big_1_18.h
 	loot/loot_tables/underwater_ruin_big_1_21_11.h
+	loot/loot_tables/underwater_ruin_small_1_13.h
+	loot/loot_tables/underwater_ruin_small_1_18.h
 	loot/loot_tables/underwater_ruin_small_1_21_11.h
 	loot/cjson/cJSON.h
 )
@@ -174,7 +178,11 @@ set(SOURCES
 	loot/loot_tables/stronghold_crossing_1_13.c
 	loot/loot_tables/stronghold_library_1_13.c
 	loot/loot_tables/stronghold_library_1_20.c
+	loot/loot_tables/underwater_ruin_big_1_13.c
+	loot/loot_tables/underwater_ruin_big_1_18.c
 	loot/loot_tables/underwater_ruin_big_1_21_11.c
+	loot/loot_tables/underwater_ruin_small_1_13.c
+	loot/loot_tables/underwater_ruin_small_1_18.c
 	loot/loot_tables/underwater_ruin_small_1_21_11.c
 	loot/cjson/cJSON.c
 )
