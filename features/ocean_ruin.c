@@ -6,46 +6,46 @@
 
 STRUCT(OceanRuinTemplateInfo)
 {
-    int type;
+    const Pos chest;
+    const int hasChest;
+    const int type;
     const char *name;
-    Pos chest;
-    int hasChest;
 };
 
 static const OceanRuinTemplateInfo warmSmall[8] = {
-    {OR_WARM_1, "underwater_ruin/warm_1", {3, 1}, 1},
-    {OR_WARM_2, "underwater_ruin/warm_2", {3, 4}, 1},
-    {OR_WARM_3, "underwater_ruin/warm_3", {3, 4}, 1},
-    {OR_WARM_4, "underwater_ruin/warm_4", {1, 2}, 1},
-    {OR_WARM_5, "underwater_ruin/warm_5", {3, 4}, 1},
-    {OR_WARM_6, "underwater_ruin/warm_6", {4, 4}, 1},
-    {OR_WARM_7, "underwater_ruin/warm_7", {3, 3}, 1},
-    {OR_WARM_8, "underwater_ruin/warm_8", {3, 3}, 1},
+    {{3, 1}, 1, OR_WARM_1, "underwater_ruin/warm_1"},
+    {{3, 4}, 1, OR_WARM_2, "underwater_ruin/warm_2"},
+    {{3, 4}, 1, OR_WARM_3, "underwater_ruin/warm_3"},
+    {{1, 2}, 1, OR_WARM_4, "underwater_ruin/warm_4"},
+    {{3, 4}, 1, OR_WARM_5, "underwater_ruin/warm_5"},
+    {{4, 4}, 1, OR_WARM_6, "underwater_ruin/warm_6"},
+    {{3, 3}, 1, OR_WARM_7, "underwater_ruin/warm_7"},
+    {{3, 3}, 1, OR_WARM_8, "underwater_ruin/warm_8"},
 };
 
 static const OceanRuinTemplateInfo warmBig[4] = {
-    {OR_BIG_WARM_4, "underwater_ruin/big_warm_4", {11, 8}, 1},
-    {OR_BIG_WARM_5, "underwater_ruin/big_warm_5", {7, 7}, 1},
-    {OR_BIG_WARM_6, "underwater_ruin/big_warm_6", {10, 9}, 1},
-    {OR_BIG_WARM_7, "underwater_ruin/big_warm_7", {11, 7}, 1},
+    {{11, 8}, 1, OR_BIG_WARM_4, "underwater_ruin/big_warm_4"},
+    {{7, 7}, 1, OR_BIG_WARM_5, "underwater_ruin/big_warm_5"},
+    {{10, 9}, 1, OR_BIG_WARM_6, "underwater_ruin/big_warm_6"},
+    {{11, 7}, 1, OR_BIG_WARM_7, "underwater_ruin/big_warm_7"},
 };
 
 static const OceanRuinTemplateInfo coldSmall[8][3] = {
-    {{OR_BRICK_1, "underwater_ruin/brick_1", {3, 5}, 1}, {OR_CRACKED_1, "underwater_ruin/cracked_1", {3, 5}, 1}, {OR_MOSSY_1, "underwater_ruin/mossy_1", {0, 0}, 0}},
-    {{OR_BRICK_2, "underwater_ruin/brick_2", {2, 1}, 1}, {OR_CRACKED_2, "underwater_ruin/cracked_2", {2, 1}, 1}, {OR_MOSSY_2, "underwater_ruin/mossy_2", {2, 1}, 1}},
-    {{OR_BRICK_3, "underwater_ruin/brick_3", {1, 5}, 1}, {OR_CRACKED_3, "underwater_ruin/cracked_3", {1, 5}, 1}, {OR_MOSSY_3, "underwater_ruin/mossy_3", {1, 5}, 1}},
-    {{OR_BRICK_4, "underwater_ruin/brick_4", {1, 4}, 1}, {OR_CRACKED_4, "underwater_ruin/cracked_4", {1, 4}, 1}, {OR_MOSSY_4, "underwater_ruin/mossy_4", {1, 4}, 1}},
-    {{OR_BRICK_5, "underwater_ruin/brick_5", {4, 4}, 1}, {OR_CRACKED_5, "underwater_ruin/cracked_5", {4, 4}, 1}, {OR_MOSSY_5, "underwater_ruin/mossy_5", {4, 4}, 1}},
-    {{OR_BRICK_6, "underwater_ruin/brick_6", {2, 2}, 1}, {OR_CRACKED_6, "underwater_ruin/cracked_6", {2, 2}, 1}, {OR_MOSSY_6, "underwater_ruin/mossy_6", {2, 2}, 1}},
-    {{OR_BRICK_7, "underwater_ruin/brick_7", {1, 3}, 1}, {OR_CRACKED_7, "underwater_ruin/cracked_7", {1, 3}, 1}, {OR_MOSSY_7, "underwater_ruin/mossy_7", {1, 3}, 1}},
-    {{OR_BRICK_8, "underwater_ruin/brick_8", {3, 4}, 1}, {OR_CRACKED_8, "underwater_ruin/cracked_8", {3, 4}, 1}, {OR_MOSSY_8, "underwater_ruin/mossy_8", {3, 4}, 1}},
+    {{{3, 5}, 1, OR_BRICK_1, "underwater_ruin/brick_1"}, {{3, 5}, 1, OR_CRACKED_1, "underwater_ruin/cracked_1"}, {{0, 0}, 0, OR_MOSSY_1, "underwater_ruin/mossy_1"}},
+    {{{2, 1}, 1, OR_BRICK_2, "underwater_ruin/brick_2"}, {{2, 1}, 1, OR_CRACKED_2, "underwater_ruin/cracked_2"}, {{2, 1}, 1, OR_MOSSY_2, "underwater_ruin/mossy_2"}},
+    {{{1, 5}, 1, OR_BRICK_3, "underwater_ruin/brick_3"}, {{1, 5}, 1, OR_CRACKED_3, "underwater_ruin/cracked_3"}, {{1, 5}, 1, OR_MOSSY_3, "underwater_ruin/mossy_3"}},
+    {{{1, 4}, 1, OR_BRICK_4, "underwater_ruin/brick_4"}, {{1, 4}, 1, OR_CRACKED_4, "underwater_ruin/cracked_4"}, {{1, 4}, 1, OR_MOSSY_4, "underwater_ruin/mossy_4"}},
+    {{{4, 4}, 1, OR_BRICK_5, "underwater_ruin/brick_5"}, {{4, 4}, 1, OR_CRACKED_5, "underwater_ruin/cracked_5"}, {{4, 4}, 1, OR_MOSSY_5, "underwater_ruin/mossy_5"}},
+    {{{2, 2}, 1, OR_BRICK_6, "underwater_ruin/brick_6"}, {{2, 2}, 1, OR_CRACKED_6, "underwater_ruin/cracked_6"}, {{2, 2}, 1, OR_MOSSY_6, "underwater_ruin/mossy_6"}},
+    {{{1, 3}, 1, OR_BRICK_7, "underwater_ruin/brick_7"}, {{1, 3}, 1, OR_CRACKED_7, "underwater_ruin/cracked_7"}, {{1, 3}, 1, OR_MOSSY_7, "underwater_ruin/mossy_7"}},
+    {{{3, 4}, 1, OR_BRICK_8, "underwater_ruin/brick_8"}, {{3, 4}, 1, OR_CRACKED_8, "underwater_ruin/cracked_8"}, {{3, 4}, 1, OR_MOSSY_8, "underwater_ruin/mossy_8"}},
 };
 
 static const OceanRuinTemplateInfo coldBig[4][3] = {
-    {{OR_BIG_BRICK_1, "underwater_ruin/big_brick_1", {5, 4}, 1}, {OR_BIG_CRACKED_1, "underwater_ruin/big_cracked_1", {5, 4}, 1}, {OR_BIG_MOSSY_1, "underwater_ruin/big_mossy_1", {5, 4}, 1}},
-    {{OR_BIG_BRICK_2, "underwater_ruin/big_brick_2", {9, 10}, 1}, {OR_BIG_CRACKED_2, "underwater_ruin/big_cracked_2", {9, 10}, 1}, {OR_BIG_MOSSY_2, "underwater_ruin/big_mossy_2", {9, 10}, 1}},
-    {{OR_BIG_BRICK_3, "underwater_ruin/big_brick_3", {12, 2}, 1}, {OR_BIG_CRACKED_3, "underwater_ruin/big_cracked_3", {12, 2}, 1}, {OR_BIG_MOSSY_3, "underwater_ruin/big_mossy_3", {12, 2}, 1}},
-    {{OR_BIG_BRICK_8, "underwater_ruin/big_brick_8", {5, 4}, 1}, {OR_BIG_CRACKED_8, "underwater_ruin/big_cracked_8", {5, 4}, 1}, {OR_BIG_MOSSY_8, "underwater_ruin/big_mossy_8", {5, 4}, 1}},
+    {{{5, 4}, 1, OR_BIG_BRICK_1, "underwater_ruin/big_brick_1"}, {{5, 4}, 1, OR_BIG_CRACKED_1, "underwater_ruin/big_cracked_1"}, {{5, 4}, 1, OR_BIG_MOSSY_1, "underwater_ruin/big_mossy_1"}},
+    {{{9, 10}, 1, OR_BIG_BRICK_2, "underwater_ruin/big_brick_2"}, {{9, 10}, 1, OR_BIG_CRACKED_2, "underwater_ruin/big_cracked_2"}, {{9, 10}, 1, OR_BIG_MOSSY_2, "underwater_ruin/big_mossy_2"}},
+    {{{12, 2}, 1, OR_BIG_BRICK_3, "underwater_ruin/big_brick_3"}, {{12, 2}, 1, OR_BIG_CRACKED_3, "underwater_ruin/big_cracked_3"}, {{12, 2}, 1, OR_BIG_MOSSY_3, "underwater_ruin/big_mossy_3"}},
+    {{{5, 4}, 1, OR_BIG_BRICK_8, "underwater_ruin/big_brick_8"}, {{5, 4}, 1, OR_BIG_CRACKED_8, "underwater_ruin/big_cracked_8"}, {{5, 4}, 1, OR_BIG_MOSSY_8, "underwater_ruin/big_mossy_8"}},
 };
 
 static int isWarmOceanRuinBiome(int biome)
