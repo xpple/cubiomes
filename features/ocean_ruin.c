@@ -229,7 +229,7 @@ static int addClusterRuinAttempts(Piece *list, int n, int *count,
 static int getOceanRuinPieceAttempts(Piece *list, int n, StructureVariant *sv,
         int mc, uint64_t seed, int posX, int posZ)
 {
-    if (mc < MC_1_21_11 || n <= 0 || !sv)
+    if (mc < MC_1_13 || n <= 0 || !sv)
         return -1;
 
     uint64_t pieceRng = chunkGenerateRnd(seed, posX >> 4, posZ >> 4);

@@ -265,6 +265,12 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
     ss_igloo_1161 =                  {4,  4},
     ss_igloo_1192 =                  {4,  3},
 
+    ss_ocean_ruin_113 =              {3,  8},
+    ss_ocean_ruin_1161 =             {4,  9},
+    ss_ocean_ruin_cold_118 =         {4,  9},
+    ss_ocean_ruin_warm_118 =         {4, 10},
+    ss_ocean_ruin_cold_1192 =        {4, 10},
+    ss_ocean_ruin_warm_1192 =        {4, 11},
     ss_ocean_ruin_cold_1194 =        {4,  7},
     ss_ocean_ruin_warm_1194 =        {4,  8},
 
@@ -352,10 +358,21 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
         else *ssconf = ss_igloo_1192;
         return mc >= MC_1_13;
     case Ocean_Ruin:
-        *ssconf = biome == warm_ocean || biome == lukewarm_ocean ||
+        if (mc < MC_1_16_1) *ssconf = ss_ocean_ruin_113;
+        else if (mc < MC_1_18) *ssconf = ss_ocean_ruin_1161;
+        else if (mc < MC_1_19_2) {
+            *ssconf = biome == warm_ocean || biome == lukewarm_ocean ||
             biome == deep_lukewarm_ocean || biome == deep_warm_ocean
-            ? ss_ocean_ruin_warm_1194 : ss_ocean_ruin_cold_1194;
-        return mc >= MC_1_21_11;
+            ? ss_ocean_ruin_warm_118 : ss_ocean_ruin_cold_118;
+        }
+        else if (mc < MC_1_19_4) { // deep_warm_ocean was removed in 1.18
+            *ssconf = biome == warm_ocean || biome == lukewarm_ocean ||
+            biome == deep_lukewarm_ocean ? ss_ocean_ruin_warm_1192 : ss_ocean_ruin_cold_1192;
+        } else {
+            *ssconf = biome == warm_ocean || biome == lukewarm_ocean ||
+            biome == deep_lukewarm_ocean ? ss_ocean_ruin_warm_1194 : ss_ocean_ruin_cold_1194;
+        }
+        return mc >= MC_1_13;
     case Jungle_Pyramid:
         if (mc < MC_1_16_1) *ssconf = ss_jungle_pyramid_113;
         else if (mc < MC_1_19_4) *ssconf = ss_jungle_pyramid_1161;
@@ -3516,7 +3533,7 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
     switch (structType)
     {
     case Ocean_Ruin:
-        r->biome = biomeID;
+        r->biome = biomeID; // to determine cold/warm
         return 1;
 
     case Village:
