@@ -7720,9 +7720,8 @@ static const int g_biome_para_range_215_diff[][13] = {
 {pale_garden             , -1500, 2000,  3000, IMAX,   300, IMAX, -7799,  500,  IMIN, IMAX,  IMIN, IMAX},
 {-1,0,0,0,0,0,0,0,0,0,0,0,0}};
 
-// TODO: find correct values!!
 static const int g_biome_para_range_262_diff[][13] = {
-{sulfur_caves             , 0, 0,  0, 0,   0, 0, 0,  0,  0, 0,  0, 0},
+{sulfur_caves            ,  IMIN, IMAX,  IMIN, IMAX,  IMIN, IMAX,  IMIN, IMAX,  2000, 9000,  IMIN,-9500},
 {-1,0,0,0,0,0,0,0,0,0,0,0,0}};
 
 /**
