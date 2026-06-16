@@ -7762,6 +7762,14 @@ const int *getBiomeParaLimits(int mc, int id)
     if (mc <= MC_1_17)
         return NULL;
     int i;
+    if (mc > MC_26_1)
+    {
+        for (i = 0; g_biome_para_range_262_diff[i][0] != -1; i++)
+        {
+            if (g_biome_para_range_262_diff[i][0] == id)
+                return &g_biome_para_range_262_diff[i][1];
+        }
+    }
     if (mc > MC_1_21_4)
     {
         for (i = 0; g_biome_para_range_215_diff[i][0] != -1; i++)
