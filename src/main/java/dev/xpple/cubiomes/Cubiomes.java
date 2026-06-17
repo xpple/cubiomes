@@ -1623,10 +1623,10 @@ public class Cubiomes {
     public static int MC_1_21() {
         return MC_1_21;
     }
-    private static final int MC_NEWEST = (int)32L;
+    private static final int MC_NEWEST = (int)34L;
     /**
      * {@snippet lang=c :
-     * enum MCVersion.MC_NEWEST = 32
+     * enum MCVersion.MC_NEWEST = 34
      * }
      */
     public static int MC_NEWEST() {
