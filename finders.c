@@ -2711,7 +2711,7 @@ void applyAllCarvers(Generator *g, int chunkX, int chunkZ, Pos3List* poses) {
     int biomes[17][17];
     for (int relChunkX = -8; relChunkX <= 8; ++relChunkX) {
         for (int relChunkZ = -8; relChunkZ <= 8; ++relChunkZ) {
-            biomes[relChunkZ + 8][relChunkX + 8] = getBiomeAt(g, 4, relChunkX << 2, 0, relChunkZ << 2);
+            biomes[relChunkZ + 8][relChunkX + 8] = getBiomeAt(g, 4, (chunkX + relChunkX) << 2, 0, (chunkZ + relChunkZ) << 2);
         }
     }
 
