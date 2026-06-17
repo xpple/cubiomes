@@ -390,7 +390,6 @@ int getStrongholdPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, i
         env.rng = &rng;
         env.portal = &portal;
         env.imposedPiece = -1;
-        env.ntyp[0] = 1;
         env.typlast = -1;
         env.nmax = n;
         env.totalWeight = 145;

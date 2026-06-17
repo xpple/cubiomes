@@ -415,6 +415,7 @@ enum Blocks {
     SOUL_SAND,
     STONE,
     TUFF,
+    BLOCK_NUM,
 };
 
 enum Ores {
@@ -463,6 +464,7 @@ enum Ores {
     UpperDioriteOre,
     UpperGraniteOre,
     UpperIronOre,
+    ORE_NUM,
 };
 
 
