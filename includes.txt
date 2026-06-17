@@ -127,6 +127,8 @@
 --include-constant MC_1_8_9
 --include-constant MC_1_9
 --include-constant MC_1_9_4
+--include-constant MC_26_1
+--include-constant MC_26_2
 --include-constant MC_B1_7
 --include-constant MC_B1_8
 --include-constant MC_NEWEST
@@ -251,6 +253,7 @@
 --include-constant stone_shore
 --include-constant stony_peaks
 --include-constant stony_shore
+--include-constant sulfur_caves
 --include-constant sunflower_plains
 --include-constant swamp
 --include-constant swamp_hills
