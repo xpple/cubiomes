@@ -1,6 +1,7 @@
 #include "finders.h"
 #include "biomes.h"
 #include "util.h"
+#include "features/ocean_ruin.h"
 #include "features/stronghold.h"
 
 #include <stdio.h>
@@ -264,6 +265,15 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
     ss_igloo_1161 =                  {4,  4},
     ss_igloo_1192 =                  {4,  3},
 
+    ss_ocean_ruin_113 =              {3,  8},
+    ss_ocean_ruin_1161 =             {4,  9},
+    ss_ocean_ruin_cold_118 =         {4,  9},
+    ss_ocean_ruin_warm_118 =         {4, 10},
+    ss_ocean_ruin_cold_1192 =        {4, 10},
+    ss_ocean_ruin_warm_1192 =        {4, 11},
+    ss_ocean_ruin_cold_1194 =        {4,  7},
+    ss_ocean_ruin_warm_1194 =        {4,  8},
+
     ss_jungle_pyramid_113 =          {3,  3},
     ss_jungle_pyramid_1161 =         {4,  2},
     ss_jungle_pyramid_1194 =         {4,  4},
@@ -346,6 +356,22 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
         if (mc < MC_1_16_1) *ssconf = ss_igloo_113;
         else if (mc < MC_1_19_2) *ssconf = ss_igloo_1161;
         else *ssconf = ss_igloo_1192;
+        return mc >= MC_1_13;
+    case Ocean_Ruin:
+        if (mc < MC_1_16_1) *ssconf = ss_ocean_ruin_113;
+        else if (mc < MC_1_18) *ssconf = ss_ocean_ruin_1161;
+        else if (mc < MC_1_19_2) {
+            *ssconf = biome == warm_ocean || biome == lukewarm_ocean ||
+            biome == deep_lukewarm_ocean || biome == deep_warm_ocean
+            ? ss_ocean_ruin_warm_118 : ss_ocean_ruin_cold_118;
+        }
+        else if (mc < MC_1_19_4) { // deep_warm_ocean was removed in 1.18
+            *ssconf = biome == warm_ocean || biome == lukewarm_ocean ||
+            biome == deep_lukewarm_ocean ? ss_ocean_ruin_warm_1192 : ss_ocean_ruin_cold_1192;
+        } else {
+            *ssconf = biome == warm_ocean || biome == lukewarm_ocean ||
+            biome == deep_lukewarm_ocean ? ss_ocean_ruin_warm_1194 : ss_ocean_ruin_cold_1194;
+        }
         return mc >= MC_1_13;
     case Jungle_Pyramid:
         if (mc < MC_1_16_1) *ssconf = ss_jungle_pyramid_113;
@@ -3506,6 +3532,10 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
 
     switch (structType)
     {
+    case Ocean_Ruin:
+        r->biome = biomeID; // to determine cold/warm
+        return 1;
+
     case Village:
         if (mc <= MC_1_9)
             return 0;
@@ -4062,6 +4092,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         p->lootSeeds[0] = rnd.nextLong(rnd.state);
         return 1;
     }
+    case Ocean_Ruin: return getOceanRuinLoot(list, n, ssconf, sv, mc, seed, posX, posZ);
     case Shipwreck: {
         static const struct { const char *name; const int sx, sy, sz; const int chestCount; const char *lootTables[3]; const Pos chestPoses[3]; } sw_info[] = {
         {"shipwreck/with_mast", 9, 21, 28, 3, {"shipwreck_supply", "shipwreck_map", "shipwreck_treasure"}, {(Pos) {4, 9}, (Pos) {5, 18}, (Pos) {6, 24}}},
@@ -7884,5 +7915,3 @@ int getLargestRec(int match, const int *ids, int sx, int sz, Pos *p0, Pos *p1)
     free(meta);
     return ret;
 }
-
-
