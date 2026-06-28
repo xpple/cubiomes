@@ -2300,7 +2300,7 @@ int getCaveCarverConfig(int caveCarverType, int mc, int biome, CaveCarverConfig*
 
     c_underwater_cave_113 = {DIM_OVERWORLD, 1.0F / 15, 1, 4, 15, getCaveThickness, 1.0, providerBiasedToBottom, 0, 127, 8, providerConstantFloat, 0.5F, -1, providerConstantFloat, 1.0F, -1, providerConstantFloat, 1.0F, -1, providerConstantFloat, -0.7F, -1},
 
-    c_nether_cave_113 = {DIM_NETHER, 0.02F, 0, 4, 10, getNetherCaveThickness, 5.0, providerUniformIntBetween, 0, 127 - 1, -1, providerConstantFloat, 0.5F, -1, providerConstantFloat, 1.0F, -1, providerConstantFloat, 1.0F, -1, providerConstantFloat, -0.7F, -1}
+    c_nether_cave_113 = {DIM_NETHER, 0.2F, 0, 4, 10, getNetherCaveThickness, 5.0, providerUniformIntBetween, 0, 127 - 1, -1, providerConstantFloat, 0.5F, -1, providerConstantFloat, 1.0F, -1, providerConstantFloat, 1.0F, -1, providerConstantFloat, -0.7F, -1}
     ;
 
     switch (caveCarverType) {

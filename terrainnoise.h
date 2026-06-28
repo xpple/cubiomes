@@ -214,6 +214,8 @@ double sampleUnderground(TerrainNoise *params, int x, int y, int z, double spagh
  */
 double sampleFinalDensity(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese);
 
+double sampleNetherFinalDensity(TerrainNoise *params, int x, int y, int z);
+
 /**
  * Sample `preliminary_surface_level`.
  *
@@ -236,6 +238,8 @@ int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z);
  */
 void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, double buffer[48 + 1]);
 
+void sampleNetherNoiseColumn(TerrainNoise *params, int cellX, int cellZ, double buffer[16 + 1]);
+
 /**
  * Generate a terrain column at the given block coordinates. The result will be written
  * to blocks. The dsxz buffers can be obtained through sampleNoiseColumn. If the
@@ -253,6 +257,8 @@ void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, double buffer
  * @return the last air block if the flag was set, -64 otherwise
  */
 int generateColumn(int x, int z, int blocks[384], const double ds00[48 + 1], const double ds01[48 + 1], const double ds10[48 + 1], const double ds11[48 + 1], int flag);
+
+int generateNetherColumn(int x, int z, int blocks[128], const double ds00[16 + 1], const double ds01[16 + 1], const double ds10[16 + 1], const double ds11[16 + 1], int flag);
 
 /**
  * Generate a region of terrain using memoisation to prevent recalculating noise columns.
@@ -272,6 +278,8 @@ int generateColumn(int x, int z, int blocks[384], const double ds00[48 + 1], con
  * @param flag the boolean flag for the stop condition
  */
 void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[384], int* ys, int flag);
+
+void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128], int* ys, int flag);
 
 #ifdef __cplusplus
 }

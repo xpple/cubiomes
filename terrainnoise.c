@@ -300,6 +300,11 @@ static inline double slideOverworld(double densityFunction, int y) {
     return slide(densityFunction, -64, 384, 80, 64, -0.078125, 0, 24, 0.1171875, y);
 }
 
+static inline double slideNetherLike(double densityFunction, int minY,
+                                     int height, int y) {
+  return slide(densityFunction, minY, height, 24, 0, 0.9375, -8, 24, 2.5, y);
+}
+
 static inline double getSpaghettiRarity2d(double value) {
     if (value < -0.75) {
         return 0.5;
@@ -562,6 +567,127 @@ void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, in
                     const int z = minZ + relZ;
                     idx = (relBlockX + relX) * blockH + (relBlockZ + relZ);
                     int y = generateColumn(x, z, blocks[idx], ds00, ds01, ds10, ds11, flag);
+                    if (ys) {
+                        ys[idx] = y;
+                    }
+                }
+            }
+        }
+    }
+    free(ds);
+    free(bitSet);
+}
+
+double sampleNetherFinalDensity(TerrainNoise *params, int x, int y, int z) {
+  double sample = sampleBase3dNoise(&params->base3dNoise, x, y, z);
+  sample = slideNetherLike(sample, 0, 128, y);
+  sample = postProcess(sample);
+  return sample; 
+}
+
+void sampleNetherNoiseColumn(TerrainNoise *params, int cellX, int cellZ, double buffer[16 + 1]) {
+    const int minY = 0;
+    const int cellWidth = 1 << 2;
+    const int cellHeight = 2 << 2;
+    int x = cellX * cellWidth, z = cellZ * cellWidth;
+
+    for (int i = 0; i < 16 + 1; ++i) {
+        int y = minY + i * cellHeight;
+        double finalDensity = sampleNetherFinalDensity(params, x, y, z);
+        buffer[i] = finalDensity;
+    }
+}
+
+int generateNetherColumn(int x, int z, int blocks[128], const double ds00[16 + 1], const double ds01[16 + 1], const double ds10[16 + 1], const double ds11[16 + 1], int flag) {
+    const int cellHeight = 2 << 2;
+    const int minY = 0;
+    const int heightScaled = floordiv(128, cellHeight);
+    const int cellWidth = 1 << 2;
+    static const double percentagesXZ[4] = {0.0, 1.0 / cellWidth, 2.0 / cellWidth, 3.0 / cellWidth};
+    static const double percentagesY[8] = {0.0, 1.0 / cellHeight, 2.0 / cellHeight, 3.0 / cellHeight, 4.0 / cellHeight, 5.0 / cellHeight, 6.0 / cellHeight, 7.0 / cellHeight};
+
+    const int relX = x & 3; // floormod(x, cellWidth)
+    const int relZ = z & 3; // floormod(z, cellWidth)
+    const double percentX = percentagesXZ[relX];
+    const double percentZ = percentagesXZ[relZ];
+
+    for (int cellY = heightScaled - 1; cellY >= 0; --cellY) {
+        const double noise000 = ds00[cellY];
+        const double noise001 = ds01[cellY];
+        const double noise100 = ds10[cellY];
+        const double noise101 = ds11[cellY];
+        const double noise010 = ds00[cellY + 1];
+        const double noise011 = ds01[cellY + 1];
+        const double noise110 = ds10[cellY + 1];
+        const double noise111 = ds11[cellY + 1];
+
+        for (int relY = cellHeight - 1; relY >= 0; --relY) {
+            double percentY = percentagesY[relY];
+            double noise = lerp3(percentX, percentY, percentZ, noise000, noise100, noise010, noise110, noise001, noise101, noise011, noise111);
+            int y = cellY * cellHeight + relY;
+
+            int block = noise > 0.0;
+            blocks[y] = block;
+
+            if (flag && block) {
+                return y + 1;
+            }
+        }
+    }
+    return minY;
+}
+
+void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128], int* ys, int flag) {
+    const int cellWidth = 1 << 2;
+
+    const int blockH = chunkH << 4;
+
+    const int chunkCellsW = (chunkW << 2) + 1;
+    const int chunkCellsH = (chunkH << 2) + 1;
+    const int minCellX = chunkX << 2;
+    const int minCellZ = chunkZ << 2;
+
+    const int cells = chunkCellsW * chunkCellsH;
+    double (*ds)[16 + 1] = malloc(cells * sizeof(*ds));
+    char* bitSet = calloc(BITNSLOTS(cells), sizeof(char));
+
+    for (int relCellX = 0; relCellX < chunkCellsW - 1; ++relCellX) {
+        const int relBlockX = relCellX << 2;
+        const int cellX = minCellX + relCellX;
+        const int minX = cellX << 2;
+        for (int relCellZ = 0; relCellZ < chunkCellsH - 1; ++relCellZ) {
+            const int relBlockZ = relCellZ << 2;
+            const int cellZ = minCellZ + relCellZ;
+            const int minZ = cellZ << 2;
+
+            int idx;
+            double* ds00 = ds[idx = (relCellX + 0) * chunkCellsW + (relCellZ + 0)];
+            if (!BITTEST(bitSet, idx)) {
+                sampleNetherNoiseColumn(params, cellX, cellZ, ds00);
+                BITSET(bitSet, idx);
+            }
+            double* ds01 = ds[idx = (relCellX + 0) * chunkCellsW + (relCellZ + 1)];
+            if (!BITTEST(bitSet, idx)) {
+                sampleNetherNoiseColumn(params, cellX, cellZ + 1, ds01);
+                BITSET(bitSet, idx);
+            }
+            double* ds10 = ds[idx = (relCellX + 1) * chunkCellsW + (relCellZ + 0)];
+            if (!BITTEST(bitSet, idx)) {
+                sampleNetherNoiseColumn(params, cellX + 1, cellZ, ds10);
+                BITSET(bitSet, idx);
+            }
+            double* ds11 = ds[idx = (relCellX + 1) * chunkCellsW + (relCellZ + 1)];
+            if (!BITTEST(bitSet, idx)) {
+                sampleNetherNoiseColumn(params, cellX + 1, cellZ + 1, ds11);
+                BITSET(bitSet, idx);
+            }
+
+            for (int relX = 0; relX < cellWidth; ++relX) {
+                const int x = minX + relX;
+                for (int relZ = 0; relZ < cellWidth; ++relZ) {
+                    const int z = minZ + relZ;
+                    idx = (relBlockX + relX) * blockH + (relBlockZ + relZ);
+                    int y = generateNetherColumn(x, z, blocks[idx], ds00, ds01, ds10, ds11, flag);
                     if (ys) {
                         ys[idx] = y;
                     }
