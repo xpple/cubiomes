@@ -302,7 +302,7 @@ static inline double slideOverworld(double densityFunction, int y) {
 
 static inline double slideNetherLike(double densityFunction, int minY,
                                      int height, int y) {
-  return slide(densityFunction, minY, height, 24, 0, 0.9375, -8, 24, 2.5, y);
+    return slide(densityFunction, minY, height, 24, 0, 0.9375, -8, 24, 2.5, y);
 }
 
 static inline double getSpaghettiRarity2d(double value) {
@@ -579,10 +579,10 @@ void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, in
 }
 
 double sampleNetherFinalDensity(TerrainNoise *params, int x, int y, int z) {
-  double sample = sampleBase3dNoise(&params->base3dNoise, x, y, z);
-  sample = slideNetherLike(sample, 0, 128, y);
-  sample = postProcess(sample);
-  return sample; 
+    double sample = sampleBase3dNoise(&params->base3dNoise, x, y, z);
+    sample = slideNetherLike(sample, 0, 128, y);
+    sample = postProcess(sample);
+    return sample; 
 }
 
 void sampleNetherNoiseColumn(TerrainNoise *params, int cellX, int cellZ, double buffer[16 + 1]) {
