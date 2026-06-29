@@ -1011,6 +1011,8 @@
 
 --include-function initTerrainNoise
 --include-function generateColumn
+--include-function generateNetherColumn
+--include-function generateNetherRegion
 --include-function generateRegion
 --include-function sampleBase3dNoise
 --include-function sampleBiomeNoise
@@ -1021,6 +1023,8 @@
 --include-function sampleClimatePara
 --include-function sampleEntrances
 --include-function sampleFinalDensity
+--include-function sampleNetherFinalDensity
+--include-function sampleNetherNoiseColumn
 --include-function sampleNoiseColumn
 --include-function sampleNoiseParameters
 --include-function sampleNoodle

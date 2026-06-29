@@ -2050,6 +2050,12 @@ int initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
         xOctaveLegacyInit(&bn->octmain, &xr, bn->oct+32, -7, 8);
         break;
     case DIM_NETHER:
+        uint64_t wsj;
+        setSeed(&wsj, ws);
+        octaveInit(&bn->octmin, &wsj, bn->oct+0, -15, 16);
+        octaveInit(&bn->octmax, &wsj, bn->oct+16, -15, 16);
+        octaveInit(&bn->octmain, &wsj, bn->oct+32, -7, 8);
+        break;
     case DIM_END:
         uint64_t wsr;
         setSeed(&wsr, ws);
