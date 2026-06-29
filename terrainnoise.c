@@ -506,7 +506,9 @@ int generateColumn(int x, int z, int blocks[384], const double ds00[48 + 1], con
             int y = cellY * cellHeight + relY;
 
             int block = noise > 0.0;
-            blocks[y] = block;
+            if (blocks) {
+                blocks[y] = block;
+            }
 
             if (flag && block) {
                 return y + 1;
@@ -566,7 +568,7 @@ void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, in
                 for (int relZ = 0; relZ < cellWidth; ++relZ) {
                     const int z = minZ + relZ;
                     idx = (relBlockX + relX) * blockH + (relBlockZ + relZ);
-                    int y = generateColumn(x, z, blocks[idx], ds00, ds01, ds10, ds11, flag);
+                    int y = generateColumn(x, z, blocks ? blocks[idx] : NULL, ds00, ds01, ds10, ds11, flag);
                     if (ys) {
                         ys[idx] = y;
                     }

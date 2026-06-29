@@ -241,14 +241,15 @@ void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, double buffer
 void sampleNetherNoiseColumn(TerrainNoise *params, int cellX, int cellZ, double buffer[16 + 1]);
 
 /**
- * Generate a terrain column at the given block coordinates. The result will be written
- * to blocks. The dsxz buffers can be obtained through sampleNoiseColumn. If the
- * flag is set, the generation will stop as soon as a solid block is found, and will
- * return the Y-coordinate of the above air block.
+ * Generate a terrain column at the given block coordinates. If not NULL, the result will
+ * be written to blocks. The dsxz buffers can be obtained through sampleNoiseColumn. If
+ * the flag is set, the generation will stop as soon as a solid block is found, and will
+ * return the Y-coordinate of the above air block. Note that if blocks is NULL and the flag
+ * is not set, the function is essentially useless.
  *
  * @param x the block X-coordinate
  * @param z the block Z-coordinate
- * @param blocks the target blocks
+ * @param blocks the target blocks, can be NULL
  * @param ds00 the (0, 0) noise column
  * @param ds01 the (0, 1) noise column
  * @param ds10 the (1, 0) noise column
@@ -258,27 +259,33 @@ void sampleNetherNoiseColumn(TerrainNoise *params, int cellX, int cellZ, double 
  */
 int generateColumn(int x, int z, int blocks[384], const double ds00[48 + 1], const double ds01[48 + 1], const double ds10[48 + 1], const double ds11[48 + 1], int flag);
 
+/**
+ * The documentation from generateColumn applies to this function also, except that blocks cannot be NULL.
+ */
 int generateNetherColumn(int x, int z, int blocks[128], const double ds00[16 + 1], const double ds01[16 + 1], const double ds10[16 + 1], const double ds11[16 + 1], int flag);
 
 /**
- * Generate a region of terrain using memoisation to prevent recalculating noise columns.
- * One can use int (*blocks)[384] = malloc(blockW * blockH * sizeof(*blocks)); to allocate the
- * array. Similarly, the blocks can then be accessed using blocks[relX * blockH + relZ][y].
- * Here blockH = chunkH << 4, relX ranges over [0, chunkW << 4), relZ ranges over [0, chunkH << 4)
- * and y ranges over [0, 384). Similarly (if flag is true), ys are written to like relX * blockH +
- * relZ.
+ * Generate a region of terrain using memoisation to prevent recalculating noise columns. One
+ * can use int (*blocks)[384] = malloc(blockW * blockH * sizeof(*blocks)); to allocate the array.
+ * Similarly, the blocks can then be accessed using blocks[relX * blockH + relZ][y]. Here blockH =
+ * chunkH << 4, relX ranges over [0, chunkW << 4), relZ ranges over [0, chunkH << 4) and y ranges
+ * over [0, 384). If the flag is true, ys are written to like relX * blockH + relZ. In this case,
+ * blocks can also be NULL, so that only ys will be written to.
  *
  * @param params the terrain noise parameters
  * @param chunkX the chunk X-coordinate
  * @param chunkZ the chunk Z-coordinate
  * @param chunkW the chunk width
  * @param chunkH the chunk height
- * @param blocks the target blocks
+ * @param blocks the target blocks, can be NULL
  * @param ys the target Y coordinates
  * @param flag the boolean flag for the stop condition
  */
 void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[384], int* ys, int flag);
 
+/**
+ * The documentation from generateRegion applies to this function also, except that blocks cannot be NULL.
+ */
 void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128], int* ys, int flag);
 
 #ifdef __cplusplus
