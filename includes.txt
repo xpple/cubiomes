@@ -295,6 +295,7 @@
 --include-struct StructureSaltConfig
 --include-struct StructureVariant
 --include-function appendPos3List
+--include-function applyAllCarvers
 --include-function canBiomeGenerate
 --include-function carveCanyon
 --include-function carveCave
@@ -327,6 +328,8 @@
 --include-function getLinkedGatewayChunk
 --include-function getLinkedGatewayPos
 --include-function getLootTableCountForStructure
+--include-function getMineshaftLoot
+--include-function getMineshaftPieces
 --include-function getMineshafts
 --include-function getOreConfig
 --include-function getOreVeinBlockAt
@@ -464,6 +467,11 @@
 --include-constant LowerRedstoneOre
 --include-constant MAGMA_BLOCK
 --include-constant MASK48
+--include-constant MS_CORRIDOR
+--include-constant MS_CROSSING
+--include-constant MS_ROOM
+--include-constant MS_STAIRS
+--include-constant MS_PIECE_COUNT
 --include-constant MagmaOre
 --include-constant Mansion
 --include-constant MediumDiamondOre
