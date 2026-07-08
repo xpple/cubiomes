@@ -542,22 +542,22 @@ void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, in
             const int minZ = cellZ << 2;
 
             int idx;
-            double* ds00 = ds[idx = (relCellX + 0) * chunkCellsW + (relCellZ + 0)];
+            double* ds00 = ds[idx = (relCellX + 0) * chunkCellsH + (relCellZ + 0)];
             if (!BITTEST(bitSet, idx)) {
                 sampleNoiseColumn(params, cellX, cellZ, ds00);
                 BITSET(bitSet, idx);
             }
-            double* ds01 = ds[idx = (relCellX + 0) * chunkCellsW + (relCellZ + 1)];
+            double* ds01 = ds[idx = (relCellX + 0) * chunkCellsH + (relCellZ + 1)];
             if (!BITTEST(bitSet, idx)) {
                 sampleNoiseColumn(params, cellX, cellZ + 1, ds01);
                 BITSET(bitSet, idx);
             }
-            double* ds10 = ds[idx = (relCellX + 1) * chunkCellsW + (relCellZ + 0)];
+            double* ds10 = ds[idx = (relCellX + 1) * chunkCellsH + (relCellZ + 0)];
             if (!BITTEST(bitSet, idx)) {
                 sampleNoiseColumn(params, cellX + 1, cellZ, ds10);
                 BITSET(bitSet, idx);
             }
-            double* ds11 = ds[idx = (relCellX + 1) * chunkCellsW + (relCellZ + 1)];
+            double* ds11 = ds[idx = (relCellX + 1) * chunkCellsH + (relCellZ + 1)];
             if (!BITTEST(bitSet, idx)) {
                 sampleNoiseColumn(params, cellX + 1, cellZ + 1, ds11);
                 BITSET(bitSet, idx);
@@ -663,22 +663,22 @@ void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chun
             const int minZ = cellZ << 2;
 
             int idx;
-            double* ds00 = ds[idx = (relCellX + 0) * chunkCellsW + (relCellZ + 0)];
+            double* ds00 = ds[idx = (relCellX + 0) * chunkCellsH + (relCellZ + 0)];
             if (!BITTEST(bitSet, idx)) {
                 sampleNetherNoiseColumn(params, cellX, cellZ, ds00);
                 BITSET(bitSet, idx);
             }
-            double* ds01 = ds[idx = (relCellX + 0) * chunkCellsW + (relCellZ + 1)];
+            double* ds01 = ds[idx = (relCellX + 0) * chunkCellsH + (relCellZ + 1)];
             if (!BITTEST(bitSet, idx)) {
                 sampleNetherNoiseColumn(params, cellX, cellZ + 1, ds01);
                 BITSET(bitSet, idx);
             }
-            double* ds10 = ds[idx = (relCellX + 1) * chunkCellsW + (relCellZ + 0)];
+            double* ds10 = ds[idx = (relCellX + 1) * chunkCellsH + (relCellZ + 0)];
             if (!BITTEST(bitSet, idx)) {
                 sampleNetherNoiseColumn(params, cellX + 1, cellZ, ds10);
                 BITSET(bitSet, idx);
             }
-            double* ds11 = ds[idx = (relCellX + 1) * chunkCellsW + (relCellZ + 1)];
+            double* ds11 = ds[idx = (relCellX + 1) * chunkCellsH + (relCellZ + 1)];
             if (!BITTEST(bitSet, idx)) {
                 sampleNetherNoiseColumn(params, cellX + 1, cellZ + 1, ds11);
                 BITSET(bitSet, idx);
