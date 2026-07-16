@@ -182,7 +182,7 @@ enum BiomeID
     pale_garden                     = 186,
     // 26.2 Chaos Cubed
     sulfur_caves                    = 187,
-    // 26.3 / new biome slot
+    // 26.3
     dappled_forest                  = 188,
 };
 
