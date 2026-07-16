@@ -312,6 +312,7 @@ const char* struct2str(int stype)
     case Ancient_City:      return "ancient_city";
     case Trail_Ruins:       return "trail_ruins";
     case Trial_Chambers:    return "trial_chambers";
+    case Abandoned_Camp:    return "abandoned_camp";
     case Stronghold:        return "stronghold";
     case Fortress:          return "fortress";
     case Bastion:           return "bastion_remnant";

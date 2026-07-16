@@ -19,7 +19,6 @@
 #define BITTEST(a, b) ((a)[BITSLOT(b)] & BITMASK(b))
 #define BITNSLOTS(nb) ((nb + CHAR_BIT - 1) / CHAR_BIT)
 #endif
-
 #define PI 3.14159265358979323846
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
@@ -131,6 +130,7 @@ int getStructureConfig(int structureType, int mc, StructureConfig *sconf)
     s_ancient_city          = { 20083232, 24, 16, Ancient_City,     0,0},
     s_trail_ruins           = { 83469867, 34, 26, Trail_Ruins,      0,0},
     s_trial_chambers        = { 94251327, 34, 22, Trial_Chambers,   0,0},
+    s_abandoned_camp        = { 91231127, 34,  8, Abandoned_Camp,   0,0},
     s_treasure              = { 10387320,  1,  1, Treasure,         0,0},
     s_mineshaft             = {        0,  1,  1, Mineshaft,        0,0},
     s_desert_well_115       = {    30010,  1,  1, Desert_Well,      0, 1.f/1000},
@@ -239,6 +239,9 @@ int getStructureConfig(int structureType, int mc, StructureConfig *sconf)
     case Trial_Chambers:
         *sconf = s_trial_chambers;
         return mc >= MC_1_21_1;
+    case Abandoned_Camp:
+        *sconf = s_abandoned_camp;
+        return mc >= MC_26_2;
     default:
         memset(sconf, 0, sizeof(StructureConfig));
         return 0;
@@ -461,7 +464,9 @@ int getStructurePos(int structureType, int mc, uint64_t seed, int regX, int regZ
     case Trial_Chambers:
         *pos = getFeaturePos(sconf, seed, regX, regZ);
         return 1;
-
+    case Abandoned_Camp:
+        *pos = getFeaturePos(sconf, seed, regX, regZ); // TODO: verify this is correct
+        return 1;
     case Monument:
     case Mansion:
         *pos = getLargeStructurePos(sconf, seed, regX, regZ);
@@ -2735,8 +2740,34 @@ int isViableFeatureBiome(int mc, int structureType, int biomeID)
 
     case Trial_Chambers:
         if (mc <= MC_1_20) return 0;
-        return biomeID != deep_dark && isOverworld(mc, biomeID);
+        return isOverworld(mc, biomeID) && biomeID != deep_dark;
 
+    case Abandoned_Camp:
+        if (mc < MC_26_2) return 0;
+        switch (biomeID) {
+            case bamboo_jungle:
+            case birch_forest:
+            case cherry_grove:
+            case flower_forest:
+            case forest:
+            case meadow:
+            case old_growth_birch_forest:
+            case old_growth_pine_taiga:
+            case old_growth_spruce_taiga:
+            case pale_garden:
+            case savanna:
+            case snowy_taiga:
+            case sparse_jungle:
+            case swamp:
+            case taiga:
+            case windswept_forest:
+            case wooded_badlands:
+            //case dappled_forest: //TODO: implement dappled forest biome
+                return 1;
+            default:
+                return 0;
+            }
+    
     case Treasure:
         if (mc <= MC_1_12) return 0;
         return biomeID == beach || biomeID == snowy_beach;
@@ -3291,6 +3322,10 @@ L_jigsaw:
         if (id < 0 || !isViableFeatureBiome(g->mc, structureType, id))
             goto L_not_viable;
         goto L_viable;
+
+    case Abandoned_Camp:
+        goto L_viable;
+
 
     case Mineshaft:
         goto L_viable;
@@ -3906,6 +3941,54 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
         case 2: r->x = 1-r->sx; r->z = 1-r->sz; break;
         case 3: r->x = 0;       r->z = 1-r->sx; break;
         }
+        return 1;
+    
+    case Abandoned_Camp:
+        r->rotation = nextInt(&rng, 4); 
+        int tent_index = nextInt(&rng, 10);
+        r->tent_index = tent_index; //TODO: rotations and camps apply specific offsets
+        
+        const int biome = biomeID;
+        char *biomestr = biome2str(MC_1_21_1, biome);
+        r->tent = snprintf(r->tent, sizeof(r->tent), "tent_%s_%d", biomestr, tent_index + 1);
+
+        const char *variants[48];
+
+        //make variant list
+        size_t n = 0;
+        int i;
+        for (i = 0; i < 15; ++i) {
+            char name[64];
+            snprintf(name, sizeof(name), "campsite_default_chest_%d", i + 1);
+            variants[n++] = strdup(name);
+        }
+        for (i = 0; i < 15; ++i) {
+            char name[64];
+            snprintf(name, sizeof(name), "campsite_default_barrel_%d", i + 1);
+            variants[n++] = strdup(name);
+        }
+        for (i = 0; i < 15; ++i) {
+            char name[64];
+            snprintf(name, sizeof(name), "campsite_default_special_%d", i + 1);
+            variants[n++] = strdup(name);
+        }
+        for (i = 0; i < 3; ++i) {
+            char name[64];
+            snprintf(name, sizeof(name), "campsite_%s_%d", biomestr, i + 1);
+            variants[n++] = strdup(name);
+        }
+        //shuffle variants
+        size_t j;
+        for (j = n; j > 1; --j)
+        {
+            const int index = nextInt(&rng, j);
+            const char *tmp = variants[index];
+            variants[index] = variants[j - 1];
+            variants[j - 1] = tmp;
+        }
+
+        r->camp = variants[0];
+
         return 1;
 
     default:
