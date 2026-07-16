@@ -22,6 +22,9 @@ int biomeExists(int mc, int id)
 
         if (id == deep_dark || id == mangrove_swamp)
             return mc >= MC_1_19_2;
+        
+        if (id == dappled_forest)
+            return mc >= MC_26_3;
 
         switch (id)
         {
@@ -208,6 +211,8 @@ int isOverworld(int mc, int id)
     case lush_caves:
         return mc >= MC_1_18;
     }
+    case dappled_forest:
+        return mc >= MC_26_3;
     return 1;
 }
 
@@ -282,6 +287,7 @@ int getCategory(int mc, int id)
     case tall_birch_forest:
     case tall_birch_hills:
     case dark_forest_hills:
+    case dappled_forest;
         return forest;
 
     case snowy_tundra:

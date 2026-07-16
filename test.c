@@ -4,14 +4,14 @@
 
 int main()
 {
-    int structType = Outpost;
-    int mc = MC_1_18;
+    int structType = Abandoned_Camp;
+    int mc = MC_26_3;
 
     Generator g;
     setupGenerator(&g, mc, 0);
 
     uint64_t lower48;
-    for (lower48 = 0; ; lower48++)
+    for (lower48 = 3; ; lower48++)
     {
         // The structure position depends only on the region coordinates and
         // the lower 48-bits of the world seed.
@@ -31,9 +31,16 @@ int main()
             applySeed(&g, DIM_OVERWORLD, seed);
             if (isViableStructurePos(structType, &g, p.x, p.z, 0))
             {
-                printf("Seed %" PRId64 " has a Pillager Outpost at (%d, %d).\n",
-                    (int64_t) seed, p.x, p.z);
-                return 0;
+                StructureVariant sv;
+                int biomeID = getBiomeAt(&g, 0, (p.x >> 2) + 2, 319 >> 2, (p.z >> 2) + 2);
+                if (getVariant(&sv, structType, mc, seed, p.x, p.z, biomeID))
+                {
+                    printf("Seed %" PRId64 " has an Abandoned Camp at (%d, %d) with tent %s and campsite %s.\n",
+                        (int64_t) seed, p.x, p.z,
+                        sv.tent ? sv.tent : "none",
+                        sv.camp ? sv.camp : "none");
+                    return 0;
+                }
             }
         }
     }
