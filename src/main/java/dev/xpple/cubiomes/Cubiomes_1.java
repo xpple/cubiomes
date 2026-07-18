@@ -16295,8 +16295,7 @@ class Cubiomes_1 {
             Cubiomes.C_POINTER,
             Cubiomes.C_POINTER,
             Cubiomes.C_POINTER,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT
+            Cubiomes.C_POINTER
         );
 
         public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("generateNetherColumn");
@@ -16307,7 +16306,7 @@ class Cubiomes_1 {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * int generateNetherColumn(int x, int z, int blocks[128], const double ds00[17], const double ds01[17], const double ds10[17], const double ds11[17], int flag)
+     * int generateNetherColumn(int x, int z, int blocks[128], const double ds00[17], const double ds01[17], const double ds10[17], const double ds11[17])
      * }
      */
     public static FunctionDescriptor generateNetherColumn$descriptor() {
@@ -16317,7 +16316,7 @@ class Cubiomes_1 {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * int generateNetherColumn(int x, int z, int blocks[128], const double ds00[17], const double ds01[17], const double ds10[17], const double ds11[17], int flag)
+     * int generateNetherColumn(int x, int z, int blocks[128], const double ds00[17], const double ds01[17], const double ds10[17], const double ds11[17])
      * }
      */
     public static MethodHandle generateNetherColumn$handle() {
@@ -16327,7 +16326,7 @@ class Cubiomes_1 {
     /**
      * Address for:
      * {@snippet lang=c :
-     * int generateNetherColumn(int x, int z, int blocks[128], const double ds00[17], const double ds01[17], const double ds10[17], const double ds11[17], int flag)
+     * int generateNetherColumn(int x, int z, int blocks[128], const double ds00[17], const double ds01[17], const double ds10[17], const double ds11[17])
      * }
      */
     public static MemorySegment generateNetherColumn$address() {
@@ -16336,16 +16335,16 @@ class Cubiomes_1 {
 
     /**
      * {@snippet lang=c :
-     * int generateNetherColumn(int x, int z, int blocks[128], const double ds00[17], const double ds01[17], const double ds10[17], const double ds11[17], int flag)
+     * int generateNetherColumn(int x, int z, int blocks[128], const double ds00[17], const double ds01[17], const double ds10[17], const double ds11[17])
      * }
      */
-    public static int generateNetherColumn(int x, int z, MemorySegment blocks, MemorySegment ds00, MemorySegment ds01, MemorySegment ds10, MemorySegment ds11, int flag) {
+    public static int generateNetherColumn(int x, int z, MemorySegment blocks, MemorySegment ds00, MemorySegment ds01, MemorySegment ds10, MemorySegment ds11) {
         var mh$ = generateNetherColumn.HANDLE;
         try {
             if (TRACE_DOWNCALLS) {
-                traceDowncall("generateNetherColumn", x, z, blocks, ds00, ds01, ds10, ds11, flag);
+                traceDowncall("generateNetherColumn", x, z, blocks, ds00, ds01, ds10, ds11);
             }
-            return (int)mh$.invokeExact(x, z, blocks, ds00, ds01, ds10, ds11, flag);
+            return (int)mh$.invokeExact(x, z, blocks, ds00, ds01, ds10, ds11);
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
@@ -16422,9 +16421,7 @@ class Cubiomes_1 {
             Cubiomes.C_INT,
             Cubiomes.C_INT,
             Cubiomes.C_INT,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT
+            Cubiomes.C_POINTER
         );
 
         public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("generateNetherRegion");
@@ -16435,7 +16432,7 @@ class Cubiomes_1 {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128], int *ys, int flag)
+     * void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128])
      * }
      */
     public static FunctionDescriptor generateNetherRegion$descriptor() {
@@ -16445,7 +16442,7 @@ class Cubiomes_1 {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128], int *ys, int flag)
+     * void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128])
      * }
      */
     public static MethodHandle generateNetherRegion$handle() {
@@ -16455,7 +16452,7 @@ class Cubiomes_1 {
     /**
      * Address for:
      * {@snippet lang=c :
-     * void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128], int *ys, int flag)
+     * void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128])
      * }
      */
     public static MemorySegment generateNetherRegion$address() {
@@ -16464,16 +16461,16 @@ class Cubiomes_1 {
 
     /**
      * {@snippet lang=c :
-     * void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128], int *ys, int flag)
+     * void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128])
      * }
      */
-    public static void generateNetherRegion(MemorySegment params, int chunkX, int chunkZ, int chunkW, int chunkH, MemorySegment blocks, MemorySegment ys, int flag) {
+    public static void generateNetherRegion(MemorySegment params, int chunkX, int chunkZ, int chunkW, int chunkH, MemorySegment blocks) {
         var mh$ = generateNetherRegion.HANDLE;
         try {
             if (TRACE_DOWNCALLS) {
-                traceDowncall("generateNetherRegion", params, chunkX, chunkZ, chunkW, chunkH, blocks, ys, flag);
+                traceDowncall("generateNetherRegion", params, chunkX, chunkZ, chunkW, chunkH, blocks);
             }
-            mh$.invokeExact(params, chunkX, chunkZ, chunkW, chunkH, blocks, ys, flag);
+            mh$.invokeExact(params, chunkX, chunkZ, chunkW, chunkH, blocks);
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }
