@@ -755,6 +755,8 @@ void carveCanyon(uint64_t seed, int mc, int chunkX, int chunkZ, CanyonCarverConf
  */
 void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, CaveCarverConfig ccc, int caveCarverType, int biomes[17][17], Pos3List* poses);
 
+void applyAllCarvers(Generator *g, int chunkX, int chunkZ, Pos3List* poses);
+
 //==============================================================================
 // Random providers
 //==============================================================================

@@ -310,6 +310,13 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
     ss_stronghold_1192 =             {4,  8},
     ss_stronghold_1194 =             {4, 19},
 
+    ss_mineshaft_113 =               {2,  0},
+    ss_mineshaft_1161 =              {3,  0},
+    ss_mineshaft_1194 =              {3,  1},
+
+    ss_mineshaft_mesa_118 =          {3,  1},
+    ss_mineshaft_mesa_1194 =         {3,  2},
+
     ss_ruined_portal_nether_118 =    {4, 24},
     ss_ruined_portal_nether_1192 =   {4, 25},
     ss_ruined_portal_nether_1194 =   {4, 14},
@@ -398,6 +405,18 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
         else if (mc < MC_1_19_2) *ssconf = ss_stronghold_116;
         else if (mc < MC_1_19_4) *ssconf = ss_stronghold_1192;
         else *ssconf = ss_stronghold_1194;
+        return mc >= MC_1_13;
+    case Mineshaft:
+        if (mc < MC_1_16_1) *ssconf = ss_mineshaft_113;
+        else if (mc < MC_1_18) *ssconf = ss_mineshaft_1161;
+        else if (mc < MC_1_19_4) {
+            if (getCategory(mc, biome) == mesa) *ssconf = ss_mineshaft_mesa_118;
+            else *ssconf = ss_mineshaft_1161;
+        }
+        else {
+            if (getCategory(mc, biome) == mesa) *ssconf = ss_mineshaft_mesa_1194;
+            else *ssconf = ss_mineshaft_1194;
+        }
         return mc >= MC_1_13;
     case Ruined_Portal_N:
         if (mc < MC_1_19_2) *ssconf = ss_ruined_portal_nether_118;
@@ -2672,6 +2691,70 @@ static void carveEllipsoid(int chunkX, int chunkZ, double x, double y, double z,
                 if (shouldSkip(relativeX, relativeY, relativeZ, absY, worldMinY, arg) || getCarveMask(carvingMask, relX, absY, relZ, worldMinY)) continue;
                 setCarveMask(carvingMask, relX, absY, relZ, worldMinY);
                 appendPos3List(poses, (Pos3) {absX, absY, absZ});
+            }
+        }
+    }
+}
+
+void applyAllCarvers(Generator *g, int chunkX, int chunkZ, Pos3List* poses) {
+    int worldHeight;
+    if (g->mc > MC_1_17_1) {
+        worldHeight = g->dim == DIM_OVERWORLD ? 384 : 128;
+    } else {
+        worldHeight = g->dim == DIM_OVERWORLD ? 256 : 128;
+    }
+    int slots = BITNSLOTS(256 * worldHeight);
+    char carvingMask[slots];
+    memset(carvingMask, 0, slots);
+
+    // TODO: replace with genBiomes?
+    int biomes[17][17];
+    for (int relChunkX = -8; relChunkX <= 8; ++relChunkX) {
+        for (int relChunkZ = -8; relChunkZ <= 8; ++relChunkZ) {
+            biomes[relChunkZ + 8][relChunkX + 8] = getBiomeAt(g, 4, (chunkX + relChunkX) << 2, 0, (chunkZ + relChunkZ) << 2);
+        }
+    }
+
+    for (int relChunkX = -8; relChunkX <= 8; ++relChunkX) {
+        for (int relChunkZ = -8; relChunkZ <= 8; ++relChunkZ) {
+            int offsetChunkX = chunkX + relChunkX;
+            int offsetChunkZ = chunkZ + relChunkZ;
+            int biome = biomes[relChunkZ + 8][relChunkX + 8];
+
+            for (int canyonCarverType = 0; canyonCarverType < CANYON_CARVER_NUM; ++canyonCarverType) {
+                CanyonCarverConfig ccc;
+                if (!getCanyonCarverConfig(canyonCarverType, g->mc, &ccc)) {
+                    continue;
+                }
+                if (ccc.dim != g->dim) {
+                    continue;
+                }
+                if (!isViableCanyonBiome(canyonCarverType, biome)) {
+                    continue;
+                }
+                uint64_t rnd;
+                if (!checkCanyonStart(g->seed, offsetChunkX, offsetChunkZ, ccc, &rnd)) {
+                    continue;
+                }
+                carveCanyonInner(ccc, g->mc, &rnd, chunkX, chunkZ, offsetChunkX, offsetChunkZ, carvingMask, poses);
+            }
+
+            for (int caveCarverType = 0; caveCarverType < CAVE_CARVER_NUM; ++caveCarverType) {
+                CaveCarverConfig ccc;
+                if (!getCaveCarverConfig(caveCarverType, g->mc, biome, &ccc)) {
+                    continue;
+                }
+                if (ccc.dim != g->dim) {
+                    continue;
+                }
+                if (!isViableCaveBiome(caveCarverType, biome)) {
+                    continue;
+                }
+                uint64_t rnd;
+                if (!checkCaveStart(g->seed, offsetChunkX, offsetChunkZ, ccc, &rnd)) {
+                    continue;
+                }
+                carveCaveInner(ccc, &rnd, chunkX, chunkZ, offsetChunkX, offsetChunkZ, g->mc, carvingMask, poses);
             }
         }
     }
