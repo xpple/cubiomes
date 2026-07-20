@@ -54,6 +54,7 @@
 #include "loot_tables/shipwreck_treasure_1_13.h"
 #include "loot_tables/shipwreck_treasure_1_20.h"
 #include "loot_tables/shipwreck_treasure_1_21_11.h"
+#include "loot_tables/simple_dungeon_1_14.h"
 #include "loot_tables/stronghold_corridor_1_13.h"
 #include "loot_tables/stronghold_corridor_1_18.h"
 #include "loot_tables/stronghold_corridor_1_20.h"
@@ -105,6 +106,9 @@ int init_loot_table_name(LootTableContext** context, const char* loot_table, int
     }
     if (strcmp(loot_table, "shipwreck_treasure") == 0) {
         return init_shipwreck_treasure(context, version);
+    }
+    if (strcmp(loot_table, "simple_dungeon") == 0) {
+        return init_simple_dungeon(context, version);
     }
     if (strcmp(loot_table, "stronghold_corridor") == 0) {
         return init_stronghold_corridor(context, version);
@@ -223,6 +227,11 @@ int init_shipwreck_treasure(LootTableContext** context, int version) {
     else if (version < MC_1_21_11) *context = init_shipwreck_treasure_1_20();
     else *context = init_shipwreck_treasure_1_21_11();
     return version > MC_1_12;
+}
+
+int init_simple_dungeon(LootTableContext** context, int version) {
+    *context = init_simple_dungeon_1_14();
+    return version > MC_1_13_2;
 }
 
 int init_stronghold_corridor(LootTableContext** context, int version) {

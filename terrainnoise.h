@@ -262,7 +262,7 @@ int generateColumn(int x, int z, int blocks[384], const double ds00[48 + 1], con
 /**
  * The documentation from generateColumn applies to this function also, except that blocks cannot be NULL.
  */
-int generateNetherColumn(int x, int z, int blocks[128], const double ds00[16 + 1], const double ds01[16 + 1], const double ds10[16 + 1], const double ds11[16 + 1], int flag);
+int generateNetherColumn(int x, int z, int blocks[128], const double ds00[16 + 1], const double ds01[16 + 1], const double ds10[16 + 1], const double ds11[16 + 1]);
 
 /**
  * Generate a region of terrain using memoisation to prevent recalculating noise columns. One
@@ -286,7 +286,7 @@ void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, in
 /**
  * The documentation from generateRegion applies to this function also, except that blocks cannot be NULL.
  */
-void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128], int* ys, int flag);
+void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128]);
 
 #ifdef __cplusplus
 }
