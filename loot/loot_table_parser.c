@@ -166,6 +166,11 @@ static void parse_set_effect(LootFunction* loot_function, const cJSON* function_
     create_set_effect(loot_function, effectCount, mobEffects);
 }
 
+static void parse_set_potion(LootFunction* loot_function, const cJSON* function_data) {
+    char *id = cJSON_GetStringValue(cJSON_GetObjectItem(function_data, "id"));
+    create_set_potion(loot_function, get_mob_effect_from_name(id));
+}
+
 static void parse_enchant_randomly(LootTableContext* ctx, LootFunction* loot_function, const cJSON* function_data, const char* item_name)
 {
     const ItemType item_type = get_item_type(item_name);
@@ -480,6 +485,9 @@ static void init_entry_functions(const cJSON* entry_data, LootPool* pool, const 
         }
         else if (strcmp(function_name, "minecraft:set_stew_effect") == 0) {
             parse_set_effect(loot_function, function_data);
+        }
+        else if (strcmp(function_name, "minecraft:set_potion") == 0) {
+            parse_set_potion(loot_function, function_data);
         }
         else if (strcmp(function_name, "minecraft:set_ominous_bottle_amplifier") == 0) {
             create_skip_calls(loot_function, 1);

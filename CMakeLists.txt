@@ -28,6 +28,7 @@ set(HEADERS
 	util.h
 	quadbase.h
 	xrms.h
+	features/abandoned_camp.h
 	features/stronghold.h
 	loot/items.h
 	loot/logging.h
@@ -36,6 +37,9 @@ set(HEADERS
 	loot/loot_table_context.h
 	loot/loot_table_parser.h
 	loot/mc_loot.h
+	loot/loot_tables/abandoned_camp_barrel_26_3.h
+	loot/loot_tables/abandoned_camp_common_chest_26_3.h
+	loot/loot_tables/abandoned_camp_secret_chest_26_3.h
 	loot/loot_tables/bastion_bridge_1_16_1.h
 	loot/loot_tables/bastion_bridge_1_16_5.h
 	loot/loot_tables/bastion_bridge_1_20.h
@@ -106,12 +110,16 @@ set(SOURCES
 	util.c
 	quadbase.c
 	xradv.c
+	features/abandoned_camp.c
 	features/stronghold.c
 	loot/items.c
 	loot/loot_functions.c
 	loot/loot_tables.c
 	loot/loot_table_context.c
 	loot/loot_table_parser.c
+	loot/loot_tables/abandoned_camp_barrel_26_3.c
+	loot/loot_tables/abandoned_camp_common_chest_26_3.c
+	loot/loot_tables/abandoned_camp_secret_chest_26_3.c
 	loot/loot_tables/bastion_bridge_1_16_1.c
 	loot/loot_tables/bastion_bridge_1_16_5.c
 	loot/loot_tables/bastion_bridge_1_20.c

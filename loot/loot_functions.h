@@ -225,6 +225,7 @@ static inline int roll_count_uniform(uint64_t* rand, const int min, const int ma
 
 void create_set_count(LootFunction* lf, const int min, const int max);
 void create_set_effect(LootFunction* lf, const int count, const MobEffectEntry mobEffects[]);
+void create_set_potion(LootFunction* lf, const MobEffect *mobEffect);
 void create_set_damage(LootFunction* lf);
 void create_skip_calls(LootFunction* lf, const int skip_count);
 void create_no_op(LootFunction* lf);

@@ -3,7 +3,6 @@ import json
 
 from abc import abstractmethod
 from textwrap import dedent, indent
-from warnings import warn
 
 class LootFunction:
     def __init__(self):
@@ -34,6 +33,16 @@ class SetEffectFunction(LootFunction):
     def to_function_call(self, arg: str, version: str):
         effects_str = ", ".join(f"{{get_mob_effect_from_name(\"{name}\"), {min_dur}, {max_dur}}}" for (name, min_dur, max_dur) in self.effects)
         return f"create_set_effect({arg}, {len(self.effects)}, (MobEffectEntry[]){{{effects_str}}})"
+
+
+class SetPotionFunction(LootFunction):
+    def __init__(self, potion: str):
+        super().__init__()
+        self.potion = potion
+
+
+    def to_function_call(self, arg: str, version: str):
+        return f"create_set_potion({arg}, get_mob_effect_from_name(\"{self.potion}\"))"
 
 
 class SetDamageFunction(LootFunction):
@@ -215,6 +224,9 @@ def parse_loot_function(json_function_entry, entry_name: str) -> LootFunction:
             max_dur = duration_entry['max']
             mob_effects.append((effect_name, int(min_dur), int(max_dur)))
         return SetEffectFunction(mob_effects)
+    if json_function == 'set_potion':
+        id = json_function_entry['id']
+        return SetPotionFunction(id)
     if json_function == 'set_damage':
         return SetDamageFunction()
     if json_function == 'set_ominous_bottle_amplifier':
@@ -237,10 +249,10 @@ def parse_loot_function(json_function_entry, entry_name: str) -> LootFunction:
         is_treasure = json_function_entry.get("treasure", json_function_entry.get("is_treasure", True))
         return EnchantWithLevelsFunction(entry_name, int(min_level), int(max_level), options, int(is_treasure))
     if json_function == 'exploration_map':
-        warn(f"Ignored loot function 'exploration_map'")
+        warn(f"Ignored loot function '{json_function}'")
         return NoOpFunction()
     if json_function == 'set_name':
-        warn(f"Ignored loot function 'set_name'")
+        warn(f"Ignored loot function '{json_function}'")
         return NoOpFunction()
 
     warn(f"Unsupported loot function '{json_function}'")
@@ -369,6 +381,10 @@ def gen_c_loot_table_header(c_file_name: str) -> str:
         """)
 
     return file_content
+
+
+def warn(msg):
+    print(f"\033[33mWarning:\033[0m {msg}")
 
 
 if __name__ == '__main__':

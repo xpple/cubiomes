@@ -129,6 +129,7 @@
 --include-constant MC_1_9_4
 --include-constant MC_26_1
 --include-constant MC_26_2
+--include-constant MC_26_3
 --include-constant MC_B1_7
 --include-constant MC_B1_8
 --include-constant MC_NEWEST
@@ -151,6 +152,7 @@
 --include-constant coldTaigaHills
 --include-constant cold_ocean
 --include-constant crimson_forest
+--include-constant dappled_forest
 --include-constant dark_forest
 --include-constant dark_forest_hills
 --include-constant deepOcean
@@ -311,6 +313,7 @@
 --include-function generateOrePositions
 --include-function generateOres
 --include-function generateVeinPart
+--include-function getAbandonedCampPieces
 --include-function getAvailableBiomes
 --include-function getBiomeCenters
 --include-function getBiomeForOreGen
@@ -359,6 +362,7 @@
 --include-function setupBiomeFilter
 --include-constant ANCIENT_DEBRIS
 --include-constant ANDESITE
+--include-constant Abandoned_Camp
 --include-constant Ancient_City
 --include-constant AndesiteOre
 --include-constant BASALT
@@ -707,18 +711,30 @@
 --include-constant ITEM_BONE
 --include-constant ITEM_BONE_BLOCK
 --include-constant ITEM_BOOK
+--include-constant ITEM_BOW
+--include-constant ITEM_BOWL
 --include-constant ITEM_BREAD
+--include-constant ITEM_BUCKET
+--include-constant ITEM_BUNDLE
 --include-constant ITEM_CARROT
 --include-constant ITEM_CHAIN
 --include-constant ITEM_CLOCK
 --include-constant ITEM_COAL
 --include-constant ITEM_COAST_ARMOR_TRIM_SMITHING_TEMPLATE
+--include-constant ITEM_COBWEB
 --include-constant ITEM_COMPASS
 --include-constant ITEM_COOKED_COD
 --include-constant ITEM_COOKED_PORKCHOP
 --include-constant ITEM_COOKED_SALMON
+--include-constant ITEM_COPPER_AXE
+--include-constant ITEM_COPPER_BOOTS
+--include-constant ITEM_COPPER_CHESTPLATE
 --include-constant ITEM_COPPER_HORSE_ARMOR
+--include-constant ITEM_COPPER_INGOT
+--include-constant ITEM_COPPER_LEGGINGS
 --include-constant ITEM_COPPER_NAUTILUS_ARMOR
+--include-constant ITEM_COPPER_SPEAR
+--include-constant ITEM_COPPER_SWORD
 --include-constant ITEM_CROSSBOW
 --include-constant ITEM_CRYING_OBSIDIAN
 --include-constant ITEM_DARK_OAK_LOG
@@ -741,9 +757,12 @@
 --include-constant ITEM_EYE_ARMOR_TRIM_SMITHING_TEMPLATE
 --include-constant ITEM_FEATHER
 --include-constant ITEM_FIRE_CHARGE
+--include-constant ITEM_FIREWORK_ROCKET
+--include-constant ITEM_FISHING_ROD
 --include-constant ITEM_FLINT
 --include-constant ITEM_FLINT_AND_STEEL
 --include-constant ITEM_GILDED_BLACKSTONE
+--include-constant ITEM_GLASS_BOTTLE
 --include-constant ITEM_GLISTERING_MELON_SLICE
 --include-constant ITEM_GOAT_HORN
 --include-constant ITEM_GOLDEN_APPLE
@@ -764,6 +783,7 @@
 --include-constant ITEM_GOLD_NUGGET
 --include-constant ITEM_GUNPOWDER
 --include-constant ITEM_HEART_OF_THE_SEA
+--include-constant ITEM_IRON_AXE
 --include-constant ITEM_IRON_BLOCK
 --include-constant ITEM_IRON_BOOTS
 --include-constant ITEM_IRON_CHAIN
@@ -779,6 +799,7 @@
 --include-constant ITEM_IRON_SPEAR
 --include-constant ITEM_IRON_SWORD
 --include-constant ITEM_LAPIS_LAZULI
+--include-constant ITEM_LEAD
 --include-constant ITEM_LEATHER
 --include-constant ITEM_LEATHER_BOOTS
 --include-constant ITEM_LEATHER_CHESTPLATE
@@ -802,16 +823,19 @@
 --include-constant ITEM_POTATO
 --include-constant ITEM_PRISMARINE_CRYSTALS
 --include-constant ITEM_PUMPKIN
+--include-constant ITEM_RABBIT_HIDE
 --include-constant ITEM_REDSTONE
 --include-constant ITEM_RIB_ARMOR_TRIM_SMITHING_TEMPLATE
 --include-constant ITEM_ROTTEN_FLESH
 --include-constant ITEM_SADDLE
 --include-constant ITEM_SAND
 --include-constant ITEM_SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE
+--include-constant ITEM_SHEARS
 --include-constant ITEM_SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE
 --include-constant ITEM_SPECTRAL_ARROW
 --include-constant ITEM_SPIDER_EYE
 --include-constant ITEM_SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE
+--include-constant ITEM_SPYGLASS
 --include-constant ITEM_STONE_AXE
 --include-constant ITEM_STRING
 --include-constant ITEM_SUSPICIOUS_STEW
@@ -819,7 +843,9 @@
 --include-constant ITEM_TRIPWIRE_HOOK
 --include-constant ITEM_UNKNOWN
 --include-constant ITEM_WHEAT
+--include-constant ITEM_WHITE_CANDLE
 --include-constant ITEM_WILD_ARMOR_TRIM_SMITHING_TEMPLATE
+--include-constant ITEM_WOODEN_AXE
 --include-constant NUM_ITEMS
 
 --include-struct EnchantInstance
@@ -946,6 +972,9 @@
 --include-constant UNBREAKING
 --include-constant WIND_BURST
 
+--include-function init_abandoned_camp_barrel
+--include-function init_abandoned_camp_common_chest
+--include-function init_abandoned_camp_secret_chest
 --include-function init_bastion_bridge
 --include-function init_bastion_other
 --include-function init_buried_treasure

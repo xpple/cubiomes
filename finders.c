@@ -1,6 +1,7 @@
 #include "finders.h"
 #include "biomes.h"
 #include "util.h"
+#include "features/abandoned_camp.h"
 #include "features/stronghold.h"
 
 #include <stdio.h>
@@ -131,6 +132,7 @@ int getStructureConfig(int structureType, int mc, StructureConfig *sconf)
     s_ancient_city          = { 20083232, 24, 16, Ancient_City,     0,0},
     s_trail_ruins           = { 83469867, 34, 26, Trail_Ruins,      0,0},
     s_trial_chambers        = { 94251327, 34, 22, Trial_Chambers,   0,0},
+    s_abandoned_camp        = { 91231127, 34, 26, Abandoned_Camp,   0,0},
     s_treasure              = { 10387320,  1,  1, Treasure,         0,0},
     s_mineshaft             = {        0,  1,  1, Mineshaft,        0,0},
     s_desert_well_115       = {    30010,  1,  1, Desert_Well,      0, 1.f/1000},
@@ -239,6 +241,9 @@ int getStructureConfig(int structureType, int mc, StructureConfig *sconf)
     case Trial_Chambers:
         *sconf = s_trial_chambers;
         return mc >= MC_1_21_1;
+    case Abandoned_Camp:
+        *sconf = s_abandoned_camp;
+        return mc >= MC_26_3;
     default:
         memset(sconf, 0, sizeof(StructureConfig));
         return 0;
@@ -247,85 +252,143 @@ int getStructureConfig(int structureType, int mc, StructureConfig *sconf)
 
 int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltConfig *ssconf) {
     static const StructureSaltConfig
-    ss_buried_treasure_113 =         {2,  2},
-    ss_buried_treasure_1161 =        {3,  1},
-    ss_buried_treasure_118 =         {3,  2},
-    ss_buried_treasure_1194 =        {3,  0},
+    ss_abandoned_camp_bamboo_jungle_263 =           {4 , 0},
+    ss_abandoned_camp_birch_forest_263 =            {4,  1},
+    ss_abandoned_camp_cherry_grove_263 =            {4,  2},
+    ss_abandoned_camp_dappled_forest_263 =          {4,  3},
+    ss_abandoned_camp_flower_forest_263 =           {4,  4},
+    ss_abandoned_camp_forest_263 =                  {4,  5},
+    ss_abandoned_camp_meadow_263 =                  {4,  6},
+    ss_abandoned_camp_old_growth_birch_forest_263 = {4,  7},
+    ss_abandoned_camp_old_growth_pine_taiga_263 =   {4,  8},
+    ss_abandoned_camp_old_growth_spruce_taiga_263 = {4,  9},
+    ss_abandoned_camp_pale_garden_263 =             {4, 10},
+    ss_abandoned_camp_savanna_263 =                 {4, 11},
+    ss_abandoned_camp_snowy_taiga_263 =             {4, 12},
+    ss_abandoned_camp_sparse_jungle_263 =           {4, 13},
+    ss_abandoned_camp_swamp_263 =                   {4, 14},
+    ss_abandoned_camp_taiga_263 =                   {4, 15},
+    ss_abandoned_camp_windswept_forest_263 =        {4, 16},
+    ss_abandoned_camp_wooded_badlands_263 =         {4, 17},
 
-    ss_bastion_remnant_116 =         {4, 12},
-    ss_bastion_remnant_1192 =        {4, 13},
-    ss_bastion_remnant_1194 =        {4,  0},
+    ss_buried_treasure_113 =                        {2,  2},
+    ss_buried_treasure_1161 =                       {3,  1},
+    ss_buried_treasure_118 =                        {3,  2},
+    ss_buried_treasure_1194 =                       {3,  0},
 
-    ss_desert_pyramid_113 =          {3,  2},
-    ss_desert_pyramid_1161 =         {4,  3},
-    ss_desert_pyramid_1192 =         {4,  1},
+    ss_bastion_remnant_116 =                        {4, 12},
+    ss_bastion_remnant_1192 =                       {4, 13},
+    ss_bastion_remnant_1194 =                       {4,  0},
+    ss_bastion_remnant_263 =                        {4, 18},
 
-    ss_igloo_113 =                   {3,  4},
-    ss_igloo_1161 =                  {4,  4},
-    ss_igloo_1192 =                  {4,  3},
+    ss_desert_pyramid_113 =                         {3,  2},
+    ss_desert_pyramid_1161 =                        {4,  3},
+    ss_desert_pyramid_1192 =                        {4,  1},
+    ss_desert_pyramid_263 =                         {4, 19},
 
-    ss_jungle_pyramid_113 =          {3,  3},
-    ss_jungle_pyramid_1161 =         {4,  2},
-    ss_jungle_pyramid_1194 =         {4,  4},
+    ss_igloo_113 =                                  {3,  4},
+    ss_igloo_1161 =                                 {4,  4},
+    ss_igloo_1192 =                                 {4,  3},
+    ss_igloo_263 =                                  {4, 21},
 
-    ss_pillager_outpost_114 =        {3,  0},
-    ss_pillager_outpost_1161 =       {4,  0},
-    ss_pillager_outpost_1194 =       {4,  9},
+    ss_jungle_pyramid_113 =                         {3,  3},
+    ss_jungle_pyramid_1161 =                        {4,  2},
+    ss_jungle_pyramid_1194 =                        {4,  4},
+    ss_jungle_pyramid_263 =                         {4, 22},
 
-    ss_shipwreck_113 =               {3,  5},
-    ss_shipwreck_1161 =              {4,  6},
-    ss_shipwreck_118 =               {4,  5},
-    ss_shipwreck_1194 =              {4, 17},
+    ss_pillager_outpost_114 =                       {3,  0},
+    ss_pillager_outpost_1161 =                      {4,  0},
+    ss_pillager_outpost_1194 =                      {4,  9},
+    ss_pillager_outpost_263 =                       {4, 27},
 
-    ss_shipwreck_beached_118 =       {4,  6},
-    ss_shipwreck_beached_1194 =      {4, 18},
+    ss_shipwreck_113 =                              {3,  5},
+    ss_shipwreck_1161 =                             {4,  6},
+    ss_shipwreck_118 =                              {4,  5},
+    ss_shipwreck_1194 =                             {4, 17},
+    ss_shipwreck_263 =                              {4, 35},
 
-    ss_ruined_portal_1161 =          {4,  5},
-    ss_ruined_portal_118 =           {4, 18},
-    ss_ruined_portal_1192 =          {4, 19},
-    ss_ruined_portal_1194 =          {4, 10},
+    ss_shipwreck_beached_118 =                      {4,  6},
+    ss_shipwreck_beached_1194 =                     {4, 18},
+    ss_shipwreck_beached_263 =                      {4, 36},
 
-    ss_ruined_portal_desert_118 =    {4, 19},
-    ss_ruined_portal_desert_1192 =   {4, 20},
-    ss_ruined_portal_desert_1194 =   {4, 11},
+    ss_ruined_portal_1161 =                         {4,  5},
+    ss_ruined_portal_118 =                          {4, 18},
+    ss_ruined_portal_1192 =                         {4, 19},
+    ss_ruined_portal_1194 =                         {4, 10},
+    ss_ruined_portal_263 =                          {4, 28},
 
-    ss_ruined_portal_jungle_118 =    {4, 20},
-    ss_ruined_portal_jungle_1192 =   {4, 21},
-    ss_ruined_portal_jungle_1194 =   {4, 12},
+    ss_ruined_portal_desert_118 =                   {4, 19},
+    ss_ruined_portal_desert_1192 =                  {4, 20},
+    ss_ruined_portal_desert_1194 =                  {4, 11},
+    ss_ruined_portal_desert_263 =                   {4, 29},
 
-    ss_ruined_portal_swamp_118 =     {4, 21},
-    ss_ruined_portal_swamp_1192 =    {4, 22},
-    ss_ruined_portal_swamp_1194 =    {4, 16},
+    ss_ruined_portal_jungle_118 =                   {4, 20},
+    ss_ruined_portal_jungle_1192 =                  {4, 21},
+    ss_ruined_portal_jungle_1194 =                  {4, 12},
+    ss_ruined_portal_jungle_263 =                   {4, 30},
 
-    ss_ruined_portal_mountain_118 =  {4, 22},
-    ss_ruined_portal_mountain_1192 = {4, 23},
-    ss_ruined_portal_mountain_1194 = {4, 13},
+    ss_ruined_portal_swamp_118 =                    {4, 21},
+    ss_ruined_portal_swamp_1192 =                   {4, 22},
+    ss_ruined_portal_swamp_1194 =                   {4, 16},
+    ss_ruined_portal_swamp_263 =                    {4, 34},
 
-    ss_ruined_portal_ocean_118 =     {4, 23},
-    ss_ruined_portal_ocean_1192 =    {4, 24},
-    ss_ruined_portal_ocean_1194 =    {4, 15},
+    ss_ruined_portal_mountain_118 =                 {4, 22},
+    ss_ruined_portal_mountain_1192 =                {4, 23},
+    ss_ruined_portal_mountain_1194 =                {4, 13},
+    ss_ruined_portal_mountain_263 =                 {4, 31},
 
-    ss_stronghold_113 =              {2,  1},
-    ss_stronghold_116 =              {5,  0},
-    ss_stronghold_1192 =             {4,  8},
-    ss_stronghold_1194 =             {4, 19},
+    ss_ruined_portal_ocean_118 =                    {4, 23},
+    ss_ruined_portal_ocean_1192 =                   {4, 24},
+    ss_ruined_portal_ocean_1194 =                   {4, 15},
+    ss_ruined_portal_ocean_263 =                    {4, 33},
 
-    ss_ruined_portal_nether_118 =    {4, 24},
-    ss_ruined_portal_nether_1192 =   {4, 25},
-    ss_ruined_portal_nether_1194 =   {4, 14},
+    ss_stronghold_113 =                             {2,  1},
+    ss_stronghold_116 =                             {5,  0},
+    ss_stronghold_1192 =                            {4,  8},
+    ss_stronghold_1194 =                            {4, 19},
+    ss_stronghold_263 =                             {4, 37},
 
-    ss_fortress_113 =                {5,  0},
-    ss_fortress_1161 =               {7,  0},
-    ss_fortress_1194 =               {7,  1},
+    ss_ruined_portal_nether_118 =                   {4, 24},
+    ss_ruined_portal_nether_1192 =                  {4, 25},
+    ss_ruined_portal_nether_1194 =                  {4, 14},
+    ss_ruined_portal_nether_263 =                   {4, 32},
 
-    ss_end_city_113 =                {3,  0},
-    ss_end_city_end_highlands_113 =  {3,  1},
-    ss_end_city_1161 =               {4, 10},
-    ss_end_city_118 =                {4, 11},
-    ss_end_city_1192 =               {4, 12},
-    ss_end_city_1194 =               {4,  2};
+    ss_fortress_113 =                               {5,  0},
+    ss_fortress_1161 =                              {7,  0},
+    ss_fortress_1194 =                              {7,  1},
+
+    ss_end_city_113 =                               {3,  0},
+    ss_end_city_end_highlands_113 =                 {3,  1},
+    ss_end_city_1161 =                              {4, 10},
+    ss_end_city_118 =                               {4, 11},
+    ss_end_city_1192 =                              {4, 12},
+    ss_end_city_1194 =                              {4,  2},
+    ss_end_city_263 =                               {4, 20};
 
     switch (structureType) {
+    case Abandoned_Camp:
+        switch (biome) {
+        case bamboo_jungle: *ssconf = ss_abandoned_camp_bamboo_jungle_263; break;
+        case birch_forest: *ssconf = ss_abandoned_camp_birch_forest_263; break;
+        case cherry_grove: *ssconf = ss_abandoned_camp_cherry_grove_263; break;
+        case dappled_forest: *ssconf = ss_abandoned_camp_dappled_forest_263; break;
+        case flower_forest: *ssconf = ss_abandoned_camp_flower_forest_263; break;
+        case forest: *ssconf = ss_abandoned_camp_forest_263; break;
+        case meadow: *ssconf = ss_abandoned_camp_meadow_263; break;
+        case old_growth_birch_forest: *ssconf = ss_abandoned_camp_old_growth_birch_forest_263; break;
+        case old_growth_pine_taiga: *ssconf = ss_abandoned_camp_old_growth_pine_taiga_263; break;
+        case old_growth_spruce_taiga: *ssconf = ss_abandoned_camp_old_growth_spruce_taiga_263; break;
+        case pale_garden: *ssconf = ss_abandoned_camp_pale_garden_263; break;
+        case savanna: *ssconf = ss_abandoned_camp_savanna_263; break;
+        case snowy_taiga: *ssconf = ss_abandoned_camp_snowy_taiga_263; break;
+        case sparse_jungle: *ssconf = ss_abandoned_camp_sparse_jungle_263; break;
+        case swamp: *ssconf = ss_abandoned_camp_swamp_263; break;
+        case taiga: *ssconf = ss_abandoned_camp_taiga_263; break;
+        case windswept_forest: *ssconf = ss_abandoned_camp_windswept_forest_263; break;
+        case wooded_badlands: *ssconf = ss_abandoned_camp_wooded_badlands_263; break;
+        default: return 0; // should never happen
+        }
+        return mc >= MC_26_3;
     case Treasure:
         if (mc < MC_1_16_1) *ssconf = ss_buried_treasure_113;
         else if (mc < MC_1_18) *ssconf = ss_buried_treasure_1161;
@@ -335,35 +398,42 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
     case Bastion:
         if (mc < MC_1_19_2) *ssconf = ss_bastion_remnant_116;
         else if (mc < MC_1_19_4) *ssconf = ss_bastion_remnant_1192;
-        else *ssconf = ss_bastion_remnant_1194;
+        else if (mc < MC_26_3) *ssconf = ss_bastion_remnant_1194;
+        else *ssconf = ss_bastion_remnant_263;
         return mc >= MC_1_16;
     case Desert_Pyramid:
         if (mc < MC_1_16_1) *ssconf = ss_desert_pyramid_113;
         else if (mc < MC_1_19_2) *ssconf = ss_desert_pyramid_1161;
-        else *ssconf = ss_desert_pyramid_1192;
+        else if (mc < MC_26_3) *ssconf = ss_desert_pyramid_1192;
+        else *ssconf = ss_desert_pyramid_263;
         return mc >= MC_1_13;
     case Igloo:
         if (mc < MC_1_16_1) *ssconf = ss_igloo_113;
         else if (mc < MC_1_19_2) *ssconf = ss_igloo_1161;
-        else *ssconf = ss_igloo_1192;
+        else if (mc < MC_26_3) *ssconf = ss_igloo_1192;
+        else *ssconf = ss_igloo_263;
         return mc >= MC_1_13;
     case Jungle_Pyramid:
         if (mc < MC_1_16_1) *ssconf = ss_jungle_pyramid_113;
         else if (mc < MC_1_19_4) *ssconf = ss_jungle_pyramid_1161;
-        else *ssconf = ss_jungle_pyramid_1194;
+        else if (mc < MC_26_3) *ssconf = ss_jungle_pyramid_1194;
+        else *ssconf = ss_jungle_pyramid_263;
         return mc >= MC_1_13;
     case Outpost:
         if (mc < MC_1_16_1) *ssconf = ss_pillager_outpost_114;
         else if (mc < MC_1_19_4) *ssconf = ss_pillager_outpost_1161;
-        else *ssconf = ss_pillager_outpost_1194;
+        else if (mc < MC_26_3) *ssconf = ss_pillager_outpost_1194;
+        else *ssconf = ss_pillager_outpost_263;
         return mc >= MC_1_14;
     case Shipwreck:
         if (mc < MC_1_16_1) *ssconf = ss_shipwreck_113;
         else if (mc < MC_1_18) *ssconf = ss_shipwreck_1161;
         else if (mc < MC_1_19_4) {
             *ssconf = isOceanic(biome) ? ss_shipwreck_118 : ss_shipwreck_beached_118;
-        } else {
+        } else if (mc < MC_26_3) {
             *ssconf = isOceanic(biome) ? ss_shipwreck_1194 : ss_shipwreck_beached_1194;
+        } else {
+            *ssconf = isOceanic(biome) ? ss_shipwreck_263 : ss_shipwreck_beached_263;
         }
         return mc >= MC_1_13;
     case Ruined_Portal:
@@ -384,7 +454,7 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
             else if (biome == ocean) *ssconf = ss_ruined_portal_ocean_1192;
             else *ssconf = ss_ruined_portal_1192; // assuming biome != deep_dark
         }
-        else {
+        else if (mc < MC_26_3) {
             if (biome == desert) *ssconf = ss_ruined_portal_desert_1194;
             else if (biome == jungle) *ssconf = ss_ruined_portal_jungle_1194;
             else if (biome == swamp) *ssconf = ss_ruined_portal_swamp_1194;
@@ -392,17 +462,27 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
             else if (biome == ocean) *ssconf = ss_ruined_portal_ocean_1194;
             else *ssconf = ss_ruined_portal_1194; // assuming biome != deep_dark
         }
+        else {
+            if (biome == desert) *ssconf = ss_ruined_portal_desert_263;
+            else if (biome == jungle) *ssconf = ss_ruined_portal_jungle_263;
+            else if (biome == swamp) *ssconf = ss_ruined_portal_swamp_263;
+            else if (biome == mountains) *ssconf = ss_ruined_portal_mountain_263;
+            else if (biome == ocean) *ssconf = ss_ruined_portal_ocean_263;
+            else *ssconf = ss_ruined_portal_263; // assuming biome != deep_dark
+        }
         return mc >= MC_1_16_1;
     case Stronghold:
         if (mc < MC_1_16_1) *ssconf = ss_stronghold_113;
         else if (mc < MC_1_19_2) *ssconf = ss_stronghold_116;
         else if (mc < MC_1_19_4) *ssconf = ss_stronghold_1192;
-        else *ssconf = ss_stronghold_1194;
+        else if (mc < MC_26_3) *ssconf = ss_stronghold_1194;
+        else *ssconf = ss_stronghold_263;
         return mc >= MC_1_13;
     case Ruined_Portal_N:
         if (mc < MC_1_19_2) *ssconf = ss_ruined_portal_nether_118;
         else if (mc < MC_1_19_4) *ssconf = ss_ruined_portal_nether_1192;
-        else *ssconf = ss_ruined_portal_nether_1194;
+        else if (mc < MC_26_3) *ssconf = ss_ruined_portal_nether_1194;
+        else *ssconf = ss_ruined_portal_nether_263;
         return mc >= MC_1_18;
     case Fortress:
         if (mc < MC_1_16_1) *ssconf = ss_fortress_113;
@@ -414,7 +494,8 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
         else if (mc < MC_1_18) *ssconf = ss_end_city_1161;
         else if (mc < MC_1_19_2) *ssconf = ss_end_city_118;
         else if (mc < MC_1_19_4) *ssconf = ss_end_city_1192;
-        else *ssconf = ss_end_city_1194;
+        else if (mc < MC_26_3) *ssconf = ss_end_city_1194;
+        else *ssconf = ss_end_city_263;
         return mc >= MC_1_13;
     default:
         fprintf(stderr, "ERR getStructureSaltConfig: unsupported structure type %d\n", structureType);
@@ -459,6 +540,7 @@ int getStructurePos(int structureType, int mc, uint64_t seed, int regX, int regZ
     case Ancient_City:
     case Trail_Ruins:
     case Trial_Chambers:
+    case Abandoned_Camp:
         *pos = getFeaturePos(sconf, seed, regX, regZ);
         return 1;
 
@@ -1051,6 +1133,7 @@ int isStrongholdBiome(int mc, int id)
         return mc >= MC_1_21_9;
     case mangrove_swamp:
     case deep_dark:
+    case dappled_forest:
         return 0;
     default:
         return 1;
@@ -2737,6 +2820,32 @@ int isViableFeatureBiome(int mc, int structureType, int biomeID)
         if (mc <= MC_1_20) return 0;
         return biomeID != deep_dark && isOverworld(mc, biomeID);
 
+    case Abandoned_Camp:
+        if (mc < MC_26_3) return 0;
+        switch (biomeID) {
+        case bamboo_jungle:
+        case birch_forest:
+        case cherry_grove:
+        case dappled_forest:
+        case flower_forest:
+        case forest:
+        case meadow:
+        case old_growth_birch_forest:
+        case old_growth_pine_taiga:
+        case old_growth_spruce_taiga:
+        case pale_garden:
+        case savanna:
+        case snowy_taiga:
+        case sparse_jungle:
+        case swamp:
+        case taiga:
+        case windswept_forest:
+        case wooded_badlands:
+            return 1;
+        default:
+            return 0;
+        }
+
     case Treasure:
         if (mc <= MC_1_12) return 0;
         return biomeID == beach || biomeID == snowy_beach;
@@ -3279,6 +3388,10 @@ L_feature:
 
     case Trial_Chambers:
         if (g->mc <= MC_1_20) goto L_not_viable;
+        goto L_jigsaw;
+
+    case Abandoned_Camp:
+        if (g->mc < MC_26_3) goto L_not_viable;
 L_jigsaw:
         {
             StructureVariant sv;
@@ -3907,6 +4020,11 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
         case 3: r->x = 0;       r->z = 1-r->sx; break;
         }
         return 1;
+    case Abandoned_Camp:
+        r->biome = biomeID;
+        r->rotation = nextInt(&rng, 4);
+        r->start = 1 + nextInt(&rng, 10); // abandoned_camp/tent/%s/tent_%s_1..10
+        return 1;
 
     default:
         return 0;
@@ -3939,6 +4057,7 @@ int getLootTableCountForStructure(int structure, int mc) {
     case End_Island: return 0;
     case Trail_Ruins: return 0;
     case Trial_Chambers: return 13;
+    case Abandoned_Camp: return 3;
     case Stronghold: return 3;
     default:
         fprintf(stderr, "getLootTableCountForStructure: not implemented for structure %s.\n", struct2str(structure));
@@ -4534,6 +4653,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         return count;
     }
     case Stronghold: return getStrongholdLoot(list, n, ssconf, mc, seed, posX >> 4, posZ >> 4);
+    case Abandoned_Camp: return getAbandonedCampPieces(list, ssconf, sv, mc, seed, posX >> 4, posZ >> 4);
     // structures that have one piece and one chest
     case Treasure: {
         Piece* p = list;
@@ -7724,6 +7844,10 @@ static const int g_biome_para_range_262_diff[][13] = {
 {sulfur_caves            ,  IMIN, IMAX,  IMIN, IMAX,  IMIN, IMAX,  IMIN, IMAX,  2000, 9000,  IMIN,-9500},
 {-1,0,0,0,0,0,0,0,0,0,0,0,0}};
 
+static const int g_biome_para_range_263_diff[][13] = {
+{dappled_forest          ,  -4500, -1500,  IMIN, -3500,  -1900, IMAX,  IMIN, IMAX,  IMIN, IMAX,  IMIN, IMAX},
+{-1,0,0,0,0,0,0,0,0,0,0,0,0}};
+
 /**
  * Gets the min/max parameter values within which a biome change can occur.
  */
@@ -7761,6 +7885,14 @@ const int *getBiomeParaLimits(int mc, int id)
     if (mc <= MC_1_17)
         return NULL;
     int i;
+    if (mc > MC_26_2)
+    {
+        for (i = 0; g_biome_para_range_263_diff[i][0] != -1; i++)
+        {
+            if (g_biome_para_range_263_diff[i][0] == id)
+                return &g_biome_para_range_263_diff[i][1];
+        }
+    }
     if (mc > MC_26_1)
     {
         for (i = 0; g_biome_para_range_262_diff[i][0] != -1; i++)

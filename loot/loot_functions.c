@@ -82,6 +82,35 @@ static void set_effect_function(uint64_t* rand, ItemStack* is, const void* param
     is->mob_effect.duration = duration;
 }
 
+static void set_potion_function(uint64_t* rand, ItemStack* is, const void* params)
+{
+    int* varparams_int = (int*)params;
+    MobEffect mob_effect = *(MobEffect *)varparams_int;
+    is->mob_effect.effect = mob_effect.effect;
+    switch (mob_effect.effect) {
+    case EFFECT_SPEED:              is->mob_effect.duration = 3600; break;
+    case EFFECT_SLOWNESS:           is->mob_effect.duration = 1800; break;
+    case EFFECT_STRENGTH:           is->mob_effect.duration = 3600; break;
+    case EFFECT_INSTANT_HEALTH:     is->mob_effect.duration = 0;    break;
+    case EFFECT_INSTANT_DAMAGE:     is->mob_effect.duration = 0;    break;
+    case EFFECT_JUMP_BOOST:         is->mob_effect.duration = 3600; break;
+    case EFFECT_REGENERATION:       is->mob_effect.duration = 900;  break;
+    case EFFECT_FIRE_RESISTANCE:    is->mob_effect.duration = 3600; break;
+    case EFFECT_WATER_BREATHING:    is->mob_effect.duration = 3600; break;
+    case EFFECT_INVISIBILITY:       is->mob_effect.duration = 3600; break;
+    case EFFECT_NIGHT_VISION:       is->mob_effect.duration = 3600; break;
+    case EFFECT_POISON:             is->mob_effect.duration = 900;  break;
+    case EFFECT_WEAKNESS:           is->mob_effect.duration = 1800; break;
+    case EFFECT_LUCK:               is->mob_effect.duration = 6000; break;
+    case EFFECT_SLOW_FALLING:       is->mob_effect.duration = 1800; break;
+    case EFFECT_WIND_CHARGED:       is->mob_effect.duration = 3600; break;
+    case EFFECT_WEAVING:            is->mob_effect.duration = 3600; break;
+    case EFFECT_OOZING:             is->mob_effect.duration = 3600; break;
+    case EFFECT_INFESTED:           is->mob_effect.duration = 3600; break;
+    default: UNREACHABLE();
+    }
+}
+
 static void skip_n_calls_function(uint64_t* rand, ItemStack* is, const void* params)
 {
     const int* params_int = (const int*)params;
@@ -325,6 +354,15 @@ void create_set_effect(LootFunction* lf, const int count, const MobEffectEntry m
     lf->varparams_int[0] = count;
     memcpy(lf->varparams_int + 1, mobEffects, count * sizeof(MobEffectEntry));
     lf->fun = set_effect_function;
+}
+
+void create_set_potion(LootFunction* lf, const MobEffect *mobEffect)
+{
+    init_function(lf);
+    lf->varparams_int = (int*)malloc(sizeof(MobEffect));
+    lf->params = lf->varparams_int;
+    memcpy(lf->varparams_int, mobEffect, sizeof(MobEffect));
+    lf->fun = set_potion_function;
 }
 
 void create_set_damage(LootFunction* lf)

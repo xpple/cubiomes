@@ -5,6 +5,9 @@
 #include "loot_table_context.h"
 #include "../biomes.h"
 
+#include "loot_tables/abandoned_camp_barrel_26_3.h"
+#include "loot_tables/abandoned_camp_common_chest_26_3.h"
+#include "loot_tables/abandoned_camp_secret_chest_26_3.h"
 #include "loot_tables/bastion_bridge_1_16_1.h"
 #include "loot_tables/bastion_bridge_1_16_5.h"
 #include "loot_tables/bastion_bridge_1_20.h"
@@ -64,6 +67,15 @@
 #include "loot_tables/stronghold_library_1_20.h"
 
 int init_loot_table_name(LootTableContext** context, const char* loot_table, int version) {
+    if (strcmp(loot_table, "abandoned_camp_barrel") == 0) {
+        return init_abandoned_camp_barrel(context, version);
+    }
+    if (strcmp(loot_table, "abandoned_camp_common_chest") == 0) {
+        return init_abandoned_camp_common_chest(context, version);
+    }
+    if (strcmp(loot_table, "abandoned_camp_secret_chest") == 0) {
+        return init_abandoned_camp_secret_chest(context, version);
+    }
     if (strcmp(loot_table, "bastion_bridge") == 0) {
         return init_bastion_bridge(context, version);
     }
@@ -118,6 +130,21 @@ int init_loot_table_name(LootTableContext** context, const char* loot_table, int
     fprintf(stderr, "ERR init_loot_table_name: unsupported loot_table %s\n", loot_table);
     *context = NULL;
     return 0;
+}
+
+int init_abandoned_camp_barrel(LootTableContext** context, int version) {
+    *context = init_abandoned_camp_barrel_26_3();
+    return version >= MC_26_3;
+}
+
+int init_abandoned_camp_common_chest(LootTableContext** context, int version) {
+    *context = init_abandoned_camp_common_chest_26_3();
+    return version >= MC_26_3;
+}
+
+int init_abandoned_camp_secret_chest(LootTableContext** context, int version) {
+    *context = init_abandoned_camp_secret_chest_26_3();
+    return version >= MC_26_3;
 }
 
 int init_bastion_bridge(LootTableContext** context, int version) {
