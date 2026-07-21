@@ -42,8 +42,8 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             break;
         case 7:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[1] = "abandoned_camp_barrel";
             break;
         default: UNREACHABLE();
         }
@@ -271,8 +271,8 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             break;
         case 7:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[1] = "abandoned_camp_barrel";
             break;
         default: UNREACHABLE();
         }
@@ -300,8 +300,8 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             break;
         case 7:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[1] = "abandoned_camp_barrel";
             break;
         default: UNREACHABLE();
         }
@@ -404,7 +404,7 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             tent->lootTables[2] = "abandoned_camp_common_chest";
             break;
         case 7:
-            tent->chestCount = 2; // checked order
+            tent->chestCount = 2;
             tent->lootTables[0] = "abandoned_camp_common_chest";
             tent->lootTables[1] = "abandoned_camp_barrel";
             break;
@@ -434,7 +434,7 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             tent->lootTables[0] = "abandoned_camp_common_chest";
             break;
         case 7:
-            tent->chestCount = 2; // checked order
+            tent->chestCount = 2;
             tent->lootTables[0] = "abandoned_camp_common_chest";
             tent->lootTables[1] = "abandoned_camp_barrel";
             break;
