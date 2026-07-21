@@ -39,6 +39,7 @@ enum StructureType
     End_Island,
     Trail_Ruins,
     Trial_Chambers,
+    Abandoned_Camp,
     Stronghold, // not like the other structures, but nice to have a constant for it
     FEATURE_NUM
 };
@@ -141,6 +142,10 @@ STRUCT(StructureVariant)
     uint8_t mirror;
     int16_t x, y, z;
     int16_t sx, sy, sz;
+    //abandoned camp
+    uint8_t tent_index;
+    char* tent;
+    char* camp;
 };
 
 STRUCT(Piece)
