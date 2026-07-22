@@ -8,11 +8,15 @@
 #include "loot_tables/bastion_bridge_1_16_1.h"
 #include "loot_tables/bastion_bridge_1_16_5.h"
 #include "loot_tables/bastion_bridge_1_20.h"
+#include "loot_tables/bastion_hoglin_stable_1_16_1.h"
+#include "loot_tables/bastion_hoglin_stable_1_16_5.h"
 #include "loot_tables/bastion_other_1_16_1.h"
 #include "loot_tables/bastion_other_1_16_5.h"
 #include "loot_tables/bastion_other_1_20.h"
 #include "loot_tables/bastion_other_1_21_1.h"
 #include "loot_tables/bastion_other_1_21_9.h"
+#include "loot_tables/bastion_treasure_1_16_1.h"
+#include "loot_tables/bastion_treasure_1_16_5.h"
 #include "loot_tables/buried_treasure_1_13.h"
 #include "loot_tables/buried_treasure_1_18.h"
 #include "loot_tables/buried_treasure_1_21_11.h"
@@ -68,8 +72,14 @@ int init_loot_table_name(LootTableContext** context, const char* loot_table, int
     if (strcmp(loot_table, "bastion_bridge") == 0) {
         return init_bastion_bridge(context, version);
     }
+    if (strcmp(loot_table, "bastion_hoglin_stable") == 0) {
+        return init_bastion_hoglin_stable(context, version);
+    }
     if (strcmp(loot_table, "bastion_other") == 0) {
         return init_bastion_other(context, version);
+    }
+    if (strcmp(loot_table, "bastion_treasure") == 0) {
+        return init_bastion_treasure(context, version);
     }
     if (strcmp(loot_table, "buried_treasure") == 0) {
         return init_buried_treasure(context, version);
@@ -128,6 +138,18 @@ int init_bastion_bridge(LootTableContext** context, int version) {
     if (version < MC_1_16_5) *context = init_bastion_bridge_1_16_1();
     else if (version < MC_1_20) *context = init_bastion_bridge_1_16_5();
     else *context = init_bastion_bridge_1_20();
+    return version > MC_1_15;
+}
+
+int init_bastion_hoglin_stable(LootTableContext** context, int version) {
+    if (version < MC_1_16_5) *context = init_bastion_hoglin_stable_1_16_1();
+    else *context = init_bastion_hoglin_stable_1_16_5();
+    return version > MC_1_15;
+}
+
+int init_bastion_treasure(LootTableContext** context, int version) {
+    if (version < MC_1_16_5) *context = init_bastion_treasure_1_16_1();
+    else *context = init_bastion_treasure_1_16_5();
     return version > MC_1_15;
 }
 

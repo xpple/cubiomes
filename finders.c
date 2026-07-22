@@ -344,7 +344,7 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
         if (mc < MC_1_19_2) *ssconf = ss_bastion_remnant_116;
         else if (mc < MC_1_19_4) *ssconf = ss_bastion_remnant_1192;
         else *ssconf = ss_bastion_remnant_1194;
-        return mc >= MC_1_16;
+        return mc >= MC_1_16_1;
     case Desert_Pyramid:
         if (mc < MC_1_16_1) *ssconf = ss_desert_pyramid_113;
         else if (mc < MC_1_19_2) *ssconf = ss_desert_pyramid_1161;

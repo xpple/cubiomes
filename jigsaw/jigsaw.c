@@ -569,3 +569,62 @@ void getJigsawContainerPos(const JigsawData *jd, const JigsawPiece *p, int c, in
     transformPos(p->rotation, cd->x, cd->y, cd->z, x, y, z);
     *x += p->x; *y += p->y; *z += p->z;
 }
+
+int getJigsawLoot(const JigsawData *jd, StructureSaltConfig ssconf, int mc,
+        uint64_t seed, const JigsawPiece *pieces, int nPieces,
+        JigsawChest *out, int maxOut)
+{
+    int n = 0, i, ci, j;
+
+    for (i = 0; i < nPieces; i++) {
+        const JigsawTemplateDef *t = &jd->templates[pieces[i].templateIdx];
+        for (ci = 0; ci < t->containerCount; ci++) {
+            const JigsawContainerDef *cd = &jd->containers[t->containerStart + ci];
+            JigsawChest *c;
+            if (n == maxOut)
+                return -1;
+            c = &out[n++];
+            c->piece = i;
+            getJigsawContainerPos(jd, &pieces[i], ci, &c->x, &c->y, &c->z);
+            c->lootSeed = 0;
+            c->lootTable = cd->lootTable >= 0 ? jd->strings[cd->lootTable] : NULL;
+        }
+    }
+
+    for (i = 0; i < n; i++) {
+        uint64_t r;
+        int cx = out[i].x >> 4, cz = out[i].z >> 4;
+        for (j = 0; j < i; j++)
+            if ((out[j].x >> 4) == cx && (out[j].z >> 4) == cz)
+                break;
+        if (j < i) // an earlier chest already seeded this chunk
+            continue;
+        setSeed(&r, getPopulationSeed(mc, seed, cx * 16, cz * 16)
+                    + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+        for (j = i; j < n; j++)
+            if ((out[j].x >> 4) == cx && (out[j].z >> 4) == cz)
+                out[j].lootSeed = nextLong(&r);
+    }
+    return n;
+}
+
+int getJigsawStructureLoot(int structureType, int mc, int biome, uint64_t seed,
+        int chunkX, int chunkZ, JigsawPiece *pieces, int maxPieces,
+        int *nPieces, JigsawChest *chests, int maxChests)
+{
+    StructureSaltConfig ssconf;
+    int n;
+
+    n = getJigsawStructurePieces(structureType, mc, biome, seed,
+            chunkX, chunkZ, pieces, maxPieces);
+    if (nPieces)
+        *nPieces = n;
+    if (n < 0)
+        return -1;
+
+    if (!getStructureSaltConfig(structureType, mc, biome, &ssconf))
+        return -1;
+
+    return getJigsawLoot(getJigsawData(mc), ssconf, mc, seed,
+            pieces, n, chests, maxChests);
+}
