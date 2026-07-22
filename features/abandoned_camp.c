@@ -827,7 +827,7 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             camp->name = "abandoned_camp/camp/default/campsite_default_special_15";
             camp->chestCount = 2;
             camp->lootTables[0] = "abandoned_camp_barrel";
-            camp->lootTables[0] = "abandoned_camp_common_chest";
+            camp->lootTables[1] = "abandoned_camp_common_chest";
             break;
         default: UNREACHABLE();
         }
