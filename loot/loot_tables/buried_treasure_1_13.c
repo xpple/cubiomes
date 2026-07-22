@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[11] = {"minecraft:heart_of_the_sea", "minecraft:iron_ingot", "minecraft:gold_ingot", "minecraft:tnt", "minecraft:emerald", "minecraft:diamond", "minecraft:prismarine_crystals", "minecraft:leather_chestplate", "minecraft:iron_sword", "minecraft:cooked_cod", "minecraft:cooked_salmon"};
 static int global_item_ids[11] = {ITEM_HEART_OF_THE_SEA, ITEM_IRON_INGOT, ITEM_GOLD_INGOT, ITEM_TNT, ITEM_EMERALD, ITEM_DIAMOND, ITEM_PRISMARINE_CRYSTALS, ITEM_LEATHER_CHESTPLATE, ITEM_IRON_SWORD, ITEM_COOKED_COD, ITEM_COOKED_SALMON};
@@ -100,7 +100,7 @@ static const LootPool buried_treasure_1_13__4 = {
 
 static LootPool loot_pools[5] = {buried_treasure_1_13__0, buried_treasure_1_13__1, buried_treasure_1_13__2, buried_treasure_1_13__3, buried_treasure_1_13__4};
 static LootTableContext context = {
-    .version = MC_1_13,
+    .version = 0, // set by init
     .item_count = 11,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -112,7 +112,8 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     LootPool* loot_pool__1 = &(context.loot_pools[1]);
     create_set_count(&(loot_pool__1->loot_functions[0]), 1, 4);
@@ -128,10 +129,13 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__4->loot_functions[1]), 2, 4);
 }
 
-LootTableContext* init_buried_treasure_1_13() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_buried_treasure_1_13(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }

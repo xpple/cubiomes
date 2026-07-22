@@ -4,6 +4,6 @@
 
 #include "../loot_table_context.h"
 
-LootTableContext* init_bastion_hoglin_stable_1_16_1();
+LootTableContext* init_bastion_hoglin_stable_1_16_1(int version);
 
 #endif //BASTION_HOGLIN_STABLE_1_16_1_H

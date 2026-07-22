@@ -4,6 +4,6 @@
 
 #include "../loot_table_context.h"
 
-LootTableContext* init_stronghold_corridor_1_21_9();
+LootTableContext* init_stronghold_corridor_1_21_9(int version);
 
 #endif //STRONGHOLD_CORRIDOR_1_21_9_H

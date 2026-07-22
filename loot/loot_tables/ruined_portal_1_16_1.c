@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[25] = {"minecraft:obsidian", "minecraft:flint", "minecraft:iron_nugget", "minecraft:flint_and_steel", "minecraft:fire_charge", "minecraft:golden_apple", "minecraft:gold_nugget", "minecraft:golden_sword", "minecraft:golden_axe", "minecraft:golden_hoe", "minecraft:golden_shovel", "minecraft:golden_pickaxe", "minecraft:golden_boots", "minecraft:golden_chestplate", "minecraft:golden_helmet", "minecraft:golden_leggings", "minecraft:glistering_melon_slice", "minecraft:golden_horse_armor", "minecraft:light_weighted_pressure_plate", "minecraft:golden_carrot", "minecraft:clock", "minecraft:gold_ingot", "minecraft:bell", "minecraft:enchanted_golden_apple", "minecraft:gold_block"};
 static int global_item_ids[25] = {ITEM_OBSIDIAN, ITEM_FLINT, ITEM_IRON_NUGGET, ITEM_FLINT_AND_STEEL, ITEM_FIRE_CHARGE, ITEM_GOLDEN_APPLE, ITEM_GOLD_NUGGET, ITEM_GOLDEN_SWORD, ITEM_GOLDEN_AXE, ITEM_GOLDEN_HOE, ITEM_GOLDEN_SHOVEL, ITEM_GOLDEN_PICKAXE, ITEM_GOLDEN_BOOTS, ITEM_GOLDEN_CHESTPLATE, ITEM_GOLDEN_HELMET, ITEM_GOLDEN_LEGGINGS, ITEM_GLISTERING_MELON_SLICE, ITEM_GOLDEN_HORSE_ARMOR, ITEM_LIGHT_WEIGHTED_PRESSURE_PLATE, ITEM_GOLDEN_CARROT, ITEM_CLOCK, ITEM_GOLD_INGOT, ITEM_BELL, ITEM_ENCHANTED_GOLDEN_APPLE, ITEM_GOLD_BLOCK};
@@ -32,7 +32,7 @@ static const LootPool ruined_portal_1_16_1__0 = {
 
 static LootPool loot_pools[1] = {ruined_portal_1_16_1__0};
 static LootTableContext context = {
-    .version = MC_1_16_1,
+    .version = 0, // set by init
     .item_count = 25,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -44,31 +44,35 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     create_set_count(&(loot_pool__0->loot_functions[0]), 1, 2);
     create_set_count(&(loot_pool__0->loot_functions[1]), 1, 4);
     create_set_count(&(loot_pool__0->loot_functions[2]), 9, 18);
     create_set_count(&(loot_pool__0->loot_functions[3]), 4, 24);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[4]), MC_1_16_1, get_item_type("minecraft:golden_sword"), 0);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[5]), MC_1_16_1, get_item_type("minecraft:golden_axe"), 0);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[6]), MC_1_16_1, get_item_type("minecraft:golden_hoe"), 0);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[7]), MC_1_16_1, get_item_type("minecraft:golden_shovel"), 0);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[8]), MC_1_16_1, get_item_type("minecraft:golden_pickaxe"), 0);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[9]), MC_1_16_1, get_item_type("minecraft:golden_boots"), 0);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[10]), MC_1_16_1, get_item_type("minecraft:golden_chestplate"), 0);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[11]), MC_1_16_1, get_item_type("minecraft:golden_helmet"), 0);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[12]), MC_1_16_1, get_item_type("minecraft:golden_leggings"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[4]), version, get_item_type("minecraft:golden_sword"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[5]), version, get_item_type("minecraft:golden_axe"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[6]), version, get_item_type("minecraft:golden_hoe"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[7]), version, get_item_type("minecraft:golden_shovel"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[8]), version, get_item_type("minecraft:golden_pickaxe"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[9]), version, get_item_type("minecraft:golden_boots"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[10]), version, get_item_type("minecraft:golden_chestplate"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[11]), version, get_item_type("minecraft:golden_helmet"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[12]), version, get_item_type("minecraft:golden_leggings"), 0);
     create_set_count(&(loot_pool__0->loot_functions[13]), 4, 12);
     create_set_count(&(loot_pool__0->loot_functions[14]), 4, 12);
     create_set_count(&(loot_pool__0->loot_functions[15]), 2, 8);
     create_set_count(&(loot_pool__0->loot_functions[16]), 1, 2);
 }
 
-LootTableContext* init_ruined_portal_1_16_1() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_ruined_portal_1_16_1(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }

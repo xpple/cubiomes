@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[23] = {"minecraft:diamond_shovel", "minecraft:diamond_pickaxe", "minecraft:netherite_scrap", "minecraft:ancient_debris", "minecraft:ancient_debris", "minecraft:saddle", "minecraft:gold_block", "minecraft:golden_carrot", "minecraft:golden_apple", "minecraft:golden_axe", "minecraft:crying_obsidian", "minecraft:glowstone", "minecraft:gilded_blackstone", "minecraft:soul_sand", "minecraft:crimson_nylium", "minecraft:gold_nugget", "minecraft:leather", "minecraft:arrow", "minecraft:string", "minecraft:porkchop", "minecraft:cooked_porkchop", "minecraft:crimson_fungus", "minecraft:crimson_roots"};
 static int global_item_ids[23] = {ITEM_DIAMOND_SHOVEL, ITEM_DIAMOND_PICKAXE, ITEM_NETHERITE_SCRAP, ITEM_ANCIENT_DEBRIS, ITEM_ANCIENT_DEBRIS, ITEM_SADDLE, ITEM_GOLD_BLOCK, ITEM_GOLDEN_CARROT, ITEM_GOLDEN_APPLE, ITEM_GOLDEN_AXE, ITEM_CRYING_OBSIDIAN, ITEM_GLOWSTONE, ITEM_GILDED_BLACKSTONE, ITEM_SOUL_SAND, ITEM_CRIMSON_NYLIUM, ITEM_GOLD_NUGGET, ITEM_LEATHER, ITEM_ARROW, ITEM_STRING, ITEM_PORKCHOP, ITEM_COOKED_PORKCHOP, ITEM_CRIMSON_FUNGUS, ITEM_CRIMSON_ROOTS};
@@ -49,7 +49,7 @@ static const LootPool bastion_hoglin_stable_1_16_5__1 = {
 
 static LootPool loot_pools[2] = {bastion_hoglin_stable_1_16_5__0, bastion_hoglin_stable_1_16_5__1};
 static LootTableContext context = {
-    .version = MC_1_16_5,
+    .version = 0, // set by init
     .item_count = 23,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -61,13 +61,14 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     create_skip_calls(&(loot_pool__0->loot_functions[0]), 1);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[1]), MC_1_16_5, get_item_type("minecraft:diamond_shovel"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[1]), version, get_item_type("minecraft:diamond_shovel"), 0);
     create_skip_calls(&(loot_pool__0->loot_functions[2]), 1);
     create_set_count(&(loot_pool__0->loot_functions[3]), 1, 1);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[4]), MC_1_16_5, get_item_type("minecraft:diamond_pickaxe"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[4]), version, get_item_type("minecraft:diamond_pickaxe"), 0);
     create_set_count(&(loot_pool__0->loot_functions[5]), 1, 1);
     create_set_count(&(loot_pool__0->loot_functions[6]), 1, 1);
     create_set_count(&(loot_pool__0->loot_functions[7]), 2, 2);
@@ -77,7 +78,7 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__0->loot_functions[11]), 1, 1);
     LootPool* loot_pool__1 = &(context.loot_pools[1]);
     create_set_count(&(loot_pool__1->loot_functions[0]), 1, 1);
-    create_enchant_randomly(&(loot_pool__1->loot_functions[1]), MC_1_16_5, get_item_type("minecraft:golden_axe"), 0);
+    create_enchant_randomly(&(loot_pool__1->loot_functions[1]), version, get_item_type("minecraft:golden_axe"), 0);
     create_set_count(&(loot_pool__1->loot_functions[2]), 1, 5);
     create_set_count(&(loot_pool__1->loot_functions[3]), 3, 6);
     create_set_count(&(loot_pool__1->loot_functions[4]), 2, 5);
@@ -93,10 +94,13 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__1->loot_functions[14]), 2, 7);
 }
 
-LootTableContext* init_bastion_hoglin_stable_1_16_5() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_bastion_hoglin_stable_1_16_5(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }

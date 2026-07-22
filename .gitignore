@@ -25,6 +25,7 @@ CmakeCXXCompilerId.cpp
 *.includecache
 CMakeCache.txt
 Makefile2
+*.py
 
 build
 

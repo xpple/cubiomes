@@ -4,6 +4,6 @@
 
 #include "../loot_table_context.h"
 
-LootTableContext* init_bastion_treasure_1_16_1();
+LootTableContext* init_bastion_treasure_1_16_1(int version);
 
 #endif //BASTION_TREASURE_1_16_1_H

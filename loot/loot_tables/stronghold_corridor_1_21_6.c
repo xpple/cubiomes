@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[21] = {"minecraft:ender_pearl", "minecraft:diamond", "minecraft:iron_ingot", "minecraft:gold_ingot", "minecraft:redstone", "minecraft:bread", "minecraft:apple", "minecraft:iron_pickaxe", "minecraft:iron_sword", "minecraft:iron_chestplate", "minecraft:iron_helmet", "minecraft:iron_leggings", "minecraft:iron_boots", "minecraft:golden_apple", "minecraft:leather", "minecraft:iron_horse_armor", "minecraft:golden_horse_armor", "minecraft:diamond_horse_armor", "minecraft:music_disc_otherside", "minecraft:book", "minecraft:eye_armor_trim_smithing_template"};
 static int global_item_ids[21] = {ITEM_ENDER_PEARL, ITEM_DIAMOND, ITEM_IRON_INGOT, ITEM_GOLD_INGOT, ITEM_REDSTONE, ITEM_BREAD, ITEM_APPLE, ITEM_IRON_PICKAXE, ITEM_IRON_SWORD, ITEM_IRON_CHESTPLATE, ITEM_IRON_HELMET, ITEM_IRON_LEGGINGS, ITEM_IRON_BOOTS, ITEM_GOLDEN_APPLE, ITEM_LEATHER, ITEM_IRON_HORSE_ARMOR, ITEM_GOLDEN_HORSE_ARMOR, ITEM_DIAMOND_HORSE_ARMOR, ITEM_MUSIC_DISC_OTHERSIDE, ITEM_BOOK, ITEM_EYE_ARMOR_TRIM_SMITHING_TEMPLATE};
@@ -49,7 +49,7 @@ static const LootPool stronghold_corridor_1_21_6__1 = {
 
 static LootPool loot_pools[2] = {stronghold_corridor_1_21_6__0, stronghold_corridor_1_21_6__1};
 static LootTableContext context = {
-    .version = MC_1_21_6,
+    .version = 0, // set by init
     .item_count = 21,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -61,7 +61,8 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     create_set_count(&(loot_pool__0->loot_functions[0]), 1, 3);
     create_set_count(&(loot_pool__0->loot_functions[1]), 1, 5);
@@ -70,14 +71,17 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__0->loot_functions[4]), 1, 3);
     create_set_count(&(loot_pool__0->loot_functions[5]), 1, 3);
     create_set_count(&(loot_pool__0->loot_functions[6]), 1, 5);
-    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[7]), MC_1_21_6, "minecraft:book", get_item_type("minecraft:book"), 30, 30, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[7]), version, "minecraft:book", get_item_type("minecraft:book"), 30, 30, "#minecraft:on_random_loot", 1);
     LootPool* loot_pool__1 = &(context.loot_pools[1]);
 }
 
-LootTableContext* init_stronghold_corridor_1_21_6() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_stronghold_corridor_1_21_6(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }

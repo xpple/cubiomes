@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[25] = {"minecraft:netherite_ingot", "minecraft:ancient_debris", "minecraft:netherite_scrap", "minecraft:ancient_debris", "minecraft:diamond_sword", "minecraft:diamond_chestplate", "minecraft:diamond_helmet", "minecraft:diamond_leggings", "minecraft:diamond_boots", "minecraft:diamond_sword", "minecraft:diamond_chestplate", "minecraft:diamond_helmet", "minecraft:diamond_boots", "minecraft:diamond_leggings", "minecraft:diamond", "minecraft:enchanted_golden_apple", "minecraft:spectral_arrow", "minecraft:gold_block", "minecraft:iron_block", "minecraft:gold_ingot", "minecraft:iron_ingot", "minecraft:crying_obsidian", "minecraft:quartz", "minecraft:gilded_blackstone", "minecraft:magma_cream"};
 static int global_item_ids[25] = {ITEM_NETHERITE_INGOT, ITEM_ANCIENT_DEBRIS, ITEM_NETHERITE_SCRAP, ITEM_ANCIENT_DEBRIS, ITEM_DIAMOND_SWORD, ITEM_DIAMOND_CHESTPLATE, ITEM_DIAMOND_HELMET, ITEM_DIAMOND_LEGGINGS, ITEM_DIAMOND_BOOTS, ITEM_DIAMOND_SWORD, ITEM_DIAMOND_CHESTPLATE, ITEM_DIAMOND_HELMET, ITEM_DIAMOND_BOOTS, ITEM_DIAMOND_LEGGINGS, ITEM_DIAMOND, ITEM_ENCHANTED_GOLDEN_APPLE, ITEM_SPECTRAL_ARROW, ITEM_GOLD_BLOCK, ITEM_IRON_BLOCK, ITEM_GOLD_INGOT, ITEM_IRON_INGOT, ITEM_CRYING_OBSIDIAN, ITEM_QUARTZ, ITEM_GILDED_BLACKSTONE, ITEM_MAGMA_CREAM};
@@ -49,7 +49,7 @@ static const LootPool bastion_treasure_1_16_5__1 = {
 
 static LootPool loot_pools[2] = {bastion_treasure_1_16_5__0, bastion_treasure_1_16_5__1};
 static LootTableContext context = {
-    .version = MC_1_16_5,
+    .version = 0, // set by init
     .item_count = 25,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -61,22 +61,23 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     create_set_count(&(loot_pool__0->loot_functions[0]), 1, 1);
     create_set_count(&(loot_pool__0->loot_functions[1]), 1, 1);
     create_set_count(&(loot_pool__0->loot_functions[2]), 1, 1);
     create_set_count(&(loot_pool__0->loot_functions[3]), 2, 2);
     create_skip_calls(&(loot_pool__0->loot_functions[4]), 1);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[5]), MC_1_16_5, get_item_type("minecraft:diamond_sword"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[5]), version, get_item_type("minecraft:diamond_sword"), 0);
     create_skip_calls(&(loot_pool__0->loot_functions[6]), 1);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[7]), MC_1_16_5, get_item_type("minecraft:diamond_chestplate"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[7]), version, get_item_type("minecraft:diamond_chestplate"), 0);
     create_skip_calls(&(loot_pool__0->loot_functions[8]), 1);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[9]), MC_1_16_5, get_item_type("minecraft:diamond_helmet"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[9]), version, get_item_type("minecraft:diamond_helmet"), 0);
     create_skip_calls(&(loot_pool__0->loot_functions[10]), 1);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[11]), MC_1_16_5, get_item_type("minecraft:diamond_leggings"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[11]), version, get_item_type("minecraft:diamond_leggings"), 0);
     create_skip_calls(&(loot_pool__0->loot_functions[12]), 1);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[13]), MC_1_16_5, get_item_type("minecraft:diamond_boots"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[13]), version, get_item_type("minecraft:diamond_boots"), 0);
     create_set_count(&(loot_pool__0->loot_functions[14]), 2, 6);
     create_set_count(&(loot_pool__0->loot_functions[15]), 1, 1);
     LootPool* loot_pool__1 = &(context.loot_pools[1]);
@@ -91,10 +92,13 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__1->loot_functions[8]), 3, 8);
 }
 
-LootTableContext* init_bastion_treasure_1_16_5() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_bastion_treasure_1_16_5(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }

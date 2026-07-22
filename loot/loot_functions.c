@@ -997,12 +997,14 @@ void create_enchant_randomly(LootFunction* lf, const int version, const ItemType
     int applicable[64];
     get_applicable_enchantments(item, version, applicable, 1);
 
+    const int filterTreasure = (version >= MC_1_21);
+
     // copy applicable enchants, along with their max levels
     int out = 0;
     for (int i = 0; i < enchantCount; i++)
     {
         const int ench = applicable[i];
-        if (!isTreasure && is_treasure_enchantment((Enchantment)ench))
+        if (filterTreasure && !isTreasure && is_treasure_enchantment((Enchantment)ench))
             continue;
         lf->varparams_int[1 + 2 * out] = ench;
         lf->varparams_int[1 + 2 * out + 1] = get_max_level(ench);

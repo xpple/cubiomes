@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[8] = {"minecraft:map", "minecraft:compass", "minecraft:map", "minecraft:clock", "minecraft:paper", "minecraft:feather", "minecraft:book", "minecraft:coast_armor_trim_smithing_template"};
 static int global_item_ids[8] = {ITEM_MAP, ITEM_COMPASS, ITEM_MAP, ITEM_CLOCK, ITEM_PAPER, ITEM_FEATHER, ITEM_BOOK, ITEM_COAST_ARMOR_TRIM_SMITHING_TEMPLATE};
@@ -66,7 +66,7 @@ static const LootPool shipwreck_map_1_20__2 = {
 
 static LootPool loot_pools[3] = {shipwreck_map_1_20__0, shipwreck_map_1_20__1, shipwreck_map_1_20__2};
 static LootTableContext context = {
-    .version = MC_1_20,
+    .version = 0, // set by init
     .item_count = 8,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -78,7 +78,8 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     create_no_op(&(loot_pool__0->loot_functions[0]));
     create_no_op(&(loot_pool__0->loot_functions[1]));
@@ -90,10 +91,13 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__2->loot_functions[0]), 2, 2);
 }
 
-LootTableContext* init_shipwreck_map_1_20() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_shipwreck_map_1_20(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }

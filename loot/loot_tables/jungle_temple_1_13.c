@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[11] = {"minecraft:diamond", "minecraft:iron_ingot", "minecraft:gold_ingot", "minecraft:emerald", "minecraft:bone", "minecraft:rotten_flesh", "minecraft:saddle", "minecraft:iron_horse_armor", "minecraft:golden_horse_armor", "minecraft:diamond_horse_armor", "minecraft:book"};
 static int global_item_ids[11] = {ITEM_DIAMOND, ITEM_IRON_INGOT, ITEM_GOLD_INGOT, ITEM_EMERALD, ITEM_BONE, ITEM_ROTTEN_FLESH, ITEM_SADDLE, ITEM_IRON_HORSE_ARMOR, ITEM_GOLDEN_HORSE_ARMOR, ITEM_DIAMOND_HORSE_ARMOR, ITEM_BOOK};
@@ -32,7 +32,7 @@ static const LootPool jungle_temple_1_13__0 = {
 
 static LootPool loot_pools[1] = {jungle_temple_1_13__0};
 static LootTableContext context = {
-    .version = MC_1_13,
+    .version = 0, // set by init
     .item_count = 11,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -44,7 +44,8 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     create_set_count(&(loot_pool__0->loot_functions[0]), 1, 3);
     create_set_count(&(loot_pool__0->loot_functions[1]), 1, 5);
@@ -52,13 +53,16 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__0->loot_functions[3]), 1, 3);
     create_set_count(&(loot_pool__0->loot_functions[4]), 4, 6);
     create_set_count(&(loot_pool__0->loot_functions[5]), 3, 7);
-    create_enchant_with_levels(&(loot_pool__0->loot_functions[6]), MC_1_13, "minecraft:book", get_item_type("minecraft:book"), 30, 30, 1);
+    create_enchant_with_levels(&(loot_pool__0->loot_functions[6]), version, "minecraft:book", get_item_type("minecraft:book"), 30, 30, 1);
 }
 
-LootTableContext* init_jungle_temple_1_13() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_jungle_temple_1_13(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }

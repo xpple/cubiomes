@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[16] = {"minecraft:paper", "minecraft:potato", "minecraft:poisonous_potato", "minecraft:carrot", "minecraft:wheat", "minecraft:suspicious_stew", "minecraft:coal", "minecraft:rotten_flesh", "minecraft:pumpkin", "minecraft:bamboo", "minecraft:gunpowder", "minecraft:tnt", "minecraft:leather_helmet", "minecraft:leather_chestplate", "minecraft:leather_leggings", "minecraft:leather_boots"};
 static int global_item_ids[16] = {ITEM_PAPER, ITEM_POTATO, ITEM_POISONOUS_POTATO, ITEM_CARROT, ITEM_WHEAT, ITEM_SUSPICIOUS_STEW, ITEM_COAL, ITEM_ROTTEN_FLESH, ITEM_PUMPKIN, ITEM_BAMBOO, ITEM_GUNPOWDER, ITEM_TNT, ITEM_LEATHER_HELMET, ITEM_LEATHER_CHESTPLATE, ITEM_LEATHER_LEGGINGS, ITEM_LEATHER_BOOTS};
@@ -32,7 +32,7 @@ static const LootPool shipwreck_supply_1_14__0 = {
 
 static LootPool loot_pools[1] = {shipwreck_supply_1_14__0};
 static LootTableContext context = {
-    .version = MC_1_14,
+    .version = 0, // set by init
     .item_count = 16,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -44,7 +44,8 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     create_set_count(&(loot_pool__0->loot_functions[0]), 1, 12);
     create_set_count(&(loot_pool__0->loot_functions[1]), 2, 6);
@@ -58,16 +59,19 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__0->loot_functions[9]), 1, 3);
     create_set_count(&(loot_pool__0->loot_functions[10]), 1, 5);
     create_set_count(&(loot_pool__0->loot_functions[11]), 1, 2);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[12]), MC_1_14, get_item_type("minecraft:leather_helmet"), 0);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[13]), MC_1_14, get_item_type("minecraft:leather_chestplate"), 0);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[14]), MC_1_14, get_item_type("minecraft:leather_leggings"), 0);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[15]), MC_1_14, get_item_type("minecraft:leather_boots"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[12]), version, get_item_type("minecraft:leather_helmet"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[13]), version, get_item_type("minecraft:leather_chestplate"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[14]), version, get_item_type("minecraft:leather_leggings"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[15]), version, get_item_type("minecraft:leather_boots"), 0);
 }
 
-LootTableContext* init_shipwreck_supply_1_14() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_shipwreck_supply_1_14(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }

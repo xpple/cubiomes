@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[17] = {"minecraft:heart_of_the_sea", "minecraft:iron_ingot", "minecraft:gold_ingot", "minecraft:tnt", "minecraft:emerald", "minecraft:diamond", "minecraft:prismarine_crystals", "minecraft:leather_chestplate", "minecraft:iron_sword", "minecraft:iron_spear", "minecraft:cooked_cod", "minecraft:cooked_salmon", "minecraft:potion", "minecraft:copper_nautilus_armor", "minecraft:iron_nautilus_armor", "minecraft:golden_nautilus_armor", "minecraft:diamond_nautilus_armor"};
 static int global_item_ids[17] = {ITEM_HEART_OF_THE_SEA, ITEM_IRON_INGOT, ITEM_GOLD_INGOT, ITEM_TNT, ITEM_EMERALD, ITEM_DIAMOND, ITEM_PRISMARINE_CRYSTALS, ITEM_LEATHER_CHESTPLATE, ITEM_IRON_SWORD, ITEM_IRON_SPEAR, ITEM_COOKED_COD, ITEM_COOKED_SALMON, ITEM_POTION, ITEM_COPPER_NAUTILUS_ARMOR, ITEM_IRON_NAUTILUS_ARMOR, ITEM_GOLDEN_NAUTILUS_ARMOR, ITEM_DIAMOND_NAUTILUS_ARMOR};
@@ -134,7 +134,7 @@ static const LootPool buried_treasure_1_21_11__6 = {
 
 static LootPool loot_pools[7] = {buried_treasure_1_21_11__0, buried_treasure_1_21_11__1, buried_treasure_1_21_11__2, buried_treasure_1_21_11__3, buried_treasure_1_21_11__4, buried_treasure_1_21_11__5, buried_treasure_1_21_11__6};
 static LootTableContext context = {
-    .version = MC_1_21_11,
+    .version = 0, // set by init
     .item_count = 17,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -146,7 +146,8 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     LootPool* loot_pool__1 = &(context.loot_pools[1]);
     create_set_count(&(loot_pool__1->loot_functions[0]), 1, 4);
@@ -168,10 +169,13 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__6->loot_functions[3]), 1, 1);
 }
 
-LootTableContext* init_buried_treasure_1_21_11() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_buried_treasure_1_21_11(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }

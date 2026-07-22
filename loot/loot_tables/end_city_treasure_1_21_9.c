@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[25] = {"minecraft:diamond", "minecraft:iron_ingot", "minecraft:gold_ingot", "minecraft:emerald", "minecraft:beetroot_seeds", "minecraft:saddle", "minecraft:copper_horse_armor", "minecraft:iron_horse_armor", "minecraft:golden_horse_armor", "minecraft:diamond_horse_armor", "minecraft:diamond_sword", "minecraft:diamond_boots", "minecraft:diamond_chestplate", "minecraft:diamond_leggings", "minecraft:diamond_helmet", "minecraft:diamond_pickaxe", "minecraft:diamond_shovel", "minecraft:iron_sword", "minecraft:iron_boots", "minecraft:iron_chestplate", "minecraft:iron_leggings", "minecraft:iron_helmet", "minecraft:iron_pickaxe", "minecraft:iron_shovel", "minecraft:spire_armor_trim_smithing_template"};
 static int global_item_ids[25] = {ITEM_DIAMOND, ITEM_IRON_INGOT, ITEM_GOLD_INGOT, ITEM_EMERALD, ITEM_BEETROOT_SEEDS, ITEM_SADDLE, ITEM_COPPER_HORSE_ARMOR, ITEM_IRON_HORSE_ARMOR, ITEM_GOLDEN_HORSE_ARMOR, ITEM_DIAMOND_HORSE_ARMOR, ITEM_DIAMOND_SWORD, ITEM_DIAMOND_BOOTS, ITEM_DIAMOND_CHESTPLATE, ITEM_DIAMOND_LEGGINGS, ITEM_DIAMOND_HELMET, ITEM_DIAMOND_PICKAXE, ITEM_DIAMOND_SHOVEL, ITEM_IRON_SWORD, ITEM_IRON_BOOTS, ITEM_IRON_CHESTPLATE, ITEM_IRON_LEGGINGS, ITEM_IRON_HELMET, ITEM_IRON_PICKAXE, ITEM_IRON_SHOVEL, ITEM_SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE};
@@ -49,7 +49,7 @@ static const LootPool end_city_treasure_1_21_9__1 = {
 
 static LootPool loot_pools[2] = {end_city_treasure_1_21_9__0, end_city_treasure_1_21_9__1};
 static LootTableContext context = {
-    .version = MC_1_21_9,
+    .version = 0, // set by init
     .item_count = 25,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -61,34 +61,38 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     create_set_count(&(loot_pool__0->loot_functions[0]), 2, 7);
     create_set_count(&(loot_pool__0->loot_functions[1]), 4, 8);
     create_set_count(&(loot_pool__0->loot_functions[2]), 2, 7);
     create_set_count(&(loot_pool__0->loot_functions[3]), 2, 6);
     create_set_count(&(loot_pool__0->loot_functions[4]), 1, 10);
-    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[5]), MC_1_21_9, "minecraft:diamond_sword", get_item_type("minecraft:diamond_sword"), 20, 39, "#minecraft:on_random_loot", 1);
-    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[6]), MC_1_21_9, "minecraft:diamond_boots", get_item_type("minecraft:diamond_boots"), 20, 39, "#minecraft:on_random_loot", 1);
-    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[7]), MC_1_21_9, "minecraft:diamond_chestplate", get_item_type("minecraft:diamond_chestplate"), 20, 39, "#minecraft:on_random_loot", 1);
-    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[8]), MC_1_21_9, "minecraft:diamond_leggings", get_item_type("minecraft:diamond_leggings"), 20, 39, "#minecraft:on_random_loot", 1);
-    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[9]), MC_1_21_9, "minecraft:diamond_helmet", get_item_type("minecraft:diamond_helmet"), 20, 39, "#minecraft:on_random_loot", 1);
-    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[10]), MC_1_21_9, "minecraft:diamond_pickaxe", get_item_type("minecraft:diamond_pickaxe"), 20, 39, "#minecraft:on_random_loot", 1);
-    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[11]), MC_1_21_9, "minecraft:diamond_shovel", get_item_type("minecraft:diamond_shovel"), 20, 39, "#minecraft:on_random_loot", 1);
-    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[12]), MC_1_21_9, "minecraft:iron_sword", get_item_type("minecraft:iron_sword"), 20, 39, "#minecraft:on_random_loot", 1);
-    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[13]), MC_1_21_9, "minecraft:iron_boots", get_item_type("minecraft:iron_boots"), 20, 39, "#minecraft:on_random_loot", 1);
-    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[14]), MC_1_21_9, "minecraft:iron_chestplate", get_item_type("minecraft:iron_chestplate"), 20, 39, "#minecraft:on_random_loot", 1);
-    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[15]), MC_1_21_9, "minecraft:iron_leggings", get_item_type("minecraft:iron_leggings"), 20, 39, "#minecraft:on_random_loot", 1);
-    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[16]), MC_1_21_9, "minecraft:iron_helmet", get_item_type("minecraft:iron_helmet"), 20, 39, "#minecraft:on_random_loot", 1);
-    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[17]), MC_1_21_9, "minecraft:iron_pickaxe", get_item_type("minecraft:iron_pickaxe"), 20, 39, "#minecraft:on_random_loot", 1);
-    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[18]), MC_1_21_9, "minecraft:iron_shovel", get_item_type("minecraft:iron_shovel"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[5]), version, "minecraft:diamond_sword", get_item_type("minecraft:diamond_sword"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[6]), version, "minecraft:diamond_boots", get_item_type("minecraft:diamond_boots"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[7]), version, "minecraft:diamond_chestplate", get_item_type("minecraft:diamond_chestplate"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[8]), version, "minecraft:diamond_leggings", get_item_type("minecraft:diamond_leggings"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[9]), version, "minecraft:diamond_helmet", get_item_type("minecraft:diamond_helmet"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[10]), version, "minecraft:diamond_pickaxe", get_item_type("minecraft:diamond_pickaxe"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[11]), version, "minecraft:diamond_shovel", get_item_type("minecraft:diamond_shovel"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[12]), version, "minecraft:iron_sword", get_item_type("minecraft:iron_sword"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[13]), version, "minecraft:iron_boots", get_item_type("minecraft:iron_boots"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[14]), version, "minecraft:iron_chestplate", get_item_type("minecraft:iron_chestplate"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[15]), version, "minecraft:iron_leggings", get_item_type("minecraft:iron_leggings"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[16]), version, "minecraft:iron_helmet", get_item_type("minecraft:iron_helmet"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[17]), version, "minecraft:iron_pickaxe", get_item_type("minecraft:iron_pickaxe"), 20, 39, "#minecraft:on_random_loot", 1);
+    create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[18]), version, "minecraft:iron_shovel", get_item_type("minecraft:iron_shovel"), 20, 39, "#minecraft:on_random_loot", 1);
     LootPool* loot_pool__1 = &(context.loot_pools[1]);
 }
 
-LootTableContext* init_end_city_treasure_1_21_9() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_end_city_treasure_1_21_9(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }

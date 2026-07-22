@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[9] = {"minecraft:iron_ingot", "minecraft:gold_ingot", "minecraft:emerald", "minecraft:diamond", "minecraft:experience_bottle", "minecraft:iron_nugget", "minecraft:gold_nugget", "minecraft:lapis_lazuli", "minecraft:coast_armor_trim_smithing_template"};
 static int global_item_ids[9] = {ITEM_IRON_INGOT, ITEM_GOLD_INGOT, ITEM_EMERALD, ITEM_DIAMOND, ITEM_EXPERIENCE_BOTTLE, ITEM_IRON_NUGGET, ITEM_GOLD_NUGGET, ITEM_LAPIS_LAZULI, ITEM_COAST_ARMOR_TRIM_SMITHING_TEMPLATE};
@@ -66,7 +66,7 @@ static const LootPool shipwreck_treasure_1_20__2 = {
 
 static LootPool loot_pools[3] = {shipwreck_treasure_1_20__0, shipwreck_treasure_1_20__1, shipwreck_treasure_1_20__2};
 static LootTableContext context = {
-    .version = MC_1_20,
+    .version = 0, // set by init
     .item_count = 9,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -78,7 +78,8 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     create_set_count(&(loot_pool__0->loot_functions[0]), 1, 5);
     create_set_count(&(loot_pool__0->loot_functions[1]), 1, 5);
@@ -91,10 +92,13 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__2->loot_functions[0]), 2, 2);
 }
 
-LootTableContext* init_shipwreck_treasure_1_20() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_shipwreck_treasure_1_20(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }

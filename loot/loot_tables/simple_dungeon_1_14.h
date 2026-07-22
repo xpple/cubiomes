@@ -4,6 +4,6 @@
 
 #include "../loot_table_context.h"
 
-LootTableContext* init_simple_dungeon_1_14();
+LootTableContext* init_simple_dungeon_1_14(int version);
 
 #endif //SIMPLE_DUNGEON_1_14_H

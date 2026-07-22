@@ -80,11 +80,11 @@ class EnchantRandomlyFunction(LootFunction):
 
         if self.enchantments is None:
             if version_gte(version, "1_21_9"):
-                return f"create_enchant_randomly_tag({arg}, MC_{version}, get_item_type(\"{self.item_name}\"), \"#minecraft:in_enchanting_table\", {int(self.treasure)})"
-            return f"create_enchant_randomly({arg}, MC_{version}, get_item_type(\"{self.item_name}\"), {int(self.treasure)})"
+                return f"create_enchant_randomly_tag({arg}, version, get_item_type(\"{self.item_name}\"), \"#minecraft:in_enchanting_table\", {int(self.treasure)})"
+            return f"create_enchant_randomly({arg}, version, get_item_type(\"{self.item_name}\"), {int(self.treasure)})"
         if isinstance(self.enchantments, str):
             if self.enchantments.startswith("#"):
-                return f"create_enchant_randomly_tag({arg}, MC_{version}, get_item_type(\"{self.item_name}\"), \"{self.enchantments}\", {int(self.treasure)})"
+                return f"create_enchant_randomly_tag({arg}, version, get_item_type(\"{self.item_name}\"), \"{self.enchantments}\", {int(self.treasure)})"
             return f"create_enchant_randomly_one_enchant({arg}, get_enchantment_from_name(\"{self.enchantments}\"))"
         assert isinstance(self.enchantments, list)
         if len(self.enchantments) == 1:
@@ -105,8 +105,8 @@ class EnchantWithLevelsFunction(LootFunction):
 
     def to_function_call(self, arg: str, version: str):
         if isinstance(self.options, str) and self.options.startswith("#"):
-            return f"create_enchant_with_levels_tag({arg}, MC_{version}, \"{self.item_name}\", get_item_type(\"{self.item_name}\"), {self.min}, {self.max}, \"{self.options}\", {self.is_treasure})"
-        return f"create_enchant_with_levels({arg}, MC_{version}, \"{self.item_name}\", get_item_type(\"{self.item_name}\"), {self.min}, {self.max}, {self.is_treasure})"
+            return f"create_enchant_with_levels_tag({arg}, version, \"{self.item_name}\", get_item_type(\"{self.item_name}\"), {self.min}, {self.max}, \"{self.options}\", {self.is_treasure})"
+        return f"create_enchant_with_levels({arg}, version, \"{self.item_name}\", get_item_type(\"{self.item_name}\"), {self.min}, {self.max}, {self.is_treasure})"
 
 
 class PoolEntry:
@@ -258,7 +258,7 @@ def gen_c_loot_table(c_file_name: str, context: LootTableContext) -> str:
         #include "../loot_table_context.h"
         #include "../loot_table_parser.h"
 
-        static int initialised = 0;
+        static int initialised_version = 0;
 
         static char* item_names[{len(context.item_names)}] = {{\"{"\", \"".join(context.item_names)}\"}};
         static int global_item_ids[{len(context.item_names)}] = {{{", ".join(f"ITEM_{item_name[len('minecraft:'):].upper()}" for item_name in context.item_names)}}};
@@ -314,7 +314,7 @@ def gen_c_loot_table(c_file_name: str, context: LootTableContext) -> str:
     file_content += dedent(f"""
         static LootPool loot_pools[{len(context.loot_pools)}] = {{{", ".join(f"{c_file_name}__{i}" for i in range(len(context.loot_pools)))}}};
         static LootTableContext context = {{
-            .version = MC_{context.version},
+            .version = 0, // set by init
             .item_count = {len(context.item_names)},
             .item_names = item_names,
             .global_item_ids = global_item_ids,
@@ -328,7 +328,8 @@ def gen_c_loot_table(c_file_name: str, context: LootTableContext) -> str:
         """)
 
     file_content += dedent(f"""
-        static void create_loot_functions() {{
+        static void create_loot_functions(int version) {{
+    (void)version; // unused when the table has no enchantment functions
         """)
 
     for pool_idx, loot_pool in enumerate(context.loot_pools):
@@ -343,10 +344,13 @@ def gen_c_loot_table(c_file_name: str, context: LootTableContext) -> str:
     file_content += f"}}\n"
 
     file_content += dedent(f"""
-        LootTableContext* init_{c_file_name}() {{
-            if (!initialised) {{
-                create_loot_functions();
-                initialised = 1;
+        LootTableContext* init_{c_file_name}(int version) {{
+            // Rebuild if the requested version differs: enchantment registries are
+            // version dependent, and one table file serves a range of versions.
+            if (initialised_version != version) {{
+                context.version = version;
+                create_loot_functions(version);
+                initialised_version = version;
             }}
             return &context;
         }}
@@ -363,7 +367,7 @@ def gen_c_loot_table_header(c_file_name: str) -> str:
         
         #include "../loot_table_context.h"
         
-        LootTableContext* init_{c_file_name}();
+        LootTableContext* init_{c_file_name}(int version);
         
         #endif //{c_file_name.upper()}_H
         """)

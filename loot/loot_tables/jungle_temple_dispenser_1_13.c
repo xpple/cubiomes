@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[1] = {"minecraft:arrow"};
 static int global_item_ids[1] = {ITEM_ARROW};
@@ -32,7 +32,7 @@ static const LootPool jungle_temple_dispenser_1_13__0 = {
 
 static LootPool loot_pools[1] = {jungle_temple_dispenser_1_13__0};
 static LootTableContext context = {
-    .version = MC_1_13,
+    .version = 0, // set by init
     .item_count = 1,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -44,15 +44,19 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     create_set_count(&(loot_pool__0->loot_functions[0]), 2, 7);
 }
 
-LootTableContext* init_jungle_temple_dispenser_1_13() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_jungle_temple_dispenser_1_13(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }

@@ -4,6 +4,6 @@
 
 #include "../loot_table_context.h"
 
-LootTableContext* init_shipwreck_treasure_1_20();
+LootTableContext* init_shipwreck_treasure_1_20(int version);
 
 #endif //SHIPWRECK_TREASURE_1_20_H

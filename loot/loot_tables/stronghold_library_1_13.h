@@ -4,6 +4,6 @@
 
 #include "../loot_table_context.h"
 
-LootTableContext* init_stronghold_library_1_13();
+LootTableContext* init_stronghold_library_1_13(int version);
 
 #endif //STRONGHOLD_LIBRARY_1_13_H

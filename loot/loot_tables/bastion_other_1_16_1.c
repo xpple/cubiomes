@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[27] = {"minecraft:crossbow", "minecraft:ancient_debris", "minecraft:netherite_scrap", "minecraft:spectral_arrow", "minecraft:piglin_banner_pattern", "minecraft:music_disc_pigstep", "minecraft:book", "minecraft:golden_boots", "minecraft:gold_block", "minecraft:crossbow", "minecraft:gold_ingot", "minecraft:iron_ingot", "minecraft:golden_sword", "minecraft:golden_chestplate", "minecraft:golden_helmet", "minecraft:golden_leggings", "minecraft:golden_boots", "minecraft:crying_obsidian", "minecraft:gilded_blackstone", "minecraft:chain", "minecraft:magma_cream", "minecraft:bone_block", "minecraft:iron_nugget", "minecraft:obsidian", "minecraft:gold_nugget", "minecraft:string", "minecraft:arrow"};
 static int global_item_ids[27] = {ITEM_CROSSBOW, ITEM_ANCIENT_DEBRIS, ITEM_NETHERITE_SCRAP, ITEM_SPECTRAL_ARROW, ITEM_PIGLIN_BANNER_PATTERN, ITEM_MUSIC_DISC_PIGSTEP, ITEM_BOOK, ITEM_GOLDEN_BOOTS, ITEM_GOLD_BLOCK, ITEM_CROSSBOW, ITEM_GOLD_INGOT, ITEM_IRON_INGOT, ITEM_GOLDEN_SWORD, ITEM_GOLDEN_CHESTPLATE, ITEM_GOLDEN_HELMET, ITEM_GOLDEN_LEGGINGS, ITEM_GOLDEN_BOOTS, ITEM_CRYING_OBSIDIAN, ITEM_GILDED_BLACKSTONE, ITEM_CHAIN, ITEM_MAGMA_CREAM, ITEM_BONE_BLOCK, ITEM_IRON_NUGGET, ITEM_OBSIDIAN, ITEM_GOLD_NUGGET, ITEM_STRING, ITEM_ARROW};
@@ -66,7 +66,7 @@ static const LootPool bastion_other_1_16_1__2 = {
 
 static LootPool loot_pools[3] = {bastion_other_1_16_1__0, bastion_other_1_16_1__1, bastion_other_1_16_1__2};
 static LootTableContext context = {
-    .version = MC_1_16_1,
+    .version = 0, // set by init
     .item_count = 27,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -78,10 +78,11 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     create_skip_calls(&(loot_pool__0->loot_functions[0]), 1);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[1]), MC_1_16_1, get_item_type("minecraft:crossbow"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[1]), version, get_item_type("minecraft:crossbow"), 0);
     create_set_count(&(loot_pool__0->loot_functions[2]), 1, 1);
     create_set_count(&(loot_pool__0->loot_functions[3]), 1, 1);
     create_set_count(&(loot_pool__0->loot_functions[4]), 2, 15);
@@ -113,10 +114,13 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__2->loot_functions[9]), 5, 17);
 }
 
-LootTableContext* init_bastion_other_1_16_1() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_bastion_other_1_16_1(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }

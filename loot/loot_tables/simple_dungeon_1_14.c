@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[24] = {"minecraft:saddle", "minecraft:golden_apple", "minecraft:enchanted_golden_apple", "minecraft:music_disc_13", "minecraft:music_disc_cat", "minecraft:name_tag", "minecraft:golden_horse_armor", "minecraft:iron_horse_armor", "minecraft:diamond_horse_armor", "minecraft:book", "minecraft:iron_ingot", "minecraft:gold_ingot", "minecraft:bread", "minecraft:wheat", "minecraft:bucket", "minecraft:redstone", "minecraft:coal", "minecraft:melon_seeds", "minecraft:pumpkin_seeds", "minecraft:beetroot_seeds", "minecraft:bone", "minecraft:gunpowder", "minecraft:rotten_flesh", "minecraft:string"};
 static int global_item_ids[24] = {ITEM_SADDLE, ITEM_GOLDEN_APPLE, ITEM_ENCHANTED_GOLDEN_APPLE, ITEM_MUSIC_DISC_13, ITEM_MUSIC_DISC_CAT, ITEM_NAME_TAG, ITEM_GOLDEN_HORSE_ARMOR, ITEM_IRON_HORSE_ARMOR, ITEM_DIAMOND_HORSE_ARMOR, ITEM_BOOK, ITEM_IRON_INGOT, ITEM_GOLD_INGOT, ITEM_BREAD, ITEM_WHEAT, ITEM_BUCKET, ITEM_REDSTONE, ITEM_COAL, ITEM_MELON_SEEDS, ITEM_PUMPKIN_SEEDS, ITEM_BEETROOT_SEEDS, ITEM_BONE, ITEM_GUNPOWDER, ITEM_ROTTEN_FLESH, ITEM_STRING};
@@ -66,7 +66,7 @@ static const LootPool simple_dungeon_1_14__2 = {
 
 static LootPool loot_pools[3] = {simple_dungeon_1_14__0, simple_dungeon_1_14__1, simple_dungeon_1_14__2};
 static LootTableContext context = {
-    .version = MC_1_14,
+    .version = 0, // set by init
     .item_count = 24,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -78,9 +78,10 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
-    create_enchant_randomly(&(loot_pool__0->loot_functions[0]), MC_1_14, get_item_type("minecraft:book"), 0);
+    create_enchant_randomly(&(loot_pool__0->loot_functions[0]), version, get_item_type("minecraft:book"), 0);
     LootPool* loot_pool__1 = &(context.loot_pools[1]);
     create_set_count(&(loot_pool__1->loot_functions[0]), 1, 4);
     create_set_count(&(loot_pool__1->loot_functions[1]), 1, 4);
@@ -97,10 +98,13 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__2->loot_functions[3]), 1, 8);
 }
 
-LootTableContext* init_simple_dungeon_1_14() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_simple_dungeon_1_14(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }
