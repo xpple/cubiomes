@@ -8,46 +8,95 @@
 #include <stdio.h>
 
 const struct MobEffect MOB_EFFECTS[EFFECT_NUM] = {
-    [EFFECT_SPEED] = {EFFECT_SPEED, "minecraft:speed", 0},
-    [EFFECT_SLOWNESS] = {EFFECT_SLOWNESS, "minecraft:slowness", 0},
-    [EFFECT_HASTE] = {EFFECT_HASTE, "minecraft:haste", 0},
-    [EFFECT_MINING_FATIGUE] = {EFFECT_MINING_FATIGUE, "minecraft:mining_fatigue", 0},
-    [EFFECT_STRENGTH] = {EFFECT_STRENGTH, "minecraft:strength", 0},
-    [EFFECT_INSTANT_HEALTH] = {EFFECT_INSTANT_HEALTH, "minecraft:instant_health", 1},
-    [EFFECT_INSTANT_DAMAGE] = {EFFECT_INSTANT_DAMAGE, "minecraft:instant_damage", 1},
-    [EFFECT_JUMP_BOOST] = {EFFECT_JUMP_BOOST, "minecraft:jump_boost", 0},
-    [EFFECT_NAUSEA] = {EFFECT_NAUSEA, "minecraft:nausea", 0},
-    [EFFECT_REGENERATION] = {EFFECT_REGENERATION, "minecraft:regeneration", 0},
-    [EFFECT_RESISTANCE] = {EFFECT_RESISTANCE, "minecraft:resistance", 0},
-    [EFFECT_FIRE_RESISTANCE] = {EFFECT_FIRE_RESISTANCE, "minecraft:fire_resistance", 0},
-    [EFFECT_WATER_BREATHING] = {EFFECT_WATER_BREATHING, "minecraft:water_breathing", 0},
-    [EFFECT_INVISIBILITY] = {EFFECT_INVISIBILITY, "minecraft:invisibility", 0},
-    [EFFECT_BLINDNESS] = {EFFECT_BLINDNESS, "minecraft:blindness", 0},
-    [EFFECT_NIGHT_VISION] = {EFFECT_NIGHT_VISION, "minecraft:night_vision", 0},
-    [EFFECT_HUNGER] = {EFFECT_HUNGER, "minecraft:hunger", 0},
-    [EFFECT_WEAKNESS] = {EFFECT_WEAKNESS, "minecraft:weakness", 0},
-    [EFFECT_POISON] = {EFFECT_POISON, "minecraft:poison", 0},
-    [EFFECT_WITHER] = {EFFECT_WITHER, "minecraft:wither", 0},
-    [EFFECT_HEALTH_BOOST] = {EFFECT_HEALTH_BOOST, "minecraft:health_boost", 0},
-    [EFFECT_ABSORPTION] = {EFFECT_ABSORPTION, "minecraft:absorption", 0},
-    [EFFECT_SATURATION] = {EFFECT_SATURATION, "minecraft:saturation", 1},
-    [EFFECT_GLOWING] = {EFFECT_GLOWING, "minecraft:glowing", 0},
-    [EFFECT_LEVITATION] = {EFFECT_LEVITATION, "minecraft:levitation", 0},
-    [EFFECT_LUCK] = {EFFECT_LUCK, "minecraft:luck", 0},
-    [EFFECT_UNLUCK] = {EFFECT_UNLUCK, "minecraft:unluck", 0},
-    [EFFECT_SLOW_FALLING] = {EFFECT_SLOW_FALLING, "minecraft:slow_falling", 0},
-    [EFFECT_CONDUIT_POWER] = {EFFECT_CONDUIT_POWER, "minecraft:conduit_power", 0},
-    [EFFECT_DOLPHINS_GRACE] = {EFFECT_DOLPHINS_GRACE, "minecraft:dolphins_grace", 0},
-    [EFFECT_BAD_OMEN] = {EFFECT_BAD_OMEN, "minecraft:bad_omen", 0},
-    [EFFECT_HERO_OF_THE_VILLAGE] = {EFFECT_HERO_OF_THE_VILLAGE, "minecraft:hero_of_the_village", 0},
-    [EFFECT_DARKNESS] = {EFFECT_DARKNESS, "minecraft:darkness", 0},
-    [EFFECT_TRIAL_OMEN] = {EFFECT_TRIAL_OMEN, "minecraft:trial_omen", 0},
-    [EFFECT_RAID_OMEN] = {EFFECT_RAID_OMEN, "minecraft:raid_omen", 0},
-    [EFFECT_WIND_CHARGED] = {EFFECT_WIND_CHARGED, "minecraft:wind_charged", 0},
-    [EFFECT_WEAVING] = {EFFECT_WEAVING, "minecraft:weaving", 0},
-    [EFFECT_OOZING] = {EFFECT_OOZING, "minecraft:oozing", 0},
-    [EFFECT_INFESTED] = {EFFECT_INFESTED, "minecraft:infested", 0},
-    [EFFECT_BREATH_OF_THE_NAUTILUS] = {EFFECT_BREATH_OF_THE_NAUTILUS, "minecraft:breath_of_the_nautilus", 0},
+    [EFFECT_SPEED] = {"minecraft:speed", EFFECT_SPEED, 0},
+    [EFFECT_SLOWNESS] = {"minecraft:slowness", EFFECT_SLOWNESS, 0},
+    [EFFECT_HASTE] = {"minecraft:haste", EFFECT_HASTE, 0},
+    [EFFECT_MINING_FATIGUE] = {"minecraft:mining_fatigue", EFFECT_MINING_FATIGUE, 0},
+    [EFFECT_STRENGTH] = {"minecraft:strength", EFFECT_STRENGTH, 0},
+    [EFFECT_INSTANT_HEALTH] = {"minecraft:instant_health", EFFECT_INSTANT_HEALTH, 1},
+    [EFFECT_INSTANT_DAMAGE] = {"minecraft:instant_damage", EFFECT_INSTANT_DAMAGE, 1},
+    [EFFECT_JUMP_BOOST] = {"minecraft:jump_boost", EFFECT_JUMP_BOOST, 0},
+    [EFFECT_NAUSEA] = {"minecraft:nausea", EFFECT_NAUSEA, 0},
+    [EFFECT_REGENERATION] = {"minecraft:regeneration", EFFECT_REGENERATION, 0},
+    [EFFECT_RESISTANCE] = {"minecraft:resistance", EFFECT_RESISTANCE, 0},
+    [EFFECT_FIRE_RESISTANCE] = {"minecraft:fire_resistance", EFFECT_FIRE_RESISTANCE, 0},
+    [EFFECT_WATER_BREATHING] = {"minecraft:water_breathing", EFFECT_WATER_BREATHING, 0},
+    [EFFECT_INVISIBILITY] = {"minecraft:invisibility", EFFECT_INVISIBILITY, 0},
+    [EFFECT_BLINDNESS] = {"minecraft:blindness", EFFECT_BLINDNESS, 0},
+    [EFFECT_NIGHT_VISION] = {"minecraft:night_vision", EFFECT_NIGHT_VISION, 0},
+    [EFFECT_HUNGER] = {"minecraft:hunger", EFFECT_HUNGER, 0},
+    [EFFECT_WEAKNESS] = {"minecraft:weakness", EFFECT_WEAKNESS, 0},
+    [EFFECT_POISON] = {"minecraft:poison", EFFECT_POISON, 0},
+    [EFFECT_WITHER] = {"minecraft:wither", EFFECT_WITHER, 0},
+    [EFFECT_HEALTH_BOOST] = {"minecraft:health_boost", EFFECT_HEALTH_BOOST, 0},
+    [EFFECT_ABSORPTION] = {"minecraft:absorption", EFFECT_ABSORPTION, 0},
+    [EFFECT_SATURATION] = {"minecraft:saturation", EFFECT_SATURATION, 1},
+    [EFFECT_GLOWING] = {"minecraft:glowing", EFFECT_GLOWING, 0},
+    [EFFECT_LEVITATION] = {"minecraft:levitation", EFFECT_LEVITATION, 0},
+    [EFFECT_LUCK] = {"minecraft:luck", EFFECT_LUCK, 0},
+    [EFFECT_UNLUCK] = {"minecraft:unluck", EFFECT_UNLUCK, 0},
+    [EFFECT_SLOW_FALLING] = {"minecraft:slow_falling", EFFECT_SLOW_FALLING, 0},
+    [EFFECT_CONDUIT_POWER] = {"minecraft:conduit_power", EFFECT_CONDUIT_POWER, 0},
+    [EFFECT_DOLPHINS_GRACE] = {"minecraft:dolphins_grace", EFFECT_DOLPHINS_GRACE, 0},
+    [EFFECT_BAD_OMEN] = {"minecraft:bad_omen", EFFECT_BAD_OMEN, 0},
+    [EFFECT_HERO_OF_THE_VILLAGE] = {"minecraft:hero_of_the_village", EFFECT_HERO_OF_THE_VILLAGE, 0},
+    [EFFECT_DARKNESS] = {"minecraft:darkness", EFFECT_DARKNESS, 0},
+    [EFFECT_TRIAL_OMEN] = {"minecraft:trial_omen", EFFECT_TRIAL_OMEN, 0},
+    [EFFECT_RAID_OMEN] = {"minecraft:raid_omen", EFFECT_RAID_OMEN, 0},
+    [EFFECT_WIND_CHARGED] = {"minecraft:wind_charged", EFFECT_WIND_CHARGED, 0},
+    [EFFECT_WEAVING] = {"minecraft:weaving", EFFECT_WEAVING, 0},
+    [EFFECT_OOZING] = {"minecraft:oozing", EFFECT_OOZING, 0},
+    [EFFECT_INFESTED] = {"minecraft:infested", EFFECT_INFESTED, 0},
+    [EFFECT_BREATH_OF_THE_NAUTILUS] = {"minecraft:breath_of_the_nautilus", EFFECT_BREATH_OF_THE_NAUTILUS, 0},
+};
+
+const struct Potion POTIONS[POTION_NUM] = {
+    [POTION_WATER] = {"minecraft:water", POTION_WATER, 0, {}},
+    [POTION_MUNDANE] = {"minecraft:mundane", POTION_MUNDANE, 0, {}},
+    [POTION_THICK] = {"minecraft:thick", POTION_THICK, 0, {}},
+    [POTION_AWKWARD] = {"minecraft:awkward", POTION_AWKWARD, 0, {}},
+    [POTION_NIGHT_VISION] = {"minecraft:night_vision", POTION_NIGHT_VISION, 1, {{EFFECT_NIGHT_VISION, 3600}}},
+    [POTION_LONG_NIGHT_VISION] = {"minecraft:long_night_vision", POTION_LONG_NIGHT_VISION, 1, {{EFFECT_NIGHT_VISION, 9600}}},
+    [POTION_INVISIBILITY] = {"minecraft:invisibility", POTION_INVISIBILITY, 1, {{EFFECT_INVISIBILITY, 3600}}},
+    [POTION_LONG_INVISIBILITY] = {"minecraft:long_invisibility", POTION_LONG_INVISIBILITY, 1, {{EFFECT_INVISIBILITY, 9600}}},
+    [POTION_LEAPING] = {"minecraft:leaping", POTION_LEAPING, 1, {{EFFECT_JUMP_BOOST, 3600}}},
+    [POTION_LONG_LEAPING] = {"minecraft:long_leaping", POTION_LONG_LEAPING, 1, {{EFFECT_JUMP_BOOST, 9600}}},
+    [POTION_STRONG_LEAPING] = {"minecraft:strong_leaping", POTION_STRONG_LEAPING, 1, {{EFFECT_JUMP_BOOST, 1800}}},
+    [POTION_FIRE_RESISTANCE] = {"minecraft:fire_resistance", POTION_FIRE_RESISTANCE, 1, {{EFFECT_FIRE_RESISTANCE, 3600}}},
+    [POTION_LONG_FIRE_RESISTANCE] = {"minecraft:long_fire_resistance", POTION_LONG_FIRE_RESISTANCE, 1, {{EFFECT_FIRE_RESISTANCE, 9600}}},
+    [POTION_SWIFTNESS] = {"minecraft:swiftness", POTION_SWIFTNESS, 1, {{EFFECT_SPEED, 3600}}},
+    [POTION_LONG_SWIFTNESS] = {"minecraft:long_swiftness", POTION_LONG_SWIFTNESS, 1, {{EFFECT_SPEED, 9600}}},
+    [POTION_STRONG_SWIFTNESS] = {"minecraft:strong_swiftness", POTION_STRONG_SWIFTNESS, 1, {{EFFECT_SPEED, 1800}}},
+    [POTION_SLOWNESS] = {"minecraft:slowness", POTION_SLOWNESS, 1, {{EFFECT_SLOWNESS, 1800}}},
+    [POTION_LONG_SLOWNESS] = {"minecraft:long_slowness", POTION_LONG_SLOWNESS, 1, {{EFFECT_SLOWNESS, 4800}}},
+    [POTION_STRONG_SLOWNESS] = {"minecraft:strong_slowness", POTION_STRONG_SLOWNESS, 1, {{EFFECT_SLOWNESS, 400}}},
+    [POTION_TURTLE_MASTER] = {"minecraft:turtle_master", POTION_TURTLE_MASTER, 2, {{EFFECT_SLOWNESS, 400}, {EFFECT_RESISTANCE, 400}}},
+    [POTION_LONG_TURTLE_MASTER] = {"minecraft:long_turtle_master", POTION_LONG_TURTLE_MASTER, 2, {{EFFECT_SLOWNESS, 800}, {EFFECT_RESISTANCE, 800}}},
+    [POTION_STRONG_TURTLE_MASTER] = {"minecraft:strong_turtle_master", POTION_STRONG_TURTLE_MASTER, 2, {{EFFECT_SLOWNESS, 400}, {EFFECT_RESISTANCE, 400}}},
+    [POTION_WATER_BREATHING] = {"minecraft:water_breathing", POTION_WATER_BREATHING, 1, {{EFFECT_WATER_BREATHING, 3600}}},
+    [POTION_LONG_WATER_BREATHING] = {"minecraft:long_water_breathing", POTION_LONG_WATER_BREATHING, 1, {{EFFECT_WATER_BREATHING, 9600}}},
+    [POTION_HEALING] = {"minecraft:healing", POTION_HEALING, 1, {{EFFECT_INSTANT_HEALTH, 1}}},
+    [POTION_STRONG_HEALING] = {"minecraft:strong_healing", POTION_STRONG_HEALING, 1, {{EFFECT_INSTANT_HEALTH, 1}}},
+    [POTION_HARMING] = {"minecraft:harming", POTION_HARMING, 1, {{EFFECT_INSTANT_DAMAGE, 1}}},
+    [POTION_STRONG_HARMING] = {"minecraft:strong_harming", POTION_STRONG_HARMING, 1, {{EFFECT_INSTANT_DAMAGE, 1}}},
+    [POTION_POISON] = {"minecraft:poison", POTION_POISON, 1, {{EFFECT_POISON, 900}}},
+    [POTION_LONG_POISON] = {"minecraft:long_poison", POTION_LONG_POISON, 1, {{EFFECT_POISON, 1800}}},
+    [POTION_STRONG_POISON] = {"minecraft:strong_poison", POTION_STRONG_POISON, 1, {{EFFECT_POISON, 432}}},
+    [POTION_REGENERATION] = {"minecraft:regeneration", POTION_REGENERATION, 1, {{EFFECT_REGENERATION, 900}}},
+    [POTION_LONG_REGENERATION] = {"minecraft:long_regeneration", POTION_LONG_REGENERATION, 1, {{EFFECT_REGENERATION, 1800}}},
+    [POTION_STRONG_REGENERATION] = {"minecraft:strong_regeneration", POTION_STRONG_REGENERATION, 1, {{EFFECT_REGENERATION, 450}}},
+    [POTION_STRENGTH] = {"minecraft:strength", POTION_STRENGTH, 1, {{EFFECT_STRENGTH, 3600}}},
+    [POTION_LONG_STRENGTH] = {"minecraft:long_strength", POTION_LONG_STRENGTH, 1, {{EFFECT_STRENGTH, 9600}}},
+    [POTION_STRONG_STRENGTH] = {"minecraft:strong_strength", POTION_STRONG_STRENGTH, 1, {{EFFECT_STRENGTH, 1800}}},
+    [POTION_WEAKNESS] = {"minecraft:weakness", POTION_WEAKNESS, 1, {{EFFECT_WEAKNESS, 1800}}},
+    [POTION_LONG_WEAKNESS] = {"minecraft:long_weakness", POTION_LONG_WEAKNESS, 1, {{EFFECT_WEAKNESS, 4800}}},
+    [POTION_LUCK] = {"minecraft:luck", POTION_LUCK, 1, {{EFFECT_LUCK, 6000}}},
+    [POTION_SLOW_FALLING] = {"minecraft:slow_falling", POTION_SLOW_FALLING, 1, {{EFFECT_SLOW_FALLING, 1800}}},
+    [POTION_LONG_SLOW_FALLING] = {"minecraft:long_slow_falling", POTION_LONG_SLOW_FALLING, 1, {{EFFECT_SLOW_FALLING, 4800}}},
+    [POTION_WIND_CHARGED] = {"minecraft:wind_charged", POTION_WIND_CHARGED, 1, {{EFFECT_WIND_CHARGED, 3600}}},
+    [POTION_WEAVING] = {"minecraft:weaving", POTION_WEAVING, 1, {{EFFECT_WEAVING, 3600}}},
+    [POTION_OOZING] = {"minecraft:oozing", POTION_OOZING, 1, {{EFFECT_OOZING, 3600}}},
+    [POTION_INFESTED] = {"minecraft:infested", POTION_INFESTED, 1, {{EFFECT_INFESTED, 3600}}},
 };
 
 // ----------------------------------------------------------------------------------------
@@ -85,29 +134,10 @@ static void set_effect_function(uint64_t* rand, ItemStack* is, const void* param
 static void set_potion_function(uint64_t* rand, ItemStack* is, const void* params)
 {
     int* varparams_int = (int*)params;
-    MobEffect mob_effect = *(MobEffect *)varparams_int;
-    is->mob_effect.effect = mob_effect.effect;
-    switch (mob_effect.effect) {
-    case EFFECT_SPEED:              is->mob_effect.duration = 3600; break;
-    case EFFECT_SLOWNESS:           is->mob_effect.duration = 1800; break;
-    case EFFECT_STRENGTH:           is->mob_effect.duration = 3600; break;
-    case EFFECT_INSTANT_HEALTH:     is->mob_effect.duration = 0;    break;
-    case EFFECT_INSTANT_DAMAGE:     is->mob_effect.duration = 0;    break;
-    case EFFECT_JUMP_BOOST:         is->mob_effect.duration = 3600; break;
-    case EFFECT_REGENERATION:       is->mob_effect.duration = 900;  break;
-    case EFFECT_FIRE_RESISTANCE:    is->mob_effect.duration = 3600; break;
-    case EFFECT_WATER_BREATHING:    is->mob_effect.duration = 3600; break;
-    case EFFECT_INVISIBILITY:       is->mob_effect.duration = 3600; break;
-    case EFFECT_NIGHT_VISION:       is->mob_effect.duration = 3600; break;
-    case EFFECT_POISON:             is->mob_effect.duration = 900;  break;
-    case EFFECT_WEAKNESS:           is->mob_effect.duration = 1800; break;
-    case EFFECT_LUCK:               is->mob_effect.duration = 6000; break;
-    case EFFECT_SLOW_FALLING:       is->mob_effect.duration = 1800; break;
-    case EFFECT_WIND_CHARGED:       is->mob_effect.duration = 3600; break;
-    case EFFECT_WEAVING:            is->mob_effect.duration = 3600; break;
-    case EFFECT_OOZING:             is->mob_effect.duration = 3600; break;
-    case EFFECT_INFESTED:           is->mob_effect.duration = 3600; break;
-    default: UNREACHABLE();
+    Potion potion = *(Potion *)varparams_int;
+    // currently only abandoned camps use potions, where each potion has exactly one mob effect
+    if (potion.mob_effect_count == 1) {
+        is->mob_effect = potion.mob_effects[0];
     }
 }
 
@@ -356,12 +386,12 @@ void create_set_effect(LootFunction* lf, const int count, const MobEffectEntry m
     lf->fun = set_effect_function;
 }
 
-void create_set_potion(LootFunction* lf, const MobEffect *mobEffect)
+void create_set_potion(LootFunction* lf, const Potion *potion)
 {
     init_function(lf);
-    lf->varparams_int = (int*)malloc(sizeof(MobEffect));
+    lf->varparams_int = (int*)malloc(sizeof(Potion));
     lf->params = lf->varparams_int;
-    memcpy(lf->varparams_int, mobEffect, sizeof(MobEffect));
+    memcpy(lf->varparams_int, potion, sizeof(Potion));
     lf->fun = set_potion_function;
 }
 

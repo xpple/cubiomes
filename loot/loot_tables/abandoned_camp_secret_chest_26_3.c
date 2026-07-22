@@ -82,13 +82,13 @@ static void create_loot_functions() {
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     create_set_count(&(loot_pool__0->loot_functions[0]), 1, 1);
     create_set_count(&(loot_pool__0->loot_functions[1]), 1, 1);
-    create_set_potion(&(loot_pool__0->loot_functions[2]), get_mob_effect_from_name("minecraft:healing"));
+    create_set_potion(&(loot_pool__0->loot_functions[2]), get_potion_from_name("minecraft:healing"));
     create_set_count(&(loot_pool__0->loot_functions[3]), 1, 1);
-    create_set_potion(&(loot_pool__0->loot_functions[4]), get_mob_effect_from_name("minecraft:leaping"));
+    create_set_potion(&(loot_pool__0->loot_functions[4]), get_potion_from_name("minecraft:leaping"));
     create_set_count(&(loot_pool__0->loot_functions[5]), 1, 1);
-    create_set_potion(&(loot_pool__0->loot_functions[6]), get_mob_effect_from_name("minecraft:night_vision"));
+    create_set_potion(&(loot_pool__0->loot_functions[6]), get_potion_from_name("minecraft:night_vision"));
     create_set_count(&(loot_pool__0->loot_functions[7]), 1, 1);
-    create_set_potion(&(loot_pool__0->loot_functions[8]), get_mob_effect_from_name("minecraft:swiftness"));
+    create_set_potion(&(loot_pool__0->loot_functions[8]), get_potion_from_name("minecraft:swiftness"));
     LootPool* loot_pool__1 = &(context.loot_pools[1]);
     create_set_count(&(loot_pool__1->loot_functions[0]), 1, 1);
     create_set_count(&(loot_pool__1->loot_functions[1]), 1, 2);

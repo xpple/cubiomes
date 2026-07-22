@@ -147,14 +147,64 @@ enum MobEffectType {
     EFFECT_NUM
 };
 
+enum PotionType {
+    POTION_WATER,
+    POTION_MUNDANE,
+    POTION_THICK,
+    POTION_AWKWARD,
+    POTION_NIGHT_VISION,
+    POTION_LONG_NIGHT_VISION,
+    POTION_INVISIBILITY,
+    POTION_LONG_INVISIBILITY,
+    POTION_LEAPING,
+    POTION_LONG_LEAPING,
+    POTION_STRONG_LEAPING,
+    POTION_FIRE_RESISTANCE,
+    POTION_LONG_FIRE_RESISTANCE,
+    POTION_SWIFTNESS,
+    POTION_LONG_SWIFTNESS,
+    POTION_STRONG_SWIFTNESS,
+    POTION_SLOWNESS,
+    POTION_LONG_SLOWNESS,
+    POTION_STRONG_SLOWNESS,
+    POTION_TURTLE_MASTER,
+    POTION_LONG_TURTLE_MASTER,
+    POTION_STRONG_TURTLE_MASTER,
+    POTION_WATER_BREATHING,
+    POTION_LONG_WATER_BREATHING,
+    POTION_HEALING,
+    POTION_STRONG_HEALING,
+    POTION_HARMING,
+    POTION_STRONG_HARMING,
+    POTION_POISON,
+    POTION_LONG_POISON,
+    POTION_STRONG_POISON,
+    POTION_REGENERATION,
+    POTION_LONG_REGENERATION,
+    POTION_STRONG_REGENERATION,
+    POTION_STRENGTH,
+    POTION_LONG_STRENGTH,
+    POTION_STRONG_STRENGTH,
+    POTION_WEAKNESS,
+    POTION_LONG_WEAKNESS,
+    POTION_LUCK,
+    POTION_SLOW_FALLING,
+    POTION_LONG_SLOW_FALLING,
+    POTION_WIND_CHARGED,
+    POTION_WEAVING,
+    POTION_OOZING,
+    POTION_INFESTED,
+    POTION_NUM,
+};
+
 typedef enum ItemType ItemType;
 typedef enum Enchantment Enchantment;
 
 // ----------------------------------------------------------------------------------------
 
 STRUCT(MobEffect) {
-    const int effect;
     const char* effect_name;
+    const int effect;
     const int is_instantaneous;
 };
 
@@ -170,6 +220,15 @@ STRUCT(MobEffectInstance) {
     int effect;
     int duration;
 };
+
+STRUCT(Potion) {
+    const char *potion_name;
+    const int potion;
+    const int mob_effect_count;
+    const MobEffectInstance mob_effects[2];
+};
+
+extern const struct Potion POTIONS[POTION_NUM];
 
 typedef struct EnchantInstance EnchantInstance;
 struct EnchantInstance {
@@ -225,7 +284,7 @@ static inline int roll_count_uniform(uint64_t* rand, const int min, const int ma
 
 void create_set_count(LootFunction* lf, const int min, const int max);
 void create_set_effect(LootFunction* lf, const int count, const MobEffectEntry mobEffects[]);
-void create_set_potion(LootFunction* lf, const MobEffect *mobEffect);
+void create_set_potion(LootFunction* lf, const Potion *potion);
 void create_set_damage(LootFunction* lf);
 void create_skip_calls(LootFunction* lf, const int skip_count);
 void create_no_op(LootFunction* lf);

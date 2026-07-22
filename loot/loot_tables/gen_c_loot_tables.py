@@ -42,7 +42,7 @@ class SetPotionFunction(LootFunction):
 
 
     def to_function_call(self, arg: str, version: str):
-        return f"create_set_potion({arg}, get_mob_effect_from_name(\"{self.potion}\"))"
+        return f"create_set_potion({arg}, get_potion_from_name(\"{self.potion}\"))"
 
 
 class SetDamageFunction(LootFunction):
