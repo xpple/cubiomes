@@ -3,7 +3,6 @@ import json
 
 from abc import abstractmethod
 from textwrap import dedent, indent
-from warnings import warn
 
 class LootFunction:
     def __init__(self):
@@ -237,10 +236,10 @@ def parse_loot_function(json_function_entry, entry_name: str) -> LootFunction:
         is_treasure = json_function_entry.get("treasure", json_function_entry.get("is_treasure", True))
         return EnchantWithLevelsFunction(entry_name, int(min_level), int(max_level), options, int(is_treasure))
     if json_function == 'exploration_map':
-        warn(f"Ignored loot function 'exploration_map'")
+        warn(f"Ignored loot function '{json_function}'")
         return NoOpFunction()
     if json_function == 'set_name':
-        warn(f"Ignored loot function 'set_name'")
+        warn(f"Ignored loot function '{json_function}'")
         return NoOpFunction()
 
     warn(f"Unsupported loot function '{json_function}'")
@@ -369,6 +368,10 @@ def gen_c_loot_table_header(c_file_name: str) -> str:
         """)
 
     return file_content
+
+
+def warn(msg):
+    print(f"\033[33mWarning:\033[0m {msg}")
 
 
 if __name__ == '__main__':

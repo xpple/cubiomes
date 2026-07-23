@@ -48,6 +48,7 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:eye_armor_trim_smithing_template") == 0) return ITEM_EYE_ARMOR_TRIM_SMITHING_TEMPLATE;
     if (strcmp(name, "minecraft:feather") == 0) return ITEM_FEATHER;
     if (strcmp(name, "minecraft:fire_charge") == 0) return ITEM_FIRE_CHARGE;
+    if (strcmp(name, "minecraft:fishing_rod") == 0) return ITEM_FISHING_ROD;
     if (strcmp(name, "minecraft:flint") == 0) return ITEM_FLINT;
     if (strcmp(name, "minecraft:flint_and_steel") == 0) return ITEM_FLINT_AND_STEEL;
     if (strcmp(name, "minecraft:gilded_blackstone") == 0) return ITEM_GILDED_BLACKSTONE;
@@ -120,6 +121,7 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:spider_eye") == 0) return ITEM_SPIDER_EYE;
     if (strcmp(name, "minecraft:spire_armor_trim_smithing_template") == 0) return ITEM_SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE;
     if (strcmp(name, "minecraft:stone_axe") == 0) return ITEM_STONE_AXE;
+    if (strcmp(name, "minecraft:stone_spear") == 0) return ITEM_STONE_SPEAR;
     if (strcmp(name, "minecraft:string") == 0) return ITEM_STRING;
     if (strcmp(name, "minecraft:suspicious_stew") == 0) return ITEM_SUSPICIOUS_STEW;
     if (strcmp(name, "minecraft:tnt") == 0) return ITEM_TNT;
@@ -178,6 +180,7 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_EYE_ARMOR_TRIM_SMITHING_TEMPLATE: return "minecraft:eye_armor_trim_smithing_template";
     case ITEM_FEATHER: return "minecraft:feather";
     case ITEM_FIRE_CHARGE: return "minecraft:fire_charge";
+    case ITEM_FISHING_ROD: return "minecraft:fishing_rod";
     case ITEM_FLINT: return "minecraft:flint";
     case ITEM_FLINT_AND_STEEL: return "minecraft:flint_and_steel";
     case ITEM_GILDED_BLACKSTONE: return "minecraft:gilded_blackstone";
@@ -249,6 +252,7 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_SPIDER_EYE: return "minecraft:spider_eye";
     case ITEM_SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE: return "minecraft:spire_armor_trim_smithing_template";
     case ITEM_STONE_AXE: return "minecraft:stone_axe";
+    case ITEM_STONE_SPEAR: return "minecraft:stone_spear";
     case ITEM_STRING: return "minecraft:string";
     case ITEM_SUSPICIOUS_STEW: return "minecraft:suspicious_stew";
     case ITEM_TNT: return "minecraft:tnt";

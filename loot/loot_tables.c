@@ -62,6 +62,12 @@
 #include "loot_tables/stronghold_crossing_1_13.h"
 #include "loot_tables/stronghold_library_1_13.h"
 #include "loot_tables/stronghold_library_1_20.h"
+#include "loot_tables/underwater_ruin_big_1_13.h"
+#include "loot_tables/underwater_ruin_big_1_18.h"
+#include "loot_tables/underwater_ruin_big_1_21_11.h"
+#include "loot_tables/underwater_ruin_small_1_13.h"
+#include "loot_tables/underwater_ruin_small_1_18.h"
+#include "loot_tables/underwater_ruin_small_1_21_11.h"
 
 int init_loot_table_name(LootTableContext** context, const char* loot_table, int version) {
     if (strcmp(loot_table, "bastion_bridge") == 0) {
@@ -114,6 +120,12 @@ int init_loot_table_name(LootTableContext** context, const char* loot_table, int
     }
     if (strcmp(loot_table, "stronghold_library") == 0) {
         return init_stronghold_library(context, version);
+    }
+    if (strcmp(loot_table, "underwater_ruin_big") == 0) {
+        return init_underwater_ruin_big(context, version);
+    }
+    if (strcmp(loot_table, "underwater_ruin_small") == 0) {
+        return init_underwater_ruin_small(context, version);
     }
     fprintf(stderr, "ERR init_loot_table_name: unsupported loot_table %s\n", loot_table);
     *context = NULL;
@@ -242,5 +254,19 @@ int init_stronghold_crossing(LootTableContext** context, int version) {
 int init_stronghold_library(LootTableContext** context, int version) {
     if (version < MC_1_20) *context = init_stronghold_library_1_13();
     else *context = init_stronghold_library_1_20();
+    return version > MC_1_12;
+}
+
+int init_underwater_ruin_big(LootTableContext** context, int version) {
+    if (version < MC_1_18) *context = init_underwater_ruin_big_1_13();
+    else if (version < MC_1_21_11) *context = init_underwater_ruin_big_1_18();
+    else *context = init_underwater_ruin_big_1_21_11();
+    return version > MC_1_12;
+}
+
+int init_underwater_ruin_small(LootTableContext** context, int version) {
+    if (version < MC_1_18) *context = init_underwater_ruin_small_1_13();
+    else if (version < MC_1_21_11) *context = init_underwater_ruin_small_1_18();
+    else *context = init_underwater_ruin_small_1_21_11();
     return version > MC_1_12;
 }
