@@ -1475,10 +1475,17 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
     o_granite_1161 = {2, 6, 33, 10, providerRange,        0,  0, 80, GraniteOre, GRANITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
     o_granite_117 =  {2, 6, 33, 10, providerUniformRange, 0, 79, -1, GraniteOre, GRANITE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
-    o_gravel_113 =  {1, 4, 33, 8, providerRange,           0,   0, 256, GravelOre, GRAVEL, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_gravel_1161 = {1, 6, 33, 8, providerRange,           0,   0, 256, GravelOre, GRAVEL, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
-    o_gravel_117 =  {1, 6, 33, 8, providerUniformRange,    0, 255,  -1, GravelOre, GRAVEL, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_gravel_113 =  {1, 4, 33, 8,  providerRange,          0,   0, 256, GravelOre, GRAVEL, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_gravel_1161 = {1, 6, 33, 8,  providerRange,          0,   0, 256, GravelOre, GRAVEL, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_gravel_117 =  {1, 6, 33, 8,  providerUniformRange,   0, 255,  -1, GravelOre, GRAVEL, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
     o_gravel_118 =  {1, 6, 33, 14, providerUniformRange, -64, 319,  -1, GravelOre, GRAVEL, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+
+    o_infested_113 =  {0, 5, 9,  7, providerRange,          0,  0, 64, InfestedOre, INFESTED_STONE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_infested_1161 = {2, 7, 9,  7, providerRange,          0,  0, 64, InfestedOre, INFESTED_STONE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_infested_117 =  {4, 7, 9,  7, providerUniformRange,   0, 63, -1, InfestedOre, INFESTED_STONE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_infested_118 =  {2, 7, 9, 14, providerUniformRange, -64, 63, -1, InfestedOre, INFESTED_STONE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_infested_1192 = {4, 7, 9, 14, providerUniformRange, -64, 63, -1, InfestedOre, INFESTED_STONE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
+    o_infested_262 =  {6, 7, 9, 14, providerUniformRange, -64, 63, -1, InfestedOre, INFESTED_STONE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
 
     o_iron_113 =  {6, 4, 9, 20, providerRange,        0,  0, 64, IronOre, IRON_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
     o_iron_1161 = {6, 6, 9, 20, providerRange,        0,  0, 64, IronOre, IRON_ORE, DIM_OVERWORLD, 6, BASE_STONE_OVERWORLD_REPLACEABLES, 0.0F},
@@ -1679,6 +1686,14 @@ int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
         else if (mc < MC_1_18) *oconf = o_gravel_117;
         else *oconf = o_gravel_118;
         return mc > MC_1_12;
+    case InfestedOre:
+        if (mc < MC_1_16_1) *oconf = o_infested_113;
+        else if (mc < MC_1_17) *oconf = o_infested_1161;
+        else if (mc < MC_1_18) *oconf = o_infested_117;
+        else if (mc < MC_1_19_2) *oconf = o_infested_118;
+        else if (mc < MC_26_2) *oconf = o_infested_1192;
+        else *oconf = o_infested_262;
+        return mc > MC_1_12;
     case IronOre:
         if (mc < MC_1_16_1) *oconf = o_iron_113;
         else if (mc < MC_1_17) *oconf = o_iron_1161;
@@ -1863,16 +1878,36 @@ int isViableOreBiome(int mc, int oreType, int biomeID)
     case UpperIronOre:
         return isOverworld(mc, biomeID);
     case EmeraldOre:
-        return (biomeID == mountains || biomeID == mountain_edge || biomeID == wooded_mountains ||
-                biomeID == gravelly_mountains || biomeID == modified_gravelly_mountains || biomeID == windswept_hills ||
-                biomeID == meadow || biomeID == frozen_peaks || biomeID == jagged_peaks ||
-                biomeID == stony_peaks || biomeID == snowy_slopes || biomeID == grove);
+    case InfestedOre:
+        switch (biomeID) {
+        case mountains: // == windswept_hills
+        case mountain_edge:
+        case wooded_mountains: // == windswept_forest
+        case gravelly_mountains: // == windswept_gravelly_hills
+        case modified_gravelly_mountains:
+        case meadow:
+        case grove:
+        case snowy_slopes:
+        case jagged_peaks:
+        case frozen_peaks:
+        case stony_peaks:
+        case cherry_grove:
+            return 1;
+        default: return 0;
+        }
     case ExtraGoldOre:
-        return (biomeID == badlands || biomeID == wooded_badlands_plateau || biomeID == badlands_plateau ||
-                biomeID == eroded_badlands || biomeID == modified_wooded_badlands_plateau || biomeID == modified_badlands_plateau ||
-                biomeID == wooded_badlands);
+        switch (biomeID) {
+        case badlands:
+        case wooded_badlands_plateau: // == wooded_badlands
+        case badlands_plateau:
+        case eroded_badlands:
+        case modified_wooded_badlands_plateau:
+        case modified_badlands_plateau:
+            return 1;
+        default: return 0;
+        }
     case LargeCopperOre:
-        return biomeID == dripstone_caves || biomeID == deep_dark;
+        return biomeID == dripstone_caves || (mc <= MC_1_19_2 && biomeID == deep_dark); // emulate MC-255133
     case ClayOre:
         return biomeID == lush_caves;
     // nether

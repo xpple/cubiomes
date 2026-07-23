@@ -340,6 +340,7 @@ const char* block2str(int btype) {
     case GOLD_ORE:            return "gold_ore";
     case GRANITE:             return "granite";
     case GRAVEL:              return "gravel";
+    case INFESTED_STONE:      return "infested_stone";
     case IRON_ORE:            return "iron_ore";
     case LAPIS_ORE:           return "lapis_ore";
     case MAGMA_BLOCK:         return "magma_block";
@@ -378,6 +379,7 @@ const char* ore2str(int otype)
     case GoldOre:            return "ore_gold";
     case GraniteOre:         return "ore_granite";
     case GravelOre:          return "ore_gravel";
+    case InfestedOre:        return "ore_infested";
     case IronOre:            return "ore_iron";
     case LapisOre:           return "ore_lapis";
     case LargeCopperOre:     return "ore_copper_large";
