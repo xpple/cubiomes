@@ -78,7 +78,7 @@ const char* mc2str(int mc)
     case MC_1_21_3:  return "1.21.3"; break;
     case MC_1_21_4:  return "1.21.4"; break;
     case MC_1_21_5:  return "1.21.5"; break;
-    case MC_1_21_7:  return "1.21.5"; break;
+    case MC_1_21_7:  return "1.21.7"; break;
     case MC_1_21_9:  return "1.21.9"; break;
     case MC_1_21_11: return "1.21.11"; break;
     case MC_26_1: return "26.1"; break;
