@@ -78,7 +78,7 @@ const char* mc2str(int mc)
     case MC_1_21_3:  return "1.21.3"; break;
     case MC_1_21_4:  return "1.21.4"; break;
     case MC_1_21_5:  return "1.21.5"; break;
-    case MC_1_21_7:  return "1.21.7"; break;
+    case MC_1_21_6:  return "1.21.6"; break;
     case MC_1_21_9:  return "1.21.9"; break;
     case MC_1_21_11: return "1.21.11"; break;
     case MC_26_1: return "26.1"; break;
@@ -94,7 +94,7 @@ int str2mc(const char *s)
     if (!strcmp(s, "1.21"))     return MC_1_21;
     if (!strcmp(s, "1.21.11"))  return MC_1_21_11;
     if (!strcmp(s, "1.21.9"))   return MC_1_21_9;
-    if (!strcmp(s, "1.21.7"))   return MC_1_21_7;
+    if (!strcmp(s, "1.21.6"))   return MC_1_21_6;
     if (!strcmp(s, "1.21.5"))   return MC_1_21_5;
     if (!strcmp(s, "1.21.4"))   return MC_1_21_4;
     if (!strcmp(s, "1.21 WD"))  return MC_1_21_4;
