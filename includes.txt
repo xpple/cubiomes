@@ -444,8 +444,10 @@
 --include-constant HOUSE_NUM
 --include-constant HouseLarge
 --include-constant HouseSmall
+--include-constant INFESTED_STONE
 --include-constant IRON_ORE
 --include-constant Igloo
+--include-constant InfestedOre
 --include-constant IronOre
 --include-constant IronVein
 --include-constant Jungle_Pyramid

@@ -10939,118 +10939,127 @@ class Cubiomes_1 {
     public static int GRAVEL() {
         return GRAVEL;
     }
-    private static final int IRON_ORE = (int)15L;
+    private static final int INFESTED_STONE = (int)15L;
     /**
      * {@snippet lang=c :
-     * enum Blocks.IRON_ORE = 15
+     * enum Blocks.INFESTED_STONE = 15
+     * }
+     */
+    public static int INFESTED_STONE() {
+        return INFESTED_STONE;
+    }
+    private static final int IRON_ORE = (int)16L;
+    /**
+     * {@snippet lang=c :
+     * enum Blocks.IRON_ORE = 16
      * }
      */
     public static int IRON_ORE() {
         return IRON_ORE;
     }
-    private static final int LAPIS_ORE = (int)16L;
+    private static final int LAPIS_ORE = (int)17L;
     /**
      * {@snippet lang=c :
-     * enum Blocks.LAPIS_ORE = 16
+     * enum Blocks.LAPIS_ORE = 17
      * }
      */
     public static int LAPIS_ORE() {
         return LAPIS_ORE;
     }
-    private static final int MAGMA_BLOCK = (int)17L;
+    private static final int MAGMA_BLOCK = (int)18L;
     /**
      * {@snippet lang=c :
-     * enum Blocks.MAGMA_BLOCK = 17
+     * enum Blocks.MAGMA_BLOCK = 18
      * }
      */
     public static int MAGMA_BLOCK() {
         return MAGMA_BLOCK;
     }
-    private static final int NETHERRACK = (int)18L;
+    private static final int NETHERRACK = (int)19L;
     /**
      * {@snippet lang=c :
-     * enum Blocks.NETHERRACK = 18
+     * enum Blocks.NETHERRACK = 19
      * }
      */
     public static int NETHERRACK() {
         return NETHERRACK;
     }
-    private static final int NETHER_GOLD_ORE = (int)19L;
+    private static final int NETHER_GOLD_ORE = (int)20L;
     /**
      * {@snippet lang=c :
-     * enum Blocks.NETHER_GOLD_ORE = 19
+     * enum Blocks.NETHER_GOLD_ORE = 20
      * }
      */
     public static int NETHER_GOLD_ORE() {
         return NETHER_GOLD_ORE;
     }
-    private static final int NETHER_QUARTZ_ORE = (int)20L;
+    private static final int NETHER_QUARTZ_ORE = (int)21L;
     /**
      * {@snippet lang=c :
-     * enum Blocks.NETHER_QUARTZ_ORE = 20
+     * enum Blocks.NETHER_QUARTZ_ORE = 21
      * }
      */
     public static int NETHER_QUARTZ_ORE() {
         return NETHER_QUARTZ_ORE;
     }
-    private static final int RAW_COPPER_BLOCK = (int)21L;
+    private static final int RAW_COPPER_BLOCK = (int)22L;
     /**
      * {@snippet lang=c :
-     * enum Blocks.RAW_COPPER_BLOCK = 21
+     * enum Blocks.RAW_COPPER_BLOCK = 22
      * }
      */
     public static int RAW_COPPER_BLOCK() {
         return RAW_COPPER_BLOCK;
     }
-    private static final int RAW_IRON_BLOCK = (int)22L;
+    private static final int RAW_IRON_BLOCK = (int)23L;
     /**
      * {@snippet lang=c :
-     * enum Blocks.RAW_IRON_BLOCK = 22
+     * enum Blocks.RAW_IRON_BLOCK = 23
      * }
      */
     public static int RAW_IRON_BLOCK() {
         return RAW_IRON_BLOCK;
     }
-    private static final int REDSTONE_ORE = (int)23L;
+    private static final int REDSTONE_ORE = (int)24L;
     /**
      * {@snippet lang=c :
-     * enum Blocks.REDSTONE_ORE = 23
+     * enum Blocks.REDSTONE_ORE = 24
      * }
      */
     public static int REDSTONE_ORE() {
         return REDSTONE_ORE;
     }
-    private static final int SOUL_SAND = (int)24L;
+    private static final int SOUL_SAND = (int)25L;
     /**
      * {@snippet lang=c :
-     * enum Blocks.SOUL_SAND = 24
+     * enum Blocks.SOUL_SAND = 25
      * }
      */
     public static int SOUL_SAND() {
         return SOUL_SAND;
     }
-    private static final int STONE = (int)25L;
+    private static final int STONE = (int)26L;
     /**
      * {@snippet lang=c :
-     * enum Blocks.STONE = 25
+     * enum Blocks.STONE = 26
      * }
      */
     public static int STONE() {
         return STONE;
     }
-    private static final int TUFF = (int)26L;
+    private static final int TUFF = (int)27L;
     /**
      * {@snippet lang=c :
-     * enum Blocks.TUFF = 26
+     * enum Blocks.TUFF = 27
      * }
      */
     public static int TUFF() {
         return TUFF;
     }
-    private static final int BLOCK_NUM = (int)27L;
+    private static final int BLOCK_NUM = (int)28L;
     /**
      * {@snippet lang=c :
-     * enum Blocks.BLOCK_NUM = 27
+     * enum Blocks.BLOCK_NUM = 28
      * }
      */
     public static int BLOCK_NUM() {
@@ -11218,253 +11227,262 @@ class Cubiomes_1 {
     public static int GravelOre() {
         return GravelOre;
     }
-    private static final int IronOre = (int)18L;
+    private static final int InfestedOre = (int)18L;
     /**
      * {@snippet lang=c :
-     * enum Ores.IronOre = 18
+     * enum Ores.InfestedOre = 18
+     * }
+     */
+    public static int InfestedOre() {
+        return InfestedOre;
+    }
+    private static final int IronOre = (int)19L;
+    /**
+     * {@snippet lang=c :
+     * enum Ores.IronOre = 19
      * }
      */
     public static int IronOre() {
         return IronOre;
     }
-    private static final int LapisOre = (int)19L;
+    private static final int LapisOre = (int)20L;
     /**
      * {@snippet lang=c :
-     * enum Ores.LapisOre = 19
+     * enum Ores.LapisOre = 20
      * }
      */
     public static int LapisOre() {
         return LapisOre;
     }
-    private static final int LargeCopperOre = (int)20L;
+    private static final int LargeCopperOre = (int)21L;
     /**
      * {@snippet lang=c :
-     * enum Ores.LargeCopperOre = 20
+     * enum Ores.LargeCopperOre = 21
      * }
      */
     public static int LargeCopperOre() {
         return LargeCopperOre;
     }
-    private static final int LargeDebrisOre = (int)21L;
+    private static final int LargeDebrisOre = (int)22L;
     /**
      * {@snippet lang=c :
-     * enum Ores.LargeDebrisOre = 21
+     * enum Ores.LargeDebrisOre = 22
      * }
      */
     public static int LargeDebrisOre() {
         return LargeDebrisOre;
     }
-    private static final int LargeDiamondOre = (int)22L;
+    private static final int LargeDiamondOre = (int)23L;
     /**
      * {@snippet lang=c :
-     * enum Ores.LargeDiamondOre = 22
+     * enum Ores.LargeDiamondOre = 23
      * }
      */
     public static int LargeDiamondOre() {
         return LargeDiamondOre;
     }
-    private static final int LowerAndesiteOre = (int)23L;
+    private static final int LowerAndesiteOre = (int)24L;
     /**
      * {@snippet lang=c :
-     * enum Ores.LowerAndesiteOre = 23
+     * enum Ores.LowerAndesiteOre = 24
      * }
      */
     public static int LowerAndesiteOre() {
         return LowerAndesiteOre;
     }
-    private static final int LowerCoalOre = (int)24L;
+    private static final int LowerCoalOre = (int)25L;
     /**
      * {@snippet lang=c :
-     * enum Ores.LowerCoalOre = 24
+     * enum Ores.LowerCoalOre = 25
      * }
      */
     public static int LowerCoalOre() {
         return LowerCoalOre;
     }
-    private static final int LowerDioriteOre = (int)25L;
+    private static final int LowerDioriteOre = (int)26L;
     /**
      * {@snippet lang=c :
-     * enum Ores.LowerDioriteOre = 25
+     * enum Ores.LowerDioriteOre = 26
      * }
      */
     public static int LowerDioriteOre() {
         return LowerDioriteOre;
     }
-    private static final int LowerGoldOre = (int)26L;
+    private static final int LowerGoldOre = (int)27L;
     /**
      * {@snippet lang=c :
-     * enum Ores.LowerGoldOre = 26
+     * enum Ores.LowerGoldOre = 27
      * }
      */
     public static int LowerGoldOre() {
         return LowerGoldOre;
     }
-    private static final int LowerGraniteOre = (int)27L;
+    private static final int LowerGraniteOre = (int)28L;
     /**
      * {@snippet lang=c :
-     * enum Ores.LowerGraniteOre = 27
+     * enum Ores.LowerGraniteOre = 28
      * }
      */
     public static int LowerGraniteOre() {
         return LowerGraniteOre;
     }
-    private static final int LowerRedstoneOre = (int)28L;
+    private static final int LowerRedstoneOre = (int)29L;
     /**
      * {@snippet lang=c :
-     * enum Ores.LowerRedstoneOre = 28
+     * enum Ores.LowerRedstoneOre = 29
      * }
      */
     public static int LowerRedstoneOre() {
         return LowerRedstoneOre;
     }
-    private static final int MagmaOre = (int)29L;
+    private static final int MagmaOre = (int)30L;
     /**
      * {@snippet lang=c :
-     * enum Ores.MagmaOre = 29
+     * enum Ores.MagmaOre = 30
      * }
      */
     public static int MagmaOre() {
         return MagmaOre;
     }
-    private static final int MediumDiamondOre = (int)30L;
+    private static final int MediumDiamondOre = (int)31L;
     /**
      * {@snippet lang=c :
-     * enum Ores.MediumDiamondOre = 30
+     * enum Ores.MediumDiamondOre = 31
      * }
      */
     public static int MediumDiamondOre() {
         return MediumDiamondOre;
     }
-    private static final int MiddleIronOre = (int)31L;
+    private static final int MiddleIronOre = (int)32L;
     /**
      * {@snippet lang=c :
-     * enum Ores.MiddleIronOre = 31
+     * enum Ores.MiddleIronOre = 32
      * }
      */
     public static int MiddleIronOre() {
         return MiddleIronOre;
     }
-    private static final int NetherGoldOre = (int)32L;
+    private static final int NetherGoldOre = (int)33L;
     /**
      * {@snippet lang=c :
-     * enum Ores.NetherGoldOre = 32
+     * enum Ores.NetherGoldOre = 33
      * }
      */
     public static int NetherGoldOre() {
         return NetherGoldOre;
     }
-    private static final int NetherGravelOre = (int)33L;
+    private static final int NetherGravelOre = (int)34L;
     /**
      * {@snippet lang=c :
-     * enum Ores.NetherGravelOre = 33
+     * enum Ores.NetherGravelOre = 34
      * }
      */
     public static int NetherGravelOre() {
         return NetherGravelOre;
     }
-    private static final int NetherQuartzOre = (int)34L;
+    private static final int NetherQuartzOre = (int)35L;
     /**
      * {@snippet lang=c :
-     * enum Ores.NetherQuartzOre = 34
+     * enum Ores.NetherQuartzOre = 35
      * }
      */
     public static int NetherQuartzOre() {
         return NetherQuartzOre;
     }
-    private static final int RedstoneOre = (int)35L;
+    private static final int RedstoneOre = (int)36L;
     /**
      * {@snippet lang=c :
-     * enum Ores.RedstoneOre = 35
+     * enum Ores.RedstoneOre = 36
      * }
      */
     public static int RedstoneOre() {
         return RedstoneOre;
     }
-    private static final int SmallDebrisOre = (int)36L;
+    private static final int SmallDebrisOre = (int)37L;
     /**
      * {@snippet lang=c :
-     * enum Ores.SmallDebrisOre = 36
+     * enum Ores.SmallDebrisOre = 37
      * }
      */
     public static int SmallDebrisOre() {
         return SmallDebrisOre;
     }
-    private static final int SmallIronOre = (int)37L;
+    private static final int SmallIronOre = (int)38L;
     /**
      * {@snippet lang=c :
-     * enum Ores.SmallIronOre = 37
+     * enum Ores.SmallIronOre = 38
      * }
      */
     public static int SmallIronOre() {
         return SmallIronOre;
     }
-    private static final int SoulSandOre = (int)38L;
+    private static final int SoulSandOre = (int)39L;
     /**
      * {@snippet lang=c :
-     * enum Ores.SoulSandOre = 38
+     * enum Ores.SoulSandOre = 39
      * }
      */
     public static int SoulSandOre() {
         return SoulSandOre;
     }
-    private static final int TuffOre = (int)39L;
+    private static final int TuffOre = (int)40L;
     /**
      * {@snippet lang=c :
-     * enum Ores.TuffOre = 39
+     * enum Ores.TuffOre = 40
      * }
      */
     public static int TuffOre() {
         return TuffOre;
     }
-    private static final int UpperAndesiteOre = (int)40L;
+    private static final int UpperAndesiteOre = (int)41L;
     /**
      * {@snippet lang=c :
-     * enum Ores.UpperAndesiteOre = 40
+     * enum Ores.UpperAndesiteOre = 41
      * }
      */
     public static int UpperAndesiteOre() {
         return UpperAndesiteOre;
     }
-    private static final int UpperCoalOre = (int)41L;
+    private static final int UpperCoalOre = (int)42L;
     /**
      * {@snippet lang=c :
-     * enum Ores.UpperCoalOre = 41
+     * enum Ores.UpperCoalOre = 42
      * }
      */
     public static int UpperCoalOre() {
         return UpperCoalOre;
     }
-    private static final int UpperDioriteOre = (int)42L;
+    private static final int UpperDioriteOre = (int)43L;
     /**
      * {@snippet lang=c :
-     * enum Ores.UpperDioriteOre = 42
+     * enum Ores.UpperDioriteOre = 43
      * }
      */
     public static int UpperDioriteOre() {
         return UpperDioriteOre;
     }
-    private static final int UpperGraniteOre = (int)43L;
+    private static final int UpperGraniteOre = (int)44L;
     /**
      * {@snippet lang=c :
-     * enum Ores.UpperGraniteOre = 43
+     * enum Ores.UpperGraniteOre = 44
      * }
      */
     public static int UpperGraniteOre() {
         return UpperGraniteOre;
     }
-    private static final int UpperIronOre = (int)44L;
+    private static final int UpperIronOre = (int)45L;
     /**
      * {@snippet lang=c :
-     * enum Ores.UpperIronOre = 44
+     * enum Ores.UpperIronOre = 45
      * }
      */
     public static int UpperIronOre() {
         return UpperIronOre;
     }
-    private static final int ORE_NUM = (int)45L;
+    private static final int ORE_NUM = (int)46L;
     /**
      * {@snippet lang=c :
-     * enum Ores.ORE_NUM = 45
+     * enum Ores.ORE_NUM = 46
      * }
      */
     public static int ORE_NUM() {
@@ -21984,125 +22002,6 @@ class Cubiomes_1 {
                 traceDowncall("init_shipwreck_supply", context, version);
             }
             return (int)mh$.invokeExact(context, version);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class init_shipwreck_treasure {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("init_shipwreck_treasure");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int init_shipwreck_treasure(LootTableContext **context, int version)
-     * }
-     */
-    public static FunctionDescriptor init_shipwreck_treasure$descriptor() {
-        return init_shipwreck_treasure.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int init_shipwreck_treasure(LootTableContext **context, int version)
-     * }
-     */
-    public static MethodHandle init_shipwreck_treasure$handle() {
-        return init_shipwreck_treasure.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int init_shipwreck_treasure(LootTableContext **context, int version)
-     * }
-     */
-    public static MemorySegment init_shipwreck_treasure$address() {
-        return init_shipwreck_treasure.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int init_shipwreck_treasure(LootTableContext **context, int version)
-     * }
-     */
-    public static int init_shipwreck_treasure(MemorySegment context, int version) {
-        var mh$ = init_shipwreck_treasure.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("init_shipwreck_treasure", context, version);
-            }
-            return (int)mh$.invokeExact(context, version);
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class init_loot_table {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("init_loot_table");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int init_loot_table(const char *loot_table_string, LootTableContext *context, const int version)
-     * }
-     */
-    public static FunctionDescriptor init_loot_table$descriptor() {
-        return init_loot_table.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int init_loot_table(const char *loot_table_string, LootTableContext *context, const int version)
-     * }
-     */
-    public static MethodHandle init_loot_table$handle() {
-        return init_loot_table.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int init_loot_table(const char *loot_table_string, LootTableContext *context, const int version)
-     * }
-     */
-    public static MemorySegment init_loot_table$address() {
-        return init_loot_table.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int init_loot_table(const char *loot_table_string, LootTableContext *context, const int version)
-     * }
-     */
-    public static int init_loot_table(MemorySegment loot_table_string, MemorySegment context, int version) {
-        var mh$ = init_loot_table.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("init_loot_table", loot_table_string, context, version);
-            }
-            return (int)mh$.invokeExact(loot_table_string, context, version);
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
         }

@@ -18,6 +18,125 @@ public class Cubiomes extends Cubiomes_1 {
         // Should not be called directly
     }
 
+    private static class init_shipwreck_treasure {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("init_shipwreck_treasure");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int init_shipwreck_treasure(LootTableContext **context, int version)
+     * }
+     */
+    public static FunctionDescriptor init_shipwreck_treasure$descriptor() {
+        return init_shipwreck_treasure.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int init_shipwreck_treasure(LootTableContext **context, int version)
+     * }
+     */
+    public static MethodHandle init_shipwreck_treasure$handle() {
+        return init_shipwreck_treasure.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int init_shipwreck_treasure(LootTableContext **context, int version)
+     * }
+     */
+    public static MemorySegment init_shipwreck_treasure$address() {
+        return init_shipwreck_treasure.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int init_shipwreck_treasure(LootTableContext **context, int version)
+     * }
+     */
+    public static int init_shipwreck_treasure(MemorySegment context, int version) {
+        var mh$ = init_shipwreck_treasure.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("init_shipwreck_treasure", context, version);
+            }
+            return (int)mh$.invokeExact(context, version);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class init_loot_table {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("init_loot_table");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int init_loot_table(const char *loot_table_string, LootTableContext *context, const int version)
+     * }
+     */
+    public static FunctionDescriptor init_loot_table$descriptor() {
+        return init_loot_table.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int init_loot_table(const char *loot_table_string, LootTableContext *context, const int version)
+     * }
+     */
+    public static MethodHandle init_loot_table$handle() {
+        return init_loot_table.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int init_loot_table(const char *loot_table_string, LootTableContext *context, const int version)
+     * }
+     */
+    public static MemorySegment init_loot_table$address() {
+        return init_loot_table.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int init_loot_table(const char *loot_table_string, LootTableContext *context, const int version)
+     * }
+     */
+    public static int init_loot_table(MemorySegment loot_table_string, MemorySegment context, int version) {
+        var mh$ = init_loot_table.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("init_loot_table", loot_table_string, context, version);
+            }
+            return (int)mh$.invokeExact(loot_table_string, context, version);
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
     private static class init_loot_table_file {
         public static final FunctionDescriptor DESC = FunctionDescriptor.of(
             Cubiomes.C_INT,
