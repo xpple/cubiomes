@@ -99,9 +99,9 @@ public class RandomSource {
      * void (*setSeed)(void *, uint64_t)
      * }
      */
-    public static class setSeed {
+    public final static class setSeed {
 
-        setSeed() {
+        private setSeed() {
             // Should not be called directly
         }
 
@@ -139,9 +139,11 @@ public class RandomSource {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static void invoke(MemorySegment funcPtr,MemorySegment _x0, long _x1) {
+        public static void invoke(MemorySegment funcPtr, MemorySegment _x0, long _x1) {
             try {
                  DOWN$MH.invokeExact(funcPtr, _x0, _x1);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }
@@ -197,9 +199,9 @@ public class RandomSource {
      * uint64_t (*nextLong)(void *)
      * }
      */
-    public static class nextLong {
+    public final static class nextLong {
 
-        nextLong() {
+        private nextLong() {
             // Should not be called directly
         }
 
@@ -237,9 +239,11 @@ public class RandomSource {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static long invoke(MemorySegment funcPtr,MemorySegment _x0) {
+        public static long invoke(MemorySegment funcPtr, MemorySegment _x0) {
             try {
                 return (long) DOWN$MH.invokeExact(funcPtr, _x0);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }
@@ -295,9 +299,9 @@ public class RandomSource {
      * int (*nextInt)(void *, int)
      * }
      */
-    public static class nextInt {
+    public final static class nextInt {
 
-        nextInt() {
+        private nextInt() {
             // Should not be called directly
         }
 
@@ -336,9 +340,11 @@ public class RandomSource {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static int invoke(MemorySegment funcPtr,MemorySegment _x0, int _x1) {
+        public static int invoke(MemorySegment funcPtr, MemorySegment _x0, int _x1) {
             try {
                 return (int) DOWN$MH.invokeExact(funcPtr, _x0, _x1);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }
@@ -394,9 +400,9 @@ public class RandomSource {
      * float (*nextFloat)(void *)
      * }
      */
-    public static class nextFloat {
+    public final static class nextFloat {
 
-        nextFloat() {
+        private nextFloat() {
             // Should not be called directly
         }
 
@@ -434,9 +440,11 @@ public class RandomSource {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static float invoke(MemorySegment funcPtr,MemorySegment _x0) {
+        public static float invoke(MemorySegment funcPtr, MemorySegment _x0) {
             try {
                 return (float) DOWN$MH.invokeExact(funcPtr, _x0);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }
@@ -492,9 +500,9 @@ public class RandomSource {
      * double (*nextDouble)(void *)
      * }
      */
-    public static class nextDouble {
+    public final static class nextDouble {
 
-        nextDouble() {
+        private nextDouble() {
             // Should not be called directly
         }
 
@@ -532,9 +540,11 @@ public class RandomSource {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static double invoke(MemorySegment funcPtr,MemorySegment _x0) {
+        public static double invoke(MemorySegment funcPtr, MemorySegment _x0) {
             try {
                 return (double) DOWN$MH.invokeExact(funcPtr, _x0);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }
@@ -590,9 +600,9 @@ public class RandomSource {
      * int (*nextIntBetween)(void *, int, int)
      * }
      */
-    public static class nextIntBetween {
+    public final static class nextIntBetween {
 
-        nextIntBetween() {
+        private nextIntBetween() {
             // Should not be called directly
         }
 
@@ -632,9 +642,11 @@ public class RandomSource {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static int invoke(MemorySegment funcPtr,MemorySegment _x0, int _x1, int _x2) {
+        public static int invoke(MemorySegment funcPtr, MemorySegment _x0, int _x1, int _x2) {
             try {
                 return (int) DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }
@@ -690,9 +702,9 @@ public class RandomSource {
      * void (*skipN)(void *, uint64_t)
      * }
      */
-    public static class skipN {
+    public final static class skipN {
 
-        skipN() {
+        private skipN() {
             // Should not be called directly
         }
 
@@ -730,9 +742,11 @@ public class RandomSource {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static void invoke(MemorySegment funcPtr,MemorySegment _x0, long _x1) {
+        public static void invoke(MemorySegment funcPtr, MemorySegment _x0, long _x1) {
             try {
                  DOWN$MH.invokeExact(funcPtr, _x0, _x1);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }

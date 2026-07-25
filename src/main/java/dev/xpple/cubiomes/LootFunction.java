@@ -52,9 +52,9 @@ public class LootFunction {
      * void (*fun)(uint64_t *, ItemStack *, const void *)
      * }
      */
-    public static class fun {
+    public final static class fun {
 
-        fun() {
+        private fun() {
             // Should not be called directly
         }
 
@@ -93,9 +93,11 @@ public class LootFunction {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static void invoke(MemorySegment funcPtr,MemorySegment _x0, MemorySegment _x1, MemorySegment _x2) {
+        public static void invoke(MemorySegment funcPtr, MemorySegment _x0, MemorySegment _x1, MemorySegment _x2) {
             try {
                  DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }
@@ -254,7 +256,7 @@ public class LootFunction {
      * }
      */
     public static int params_int(MemorySegment struct, long index0) {
-        return (int)params_int$ELEM_HANDLE.get(struct, 0L, index0);
+        return (int)params_int$ELEM_HANDLE.get(struct, params_int$OFFSET, index0);
     }
 
     /**
@@ -264,7 +266,7 @@ public class LootFunction {
      * }
      */
     public static void params_int(MemorySegment struct, long index0, int fieldValue) {
-        params_int$ELEM_HANDLE.set(struct, 0L, index0, fieldValue);
+        params_int$ELEM_HANDLE.set(struct, params_int$OFFSET, index0, fieldValue);
     }
 
     private static final AddressLayout varparams_int$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("varparams_int"));

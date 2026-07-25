@@ -105,7 +105,9 @@ public class LootTableOutput {
      */
     public static MemorySegment natural_loot(MemorySegment struct, long index0) {
         try {
-            return (MemorySegment)natural_loot$ELEM_HANDLE.invokeExact(struct, 0L, index0);
+            return (MemorySegment)natural_loot$ELEM_HANDLE.invokeExact(struct, natural_loot$OFFSET, index0);
+        } catch (Error | RuntimeException ex) {
+            throw ex;
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -186,7 +188,9 @@ public class LootTableOutput {
      */
     public static MemorySegment indexed_loot(MemorySegment struct, long index0) {
         try {
-            return (MemorySegment)indexed_loot$ELEM_HANDLE.invokeExact(struct, 0L, index0);
+            return (MemorySegment)indexed_loot$ELEM_HANDLE.invokeExact(struct, indexed_loot$OFFSET, index0);
+        } catch (Error | RuntimeException ex) {
+            throw ex;
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -266,7 +270,7 @@ public class LootTableOutput {
      * }
      */
     public static int aggregated_loot(MemorySegment struct, long index0) {
-        return (int)aggregated_loot$ELEM_HANDLE.get(struct, 0L, index0);
+        return (int)aggregated_loot$ELEM_HANDLE.get(struct, aggregated_loot$OFFSET, index0);
     }
 
     /**
@@ -276,7 +280,7 @@ public class LootTableOutput {
      * }
      */
     public static void aggregated_loot(MemorySegment struct, long index0, int fieldValue) {
-        aggregated_loot$ELEM_HANDLE.set(struct, 0L, index0, fieldValue);
+        aggregated_loot$ELEM_HANDLE.set(struct, aggregated_loot$OFFSET, index0, fieldValue);
     }
 
     /**

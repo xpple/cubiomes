@@ -30,9 +30,9 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
  * } *, int *, int, int, int, int)
  * }
  */
-public class mapfunc_t {
+public final class mapfunc_t {
 
-    mapfunc_t() {
+    private mapfunc_t() {
         // Should not be called directly
     }
 
@@ -75,9 +75,11 @@ public class mapfunc_t {
     /**
      * Invoke the upcall stub {@code funcPtr}, with given parameters
      */
-    public static int invoke(MemorySegment funcPtr,MemorySegment _x0, MemorySegment _x1, int _x2, int _x3, int _x4, int _x5) {
+    public static int invoke(MemorySegment funcPtr, MemorySegment _x0, MemorySegment _x1, int _x2, int _x3, int _x4, int _x5) {
         try {
             return (int) DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2, _x3, _x4, _x5);
+        } catch (Error | RuntimeException ex) {
+            throw ex;
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }

@@ -196,7 +196,7 @@ public class Spline {
      * }
      */
     public static float loc(MemorySegment struct, long index0) {
-        return (float)loc$ELEM_HANDLE.get(struct, 0L, index0);
+        return (float)loc$ELEM_HANDLE.get(struct, loc$OFFSET, index0);
     }
 
     /**
@@ -206,7 +206,7 @@ public class Spline {
      * }
      */
     public static void loc(MemorySegment struct, long index0, float fieldValue) {
-        loc$ELEM_HANDLE.set(struct, 0L, index0, fieldValue);
+        loc$ELEM_HANDLE.set(struct, loc$OFFSET, index0, fieldValue);
     }
 
     private static final SequenceLayout der$LAYOUT = (SequenceLayout)$LAYOUT.select(groupElement("der"));
@@ -273,7 +273,7 @@ public class Spline {
      * }
      */
     public static float der(MemorySegment struct, long index0) {
-        return (float)der$ELEM_HANDLE.get(struct, 0L, index0);
+        return (float)der$ELEM_HANDLE.get(struct, der$OFFSET, index0);
     }
 
     /**
@@ -283,7 +283,7 @@ public class Spline {
      * }
      */
     public static void der(MemorySegment struct, long index0, float fieldValue) {
-        der$ELEM_HANDLE.set(struct, 0L, index0, fieldValue);
+        der$ELEM_HANDLE.set(struct, der$OFFSET, index0, fieldValue);
     }
 
     private static final SequenceLayout val$LAYOUT = (SequenceLayout)$LAYOUT.select(groupElement("val"));
@@ -350,7 +350,7 @@ public class Spline {
      * }
      */
     public static MemorySegment val(MemorySegment struct, long index0) {
-        return (MemorySegment)val$ELEM_HANDLE.get(struct, 0L, index0);
+        return (MemorySegment)val$ELEM_HANDLE.get(struct, val$OFFSET, index0);
     }
 
     /**
@@ -360,7 +360,7 @@ public class Spline {
      * }
      */
     public static void val(MemorySegment struct, long index0, MemorySegment fieldValue) {
-        val$ELEM_HANDLE.set(struct, 0L, index0, fieldValue);
+        val$ELEM_HANDLE.set(struct, val$OFFSET, index0, fieldValue);
     }
 
     /**

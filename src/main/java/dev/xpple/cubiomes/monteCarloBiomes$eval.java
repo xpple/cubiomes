@@ -17,9 +17,9 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
  * int (*eval)(Generator *, int, int, int, int, void *)
  * }
  */
-public class monteCarloBiomes$eval {
+public final class monteCarloBiomes$eval {
 
-    monteCarloBiomes$eval() {
+    private monteCarloBiomes$eval() {
         // Should not be called directly
     }
 
@@ -62,9 +62,11 @@ public class monteCarloBiomes$eval {
     /**
      * Invoke the upcall stub {@code funcPtr}, with given parameters
      */
-    public static int invoke(MemorySegment funcPtr,MemorySegment _x0, int _x1, int _x2, int _x3, int _x4, MemorySegment _x5) {
+    public static int invoke(MemorySegment funcPtr, MemorySegment _x0, int _x1, int _x2, int _x3, int _x4, MemorySegment _x5) {
         try {
             return (int) DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2, _x3, _x4, _x5);
+        } catch (Error | RuntimeException ex) {
+            throw ex;
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }

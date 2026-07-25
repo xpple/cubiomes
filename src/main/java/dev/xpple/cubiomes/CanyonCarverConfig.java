@@ -265,9 +265,9 @@ public class CanyonCarverConfig {
      * int (*y)(uint64_t *, int, int, int)
      * }
      */
-    public static class y {
+    public final static class y {
 
-        y() {
+        private y() {
             // Should not be called directly
         }
 
@@ -308,9 +308,11 @@ public class CanyonCarverConfig {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static int invoke(MemorySegment funcPtr,MemorySegment _x0, int _x1, int _x2, int _x3) {
+        public static int invoke(MemorySegment funcPtr, MemorySegment _x0, int _x1, int _x2, int _x3) {
             try {
                 return (int) DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2, _x3);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }
@@ -542,9 +544,9 @@ public class CanyonCarverConfig {
      * float (*verticalRotation)(uint64_t *, float, float)
      * }
      */
-    public static class verticalRotation {
+    public final static class verticalRotation {
 
-        verticalRotation() {
+        private verticalRotation() {
             // Should not be called directly
         }
 
@@ -584,9 +586,11 @@ public class CanyonCarverConfig {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static float invoke(MemorySegment funcPtr,MemorySegment _x0, float _x1, float _x2) {
+        public static float invoke(MemorySegment funcPtr, MemorySegment _x0, float _x1, float _x2) {
             try {
                 return (float) DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }
@@ -730,9 +734,9 @@ public class CanyonCarverConfig {
      * float (*distanceFactor)(uint64_t *, float, float)
      * }
      */
-    public static class distanceFactor {
+    public final static class distanceFactor {
 
-        distanceFactor() {
+        private distanceFactor() {
             // Should not be called directly
         }
 
@@ -772,9 +776,11 @@ public class CanyonCarverConfig {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static float invoke(MemorySegment funcPtr,MemorySegment _x0, float _x1, float _x2) {
+        public static float invoke(MemorySegment funcPtr, MemorySegment _x0, float _x1, float _x2) {
             try {
                 return (float) DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }
@@ -918,9 +924,9 @@ public class CanyonCarverConfig {
      * float (*thickness)(uint64_t *, float, float, float)
      * }
      */
-    public static class thickness {
+    public final static class thickness {
 
-        thickness() {
+        private thickness() {
             // Should not be called directly
         }
 
@@ -961,9 +967,11 @@ public class CanyonCarverConfig {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static float invoke(MemorySegment funcPtr,MemorySegment _x0, float _x1, float _x2, float _x3) {
+        public static float invoke(MemorySegment funcPtr, MemorySegment _x0, float _x1, float _x2, float _x3) {
             try {
                 return (float) DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2, _x3);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }
@@ -1195,9 +1203,9 @@ public class CanyonCarverConfig {
      * float (*horizontalRadiusFactor)(uint64_t *, float, float)
      * }
      */
-    public static class horizontalRadiusFactor {
+    public final static class horizontalRadiusFactor {
 
-        horizontalRadiusFactor() {
+        private horizontalRadiusFactor() {
             // Should not be called directly
         }
 
@@ -1237,9 +1245,11 @@ public class CanyonCarverConfig {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static float invoke(MemorySegment funcPtr,MemorySegment _x0, float _x1, float _x2) {
+        public static float invoke(MemorySegment funcPtr, MemorySegment _x0, float _x1, float _x2) {
             try {
                 return (float) DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }

@@ -196,7 +196,7 @@ public class SeaLevelColumnNoiseBeta {
      * }
      */
     public static double minSample(MemorySegment struct, long index0) {
-        return (double)minSample$ELEM_HANDLE.get(struct, 0L, index0);
+        return (double)minSample$ELEM_HANDLE.get(struct, minSample$OFFSET, index0);
     }
 
     /**
@@ -206,7 +206,7 @@ public class SeaLevelColumnNoiseBeta {
      * }
      */
     public static void minSample(MemorySegment struct, long index0, double fieldValue) {
-        minSample$ELEM_HANDLE.set(struct, 0L, index0, fieldValue);
+        minSample$ELEM_HANDLE.set(struct, minSample$OFFSET, index0, fieldValue);
     }
 
     private static final SequenceLayout maxSample$LAYOUT = (SequenceLayout)$LAYOUT.select(groupElement("maxSample"));
@@ -273,7 +273,7 @@ public class SeaLevelColumnNoiseBeta {
      * }
      */
     public static double maxSample(MemorySegment struct, long index0) {
-        return (double)maxSample$ELEM_HANDLE.get(struct, 0L, index0);
+        return (double)maxSample$ELEM_HANDLE.get(struct, maxSample$OFFSET, index0);
     }
 
     /**
@@ -283,7 +283,7 @@ public class SeaLevelColumnNoiseBeta {
      * }
      */
     public static void maxSample(MemorySegment struct, long index0, double fieldValue) {
-        maxSample$ELEM_HANDLE.set(struct, 0L, index0, fieldValue);
+        maxSample$ELEM_HANDLE.set(struct, maxSample$OFFSET, index0, fieldValue);
     }
 
     private static final SequenceLayout mainSample$LAYOUT = (SequenceLayout)$LAYOUT.select(groupElement("mainSample"));
@@ -350,7 +350,7 @@ public class SeaLevelColumnNoiseBeta {
      * }
      */
     public static double mainSample(MemorySegment struct, long index0) {
-        return (double)mainSample$ELEM_HANDLE.get(struct, 0L, index0);
+        return (double)mainSample$ELEM_HANDLE.get(struct, mainSample$OFFSET, index0);
     }
 
     /**
@@ -360,7 +360,7 @@ public class SeaLevelColumnNoiseBeta {
      * }
      */
     public static void mainSample(MemorySegment struct, long index0, double fieldValue) {
-        mainSample$ELEM_HANDLE.set(struct, 0L, index0, fieldValue);
+        mainSample$ELEM_HANDLE.set(struct, mainSample$OFFSET, index0, fieldValue);
     }
 
     /**

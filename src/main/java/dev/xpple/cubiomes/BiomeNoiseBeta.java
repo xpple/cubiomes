@@ -107,7 +107,9 @@ public class BiomeNoiseBeta {
      */
     public static MemorySegment climate(MemorySegment struct, long index0) {
         try {
-            return (MemorySegment)climate$ELEM_HANDLE.invokeExact(struct, 0L, index0);
+            return (MemorySegment)climate$ELEM_HANDLE.invokeExact(struct, climate$OFFSET, index0);
+        } catch (Error | RuntimeException ex) {
+            throw ex;
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -188,7 +190,9 @@ public class BiomeNoiseBeta {
      */
     public static MemorySegment oct(MemorySegment struct, long index0) {
         try {
-            return (MemorySegment)oct$ELEM_HANDLE.invokeExact(struct, 0L, index0);
+            return (MemorySegment)oct$ELEM_HANDLE.invokeExact(struct, oct$OFFSET, index0);
+        } catch (Error | RuntimeException ex) {
+            throw ex;
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }

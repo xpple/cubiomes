@@ -17,9 +17,9 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
  * int (*func)(void *, int, int, double)
  * }
  */
-public class getParaRange$func {
+public final class getParaRange$func {
 
-    getParaRange$func() {
+    private getParaRange$func() {
         // Should not be called directly
     }
 
@@ -60,9 +60,11 @@ public class getParaRange$func {
     /**
      * Invoke the upcall stub {@code funcPtr}, with given parameters
      */
-    public static int invoke(MemorySegment funcPtr,MemorySegment _x0, int _x1, int _x2, double _x3) {
+    public static int invoke(MemorySegment funcPtr, MemorySegment _x0, int _x1, int _x2, double _x3) {
         try {
             return (int) DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2, _x3);
+        } catch (Error | RuntimeException ex) {
+            throw ex;
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }

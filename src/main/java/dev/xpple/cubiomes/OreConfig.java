@@ -245,9 +245,9 @@ public class OreConfig {
      * int (*heightProvider)(RandomSource, int, int, int)
      * }
      */
-    public static class heightProvider {
+    public final static class heightProvider {
 
-        heightProvider() {
+        private heightProvider() {
             // Should not be called directly
         }
 
@@ -288,9 +288,11 @@ public class OreConfig {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static int invoke(MemorySegment funcPtr,MemorySegment _x0, int _x1, int _x2, int _x3) {
+        public static int invoke(MemorySegment funcPtr, MemorySegment _x0, int _x1, int _x2, int _x3) {
             try {
                 return (int) DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2, _x3);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }

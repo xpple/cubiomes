@@ -17,9 +17,9 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
  * int (*check)(uint64_t, void *)
  * }
  */
-public class searchAll48$check {
+public final class searchAll48$check {
 
-    searchAll48$check() {
+    private searchAll48$check() {
         // Should not be called directly
     }
 
@@ -58,9 +58,11 @@ public class searchAll48$check {
     /**
      * Invoke the upcall stub {@code funcPtr}, with given parameters
      */
-    public static int invoke(MemorySegment funcPtr,long _x0, MemorySegment _x1) {
+    public static int invoke(MemorySegment funcPtr, long _x0, MemorySegment _x1) {
         try {
             return (int) DOWN$MH.invokeExact(funcPtr, _x0, _x1);
+        } catch (Error | RuntimeException ex) {
+            throw ex;
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }

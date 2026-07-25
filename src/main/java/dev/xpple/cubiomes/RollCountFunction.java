@@ -17,9 +17,9 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
  * typedef int (*RollCountFunction)(uint64_t *, const int, const int)
  * }
  */
-public class RollCountFunction {
+public final class RollCountFunction {
 
-    RollCountFunction() {
+    private RollCountFunction() {
         // Should not be called directly
     }
 
@@ -59,9 +59,11 @@ public class RollCountFunction {
     /**
      * Invoke the upcall stub {@code funcPtr}, with given parameters
      */
-    public static int invoke(MemorySegment funcPtr,MemorySegment _x0, int _x1, int _x2) {
+    public static int invoke(MemorySegment funcPtr, MemorySegment _x0, int _x1, int _x2) {
         try {
             return (int) DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2);
+        } catch (Error | RuntimeException ex) {
+            throw ex;
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }

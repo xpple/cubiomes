@@ -117,7 +117,7 @@ public class PerlinNoise {
      * }
      */
     public static byte d(MemorySegment struct, long index0) {
-        return (byte)d$ELEM_HANDLE.get(struct, 0L, index0);
+        return (byte)d$ELEM_HANDLE.get(struct, d$OFFSET, index0);
     }
 
     /**
@@ -127,7 +127,7 @@ public class PerlinNoise {
      * }
      */
     public static void d(MemorySegment struct, long index0, byte fieldValue) {
-        d$ELEM_HANDLE.set(struct, 0L, index0, fieldValue);
+        d$ELEM_HANDLE.set(struct, d$OFFSET, index0, fieldValue);
     }
 
     private static final OfByte h2$LAYOUT = (OfByte)$LAYOUT.select(groupElement("h2"));

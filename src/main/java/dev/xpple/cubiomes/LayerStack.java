@@ -113,7 +113,9 @@ public class LayerStack {
      */
     public static MemorySegment layers(MemorySegment struct, long index0) {
         try {
-            return (MemorySegment)layers$ELEM_HANDLE.invokeExact(struct, 0L, index0);
+            return (MemorySegment)layers$ELEM_HANDLE.invokeExact(struct, layers$OFFSET, index0);
+        } catch (Error | RuntimeException ex) {
+            throw ex;
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }

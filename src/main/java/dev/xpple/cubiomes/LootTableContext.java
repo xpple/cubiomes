@@ -437,7 +437,7 @@ public class LootTableContext {
      * }
      */
     public static MemorySegment unresolved_subtable_names(MemorySegment struct, long index0) {
-        return (MemorySegment)unresolved_subtable_names$ELEM_HANDLE.get(struct, 0L, index0);
+        return (MemorySegment)unresolved_subtable_names$ELEM_HANDLE.get(struct, unresolved_subtable_names$OFFSET, index0);
     }
 
     /**
@@ -447,7 +447,7 @@ public class LootTableContext {
      * }
      */
     public static void unresolved_subtable_names(MemorySegment struct, long index0, MemorySegment fieldValue) {
-        unresolved_subtable_names$ELEM_HANDLE.set(struct, 0L, index0, fieldValue);
+        unresolved_subtable_names$ELEM_HANDLE.set(struct, unresolved_subtable_names$OFFSET, index0, fieldValue);
     }
 
     private static final OfInt subtable_count$LAYOUT = (OfInt)$LAYOUT.select(groupElement("subtable_count"));
@@ -735,7 +735,9 @@ public class LootTableContext {
      */
     public static MemorySegment generated_items(MemorySegment struct, long index0) {
         try {
-            return (MemorySegment)generated_items$ELEM_HANDLE.invokeExact(struct, 0L, index0);
+            return (MemorySegment)generated_items$ELEM_HANDLE.invokeExact(struct, generated_items$OFFSET, index0);
+        } catch (Error | RuntimeException ex) {
+            throw ex;
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }

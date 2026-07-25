@@ -480,7 +480,9 @@ public class Piece {
      */
     public static MemorySegment chestPoses(MemorySegment struct, long index0) {
         try {
-            return (MemorySegment)chestPoses$ELEM_HANDLE.invokeExact(struct, 0L, index0);
+            return (MemorySegment)chestPoses$ELEM_HANDLE.invokeExact(struct, chestPoses$OFFSET, index0);
+        } catch (Error | RuntimeException ex) {
+            throw ex;
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }
@@ -560,7 +562,7 @@ public class Piece {
      * }
      */
     public static long lootSeeds(MemorySegment struct, long index0) {
-        return (long)lootSeeds$ELEM_HANDLE.get(struct, 0L, index0);
+        return (long)lootSeeds$ELEM_HANDLE.get(struct, lootSeeds$OFFSET, index0);
     }
 
     /**
@@ -570,7 +572,7 @@ public class Piece {
      * }
      */
     public static void lootSeeds(MemorySegment struct, long index0, long fieldValue) {
-        lootSeeds$ELEM_HANDLE.set(struct, 0L, index0, fieldValue);
+        lootSeeds$ELEM_HANDLE.set(struct, lootSeeds$OFFSET, index0, fieldValue);
     }
 
     private static final SequenceLayout lootTables$LAYOUT = (SequenceLayout)$LAYOUT.select(groupElement("lootTables"));
@@ -637,7 +639,7 @@ public class Piece {
      * }
      */
     public static MemorySegment lootTables(MemorySegment struct, long index0) {
-        return (MemorySegment)lootTables$ELEM_HANDLE.get(struct, 0L, index0);
+        return (MemorySegment)lootTables$ELEM_HANDLE.get(struct, lootTables$OFFSET, index0);
     }
 
     /**
@@ -647,7 +649,7 @@ public class Piece {
      * }
      */
     public static void lootTables(MemorySegment struct, long index0, MemorySegment fieldValue) {
-        lootTables$ELEM_HANDLE.set(struct, 0L, index0, fieldValue);
+        lootTables$ELEM_HANDLE.set(struct, lootTables$OFFSET, index0, fieldValue);
     }
 
     private static final OfInt additionalData$LAYOUT = (OfInt)$LAYOUT.select(groupElement("additionalData"));

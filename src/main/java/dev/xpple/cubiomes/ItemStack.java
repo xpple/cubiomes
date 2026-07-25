@@ -241,7 +241,9 @@ public class ItemStack {
      */
     public static MemorySegment enchantments(MemorySegment struct, long index0) {
         try {
-            return (MemorySegment)enchantments$ELEM_HANDLE.invokeExact(struct, 0L, index0);
+            return (MemorySegment)enchantments$ELEM_HANDLE.invokeExact(struct, enchantments$OFFSET, index0);
+        } catch (Error | RuntimeException ex) {
+            throw ex;
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }

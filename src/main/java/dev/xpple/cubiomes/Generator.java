@@ -404,7 +404,9 @@ public class Generator {
      */
     public static MemorySegment xlayer(MemorySegment struct, long index0) {
         try {
-            return (MemorySegment)xlayer$ELEM_HANDLE.invokeExact(struct, 0L, index0);
+            return (MemorySegment)xlayer$ELEM_HANDLE.invokeExact(struct, xlayer$OFFSET, index0);
+        } catch (Error | RuntimeException ex) {
+            throw ex;
         } catch (Throwable ex$) {
             throw new AssertionError("should not reach here", ex$);
         }

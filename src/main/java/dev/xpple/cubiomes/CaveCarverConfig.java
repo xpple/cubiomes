@@ -307,9 +307,9 @@ public class CaveCarverConfig {
      * float (*thickness)(uint64_t *)
      * }
      */
-    public static class thickness {
+    public final static class thickness {
 
-        thickness() {
+        private thickness() {
             // Should not be called directly
         }
 
@@ -347,9 +347,11 @@ public class CaveCarverConfig {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static float invoke(MemorySegment funcPtr,MemorySegment _x0) {
+        public static float invoke(MemorySegment funcPtr, MemorySegment _x0) {
             try {
                 return (float) DOWN$MH.invokeExact(funcPtr, _x0);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }
@@ -449,9 +451,9 @@ public class CaveCarverConfig {
      * int (*y)(uint64_t *, int, int, int)
      * }
      */
-    public static class y {
+    public final static class y {
 
-        y() {
+        private y() {
             // Should not be called directly
         }
 
@@ -492,9 +494,11 @@ public class CaveCarverConfig {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static int invoke(MemorySegment funcPtr,MemorySegment _x0, int _x1, int _x2, int _x3) {
+        public static int invoke(MemorySegment funcPtr, MemorySegment _x0, int _x1, int _x2, int _x3) {
             try {
                 return (int) DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2, _x3);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }
@@ -682,9 +686,9 @@ public class CaveCarverConfig {
      * float (*yScale)(uint64_t *, float, float)
      * }
      */
-    public static class yScale {
+    public final static class yScale {
 
-        yScale() {
+        private yScale() {
             // Should not be called directly
         }
 
@@ -724,9 +728,11 @@ public class CaveCarverConfig {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static float invoke(MemorySegment funcPtr,MemorySegment _x0, float _x1, float _x2) {
+        public static float invoke(MemorySegment funcPtr, MemorySegment _x0, float _x1, float _x2) {
             try {
                 return (float) DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }
@@ -870,9 +876,9 @@ public class CaveCarverConfig {
      * float (*horizontalRadiusMultiplier)(uint64_t *, float, float)
      * }
      */
-    public static class horizontalRadiusMultiplier {
+    public final static class horizontalRadiusMultiplier {
 
-        horizontalRadiusMultiplier() {
+        private horizontalRadiusMultiplier() {
             // Should not be called directly
         }
 
@@ -912,9 +918,11 @@ public class CaveCarverConfig {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static float invoke(MemorySegment funcPtr,MemorySegment _x0, float _x1, float _x2) {
+        public static float invoke(MemorySegment funcPtr, MemorySegment _x0, float _x1, float _x2) {
             try {
                 return (float) DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }
@@ -1058,9 +1066,9 @@ public class CaveCarverConfig {
      * float (*verticalRadiusMultiplier)(uint64_t *, float, float)
      * }
      */
-    public static class verticalRadiusMultiplier {
+    public final static class verticalRadiusMultiplier {
 
-        verticalRadiusMultiplier() {
+        private verticalRadiusMultiplier() {
             // Should not be called directly
         }
 
@@ -1100,9 +1108,11 @@ public class CaveCarverConfig {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static float invoke(MemorySegment funcPtr,MemorySegment _x0, float _x1, float _x2) {
+        public static float invoke(MemorySegment funcPtr, MemorySegment _x0, float _x1, float _x2) {
             try {
                 return (float) DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }
@@ -1246,9 +1256,9 @@ public class CaveCarverConfig {
      * float (*floorLevel)(uint64_t *, float, float)
      * }
      */
-    public static class floorLevel {
+    public final static class floorLevel {
 
-        floorLevel() {
+        private floorLevel() {
             // Should not be called directly
         }
 
@@ -1288,9 +1298,11 @@ public class CaveCarverConfig {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static float invoke(MemorySegment funcPtr,MemorySegment _x0, float _x1, float _x2) {
+        public static float invoke(MemorySegment funcPtr, MemorySegment _x0, float _x1, float _x2) {
             try {
                 return (float) DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2);
+            } catch (Error | RuntimeException ex) {
+                throw ex;
             } catch (Throwable ex$) {
                 throw new AssertionError("should not reach here", ex$);
             }
