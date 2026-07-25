@@ -184,3 +184,10 @@ endif()
 
 install(TARGETS cubiomes cubiomes_static DESTINATION lib)
 install(FILES ${HEADERS} DESTINATION include)
+
+option(EXPORT_HEADERS "Export project headers" OFF)
+
+if (EXPORT_HEADERS)
+	string(JOIN "\n" HEADER_LIST ${HEADERS})
+	file(WRITE "${CMAKE_BINARY_DIR}/headers.txt" "${HEADER_LIST}\n")
+endif()

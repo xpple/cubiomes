@@ -87,10 +87,6 @@ jobs:
       - name: Update master submodule
         working-directory: src/main/c/cubiomes
         run: git checkout $GITHUB_SHA
-      - name: Update includes.txt
-        run: |
-          git fetch origin $GITHUB_SHA
-          git restore --source $GITHUB_SHA --worktree --staged includes.txt
       - name: Validate gradle wrapper
         uses: gradle/actions/wrapper-validation@v4
       - name: Setup JDK 23
@@ -110,7 +106,16 @@ jobs:
       - name: Compile jextract
         working-directory: jextract
         run: ./gradlew --stacktrace -Pjdk_home=$JAVA_HOME -Pllvm_home=$LLVM_HOME clean verify
-      - name: Create Java bindings and build
+      - name: Export headers
+        working-directory: src/main/c/cubiomes
+        run: cmake -S . -B build -DEXPORT_HEADERS=ON
+      - name: Create Java bindings
+        run: |
+          ./gradlew clean --stacktrace
+          ./jextract/build/jextract/bin/jextract --include-dir src/main/c/cubiomes --header-class-name Cubiomes --dump-includes dump_includes.txt @src/main/c/cubiomes/build/headers.txt
+          grep "/cubiomes/src/main/c/cubiomes/" dump_includes.txt | grep -v "/cubiomes/src/main/c/cubiomes/loot/cjson/" > dump_includes_filtered.txt
+          ./jextract/build/jextract/bin/jextract --include-dir src/main/c/cubiomes --include-dir src/main/c/cubiomes --output src/main/java --use-system-load-library --target-package dev.xpple.cubiomes --header-class-name Cubiomes @dump_includes_filtered.txt @src/main/c/cubiomes/build/headers.txt
+      - name: Build
         env:
           ORG_GRADLE_PROJECT_signingKeyId: ${{ vars.ORG_GRADLE_PROJECT_SIGNINGKEYID }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGKEY }}
