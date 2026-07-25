@@ -1,5 +1,3 @@
-import dev.xpple.cubiomes.buildscript.CreateJavaBindingsTask
-
 import java.time.Instant
 import java.time.ZoneOffset
 
@@ -46,11 +44,6 @@ clean {
         exclude 'CubiomesInit.java'
     }
 }
-
-tasks.register('createJavaBindings', CreateJavaBindingsTask) {}
-compileJava.dependsOn('createJavaBindings')
-
-createJavaBindings.dependsOn(clean)
 
 processResources {
     from("LICENSE")
