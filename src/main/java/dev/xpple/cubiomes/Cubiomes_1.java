@@ -45,33 +45,6 @@ class Cubiomes_1 extends Cubiomes$shared {
     public static int POWS_OF_2() {
         return POWS_OF_2;
     }
-    private static final int __GNUC_VA_LIST = (int)1L;
-    /**
-     * {@snippet lang=c :
-     * #define __GNUC_VA_LIST 1
-     * }
-     */
-    public static int __GNUC_VA_LIST() {
-        return __GNUC_VA_LIST;
-    }
-    /**
-     * {@snippet lang=c :
-     * typedef unsigned long size_t
-     * }
-     */
-    public static final OfLong size_t = Cubiomes.C_LONG;
-    /**
-     * {@snippet lang=c :
-     * typedef int wchar_t
-     * }
-     */
-    public static final OfInt wchar_t = Cubiomes.C_INT;
-    /**
-     * {@snippet lang=c :
-     * typedef long ptrdiff_t
-     * }
-     */
-    public static final OfLong ptrdiff_t = Cubiomes.C_LONG;
     /**
      * {@snippet lang=c :
      * typedef int8_t i8
@@ -21524,6 +21497,248 @@ class Cubiomes_1 extends Cubiomes$shared {
                 traceDowncall("get_item_id", context, item_name);
             }
             return (int)mh$.invokeExact(context, item_name);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class get_global_item_id {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("get_global_item_id");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int get_global_item_id(LootTableContext *context, int item_id)
+     * }
+     */
+    public static FunctionDescriptor get_global_item_id$descriptor() {
+        return get_global_item_id.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int get_global_item_id(LootTableContext *context, int item_id)
+     * }
+     */
+    public static MethodHandle get_global_item_id$handle() {
+        return get_global_item_id.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int get_global_item_id(LootTableContext *context, int item_id)
+     * }
+     */
+    public static MemorySegment get_global_item_id$address() {
+        return get_global_item_id.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int get_global_item_id(LootTableContext *context, int item_id)
+     * }
+     */
+    public static int get_global_item_id(MemorySegment context, int item_id) {
+        var mh$ = get_global_item_id.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("get_global_item_id", context, item_id);
+            }
+            return (int)mh$.invokeExact(context, item_id);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class get_item_name {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_POINTER,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("get_item_name");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * const char *get_item_name(LootTableContext *context, int item_id)
+     * }
+     */
+    public static FunctionDescriptor get_item_name$descriptor() {
+        return get_item_name.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * const char *get_item_name(LootTableContext *context, int item_id)
+     * }
+     */
+    public static MethodHandle get_item_name$handle() {
+        return get_item_name.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * const char *get_item_name(LootTableContext *context, int item_id)
+     * }
+     */
+    public static MemorySegment get_item_name$address() {
+        return get_item_name.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * const char *get_item_name(LootTableContext *context, int item_id)
+     * }
+     */
+    public static MemorySegment get_item_name(MemorySegment context, int item_id) {
+        var mh$ = get_item_name.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("get_item_name", context, item_id);
+            }
+            return (MemorySegment)mh$.invokeExact(context, item_id);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class has_item {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("has_item");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int has_item(LootTableContext *context, int global_item_id)
+     * }
+     */
+    public static FunctionDescriptor has_item$descriptor() {
+        return has_item.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int has_item(LootTableContext *context, int global_item_id)
+     * }
+     */
+    public static MethodHandle has_item$handle() {
+        return has_item.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int has_item(LootTableContext *context, int global_item_id)
+     * }
+     */
+    public static MemorySegment has_item$address() {
+        return has_item.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int has_item(LootTableContext *context, int global_item_id)
+     * }
+     */
+    public static int has_item(MemorySegment context, int global_item_id) {
+        var mh$ = has_item.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("has_item", context, global_item_id);
+            }
+            return (int)mh$.invokeExact(context, global_item_id);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class generate_loot {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Cubiomes.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("generate_loot");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void generate_loot(LootTableContext *context)
+     * }
+     */
+    public static FunctionDescriptor generate_loot$descriptor() {
+        return generate_loot.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void generate_loot(LootTableContext *context)
+     * }
+     */
+    public static MethodHandle generate_loot$handle() {
+        return generate_loot.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void generate_loot(LootTableContext *context)
+     * }
+     */
+    public static MemorySegment generate_loot$address() {
+        return generate_loot.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void generate_loot(LootTableContext *context)
+     * }
+     */
+    public static void generate_loot(MemorySegment context) {
+        var mh$ = generate_loot.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("generate_loot", context);
+            }
+            mh$.invokeExact(context);
         } catch (Error | RuntimeException ex) {
            throw ex;
         } catch (Throwable ex$) {
