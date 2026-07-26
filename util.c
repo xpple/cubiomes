@@ -1,6 +1,8 @@
 #include "util.h"
 #include "biomes.h"
 #include "finders.h"
+#include "carver.h"
+#include "features/ore.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -81,8 +83,8 @@ const char* mc2str(int mc)
     case MC_1_21_6:  return "1.21.6"; break;
     case MC_1_21_9:  return "1.21.9"; break;
     case MC_1_21_11: return "1.21.11"; break;
-    case MC_26_1: return "26.1"; break;
-    case MC_26_2: return "26.2"; break;
+    case MC_26_1:    return "26.1"; break;
+    case MC_26_2:    return "26.2"; break;
     default:         return "?";
     }
 }
