@@ -20468,1232 +20468,221 @@ class Cubiomes_1 extends Cubiomes$shared {
     public static int EFFECT_NUM() {
         return EFFECT_NUM;
     }
-
-    private static class MOB_EFFECTS$constants {
-        public static final SequenceLayout LAYOUT = MemoryLayout.sequenceLayout(40, MobEffect.layout());
-        public static final MemorySegment SEGMENT = SYMBOL_LOOKUP.findOrThrow("MOB_EFFECTS").reinterpret(LAYOUT.byteSize());
-    public static final MethodHandle HANDLE = LAYOUT.sliceHandle(sequenceElement());
-        public static final long[] DIMS = { 40 };
-    }
-
-    /**
-     * Layout for variable:
-     * {@snippet lang=c :
-     * extern const struct MobEffect MOB_EFFECTS[40]
-     * }
-     */
-    public static SequenceLayout MOB_EFFECTS$layout() {
-        return MOB_EFFECTS$constants.LAYOUT;
-    }
-
-    /**
-     * Dimensions for array variable:
-     * {@snippet lang=c :
-     * extern const struct MobEffect MOB_EFFECTS[40]
-     * }
-     */
-    public static long[] MOB_EFFECTS$dimensions() {
-        return MOB_EFFECTS$constants.DIMS;
-    }
-
-    /**
-     * Getter for variable:
-     * {@snippet lang=c :
-     * extern const struct MobEffect MOB_EFFECTS[40]
-     * }
-     */
-    public static MemorySegment MOB_EFFECTS() {
-        return MOB_EFFECTS$constants.SEGMENT;
-    }
-
-    /**
-     * Setter for variable:
-     * {@snippet lang=c :
-     * extern const struct MobEffect MOB_EFFECTS[40]
-     * }
-     */
-    public static void MOB_EFFECTS(MemorySegment varValue) {
-        MemorySegment.copy(varValue, 0L, MOB_EFFECTS$constants.SEGMENT, 0L, MOB_EFFECTS$constants.LAYOUT.byteSize());
-    }
-
-    /**
-     * Indexed getter for variable:
-     * {@snippet lang=c :
-     * extern const struct MobEffect MOB_EFFECTS[40]
-     * }
-     */
-    public static MemorySegment MOB_EFFECTS(long index0) {
-        try {
-            return (MemorySegment)MOB_EFFECTS$constants.HANDLE.invokeExact(MOB_EFFECTS$constants.SEGMENT, 0L, index0);
-        } catch (Error | RuntimeException ex) {
-            throw ex;
-        } catch (Throwable ex$) {
-            throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    /**
-     * Indexed setter for variable:
-     * {@snippet lang=c :
-     * extern const struct MobEffect MOB_EFFECTS[40]
-     * }
-     */
-    public static void MOB_EFFECTS(long index0, MemorySegment varValue) {
-        MemorySegment.copy(varValue, 0L, MOB_EFFECTS(index0), 0L, MobEffect.layout().byteSize());
-    }
-
-    private static class create_set_count {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("create_set_count");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void create_set_count(LootFunction *lf, const int min, const int max)
-     * }
-     */
-    public static FunctionDescriptor create_set_count$descriptor() {
-        return create_set_count.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void create_set_count(LootFunction *lf, const int min, const int max)
-     * }
-     */
-    public static MethodHandle create_set_count$handle() {
-        return create_set_count.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void create_set_count(LootFunction *lf, const int min, const int max)
-     * }
-     */
-    public static MemorySegment create_set_count$address() {
-        return create_set_count.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void create_set_count(LootFunction *lf, const int min, const int max)
-     * }
-     */
-    public static void create_set_count(MemorySegment lf, int min, int max) {
-        var mh$ = create_set_count.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("create_set_count", lf, min, max);
-            }
-            mh$.invokeExact(lf, min, max);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class create_set_effect {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("create_set_effect");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void create_set_effect(LootFunction *lf, const int count, const MobEffectEntry mobEffects[])
-     * }
-     */
-    public static FunctionDescriptor create_set_effect$descriptor() {
-        return create_set_effect.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void create_set_effect(LootFunction *lf, const int count, const MobEffectEntry mobEffects[])
-     * }
-     */
-    public static MethodHandle create_set_effect$handle() {
-        return create_set_effect.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void create_set_effect(LootFunction *lf, const int count, const MobEffectEntry mobEffects[])
-     * }
-     */
-    public static MemorySegment create_set_effect$address() {
-        return create_set_effect.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void create_set_effect(LootFunction *lf, const int count, const MobEffectEntry mobEffects[])
-     * }
-     */
-    public static void create_set_effect(MemorySegment lf, int count, MemorySegment mobEffects) {
-        var mh$ = create_set_effect.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("create_set_effect", lf, count, mobEffects);
-            }
-            mh$.invokeExact(lf, count, mobEffects);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class create_set_damage {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("create_set_damage");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void create_set_damage(LootFunction *lf)
-     * }
-     */
-    public static FunctionDescriptor create_set_damage$descriptor() {
-        return create_set_damage.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void create_set_damage(LootFunction *lf)
-     * }
-     */
-    public static MethodHandle create_set_damage$handle() {
-        return create_set_damage.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void create_set_damage(LootFunction *lf)
-     * }
-     */
-    public static MemorySegment create_set_damage$address() {
-        return create_set_damage.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void create_set_damage(LootFunction *lf)
-     * }
-     */
-    public static void create_set_damage(MemorySegment lf) {
-        var mh$ = create_set_damage.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("create_set_damage", lf);
-            }
-            mh$.invokeExact(lf);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class create_skip_calls {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("create_skip_calls");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void create_skip_calls(LootFunction *lf, const int skip_count)
-     * }
-     */
-    public static FunctionDescriptor create_skip_calls$descriptor() {
-        return create_skip_calls.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void create_skip_calls(LootFunction *lf, const int skip_count)
-     * }
-     */
-    public static MethodHandle create_skip_calls$handle() {
-        return create_skip_calls.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void create_skip_calls(LootFunction *lf, const int skip_count)
-     * }
-     */
-    public static MemorySegment create_skip_calls$address() {
-        return create_skip_calls.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void create_skip_calls(LootFunction *lf, const int skip_count)
-     * }
-     */
-    public static void create_skip_calls(MemorySegment lf, int skip_count) {
-        var mh$ = create_skip_calls.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("create_skip_calls", lf, skip_count);
-            }
-            mh$.invokeExact(lf, skip_count);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class create_no_op {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("create_no_op");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void create_no_op(LootFunction *lf)
-     * }
-     */
-    public static FunctionDescriptor create_no_op$descriptor() {
-        return create_no_op.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void create_no_op(LootFunction *lf)
-     * }
-     */
-    public static MethodHandle create_no_op$handle() {
-        return create_no_op.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void create_no_op(LootFunction *lf)
-     * }
-     */
-    public static MemorySegment create_no_op$address() {
-        return create_no_op.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void create_no_op(LootFunction *lf)
-     * }
-     */
-    public static void create_no_op(MemorySegment lf) {
-        var mh$ = create_no_op.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("create_no_op", lf);
-            }
-            mh$.invokeExact(lf);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class create_enchant_randomly_one_enchant {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("create_enchant_randomly_one_enchant");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void create_enchant_randomly_one_enchant(LootFunction *lf, const Enchantment enchantment)
-     * }
-     */
-    public static FunctionDescriptor create_enchant_randomly_one_enchant$descriptor() {
-        return create_enchant_randomly_one_enchant.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void create_enchant_randomly_one_enchant(LootFunction *lf, const Enchantment enchantment)
-     * }
-     */
-    public static MethodHandle create_enchant_randomly_one_enchant$handle() {
-        return create_enchant_randomly_one_enchant.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void create_enchant_randomly_one_enchant(LootFunction *lf, const Enchantment enchantment)
-     * }
-     */
-    public static MemorySegment create_enchant_randomly_one_enchant$address() {
-        return create_enchant_randomly_one_enchant.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void create_enchant_randomly_one_enchant(LootFunction *lf, const Enchantment enchantment)
-     * }
-     */
-    public static void create_enchant_randomly_one_enchant(MemorySegment lf, int enchantment) {
-        var mh$ = create_enchant_randomly_one_enchant.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("create_enchant_randomly_one_enchant", lf, enchantment);
-            }
-            mh$.invokeExact(lf, enchantment);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class create_enchant_randomly_list {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("create_enchant_randomly_list");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void create_enchant_randomly_list(LootFunction *lf, const Enchantment *list, const int list_length)
-     * }
-     */
-    public static FunctionDescriptor create_enchant_randomly_list$descriptor() {
-        return create_enchant_randomly_list.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void create_enchant_randomly_list(LootFunction *lf, const Enchantment *list, const int list_length)
-     * }
-     */
-    public static MethodHandle create_enchant_randomly_list$handle() {
-        return create_enchant_randomly_list.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void create_enchant_randomly_list(LootFunction *lf, const Enchantment *list, const int list_length)
-     * }
-     */
-    public static MemorySegment create_enchant_randomly_list$address() {
-        return create_enchant_randomly_list.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void create_enchant_randomly_list(LootFunction *lf, const Enchantment *list, const int list_length)
-     * }
-     */
-    public static void create_enchant_randomly_list(MemorySegment lf, MemorySegment list, int list_length) {
-        var mh$ = create_enchant_randomly_list.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("create_enchant_randomly_list", lf, list, list_length);
-            }
-            mh$.invokeExact(lf, list, list_length);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class create_enchant_randomly {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("create_enchant_randomly");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void create_enchant_randomly(LootFunction *lf, const int version, const ItemType item, const int isTreasure)
-     * }
-     */
-    public static FunctionDescriptor create_enchant_randomly$descriptor() {
-        return create_enchant_randomly.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void create_enchant_randomly(LootFunction *lf, const int version, const ItemType item, const int isTreasure)
-     * }
-     */
-    public static MethodHandle create_enchant_randomly$handle() {
-        return create_enchant_randomly.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void create_enchant_randomly(LootFunction *lf, const int version, const ItemType item, const int isTreasure)
-     * }
-     */
-    public static MemorySegment create_enchant_randomly$address() {
-        return create_enchant_randomly.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void create_enchant_randomly(LootFunction *lf, const int version, const ItemType item, const int isTreasure)
-     * }
-     */
-    public static void create_enchant_randomly(MemorySegment lf, int version, int item, int isTreasure) {
-        var mh$ = create_enchant_randomly.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("create_enchant_randomly", lf, version, item, isTreasure);
-            }
-            mh$.invokeExact(lf, version, item, isTreasure);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class create_enchant_randomly_tag {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("create_enchant_randomly_tag");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void create_enchant_randomly_tag(LootFunction *lf, const int version, const ItemType item, const char *tag, const int allowTreasure)
-     * }
-     */
-    public static FunctionDescriptor create_enchant_randomly_tag$descriptor() {
-        return create_enchant_randomly_tag.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void create_enchant_randomly_tag(LootFunction *lf, const int version, const ItemType item, const char *tag, const int allowTreasure)
-     * }
-     */
-    public static MethodHandle create_enchant_randomly_tag$handle() {
-        return create_enchant_randomly_tag.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void create_enchant_randomly_tag(LootFunction *lf, const int version, const ItemType item, const char *tag, const int allowTreasure)
-     * }
-     */
-    public static MemorySegment create_enchant_randomly_tag$address() {
-        return create_enchant_randomly_tag.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void create_enchant_randomly_tag(LootFunction *lf, const int version, const ItemType item, const char *tag, const int allowTreasure)
-     * }
-     */
-    public static void create_enchant_randomly_tag(MemorySegment lf, int version, int item, MemorySegment tag, int allowTreasure) {
-        var mh$ = create_enchant_randomly_tag.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("create_enchant_randomly_tag", lf, version, item, tag, allowTreasure);
-            }
-            mh$.invokeExact(lf, version, item, tag, allowTreasure);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class create_enchant_with_levels {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("create_enchant_with_levels");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void create_enchant_with_levels(LootFunction *lf, const int version, const char *item_name, const ItemType item_type, const int min_level, const int max_level, const int isTreasure)
-     * }
-     */
-    public static FunctionDescriptor create_enchant_with_levels$descriptor() {
-        return create_enchant_with_levels.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void create_enchant_with_levels(LootFunction *lf, const int version, const char *item_name, const ItemType item_type, const int min_level, const int max_level, const int isTreasure)
-     * }
-     */
-    public static MethodHandle create_enchant_with_levels$handle() {
-        return create_enchant_with_levels.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void create_enchant_with_levels(LootFunction *lf, const int version, const char *item_name, const ItemType item_type, const int min_level, const int max_level, const int isTreasure)
-     * }
-     */
-    public static MemorySegment create_enchant_with_levels$address() {
-        return create_enchant_with_levels.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void create_enchant_with_levels(LootFunction *lf, const int version, const char *item_name, const ItemType item_type, const int min_level, const int max_level, const int isTreasure)
-     * }
-     */
-    public static void create_enchant_with_levels(MemorySegment lf, int version, MemorySegment item_name, int item_type, int min_level, int max_level, int isTreasure) {
-        var mh$ = create_enchant_with_levels.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("create_enchant_with_levels", lf, version, item_name, item_type, min_level, max_level, isTreasure);
-            }
-            mh$.invokeExact(lf, version, item_name, item_type, min_level, max_level, isTreasure);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class create_enchant_with_levels_tag {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("create_enchant_with_levels_tag");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void create_enchant_with_levels_tag(LootFunction *lf, const int version, const char *item_name, const ItemType item_type, const int min_level, const int max_level, const char *tag, const int allowTreasure)
-     * }
-     */
-    public static FunctionDescriptor create_enchant_with_levels_tag$descriptor() {
-        return create_enchant_with_levels_tag.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void create_enchant_with_levels_tag(LootFunction *lf, const int version, const char *item_name, const ItemType item_type, const int min_level, const int max_level, const char *tag, const int allowTreasure)
-     * }
-     */
-    public static MethodHandle create_enchant_with_levels_tag$handle() {
-        return create_enchant_with_levels_tag.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void create_enchant_with_levels_tag(LootFunction *lf, const int version, const char *item_name, const ItemType item_type, const int min_level, const int max_level, const char *tag, const int allowTreasure)
-     * }
-     */
-    public static MemorySegment create_enchant_with_levels_tag$address() {
-        return create_enchant_with_levels_tag.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void create_enchant_with_levels_tag(LootFunction *lf, const int version, const char *item_name, const ItemType item_type, const int min_level, const int max_level, const char *tag, const int allowTreasure)
-     * }
-     */
-    public static void create_enchant_with_levels_tag(MemorySegment lf, int version, MemorySegment item_name, int item_type, int min_level, int max_level, MemorySegment tag, int allowTreasure) {
-        var mh$ = create_enchant_with_levels_tag.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("create_enchant_with_levels_tag", lf, version, item_name, item_type, min_level, max_level, tag, allowTreasure);
-            }
-            mh$.invokeExact(lf, version, item_name, item_type, min_level, max_level, tag, allowTreasure);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class get_enchantment_name {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("get_enchantment_name");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * const char *get_enchantment_name(const Enchantment enchantment)
-     * }
-     */
-    public static FunctionDescriptor get_enchantment_name$descriptor() {
-        return get_enchantment_name.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * const char *get_enchantment_name(const Enchantment enchantment)
-     * }
-     */
-    public static MethodHandle get_enchantment_name$handle() {
-        return get_enchantment_name.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * const char *get_enchantment_name(const Enchantment enchantment)
-     * }
-     */
-    public static MemorySegment get_enchantment_name$address() {
-        return get_enchantment_name.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * const char *get_enchantment_name(const Enchantment enchantment)
-     * }
-     */
-    public static MemorySegment get_enchantment_name(int enchantment) {
-        var mh$ = get_enchantment_name.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("get_enchantment_name", enchantment);
-            }
-            return (MemorySegment)mh$.invokeExact(enchantment);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    /**
-     * Variadic invoker class for:
-     * {@snippet lang=c :
-     * void test_enchant_vec()
-     * }
-     */
-    public static class test_enchant_vec {
-        private static final FunctionDescriptor BASE_DESC = FunctionDescriptor.ofVoid(        );
-        private static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("test_enchant_vec");
-
-        private final MethodHandle handle;
-        private final FunctionDescriptor descriptor;
-        private final MethodHandle spreader;
-
-        private test_enchant_vec(MethodHandle handle, FunctionDescriptor descriptor, MethodHandle spreader) {
-            this.handle = handle;
-            this.descriptor = descriptor;
-            this.spreader = spreader;
-        }
-
-        /**
-         * Variadic invoker factory for:
-         * {@snippet lang=c :
-         * void test_enchant_vec()
-         * }
-         */
-        public static test_enchant_vec makeInvoker(MemoryLayout... layouts) {
-            FunctionDescriptor desc$ = BASE_DESC.appendArgumentLayouts(layouts);
-            Linker.Option fva$ = Linker.Option.firstVariadicArg(BASE_DESC.argumentLayouts().size());
-            var mh$ = Linker.nativeLinker().downcallHandle(ADDR, desc$, fva$);
-            var spreader$ = mh$.asSpreader(Object[].class, layouts.length);
-            return new test_enchant_vec(mh$, desc$, spreader$);
-        }
-
-        /**
-         * {@return the address}
-         */
-        public static MemorySegment address() {
-            return ADDR;
-        }
-
-        /**
-         * {@return the specialized method handle}
-         */
-        public MethodHandle handle() {
-            return handle;
-        }
-
-        /**
-         * {@return the specialized descriptor}
-         */
-        public FunctionDescriptor descriptor() {
-            return descriptor;
-        }
-
-        public void apply(Object... x0) {
-            try {
-                if (TRACE_DOWNCALLS) {
-                    traceDowncall("test_enchant_vec", x0);
-                }
-                 spreader.invokeExact(x0);
-            } catch(IllegalArgumentException | ClassCastException ex$)  {
-                throw ex$; // rethrow IAE from passing wrong number/type of args
-            } catch (Throwable ex$) {
-               throw new AssertionError("should not reach here", ex$);
-            }
-        }
-    }
-    private static final int GENERATE_NATURAL = (int)0L;
+    private static final int POTION_WATER = (int)0L;
     /**
      * {@snippet lang=c :
-     * enum GenerationMode.GENERATE_NATURAL = 0
+     * enum PotionType.POTION_WATER = 0
      * }
      */
-    public static int GENERATE_NATURAL() {
-        return GENERATE_NATURAL;
+    public static int POTION_WATER() {
+        return POTION_WATER;
     }
-    private static final int GENERATE_INDEXED = (int)1L;
+    private static final int POTION_MUNDANE = (int)1L;
     /**
      * {@snippet lang=c :
-     * enum GenerationMode.GENERATE_INDEXED = 1
+     * enum PotionType.POTION_MUNDANE = 1
      * }
      */
-    public static int GENERATE_INDEXED() {
-        return GENERATE_INDEXED;
+    public static int POTION_MUNDANE() {
+        return POTION_MUNDANE;
     }
-    private static final int GENERATE_AGGREGATED = (int)2L;
+    private static final int POTION_THICK = (int)2L;
     /**
      * {@snippet lang=c :
-     * enum GenerationMode.GENERATE_AGGREGATED = 2
+     * enum PotionType.POTION_THICK = 2
      * }
      */
-    public static int GENERATE_AGGREGATED() {
-        return GENERATE_AGGREGATED;
+    public static int POTION_THICK() {
+        return POTION_THICK;
     }
-    private static final int SKIP_ENCHANTMENTS = (int)4L;
+    private static final int POTION_AWKWARD = (int)3L;
     /**
      * {@snippet lang=c :
-     * enum GenerationMode.SKIP_ENCHANTMENTS = 4
+     * enum PotionType.POTION_AWKWARD = 3
      * }
      */
-    public static int SKIP_ENCHANTMENTS() {
-        return SKIP_ENCHANTMENTS;
+    public static int POTION_AWKWARD() {
+        return POTION_AWKWARD;
     }
-    private static final int STOP_AT_PREDICATE_MATCH = (int)8L;
+    private static final int POTION_NIGHT_VISION = (int)4L;
     /**
      * {@snippet lang=c :
-     * enum GenerationMode.STOP_AT_PREDICATE_MATCH = 8
+     * enum PotionType.POTION_NIGHT_VISION = 4
      * }
      */
-    public static int STOP_AT_PREDICATE_MATCH() {
-        return STOP_AT_PREDICATE_MATCH;
+    public static int POTION_NIGHT_VISION() {
+        return POTION_NIGHT_VISION;
     }
-
-    private static class set_loot_seed {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER,
-            Cubiomes.C_LONG
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("set_loot_seed");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void set_loot_seed(LootTableContext *context, uint64_t seed)
-     * }
-     */
-    public static FunctionDescriptor set_loot_seed$descriptor() {
-        return set_loot_seed.DESC;
-    }
-
+    private static final int POTION_LONG_NIGHT_VISION = (int)5L;
     /**
-     * Downcall method handle for:
      * {@snippet lang=c :
-     * void set_loot_seed(LootTableContext *context, uint64_t seed)
+     * enum PotionType.POTION_LONG_NIGHT_VISION = 5
      * }
      */
-    public static MethodHandle set_loot_seed$handle() {
-        return set_loot_seed.HANDLE;
+    public static int POTION_LONG_NIGHT_VISION() {
+        return POTION_LONG_NIGHT_VISION;
     }
-
+    private static final int POTION_INVISIBILITY = (int)6L;
     /**
-     * Address for:
      * {@snippet lang=c :
-     * void set_loot_seed(LootTableContext *context, uint64_t seed)
+     * enum PotionType.POTION_INVISIBILITY = 6
      * }
      */
-    public static MemorySegment set_loot_seed$address() {
-        return set_loot_seed.ADDR;
+    public static int POTION_INVISIBILITY() {
+        return POTION_INVISIBILITY;
     }
-
+    private static final int POTION_LONG_INVISIBILITY = (int)7L;
     /**
      * {@snippet lang=c :
-     * void set_loot_seed(LootTableContext *context, uint64_t seed)
+     * enum PotionType.POTION_LONG_INVISIBILITY = 7
      * }
      */
-    public static void set_loot_seed(MemorySegment context, long seed) {
-        var mh$ = set_loot_seed.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("set_loot_seed", context, seed);
-            }
-            mh$.invokeExact(context, seed);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class set_internal_loot_seed {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER,
-            Cubiomes.C_LONG
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("set_internal_loot_seed");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    public static int POTION_LONG_INVISIBILITY() {
+        return POTION_LONG_INVISIBILITY;
     }
-
+    private static final int POTION_LEAPING = (int)8L;
     /**
-     * Function descriptor for:
      * {@snippet lang=c :
-     * void set_internal_loot_seed(LootTableContext *context, uint64_t internal_seed)
+     * enum PotionType.POTION_LEAPING = 8
      * }
      */
-    public static FunctionDescriptor set_internal_loot_seed$descriptor() {
-        return set_internal_loot_seed.DESC;
+    public static int POTION_LEAPING() {
+        return POTION_LEAPING;
     }
-
+    private static final int POTION_LONG_LEAPING = (int)9L;
     /**
-     * Downcall method handle for:
      * {@snippet lang=c :
-     * void set_internal_loot_seed(LootTableContext *context, uint64_t internal_seed)
+     * enum PotionType.POTION_LONG_LEAPING = 9
      * }
      */
-    public static MethodHandle set_internal_loot_seed$handle() {
-        return set_internal_loot_seed.HANDLE;
+    public static int POTION_LONG_LEAPING() {
+        return POTION_LONG_LEAPING;
     }
-
+    private static final int POTION_STRONG_LEAPING = (int)10L;
     /**
-     * Address for:
      * {@snippet lang=c :
-     * void set_internal_loot_seed(LootTableContext *context, uint64_t internal_seed)
+     * enum PotionType.POTION_STRONG_LEAPING = 10
      * }
      */
-    public static MemorySegment set_internal_loot_seed$address() {
-        return set_internal_loot_seed.ADDR;
+    public static int POTION_STRONG_LEAPING() {
+        return POTION_STRONG_LEAPING;
     }
-
+    private static final int POTION_FIRE_RESISTANCE = (int)11L;
     /**
      * {@snippet lang=c :
-     * void set_internal_loot_seed(LootTableContext *context, uint64_t internal_seed)
+     * enum PotionType.POTION_FIRE_RESISTANCE = 11
      * }
      */
-    public static void set_internal_loot_seed(MemorySegment context, long internal_seed) {
-        var mh$ = set_internal_loot_seed.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("set_internal_loot_seed", context, internal_seed);
-            }
-            mh$.invokeExact(context, internal_seed);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
+    public static int POTION_FIRE_RESISTANCE() {
+        return POTION_FIRE_RESISTANCE;
     }
-
-    private static class get_item_id {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("get_item_id");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
+    private static final int POTION_LONG_FIRE_RESISTANCE = (int)12L;
     /**
-     * Function descriptor for:
      * {@snippet lang=c :
-     * int get_item_id(LootTableContext *context, const char *item_name)
+     * enum PotionType.POTION_LONG_FIRE_RESISTANCE = 12
      * }
      */
-    public static FunctionDescriptor get_item_id$descriptor() {
-        return get_item_id.DESC;
+    public static int POTION_LONG_FIRE_RESISTANCE() {
+        return POTION_LONG_FIRE_RESISTANCE;
     }
-
+    private static final int POTION_SWIFTNESS = (int)13L;
     /**
-     * Downcall method handle for:
      * {@snippet lang=c :
-     * int get_item_id(LootTableContext *context, const char *item_name)
+     * enum PotionType.POTION_SWIFTNESS = 13
      * }
      */
-    public static MethodHandle get_item_id$handle() {
-        return get_item_id.HANDLE;
+    public static int POTION_SWIFTNESS() {
+        return POTION_SWIFTNESS;
     }
-
+    private static final int POTION_LONG_SWIFTNESS = (int)14L;
     /**
-     * Address for:
      * {@snippet lang=c :
-     * int get_item_id(LootTableContext *context, const char *item_name)
+     * enum PotionType.POTION_LONG_SWIFTNESS = 14
      * }
      */
-    public static MemorySegment get_item_id$address() {
-        return get_item_id.ADDR;
+    public static int POTION_LONG_SWIFTNESS() {
+        return POTION_LONG_SWIFTNESS;
     }
-
+    private static final int POTION_STRONG_SWIFTNESS = (int)15L;
     /**
      * {@snippet lang=c :
-     * int get_item_id(LootTableContext *context, const char *item_name)
+     * enum PotionType.POTION_STRONG_SWIFTNESS = 15
      * }
      */
-    public static int get_item_id(MemorySegment context, MemorySegment item_name) {
-        var mh$ = get_item_id.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("get_item_id", context, item_name);
-            }
-            return (int)mh$.invokeExact(context, item_name);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
+    public static int POTION_STRONG_SWIFTNESS() {
+        return POTION_STRONG_SWIFTNESS;
     }
-
-    private static class get_global_item_id {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("get_global_item_id");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
+    private static final int POTION_SLOWNESS = (int)16L;
     /**
-     * Function descriptor for:
      * {@snippet lang=c :
-     * int get_global_item_id(LootTableContext *context, int item_id)
+     * enum PotionType.POTION_SLOWNESS = 16
      * }
      */
-    public static FunctionDescriptor get_global_item_id$descriptor() {
-        return get_global_item_id.DESC;
+    public static int POTION_SLOWNESS() {
+        return POTION_SLOWNESS;
     }
-
+    private static final int POTION_LONG_SLOWNESS = (int)17L;
     /**
-     * Downcall method handle for:
      * {@snippet lang=c :
-     * int get_global_item_id(LootTableContext *context, int item_id)
+     * enum PotionType.POTION_LONG_SLOWNESS = 17
      * }
      */
-    public static MethodHandle get_global_item_id$handle() {
-        return get_global_item_id.HANDLE;
+    public static int POTION_LONG_SLOWNESS() {
+        return POTION_LONG_SLOWNESS;
     }
-
+    private static final int POTION_STRONG_SLOWNESS = (int)18L;
     /**
-     * Address for:
      * {@snippet lang=c :
-     * int get_global_item_id(LootTableContext *context, int item_id)
+     * enum PotionType.POTION_STRONG_SLOWNESS = 18
      * }
      */
-    public static MemorySegment get_global_item_id$address() {
-        return get_global_item_id.ADDR;
+    public static int POTION_STRONG_SLOWNESS() {
+        return POTION_STRONG_SLOWNESS;
     }
-
+    private static final int POTION_TURTLE_MASTER = (int)19L;
     /**
      * {@snippet lang=c :
-     * int get_global_item_id(LootTableContext *context, int item_id)
+     * enum PotionType.POTION_TURTLE_MASTER = 19
      * }
      */
-    public static int get_global_item_id(MemorySegment context, int item_id) {
-        var mh$ = get_global_item_id.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("get_global_item_id", context, item_id);
-            }
-            return (int)mh$.invokeExact(context, item_id);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class get_item_name {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_POINTER,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("get_item_name");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    public static int POTION_TURTLE_MASTER() {
+        return POTION_TURTLE_MASTER;
     }
-
+    private static final int POTION_LONG_TURTLE_MASTER = (int)20L;
     /**
-     * Function descriptor for:
      * {@snippet lang=c :
-     * const char *get_item_name(LootTableContext *context, int item_id)
+     * enum PotionType.POTION_LONG_TURTLE_MASTER = 20
      * }
      */
-    public static FunctionDescriptor get_item_name$descriptor() {
-        return get_item_name.DESC;
+    public static int POTION_LONG_TURTLE_MASTER() {
+        return POTION_LONG_TURTLE_MASTER;
     }
-
+    private static final int POTION_STRONG_TURTLE_MASTER = (int)21L;
     /**
-     * Downcall method handle for:
      * {@snippet lang=c :
-     * const char *get_item_name(LootTableContext *context, int item_id)
+     * enum PotionType.POTION_STRONG_TURTLE_MASTER = 21
      * }
      */
-    public static MethodHandle get_item_name$handle() {
-        return get_item_name.HANDLE;
+    public static int POTION_STRONG_TURTLE_MASTER() {
+        return POTION_STRONG_TURTLE_MASTER;
     }
-
+    private static final int POTION_WATER_BREATHING = (int)22L;
     /**
-     * Address for:
      * {@snippet lang=c :
-     * const char *get_item_name(LootTableContext *context, int item_id)
+     * enum PotionType.POTION_WATER_BREATHING = 22
      * }
      */
-    public static MemorySegment get_item_name$address() {
-        return get_item_name.ADDR;
+    public static int POTION_WATER_BREATHING() {
+        return POTION_WATER_BREATHING;
     }
-
+    private static final int POTION_LONG_WATER_BREATHING = (int)23L;
     /**
      * {@snippet lang=c :
-     * const char *get_item_name(LootTableContext *context, int item_id)
+     * enum PotionType.POTION_LONG_WATER_BREATHING = 23
      * }
      */
-    public static MemorySegment get_item_name(MemorySegment context, int item_id) {
-        var mh$ = get_item_name.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("get_item_name", context, item_id);
-            }
-            return (MemorySegment)mh$.invokeExact(context, item_id);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
+    public static int POTION_LONG_WATER_BREATHING() {
+        return POTION_LONG_WATER_BREATHING;
     }
 }
 

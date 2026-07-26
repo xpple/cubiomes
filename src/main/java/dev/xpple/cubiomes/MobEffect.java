@@ -15,8 +15,8 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
 /**
  * {@snippet lang=c :
  * struct MobEffect {
- *     const int effect;
  *     const char *effect_name;
+ *     const int effect;
  *     const int is_instantaneous;
  * }
  * }
@@ -28,11 +28,9 @@ public class MobEffect {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        Cubiomes.C_INT.withName("effect"),
-        MemoryLayout.paddingLayout(4),
         Cubiomes.C_POINTER.withName("effect_name"),
-        Cubiomes.C_INT.withName("is_instantaneous"),
-        MemoryLayout.paddingLayout(4)
+        Cubiomes.C_INT.withName("effect"),
+        Cubiomes.C_INT.withName("is_instantaneous")
     ).withName("MobEffect");
 
     /**
@@ -40,50 +38,6 @@ public class MobEffect {
      */
     public static final GroupLayout layout() {
         return $LAYOUT;
-    }
-
-    private static final OfInt effect$LAYOUT = (OfInt)$LAYOUT.select(groupElement("effect"));
-
-    /**
-     * Layout for field:
-     * {@snippet lang=c :
-     * const int effect
-     * }
-     */
-    public static final OfInt effect$layout() {
-        return effect$LAYOUT;
-    }
-
-    private static final long effect$OFFSET = $LAYOUT.byteOffset(groupElement("effect"));
-
-    /**
-     * Offset for field:
-     * {@snippet lang=c :
-     * const int effect
-     * }
-     */
-    public static final long effect$offset() {
-        return effect$OFFSET;
-    }
-
-    /**
-     * Getter for field:
-     * {@snippet lang=c :
-     * const int effect
-     * }
-     */
-    public static int effect(MemorySegment struct) {
-        return struct.get(effect$LAYOUT, effect$OFFSET);
-    }
-
-    /**
-     * Setter for field:
-     * {@snippet lang=c :
-     * const int effect
-     * }
-     */
-    public static void effect(MemorySegment struct, int fieldValue) {
-        struct.set(effect$LAYOUT, effect$OFFSET, fieldValue);
     }
 
     private static final AddressLayout effect_name$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("effect_name"));
@@ -128,6 +82,50 @@ public class MobEffect {
      */
     public static void effect_name(MemorySegment struct, MemorySegment fieldValue) {
         struct.set(effect_name$LAYOUT, effect_name$OFFSET, fieldValue);
+    }
+
+    private static final OfInt effect$LAYOUT = (OfInt)$LAYOUT.select(groupElement("effect"));
+
+    /**
+     * Layout for field:
+     * {@snippet lang=c :
+     * const int effect
+     * }
+     */
+    public static final OfInt effect$layout() {
+        return effect$LAYOUT;
+    }
+
+    private static final long effect$OFFSET = $LAYOUT.byteOffset(groupElement("effect"));
+
+    /**
+     * Offset for field:
+     * {@snippet lang=c :
+     * const int effect
+     * }
+     */
+    public static final long effect$offset() {
+        return effect$OFFSET;
+    }
+
+    /**
+     * Getter for field:
+     * {@snippet lang=c :
+     * const int effect
+     * }
+     */
+    public static int effect(MemorySegment struct) {
+        return struct.get(effect$LAYOUT, effect$OFFSET);
+    }
+
+    /**
+     * Setter for field:
+     * {@snippet lang=c :
+     * const int effect
+     * }
+     */
+    public static void effect(MemorySegment struct, int fieldValue) {
+        struct.set(effect$LAYOUT, effect$OFFSET, fieldValue);
     }
 
     private static final OfInt is_instantaneous$LAYOUT = (OfInt)$LAYOUT.select(groupElement("is_instantaneous"));
