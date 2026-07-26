@@ -135,7 +135,7 @@ static void set_potion_function(uint64_t* rand, ItemStack* is, const void* param
 {
     int* varparams_int = (int*)params;
     Potion potion = *(Potion *)varparams_int;
-    // currently only abandoned camps use potions, where each potion has exactly one mob effect
+    // currently only buried treasures and abandoned camps use potions, where each potion has exactly one mob effect
     if (potion.mob_effect_count == 1) {
         is->mob_effect = potion.mob_effects[0];
     }

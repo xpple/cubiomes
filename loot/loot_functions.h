@@ -225,7 +225,7 @@ STRUCT(Potion) {
     const char *potion_name;
     const int potion;
     const int mob_effect_count;
-    const MobEffectInstance mob_effects[2];
+    const MobEffectInstance mob_effects[2]; // 2 is the max currently
 };
 
 extern const struct Potion POTIONS[POTION_NUM];

@@ -163,6 +163,11 @@ def parse_loot_table(version: str, json_pools) -> LootTableContext:
     for json_pool in json_pools:
         min_rolls, max_rolls, roll_count_function = parse_pool_rolls(json_pool["rolls"])
 
+        pool_loot_functions = []
+        for json_pool_function_entry in json_pool.get("functions", []):
+            pool_loot_function = parse_loot_function(json_pool_function_entry, None)
+            pool_loot_functions.append(pool_loot_function)
+
         pool_entries: list[PoolEntry] = []
         for entry_idx, json_entry in enumerate(json_pool["entries"]):
             entry_type = json_entry["type"]
@@ -181,6 +186,7 @@ def parse_loot_table(version: str, json_pools) -> LootTableContext:
             for json_function_entry in json_entry.get("functions", []):
                 loot_function = parse_loot_function(json_function_entry, entry_name)
                 loot_functions.append(loot_function)
+            loot_functions.extend(pool_loot_functions)
 
             pool_entries.append(PoolEntry(entry_name, entry_weight, loot_functions))
 
@@ -200,7 +206,7 @@ def parse_pool_rolls(json_rolls) -> (int, int, str):
     return int(min_rolls), int(max_rolls), roll_count_function
 
 
-def parse_loot_function(json_function_entry, entry_name: str) -> LootFunction:
+def parse_loot_function(json_function_entry, entry_name: str | None) -> LootFunction:
     json_function = json_function_entry["function"]
     if json_function.startswith('minecraft:'):
         json_function = json_function[len('minecraft:'):]
@@ -230,6 +236,8 @@ def parse_loot_function(json_function_entry, entry_name: str) -> LootFunction:
     if json_function == 'set_damage':
         return SetDamageFunction()
     if json_function == 'set_ominous_bottle_amplifier':
+        return SkipCallsFunction(1)
+    if json_function == 'set_instrument':
         return SkipCallsFunction(1)
     if json_function == 'enchant_randomly':
         enchantments = json_function_entry.get("enchantments", json_function_entry.get("options", None))
