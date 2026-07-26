@@ -18,6 +18,126 @@ public class Cubiomes extends Cubiomes_1 {
         // Should not be called directly
     }
 
+    private static class has_item {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("has_item");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int has_item(LootTableContext *context, int global_item_id)
+     * }
+     */
+    public static FunctionDescriptor has_item$descriptor() {
+        return has_item.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int has_item(LootTableContext *context, int global_item_id)
+     * }
+     */
+    public static MethodHandle has_item$handle() {
+        return has_item.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int has_item(LootTableContext *context, int global_item_id)
+     * }
+     */
+    public static MemorySegment has_item$address() {
+        return has_item.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int has_item(LootTableContext *context, int global_item_id)
+     * }
+     */
+    public static int has_item(MemorySegment context, int global_item_id) {
+        var mh$ = has_item.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("has_item", context, global_item_id);
+            }
+            return (int)mh$.invokeExact(context, global_item_id);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class generate_loot {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Cubiomes.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("generate_loot");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void generate_loot(LootTableContext *context)
+     * }
+     */
+    public static FunctionDescriptor generate_loot$descriptor() {
+        return generate_loot.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void generate_loot(LootTableContext *context)
+     * }
+     */
+    public static MethodHandle generate_loot$handle() {
+        return generate_loot.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void generate_loot(LootTableContext *context)
+     * }
+     */
+    public static MemorySegment generate_loot$address() {
+        return generate_loot.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void generate_loot(LootTableContext *context)
+     * }
+     */
+    public static void generate_loot(MemorySegment context) {
+        var mh$ = generate_loot.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("generate_loot", context);
+            }
+            mh$.invokeExact(context);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
     private static class init_loot_table_name {
         public static final FunctionDescriptor DESC = FunctionDescriptor.of(
             Cubiomes.C_INT,
