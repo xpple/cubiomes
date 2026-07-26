@@ -18,6 +18,7 @@ set(CMAKE_C_FLAGS_DEBUG "-O0 -g3 -DDEBUG")
 
 set(HEADERS
 	finders.h
+	carver.h
 	generator.h
 	layers.h
 	biomenoise.h
@@ -28,7 +29,10 @@ set(HEADERS
 	util.h
 	quadbase.h
 	xrms.h
-	features/abandoned_camp.h
+    features/abandoned_camp.h
+	features/end_city.h
+	features/fortress.h
+	features/ore.h
 	features/stronghold.h
 	loot/items.h
 	loot/logging.h
@@ -101,6 +105,7 @@ set(HEADERS
 )
 set(SOURCES
 	finders.c
+	carver.c
 	generator.c
 	layers.c
 	biomenoise.c
@@ -111,6 +116,9 @@ set(SOURCES
 	quadbase.c
 	xradv.c
 	features/abandoned_camp.c
+	features/end_city.c
+	features/fortress.c
+	features/ore.c
 	features/stronghold.c
 	loot/items.c
 	loot/loot_functions.c
@@ -192,3 +200,10 @@ endif()
 
 install(TARGETS cubiomes cubiomes_static DESTINATION lib)
 install(FILES ${HEADERS} DESTINATION include)
+
+option(EXPORT_HEADERS "Export project headers" OFF)
+
+if (EXPORT_HEADERS)
+	string(JOIN "\n" HEADER_LIST ${HEADERS})
+	file(WRITE "${CMAKE_BINARY_DIR}/headers.txt" "${HEADER_LIST}\n")
+endif()
