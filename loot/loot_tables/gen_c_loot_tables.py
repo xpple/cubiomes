@@ -163,6 +163,13 @@ def parse_loot_table(version: str, json_pools) -> LootTableContext:
     for json_pool in json_pools:
         min_rolls, max_rolls, roll_count_function = parse_pool_rolls(json_pool["rolls"])
 
+        # Vanilla lets "functions" sit on the pool itself, not just on each
+        # entry — applied to whichever item the pool rolls (e.g. buried
+        # treasure's set_potion, pillager outpost's set_instrument). Folded
+        # into every entry's own function list, after its entry-level
+        # functions, matching vanilla's apply order.
+        pool_functions_json = json_pool.get("functions", [])
+
         pool_entries: list[PoolEntry] = []
         for entry_idx, json_entry in enumerate(json_pool["entries"]):
             entry_type = json_entry["type"]
@@ -178,7 +185,7 @@ def parse_loot_table(version: str, json_pools) -> LootTableContext:
             entry_weight = json_entry.get("weight", 1)
 
             loot_functions: list[LootFunction] = []
-            for json_function_entry in json_entry.get("functions", []):
+            for json_function_entry in [*json_entry.get("functions", []), *pool_functions_json]:
                 loot_function = parse_loot_function(json_function_entry, entry_name)
                 loot_functions.append(loot_function)
 

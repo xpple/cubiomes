@@ -82,9 +82,9 @@ static const LootPool pillager_outpost_1_20__3 = {
 };
 static int precomputed_loot__4[1] = {0};
 static int entry_to_item__4[1] = {11};
-static int entry_functions_count__4[1] = {0};
+static int entry_functions_count__4[1] = {1};
 static int entry_functions_index__4[1] = {0};
-static LootFunction loot_functions__4[0];
+static LootFunction loot_functions__4[1];
 static const LootPool pillager_outpost_1_20__4 = {
     .min_rolls = 0,
     .max_rolls = 1,
@@ -144,6 +144,7 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__3->loot_functions[3]), 1, 3);
     create_enchant_randomly(&(loot_pool__3->loot_functions[4]), MC_1_20, get_item_type("minecraft:book"), 0);
     LootPool* loot_pool__4 = &(context.loot_pools[4]);
+    create_no_op(&(loot_pool__4->loot_functions[0]));
     LootPool* loot_pool__5 = &(context.loot_pools[5]);
     create_set_count(&(loot_pool__5->loot_functions[0]), 2, 2);
 }

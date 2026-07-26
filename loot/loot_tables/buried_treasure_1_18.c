@@ -99,9 +99,9 @@ static const LootPool buried_treasure_1_18__4 = {
 };
 static int precomputed_loot__5[1] = {0};
 static int entry_to_item__5[1] = {11};
-static int entry_functions_count__5[1] = {0};
+static int entry_functions_count__5[1] = {1};
 static int entry_functions_index__5[1] = {0};
-static LootFunction loot_functions__5[0];
+static LootFunction loot_functions__5[1];
 static const LootPool buried_treasure_1_18__5 = {
     .min_rolls = 0,
     .max_rolls = 2,
@@ -144,6 +144,7 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__4->loot_functions[0]), 2, 4);
     create_set_count(&(loot_pool__4->loot_functions[1]), 2, 4);
     LootPool* loot_pool__5 = &(context.loot_pools[5]);
+    create_set_potion(&(loot_pool__5->loot_functions[0]), get_potion_from_name("minecraft:water_breathing"));
 }
 
 LootTableContext* init_buried_treasure_1_18() {
