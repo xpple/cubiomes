@@ -563,7 +563,7 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
     Piece* camp = &list[1];
     uint64_t rng = chunkGenerateRnd(seed, chunkX, chunkZ);
     rng = (rng * 205749139540585ULL + 277363943098ULL) & MASK48; // skip nextInt(4) and nextInt(10)
-    int campCount = 3 * 15 + 3;
+    int campCount = 3 * 15 + 4;
     int positions[campCount];
     for (int i = 0; i < campCount; i++) {
         positions[i] = i;
@@ -852,6 +852,11 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
                 camp->lootTables[0] = "abandoned_camp_secret_chest";
                 camp->lootTables[1] = "abandoned_camp_common_chest";
                 break;
+            case 4:
+                camp->name = "abandoned_camp/camp/bamboo_jungle/campsite_bamboo_jungle_4";
+                camp->chestCount = 1;
+                camp->lootTables[0] = "abandoned_camp_barrel";
+                break;
             default: UNREACHABLE();
             }
             break;
@@ -874,6 +879,11 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
                 camp->lootTables[1] = "abandoned_camp_barrel";
                 camp->lootTables[2] = "abandoned_camp_barrel";
                 break;
+            case 4:
+                camp->name = "abandoned_camp/camp/birch_forest/campsite_birch_forest_4";
+                camp->chestCount = 1;
+                camp->lootTables[0] = "abandoned_camp_common_chest";
+                break;
             default: UNREACHABLE();
             }
             break;
@@ -895,6 +905,14 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
                 camp->lootTables[0] = "abandoned_camp_secret_chest";
                 camp->lootTables[1] = "abandoned_camp_common_chest";
                 break;
+            case 4:
+                camp->name = "abandoned_camp/camp/cherry_grove/campsite_cherry_grove_4";
+                camp->chestCount = 4;
+                camp->lootTables[0] = "abandoned_camp_secret_chest";
+                camp->lootTables[1] = "abandoned_camp_barrel";
+                camp->lootTables[2] = "abandoned_camp_barrel";
+                camp->lootTables[3] = "abandoned_camp_barrel";
+                break;
             default: UNREACHABLE();
             }
             break;
@@ -915,6 +933,12 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
                 camp->chestCount = 2;
                 camp->lootTables[0] = "abandoned_camp_secret_chest";
                 camp->lootTables[1] = "abandoned_camp_barrel";
+                break;
+            case 4:
+                camp->name = "abandoned_camp/camp/dappled_forest/campsite_dappled_forest_4";
+                camp->chestCount = 2;
+                camp->lootTables[0] = "abandoned_camp_secret_chest";
+                camp->lootTables[1] = "abandoned_camp_common_chest";
                 break;
             default: UNREACHABLE();
             }
@@ -938,6 +962,12 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
                 camp->lootTables[0] = "abandoned_camp_barrel";
                 camp->lootTables[1] = "abandoned_camp_common_chest";
                 break;
+            case 4:
+                camp->name = "abandoned_camp/camp/flower_forest/campsite_flower_forest_4";
+                camp->chestCount = 2;
+                camp->lootTables[0] = "abandoned_camp_secret_chest";
+                camp->lootTables[1] = "abandoned_camp_barrel";
+                break;
             default: UNREACHABLE();
             }
             break;
@@ -959,6 +989,12 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
                 camp->lootTables[0] = "abandoned_camp_secret_chest";
                 camp->lootTables[1] = "abandoned_camp_common_chest";
                 break;
+            case 4:
+                camp->name = "abandoned_camp/camp/forest/campsite_forest_4";
+                camp->chestCount = 2;
+                camp->lootTables[0] = "abandoned_camp_secret_chest";
+                camp->lootTables[1] = "abandoned_camp_common_chest";
+                break;
             default: UNREACHABLE();
             }
             break;
@@ -976,6 +1012,12 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/meadow/campsite_meadow_3";
+                camp->chestCount = 2;
+                camp->lootTables[0] = "abandoned_camp_secret_chest";
+                camp->lootTables[1] = "abandoned_camp_barrel";
+                break;
+            case 4:
+                camp->name = "abandoned_camp/camp/meadow/campsite_meadow_4";
                 camp->chestCount = 2;
                 camp->lootTables[0] = "abandoned_camp_secret_chest";
                 camp->lootTables[1] = "abandoned_camp_barrel";
@@ -1002,6 +1044,12 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
                 camp->chestCount = 1;
                 camp->lootTables[0] = "abandoned_camp_common_chest";
                 break;
+            case 4:
+                camp->name = "abandoned_camp/camp/old_growth_birch_forest/campsite_old_growth_birch_forest_4";
+                camp->chestCount = 2;
+                camp->lootTables[0] = "abandoned_camp_secret_chest";
+                camp->lootTables[1] = "abandoned_camp_common_chest";
+                break;
             default: UNREACHABLE();
             }
             break;
@@ -1023,6 +1071,12 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
                 camp->chestCount = 1;
                 camp->lootTables[0] = "abandoned_camp_common_chest";
                 break;
+            case 4:
+                camp->name = "abandoned_camp/camp/old_growth_pine_taiga/campsite_old_growth_pine_taiga_4";
+                camp->chestCount = 2;
+                camp->lootTables[0] = "abandoned_camp_secret_chest";
+                camp->lootTables[1] = "abandoned_camp_common_chest";
+                break;
             default: UNREACHABLE();
             }
             break;
@@ -1042,6 +1096,12 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
                 camp->name = "abandoned_camp/camp/old_growth_spruce_taiga/campsite_old_growth_spruce_taiga_3";
                 camp->chestCount = 1;
                 camp->lootTables[0] = "abandoned_camp_common_chest";
+                break;
+            case 4:
+                camp->name = "abandoned_camp/camp/old_growth_spruce_taiga/campsite_old_growth_spruce_taiga_4";
+                camp->chestCount = 2;
+                camp->lootTables[0] = "abandoned_camp_secret_chest";
+                camp->lootTables[1] = "abandoned_camp_barrel";
                 break;
             default: UNREACHABLE();
             }
@@ -1064,6 +1124,12 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
                 camp->chestCount = 1;
                 camp->lootTables[0] = "abandoned_camp_common_chest";
                 break;
+            case 4:
+                camp->name = "abandoned_camp/camp/pale_garden/campsite_pale_garden_4";
+                camp->chestCount = 2;
+                camp->lootTables[0] = "abandoned_camp_secret_chest";
+                camp->lootTables[1] = "abandoned_camp_common_chest";
+                break;
             default: UNREACHABLE();
             }
             break;
@@ -1085,6 +1151,12 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
                 camp->chestCount = 1;
                 camp->lootTables[0] = "abandoned_camp_common_chest";
                 break;
+            case 4:
+                camp->name = "abandoned_camp/camp/savanna/campsite_savanna_4";
+                camp->chestCount = 2;
+                camp->lootTables[0] = "abandoned_camp_secret_chest";
+                camp->lootTables[1] = "abandoned_camp_barrel";
+                break;
             default: UNREACHABLE();
             }
             break;
@@ -1103,6 +1175,11 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/snowy_taiga/campsite_snowy_taiga_3";
+                camp->chestCount = 1;
+                camp->lootTables[0] = "abandoned_camp_barrel";
+                break;
+            case 4:
+                camp->name = "abandoned_camp/camp/snowy_taiga/campsite_snowy_taiga_4";
                 camp->chestCount = 1;
                 camp->lootTables[0] = "abandoned_camp_barrel";
                 break;
@@ -1128,6 +1205,14 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
                 camp->chestCount = 1;
                 camp->lootTables[0] = "abandoned_camp_common_chest";
                 break;
+            case 4:
+                camp->name = "abandoned_camp/camp/sparse_jungle/campsite_sparse_jungle_4";
+                camp->chestCount = 4;
+                camp->lootTables[0] = "abandoned_camp_secret_chest";
+                camp->lootTables[1] = "abandoned_camp_barrel";
+                camp->lootTables[2] = "abandoned_camp_barrel";
+                camp->lootTables[3] = "abandoned_camp_barrel";
+                break;
             default: UNREACHABLE();
             }
             break;
@@ -1150,6 +1235,12 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
                 camp->lootTables[0] = "abandoned_camp_common_chest";
                 camp->lootTables[1] = "abandoned_camp_barrel";
                 break;
+            case 4:
+                camp->name = "abandoned_camp/camp/swamp/campsite_swamp_4";
+                camp->chestCount = 2;
+                camp->lootTables[0] = "abandoned_camp_secret_chest";
+                camp->lootTables[1] = "abandoned_camp_barrel";
+                break;
             default: UNREACHABLE();
             }
             break;
@@ -1169,6 +1260,12 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
                 camp->name = "abandoned_camp/camp/taiga/campsite_taiga_3";
                 camp->chestCount = 1;
                 camp->lootTables[0] = "abandoned_camp_barrel";
+                break;
+            case 4:
+                camp->name = "abandoned_camp/camp/taiga/campsite_taiga_4";
+                camp->chestCount = 2;
+                camp->lootTables[0] = "abandoned_camp_secret_chest";
+                camp->lootTables[1] = "abandoned_camp_common_chest";
                 break;
             default: UNREACHABLE();
             }
@@ -1191,6 +1288,12 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
                 camp->lootTables[0] = "abandoned_camp_secret_chest";
                 camp->lootTables[1] = "abandoned_camp_barrel";
                 break;
+            case 4:
+                camp->name = "abandoned_camp/camp/windswept_forest/campsite_windswept_forest_4";
+                camp->chestCount = 2;
+                camp->lootTables[0] = "abandoned_camp_secret_chest";
+                camp->lootTables[1] = "abandoned_camp_common_chest";
+                break;
             default: UNREACHABLE();
             }
             break;
@@ -1209,6 +1312,12 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/wooded_badlands/campsite_wooded_badlands_3";
+                camp->chestCount = 2;
+                camp->lootTables[0] = "abandoned_camp_secret_chest";
+                camp->lootTables[1] = "abandoned_camp_barrel";
+                break;
+            case 4:
+                camp->name = "abandoned_camp/camp/wooded_badlands/campsite_wooded_badlands_4";
                 camp->chestCount = 2;
                 camp->lootTables[0] = "abandoned_camp_secret_chest";
                 camp->lootTables[1] = "abandoned_camp_barrel";
