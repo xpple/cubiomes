@@ -10261,6 +10261,127 @@ class Cubiomes_1 extends Cubiomes$shared {
         return BF_FORCED_OCEAN;
     }
 
+    private static class getStructureConfig_default {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("getStructureConfig_default");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int getStructureConfig_default(int structureType, int mc, StructureConfig *sconf)
+     * }
+     */
+    public static FunctionDescriptor getStructureConfig_default$descriptor() {
+        return getStructureConfig_default.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int getStructureConfig_default(int structureType, int mc, StructureConfig *sconf)
+     * }
+     */
+    public static MethodHandle getStructureConfig_default$handle() {
+        return getStructureConfig_default.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int getStructureConfig_default(int structureType, int mc, StructureConfig *sconf)
+     * }
+     */
+    public static MemorySegment getStructureConfig_default$address() {
+        return getStructureConfig_default.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int getStructureConfig_default(int structureType, int mc, StructureConfig *sconf)
+     * }
+     */
+    public static int getStructureConfig_default(int structureType, int mc, MemorySegment sconf) {
+        var mh$ = getStructureConfig_default.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("getStructureConfig_default", structureType, mc, sconf);
+            }
+            return (int)mh$.invokeExact(structureType, mc, sconf);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class setStructureConfigProvider {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Cubiomes.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("setStructureConfigProvider");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void setStructureConfigProvider(StructureConfigProvider fn)
+     * }
+     */
+    public static FunctionDescriptor setStructureConfigProvider$descriptor() {
+        return setStructureConfigProvider.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void setStructureConfigProvider(StructureConfigProvider fn)
+     * }
+     */
+    public static MethodHandle setStructureConfigProvider$handle() {
+        return setStructureConfigProvider.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void setStructureConfigProvider(StructureConfigProvider fn)
+     * }
+     */
+    public static MemorySegment setStructureConfigProvider$address() {
+        return setStructureConfigProvider.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void setStructureConfigProvider(StructureConfigProvider fn)
+     * }
+     */
+    public static void setStructureConfigProvider(MemorySegment fn) {
+        var mh$ = setStructureConfigProvider.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("setStructureConfigProvider", fn);
+            }
+            mh$.invokeExact(fn);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
     private static class getStructureConfig {
         public static final FunctionDescriptor DESC = FunctionDescriptor.of(
             Cubiomes.C_INT,
@@ -20665,24 +20786,6 @@ class Cubiomes_1 extends Cubiomes$shared {
      */
     public static int POTION_STRONG_TURTLE_MASTER() {
         return POTION_STRONG_TURTLE_MASTER;
-    }
-    private static final int POTION_WATER_BREATHING = (int)22L;
-    /**
-     * {@snippet lang=c :
-     * enum PotionType.POTION_WATER_BREATHING = 22
-     * }
-     */
-    public static int POTION_WATER_BREATHING() {
-        return POTION_WATER_BREATHING;
-    }
-    private static final int POTION_LONG_WATER_BREATHING = (int)23L;
-    /**
-     * {@snippet lang=c :
-     * enum PotionType.POTION_LONG_WATER_BREATHING = 23
-     * }
-     */
-    public static int POTION_LONG_WATER_BREATHING() {
-        return POTION_LONG_WATER_BREATHING;
     }
 }
 

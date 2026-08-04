@@ -17,6 +17,24 @@ public class Cubiomes extends Cubiomes_1 {
     Cubiomes() {
         // Should not be called directly
     }
+    private static final int POTION_WATER_BREATHING = (int)22L;
+    /**
+     * {@snippet lang=c :
+     * enum PotionType.POTION_WATER_BREATHING = 22
+     * }
+     */
+    public static int POTION_WATER_BREATHING() {
+        return POTION_WATER_BREATHING;
+    }
+    private static final int POTION_LONG_WATER_BREATHING = (int)23L;
+    /**
+     * {@snippet lang=c :
+     * enum PotionType.POTION_LONG_WATER_BREATHING = 23
+     * }
+     */
+    public static int POTION_LONG_WATER_BREATHING() {
+        return POTION_LONG_WATER_BREATHING;
+    }
     private static final int POTION_HEALING = (int)24L;
     /**
      * {@snippet lang=c :
