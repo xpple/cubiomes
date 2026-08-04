@@ -93,7 +93,7 @@ void freePos3List(Pos3List* list)
     list->capacity = 0;
 }
 
-int getStructureConfig(int structureType, int mc, StructureConfig *sconf)
+int getStructureConfig_default(int structureType, int mc, StructureConfig *sconf)
 {
     static const StructureConfig
     // for desert pyramids, jungle temples, witch huts and igloos prior to 1.13
@@ -235,6 +235,20 @@ int getStructureConfig(int structureType, int mc, StructureConfig *sconf)
         memset(sconf, 0, sizeof(StructureConfig));
         return 0;
     }
+}
+
+static StructureConfigProvider provider = getStructureConfig_default;
+
+void setStructureConfigProvider(StructureConfigProvider fn) {
+    if (fn) {
+        provider = fn;
+    } else {
+        provider = getStructureConfig_default;
+    }
+}
+
+int getStructureConfig(int structureType, int mc, StructureConfig *sconf) {
+    return provider(structureType, mc, sconf);
 }
 
 int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltConfig *ssconf) {
@@ -427,11 +441,7 @@ void getRegPos(Pos *p, uint64_t *s, int rx, int rz, StructureConfig sc)
 int getStructurePos(int structureType, int mc, uint64_t seed, int regX, int regZ, Pos *pos)
 {
     StructureConfig sconf;
-#if STRUCT_CONFIG_OVERRIDE
-    if (!getStructureConfig_override(structureType, mc, &sconf))
-#else
     if (!getStructureConfig(structureType, mc, &sconf))
-#endif
     {
         return 0;
     }

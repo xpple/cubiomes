@@ -240,6 +240,20 @@ static inline uint64_t moveStructure(uint64_t baseSeed, int regX, int regZ)
 // Finding Structure Positions
 //==============================================================================
 
+/* Always returns vanilla structure config. Use setStructureConfigProvider
+ * and getStructureConfig for customisability.
+ */
+int getStructureConfig_default(int structureType, int mc, StructureConfig *sconf);
+
+typedef int (*StructureConfigProvider)(int structureType, int mc, StructureConfig *sconf);
+
+/* The library can be configured to use a custom internal getter for structure
+ * configurations. However, note this is experimental and not all structure
+ * configs may work. (Ideally only change structure salts.)
+ *
+ * Passing NULL resets the provider.
+ */
+void setStructureConfigProvider(StructureConfigProvider fn);
 
 /* Selects the structure configuration for a given version. Returns zero upon
  * failure (e.g. version does not support structure type).
@@ -258,16 +272,6 @@ int getStructureConfig(int structureType, int mc, StructureConfig *sconf);
  * @return zero upon failure
  */
 int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltConfig *ssconf);
-
-/* The library can be compiled to use a custom internal getter for structure
- * configurations. For this, the macro STRUCT_CONFIG_OVERRIDE should be defined
- * as true and the function getStructureConfig_override() should be defined
- * with a custom function body. However, note this is experimental and not all
- * structure configs may work. (Ideally only change structure salts.)
- */
-#if STRUCT_CONFIG_OVERRIDE
-int getStructureConfig_override(int stype, int mc, StructureConfig *sconf);
-#endif
 
 /* Finds the block position of the structure generation attempt in a given
  * region. You can use isViableStructurePos() to test if the necessary biome
