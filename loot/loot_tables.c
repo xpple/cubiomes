@@ -59,6 +59,22 @@
 #include "loot_tables/shipwreck_treasure_1_20.h"
 #include "loot_tables/shipwreck_treasure_1_21_11.h"
 #include "loot_tables/simple_dungeon_1_14.h"
+#include "loot_tables/village_armorer_1_16_1.h"
+#include "loot_tables/village_butcher_1_16_1.h"
+#include "loot_tables/village_cartographer_1_16_1.h"
+#include "loot_tables/village_desert_house_1_16_1.h"
+#include "loot_tables/village_fisher_1_16_1.h"
+#include "loot_tables/village_fletcher_1_16_1.h"
+#include "loot_tables/village_mason_1_16_1.h"
+#include "loot_tables/village_plains_house_1_16_1.h"
+#include "loot_tables/village_savanna_house_1_16_1.h"
+#include "loot_tables/village_shepherd_1_16_1.h"
+#include "loot_tables/village_snowy_house_1_16_1.h"
+#include "loot_tables/village_taiga_house_1_16_1.h"
+#include "loot_tables/village_tannery_1_16_1.h"
+#include "loot_tables/village_temple_1_16_1.h"
+#include "loot_tables/village_toolsmith_1_16_1.h"
+#include "loot_tables/village_weaponsmith_1_16_1.h"
 #include "loot_tables/stronghold_corridor_1_13.h"
 #include "loot_tables/stronghold_corridor_1_18.h"
 #include "loot_tables/stronghold_corridor_1_20.h"
@@ -119,6 +135,54 @@ int init_loot_table_name(LootTableContext** context, const char* loot_table, int
     }
     if (strcmp(loot_table, "simple_dungeon") == 0) {
         return init_simple_dungeon(context, version);
+    }
+    if (strcmp(loot_table, "village_armorer") == 0) {
+        return init_village_armorer(context, version);
+    }
+    if (strcmp(loot_table, "village_butcher") == 0) {
+        return init_village_butcher(context, version);
+    }
+    if (strcmp(loot_table, "village_cartographer") == 0) {
+        return init_village_cartographer(context, version);
+    }
+    if (strcmp(loot_table, "village_desert_house") == 0) {
+        return init_village_desert_house(context, version);
+    }
+    if (strcmp(loot_table, "village_fisher") == 0) {
+        return init_village_fisher(context, version);
+    }
+    if (strcmp(loot_table, "village_fletcher") == 0) {
+        return init_village_fletcher(context, version);
+    }
+    if (strcmp(loot_table, "village_mason") == 0) {
+        return init_village_mason(context, version);
+    }
+    if (strcmp(loot_table, "village_plains_house") == 0) {
+        return init_village_plains_house(context, version);
+    }
+    if (strcmp(loot_table, "village_savanna_house") == 0) {
+        return init_village_savanna_house(context, version);
+    }
+    if (strcmp(loot_table, "village_shepherd") == 0) {
+        return init_village_shepherd(context, version);
+    }
+    if (strcmp(loot_table, "village_snowy_house") == 0) {
+        return init_village_snowy_house(context, version);
+    }
+    if (strcmp(loot_table, "village_taiga_house") == 0) {
+        return init_village_taiga_house(context, version);
+    }
+    if (strcmp(loot_table, "village_tannery") == 0) {
+        return init_village_tannery(context, version);
+    }
+    if (strcmp(loot_table, "village_temple") == 0) {
+        return init_village_temple(context, version);
+    }
+    if (strcmp(loot_table, "village_toolsmith") == 0) {
+        return init_village_toolsmith(context, version);
+    }
+    if (strcmp(loot_table, "village_weaponsmith") == 0) {
+        return init_village_weaponsmith(context, version);
     }
     if (strcmp(loot_table, "stronghold_corridor") == 0) {
         return init_stronghold_corridor(context, version);
@@ -254,6 +318,71 @@ int init_shipwreck_treasure(LootTableContext** context, int version) {
 int init_simple_dungeon(LootTableContext** context, int version) {
     *context = init_simple_dungeon_1_14(version);
     return version > MC_1_13_2;
+}
+
+int init_village_armorer(LootTableContext** context, int version) {
+    *context = init_village_armorer_1_16_1(version);
+    return version >= MC_1_16_1;
+}
+int init_village_butcher(LootTableContext** context, int version) {
+    *context = init_village_butcher_1_16_1(version);
+    return version >= MC_1_16_1;
+}
+int init_village_cartographer(LootTableContext** context, int version) {
+    *context = init_village_cartographer_1_16_1(version);
+    return version >= MC_1_16_1;
+}
+int init_village_desert_house(LootTableContext** context, int version) {
+    *context = init_village_desert_house_1_16_1(version);
+    return version >= MC_1_16_1;
+}
+int init_village_fisher(LootTableContext** context, int version) {
+    *context = init_village_fisher_1_16_1(version);
+    return version >= MC_1_16_1;
+}
+int init_village_fletcher(LootTableContext** context, int version) {
+    *context = init_village_fletcher_1_16_1(version);
+    return version >= MC_1_16_1;
+}
+int init_village_mason(LootTableContext** context, int version) {
+    *context = init_village_mason_1_16_1(version);
+    return version >= MC_1_16_1;
+}
+int init_village_plains_house(LootTableContext** context, int version) {
+    *context = init_village_plains_house_1_16_1(version);
+    return version >= MC_1_16_1;
+}
+int init_village_savanna_house(LootTableContext** context, int version) {
+    *context = init_village_savanna_house_1_16_1(version);
+    return version >= MC_1_16_1;
+}
+int init_village_shepherd(LootTableContext** context, int version) {
+    *context = init_village_shepherd_1_16_1(version);
+    return version >= MC_1_16_1;
+}
+int init_village_snowy_house(LootTableContext** context, int version) {
+    *context = init_village_snowy_house_1_16_1(version);
+    return version >= MC_1_16_1;
+}
+int init_village_taiga_house(LootTableContext** context, int version) {
+    *context = init_village_taiga_house_1_16_1(version);
+    return version >= MC_1_16_1;
+}
+int init_village_tannery(LootTableContext** context, int version) {
+    *context = init_village_tannery_1_16_1(version);
+    return version >= MC_1_16_1;
+}
+int init_village_temple(LootTableContext** context, int version) {
+    *context = init_village_temple_1_16_1(version);
+    return version >= MC_1_16_1;
+}
+int init_village_toolsmith(LootTableContext** context, int version) {
+    *context = init_village_toolsmith_1_16_1(version);
+    return version >= MC_1_16_1;
+}
+int init_village_weaponsmith(LootTableContext** context, int version) {
+    *context = init_village_weaponsmith_1_16_1(version);
+    return version >= MC_1_16_1;
 }
 
 int init_stronghold_corridor(LootTableContext** context, int version) {

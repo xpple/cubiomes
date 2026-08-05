@@ -69,6 +69,73 @@ static void templateBounds(const JigsawTemplateDef *t, int rot,
     bb[3] += px; bb[4] += py; bb[5] += pz;
 }
 
+static int findString(const JigsawData *jd, const char *s)
+{
+    int i;
+    for (i = 0; i < jd->stringCount; i++)
+        if (strcmp(jd->strings[i], s) == 0)
+            return i;
+    return -1;
+}
+
+static int findPool(const JigsawData *jd, const char *name)
+{
+    int i;
+    for (i = 0; i < jd->poolCount; i++)
+        if (strcmp(jd->pools[i].name, name) == 0)
+            return i;
+    return -1;
+}
+
+/* the template that carries a pool entry's jigsaw blocks, -1 if none */
+static int elementTemplateIdx(const JigsawData *jd, const JigsawPoolEntryDef *e)
+{
+    switch (e->kind) {
+    case JIGSAW_ELEMENT_SINGLE:
+    case JIGSAW_ELEMENT_LEGACY_SINGLE:
+        return e->templateIdx;
+    case JIGSAW_ELEMENT_LIST: // a list takes its connectors from member 0
+        return e->listCount ? jd->poolEntries[e->listStart].templateIdx : -1;
+    default:
+        return -1;
+    }
+}
+
+
+static void elementBounds(const JigsawData *jd, const JigsawPoolEntryDef *e,
+        int rot, int px, int py, int pz, int bb[6])
+{
+    int i;
+    switch (e->kind) {
+    case JIGSAW_ELEMENT_SINGLE:
+    case JIGSAW_ELEMENT_LEGACY_SINGLE:
+        templateBounds(&jd->templates[e->templateIdx], rot, px, py, pz, bb);
+        return;
+    case JIGSAW_ELEMENT_LIST:
+        for (i = 0; i < e->listCount; i++) {
+            int mb[6], k;
+            elementBounds(jd, &jd->poolEntries[e->listStart + i], rot,
+                          px, py, pz, mb);
+            if (i == 0) {
+                memcpy(bb, mb, 6 * sizeof(int));
+                continue;
+            }
+            for (k = 0; k < 3; k++) {
+                if (mb[k] < bb[k])
+                    bb[k] = mb[k];
+                if (mb[k+3] > bb[k+3])
+                    bb[k+3] = mb[k+3];
+            }
+        }
+        return;
+    default:
+        bb[0] = bb[3] = px;
+        bb[1] = bb[4] = py;
+        bb[2] = bb[5] = pz;
+        return;
+    }
+}
+
 #define COLLECTIONS_SHUFFLE(arr, n, rng, T) do { \
     int i_; \
     for (i_ = (n); i_ > 1; i_--) { \
@@ -153,7 +220,24 @@ typedef struct {
     int nshapes, maxShapes;
     int *qPiece, *qShape, *qTop;
     int qhead, qtail;
+    const Generator *g;
+    const SurfaceNoise *sn;
+    int doExpansionHack;
+    int *poolMax;               // getMaxSize per pool, -1 until computed
+    JigsawBlockDef featureBlock;
 } Ctx;
+
+static void makeFeatureBlock(const JigsawData *jd, JigsawBlockDef *b)
+{
+    int name = findString(jd, "bottom"), target = findString(jd, "empty");
+    memset(b, 0, sizeof(*b));
+    b->front = JD_DOWN;
+    b->top = JD_SOUTH;
+    b->joint = JIGSAW_JOINT_ROLLABLE;
+    b->poolIdx = (int16_t) findPool(jd, "empty");
+    b->name = (uint16_t)(name < 0 ? 0xffff : name);
+    b->target = (uint16_t)(target < 0 ? 0xfffe : target);
+}
 
 static int shuffledJigsawBlocks(const Ctx *c, const JigsawTemplateDef *t,
         int rot, int bx, int by, int bz, JigInst *out)
@@ -174,7 +258,62 @@ static int shuffledJigsawBlocks(const Ctx *c, const JigsawTemplateDef *t,
     return n;
 }
 
-/* pool exists and is usable: non-empty or literally the "empty" pool */
+// getShuffledJigsawBlocks
+static int elementJigsawBlocks(const Ctx *c, const JigsawPoolEntryDef *e,
+        int rot, int bx, int by, int bz, JigInst *out)
+{
+    switch (e->kind) {
+    case JIGSAW_ELEMENT_SINGLE:
+    case JIGSAW_ELEMENT_LEGACY_SINGLE:
+        return shuffledJigsawBlocks(c, &c->jd->templates[e->templateIdx],
+                                    rot, bx, by, bz, out);
+    case JIGSAW_ELEMENT_LIST:
+        if (e->listCount == 0)
+            return 0;
+        return elementJigsawBlocks(c, &c->jd->poolEntries[e->listStart],
+                                   rot, bx, by, bz, out);
+    case JIGSAW_ELEMENT_FEATURE:
+        out[0].wx = bx; out[0].wy = by; out[0].wz = bz;
+        out[0].front = JD_DOWN;
+        out[0].top = JD_SOUTH;
+        out[0].def = &c->featureBlock;
+        return 1;
+    default:
+        return 0;
+    }
+}
+
+// getMaxSize
+static int poolMaxSize(Ctx *c, int poolIdx)
+{
+    const JigsawPoolDef *p;
+    int i, mx = 0;
+
+    if (poolIdx < 0)
+        return 0;
+    if (c->poolMax[poolIdx] >= 0)
+        return c->poolMax[poolIdx];
+
+    p = &c->jd->pools[poolIdx];
+    for (i = 0; i < p->entryCount; i++) {
+        const JigsawPoolEntryDef *e = &c->jd->poolEntries[p->entryStart + i];
+        int bb[6], span;
+        if (e->weight == 0)
+            continue;
+        if (e->kind == JIGSAW_ELEMENT_EMPTY) {
+            span = 2;
+        } else {
+            elementBounds(c->jd, e, JIGSAW_ROT_NONE, 0, 0, 0, bb);
+            span = bb[4] - bb[1] + 1;
+        }
+        if (span > mx)
+            mx = span;
+    }
+    c->poolMax[poolIdx] = mx;
+    return mx;
+}
+
+// pool exists and is usable
 static int poolOk(const JigsawData *jd, int poolIdx)
 {
     if (poolIdx < 0)
@@ -183,8 +322,7 @@ static int poolOk(const JigsawData *jd, int poolIdx)
            strcmp(jd->pools[poolIdx].name, "empty") == 0;
 }
 
-/* StructureTemplatePool.getShuffledTemplates: fastutil shuffle of the
- * weight-expanded template list; appends entry indices to cand */
+// getShuffledTemplates
 static int appendShuffledPool(const Ctx *c, int poolIdx, int *cand, int ncand)
 {
     const JigsawPoolDef *p = &c->jd->pools[poolIdx];
@@ -216,13 +354,15 @@ static int tryPlacingChildren(Ctx *c, int pieceIdx, int shapeIdx,
 {
     const JigsawData *jd = c->jd;
     JigsawPiece parent = c->pieces[pieceIdx];
-    const JigsawTemplateDef *ptmpl = &jd->templates[parent.templateIdx];
+    const JigsawPoolEntryDef *pentry = &jd->poolEntries[parent.entryIdx];
+    int parentRigid = parent.projection == JIGSAW_PROJECTION_RIGID;
     int k = parent.bb[1];
     int interiorShape = -1;
     JigInst jigs[MAX_JIGS];
     int njigs, ji;
 
-    njigs = shuffledJigsawBlocks(c, ptmpl, parent.rotation, parent.x, parent.y, parent.z, jigs);
+    njigs = elementJigsawBlocks(c, pentry, parent.rotation,
+                                parent.x, parent.y, parent.z, jigs);
     if (njigs < 0)
         return -1;
 
@@ -233,6 +373,7 @@ static int tryPlacingChildren(Ctx *c, int pieceIdx, int shapeIdx,
         int attachZ = jig->wz + stepZ[jig->front];
         int l = jig->wy - k;
         int poolIdx = jig->def->poolIdx;
+        int surfaceY = -1; // heightmap under this connector, sampled at most once
         int fbIdx, inside, useShape, n2;
         int cand[MAX_CANDIDATES];
         int ncand = 0, ci;
@@ -276,25 +417,47 @@ static int tryPlacingChildren(Ctx *c, int pieceIdx, int shapeIdx,
 
         for (ci = 0; ci < ncand; ci++) {
             const JigsawPoolEntryDef *e = &jd->poolEntries[cand[ci]];
-            const JigsawTemplateDef *ctmpl;
             uint8_t rots[4] = { 0, 1, 2, 3 };
-            int ri;
+            int childRigid, ri;
 
             if (e->kind == JIGSAW_ELEMENT_EMPTY)
                 break;
-            if (e->kind != JIGSAW_ELEMENT_SINGLE &&
-                e->kind != JIGSAW_ELEMENT_LEGACY_SINGLE)
-                return -1; // feature/list elements not supported yet
-            ctmpl = &jd->templates[e->templateIdx];
+            childRigid = e->projection == JIGSAW_PROJECTION_RIGID;
 
             COLLECTIONS_SHUFFLE(rots, 4, c->rng, uint8_t);
             for (ri = 0; ri < 4; ri++) {
                 int rot2 = rots[ri];
                 JigInst cjigs[MAX_JIGS];
+                int bb2[6], grow = 0;
                 int ncj, cj;
-                ncj = shuffledJigsawBlocks(c, ctmpl, rot2, 0, 0, 0, cjigs);
+                ncj = elementJigsawBlocks(c, e, rot2, 0, 0, 0, cjigs);
                 if (ncj < 0)
                     return -1;
+                elementBounds(jd, e, rot2, 0, 0, 0, bb2);
+
+                // the expansion hack: a short piece whose own connectors
+                // point back into itself gets its box stretched to fit
+                // whatever those connectors could still pull in
+                if (c->doExpansionHack && bb2[4] - bb2[1] + 1 <= 16) {
+                    for (cj = 0; cj < ncj; cj++) {
+                        const JigInst *cjig = &cjigs[cj];
+                        int rx = cjig->wx + stepX[cjig->front];
+                        int ry = cjig->wy + stepY[cjig->front];
+                        int rz = cjig->wz + stepZ[cjig->front];
+                        int cpool, a, b;
+                        if (rx < bb2[0] || rx > bb2[3] || ry < bb2[1] ||
+                            ry > bb2[4] || rz < bb2[2] || rz > bb2[5])
+                            continue;
+                        cpool = cjig->def->poolIdx;
+                        a = poolMaxSize(c, cpool);
+                        b = cpool >= 0 ? poolMaxSize(c, jd->pools[cpool].fallbackIdx) : 0;
+                        if (b > a)
+                            a = b;
+                        if (a > grow)
+                            grow = a;
+                    }
+                }
+
                 for (cj = 0; cj < ncj; cj++) {
                     const JigInst *cjig = &cjigs[cj];
                     int ax, ay, az, bb3[6], p, q, r, s, t;
@@ -311,14 +474,30 @@ static int tryPlacingChildren(Ctx *c, int pieceIdx, int shapeIdx,
                     ax = attachX - cjig->wx;
                     ay = attachY - cjig->wy;
                     az = attachZ - cjig->wz;
-                    templateBounds(ctmpl, rot2, ax, ay, az, bb3);
+                    elementBounds(jd, e, rot2, ax, ay, az, bb3);
                     p = bb3[1];
                     q = cjig->wy;
                     r = l - q + stepY[jig->front];
-                    s = k + r;
+                    if (parentRigid && childRigid) {
+                        s = k + r;
+                    } else { // either end floats, so sit the joint on the ground
+                        if (surfaceY < 0) {
+                            if (!c->g || !c->sn)
+                                return -1;
+                            surfaceY = getSingleBlockSurfaceHeight(c->g, c->sn,
+                                                        jig->wx, jig->wz, 0);
+                        }
+                        s = surfaceY - q;
+                    }
                     t = s - p;
                     bb3[1] += t; bb3[4] += t;
                     ay += t;
+                    if (grow > 0) {
+                        int span = bb3[4] - bb3[1];
+                        if (grow + 1 > span)
+                            span = grow + 1;
+                        bb3[4] = bb3[1] + span;
+                    }
 
                     if (!shapeFits(&c->shapes[useShape], bb3))
                         continue;
@@ -328,11 +507,13 @@ static int tryPlacingChildren(Ctx *c, int pieceIdx, int shapeIdx,
                     if (c->npieces == c->maxPieces)
                         return -1;
                     child = &c->pieces[c->npieces++];
-                    child->templateIdx = (int16_t)(ctmpl - jd->templates);
+                    child->templateIdx = (int16_t) elementTemplateIdx(jd, e);
+                    child->entryIdx = (int16_t) cand[ci];
                     child->rotation = (uint8_t)rot2;
                     child->depth = (uint8_t)(depth + 1);
-                    child->groundLevelDelta =
-                        (int16_t)(parent.groundLevelDelta - r);
+                    child->projection = e->projection;
+                    child->groundLevelDelta = childRigid
+                        ? (int16_t)(parent.groundLevelDelta - r) : 1;
                     child->x = ax; child->y = ay; child->z = az;
                     memcpy(child->bb, bb3, sizeof(bb3));
 
@@ -349,26 +530,25 @@ static int tryPlacingChildren(Ctx *c, int pieceIdx, int shapeIdx,
 
 int getJigsawPieces(const JigsawData *jd, const JigsawConfig *jc,
         const char *startPool, uint64_t *rng, int blockX, int blockZ,
+        const Generator *g, const SurfaceNoise *sn,
         JigsawPiece *out, int maxOut)
 {
     Ctx c;
     const JigsawPoolDef *pool = NULL;
     const JigsawPoolEntryDef *startEntry = NULL;
-    const JigsawTemplateDef *stmpl;
     JigsawPiece *start;
     int i, rot, pick, cx, cz, k, l, dy, dist, ret = -1;
 
-    if (jc->useExpansionHack || jc->projectStartToHeightmap ||
-        jc->startJigsawName)
+    if (jc->startJigsawName)
         return -1; // not implemented yet
+    if (jc->projectStartToHeightmap && (!g || !sn))
+        return -1;
 
-    for (i = 0; i < jd->poolCount; i++) {
-        if (strcmp(jd->pools[i].name, startPool) == 0) {
-            pool = &jd->pools[i];
-            break;
-        }
-    }
-    if (!pool || pool->totalWeight == 0 || maxOut < 1)
+    i = findPool(jd, startPool);
+    if (i < 0)
+        return -1;
+    pool = &jd->pools[i];
+    if (pool->totalWeight == 0 || maxOut < 1)
         return -1;
 
     rot = nextInt(rng, 4);
@@ -382,22 +562,24 @@ int getJigsawPieces(const JigsawData *jd, const JigsawConfig *jc,
         }
         pick -= e->weight;
     }
-    if (!startEntry || (startEntry->kind != JIGSAW_ELEMENT_SINGLE &&
-                        startEntry->kind != JIGSAW_ELEMENT_LEGACY_SINGLE))
+    if (!startEntry || startEntry->kind == JIGSAW_ELEMENT_EMPTY)
         return -1;
-    stmpl = &jd->templates[startEntry->templateIdx];
 
     start = &out[0];
-    start->templateIdx = startEntry->templateIdx;
+    start->templateIdx = (int16_t) elementTemplateIdx(jd, startEntry);
+    start->entryIdx = (int16_t)(startEntry - jd->poolEntries);
     start->rotation = (uint8_t)rot;
     start->depth = 0;
+    start->projection = startEntry->projection;
     start->groundLevelDelta = 1;
     start->x = blockX; start->y = jc->startHeight; start->z = blockZ;
-    templateBounds(stmpl, rot, blockX, jc->startHeight, blockZ, start->bb);
+    elementBounds(jd, startEntry, rot, blockX, jc->startHeight, blockZ, start->bb);
 
     cx = (start->bb[0] + start->bb[3]) / 2;
     cz = (start->bb[2] + start->bb[5]) / 2;
     k = jc->startHeight;
+    if (jc->projectStartToHeightmap)
+        k += getSingleBlockSurfaceHeight(g, sn, cx, cz, 0);
     l = start->bb[1] + start->groundLevelDelta;
     dy = k - l;
     start->y += dy; start->bb[1] += dy; start->bb[4] += dy;
@@ -413,12 +595,18 @@ int getJigsawPieces(const JigsawData *jd, const JigsawConfig *jc,
     c.npieces = 1;
     c.maxPieces = maxOut;
     c.maxShapes = maxOut + 1;
+    c.g = g;
+    c.sn = sn;
+    c.doExpansionHack = jc->useExpansionHack;
     c.shapes = (JShape*) calloc(c.maxShapes, sizeof(JShape));
     c.qPiece = (int*) malloc(maxOut * sizeof(int));
     c.qShape = (int*) malloc(maxOut * sizeof(int));
     c.qTop = (int*) malloc(maxOut * sizeof(int));
-    if (!c.shapes || !c.qPiece || !c.qShape || !c.qTop)
+    c.poolMax = (int*) malloc(jd->poolCount * sizeof(int));
+    if (!c.shapes || !c.qPiece || !c.qShape || !c.qTop || !c.poolMax)
         goto done;
+    memset(c.poolMax, 0xff, jd->poolCount * sizeof(int)); // all -1
+    makeFeatureBlock(jd, &c.featureBlock);
 
     dist = jc->maxDistanceFromCenter;
     c.shapes[0].outer.x0 = cx - dist; c.shapes[0].outer.x1 = cx + dist + 1;
@@ -446,6 +634,7 @@ done:
     free(c.qPiece);
     free(c.qShape);
     free(c.qTop);
+    free(c.poolMax);
     return ret;
 }
 
@@ -538,7 +727,8 @@ const JigsawData *getJigsawData(int mc)
 }
 
 int getJigsawStructurePieces(int structureType, int mc, int biome,
-        uint64_t seed, int chunkX, int chunkZ, JigsawPiece *out, int maxOut)
+        uint64_t seed, int chunkX, int chunkZ, const Generator *g,
+        const SurfaceNoise *sn, JigsawPiece *out, int maxOut)
 {
     const JigsawData *jd = getJigsawData(mc);
     JigsawConfig jc;
@@ -559,7 +749,55 @@ int getJigsawStructurePieces(int structureType, int mc, int biome,
     if (jc.nStartPools > 1)
         startPool = jc.startPools[nextInt(&rng, jc.nStartPools)];
 
-    return getJigsawPieces(jd, &jc, startPool, &rng, chunkX * 16, chunkZ * 16, out, maxOut);
+    return getJigsawPieces(jd, &jc, startPool, &rng, chunkX * 16, chunkZ * 16,
+            g, sn, out, maxOut);
+}
+
+int getJigsawPieceTemplates(const JigsawData *jd, const JigsawPiece *p,
+        int16_t *out)
+{
+    const JigsawPoolEntryDef *e = &jd->poolEntries[p->entryIdx];
+    int n = 0, i;
+
+    if (e->kind == JIGSAW_ELEMENT_LIST) {
+        for (i = 0; i < e->listCount && n < JIGSAW_MAX_PIECE_TEMPLATES; i++) {
+            int t = elementTemplateIdx(jd, &jd->poolEntries[e->listStart + i]);
+            if (t >= 0)
+                out[n++] = (int16_t) t;
+        }
+        return n;
+    }
+    if (p->templateIdx >= 0)
+        out[n++] = p->templateIdx;
+    return n;
+}
+
+const char *getJigsawPieceFeature(const JigsawData *jd, const JigsawPiece *p)
+{
+    const JigsawPoolEntryDef *e = &jd->poolEntries[p->entryIdx];
+    if (e->kind != JIGSAW_ELEMENT_FEATURE || e->featureIdx < 0)
+        return NULL;
+    return jd->strings[e->featureIdx];
+}
+
+int getJigsawFeaturePositions(const JigsawData *jd, const JigsawPiece *pieces,
+        int nPieces, const char *feature, Pos3 *out, int maxOut)
+{
+    int n = 0, i;
+    for (i = 0; i < nPieces; i++) {
+        const char *f = getJigsawPieceFeature(jd, &pieces[i]);
+        if (!f || strcmp(f, feature) != 0)
+            continue;
+        if (out) {
+            if (n == maxOut)
+                return n;
+            out[n].x = pieces[i].x;
+            out[n].y = pieces[i].y;
+            out[n].z = pieces[i].z;
+        }
+        n++;
+    }
+    return n;
 }
 
 void getJigsawContainerPos(const JigsawData *jd, const JigsawPiece *p, int c, int *x, int *y, int *z)
@@ -577,18 +815,36 @@ int getJigsawLoot(const JigsawData *jd, StructureSaltConfig ssconf, int mc,
     int n = 0, i, ci, j;
 
     for (i = 0; i < nPieces; i++) {
-        const JigsawTemplateDef *t = &jd->templates[pieces[i].templateIdx];
-        for (ci = 0; ci < t->containerCount; ci++) {
-            const JigsawContainerDef *cd = &jd->containers[t->containerStart + ci];
-            JigsawChest *c;
-            if (n == maxOut)
-                return -1;
-            c = &out[n++];
-            c->piece = i;
-            getJigsawContainerPos(jd, &pieces[i], ci, &c->x, &c->y, &c->z);
-            c->lootSeed = 0;
-            c->lootTable = cd->lootTable >= 0 ? jd->strings[cd->lootTable] : NULL;
+        int16_t tmpl[JIGSAW_MAX_PIECE_TEMPLATES];
+        int ntmpl = getJigsawPieceTemplates(jd, &pieces[i], tmpl), ti;
+        for (ti = 0; ti < ntmpl; ti++) {
+            const JigsawTemplateDef *t = &jd->templates[tmpl[ti]];
+            for (ci = 0; ci < t->containerCount; ci++) {
+                const JigsawContainerDef *cd = &jd->containers[t->containerStart + ci];
+                JigsawChest *c;
+                if (n == maxOut)
+                    return -1;
+                c = &out[n++];
+                c->piece = i;
+                transformPos(pieces[i].rotation, cd->x, cd->y, cd->z,
+                             &c->x, &c->y, &c->z);
+                c->x += pieces[i].x; c->y += pieces[i].y; c->z += pieces[i].z;
+                c->lootSeed = 0;
+                c->seedExact = 1;
+                c->lootTable = cd->lootTable >= 0 ? jd->strings[cd->lootTable] : NULL;
+            }
         }
+    }
+    
+    for (i = 0; i < nPieces; i++) {
+        int fcx, fcz;
+        if (jd->poolEntries[pieces[i].entryIdx].kind != JIGSAW_ELEMENT_FEATURE)
+            continue;
+        fcx = pieces[i].x >> 4;
+        fcz = pieces[i].z >> 4;
+        for (j = 0; j < n; j++)
+            if (out[j].piece > i && (out[j].x >> 4) == fcx && (out[j].z >> 4) == fcz)
+                out[j].seedExact = 0;
     }
 
     for (i = 0; i < n; i++) {
@@ -609,14 +865,15 @@ int getJigsawLoot(const JigsawData *jd, StructureSaltConfig ssconf, int mc,
 }
 
 int getJigsawStructureLoot(int structureType, int mc, int biome, uint64_t seed,
-        int chunkX, int chunkZ, JigsawPiece *pieces, int maxPieces,
+        int chunkX, int chunkZ, const Generator *g, const SurfaceNoise *sn,
+        JigsawPiece *pieces, int maxPieces,
         int *nPieces, JigsawChest *chests, int maxChests)
 {
     StructureSaltConfig ssconf;
     int n;
 
     n = getJigsawStructurePieces(structureType, mc, biome, seed,
-            chunkX, chunkZ, pieces, maxPieces);
+            chunkX, chunkZ, g, sn, pieces, maxPieces);
     if (nPieces)
         *nPieces = n;
     if (n < 0)

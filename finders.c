@@ -273,6 +273,8 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
     ss_pillager_outpost_1161 =       {4,  0},
     ss_pillager_outpost_1194 =       {4,  9},
 
+    ss_village_1161 =                {4, 11},
+
     ss_shipwreck_113 =               {3,  5},
     ss_shipwreck_1161 =              {4,  6},
     ss_shipwreck_118 =               {4,  5},
@@ -365,6 +367,11 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
         else if (mc < MC_1_19_4) *ssconf = ss_pillager_outpost_1161;
         else *ssconf = ss_pillager_outpost_1194;
         return mc >= MC_1_14;
+    case Village:
+        // only 1.16-1.17: the decoration order changed in 1.18 and the
+        // index there hasn't been checked yet
+        *ssconf = ss_village_1161;
+        return mc >= MC_1_16_1 && mc <= MC_1_17;
     case Shipwreck:
         if (mc < MC_1_16_1) *ssconf = ss_shipwreck_113;
         else if (mc < MC_1_18) *ssconf = ss_shipwreck_1161;
