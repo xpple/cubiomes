@@ -769,6 +769,8 @@ int mapApproxHeight(float *y, int *ids, const Generator *g, const SurfaceNoise *
 STRUCT(CornerDensEntry) {
     uint64_t seed;
     int cx, cz;
+    int mc, dim; // the biomes feeding the kernel depend on both of these
+    uint32_t flags; // and on LARGE_BIOMES
     int valid;
     double dens[SURFACE_DENS_CELLS];
 };
@@ -779,7 +781,8 @@ void surfaceCornerDens(const Generator *g, const SurfaceNoise *sn, int cx, int c
 {
     uint32_t i = (cx & 255) | ((cz & 255) << 8);
     CornerDensEntry *e = &cornerDensCache[i];
-    if (e->valid && e->seed == g->seed && e->cx == cx && e->cz == cz) {
+    if (e->valid && e->seed == g->seed && e->cx == cx && e->cz == cz &&
+        e->mc == g->mc && e->dim == g->dim && e->flags == g->flags) {
         memcpy(out, e->dens, sizeof(e->dens));
         return;
     }
@@ -836,6 +839,9 @@ void surfaceCornerDens(const Generator *g, const SurfaceNoise *sn, int cx, int c
     e->seed = g->seed;
     e->cx = cx;
     e->cz = cz;
+    e->mc = g->mc;
+    e->dim = g->dim;
+    e->flags = g->flags;
     memcpy(e->dens, out, sizeof(e->dens));
     e->valid = 1;
 }
