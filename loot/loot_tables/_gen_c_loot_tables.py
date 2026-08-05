@@ -3,7 +3,6 @@ import json
 
 from abc import abstractmethod
 from textwrap import dedent, indent
-from warnings import warn
 
 class LootFunction:
     def __init__(self):
@@ -34,6 +33,16 @@ class SetEffectFunction(LootFunction):
     def to_function_call(self, arg: str, version: str):
         effects_str = ", ".join(f"{{get_mob_effect_from_name(\"{name}\"), {min_dur}, {max_dur}}}" for (name, min_dur, max_dur) in self.effects)
         return f"create_set_effect({arg}, {len(self.effects)}, (MobEffectEntry[]){{{effects_str}}})"
+
+
+class SetPotionFunction(LootFunction):
+    def __init__(self, potion: str):
+        super().__init__()
+        self.potion = potion
+
+
+    def to_function_call(self, arg: str, version: str):
+        return f"create_set_potion({arg}, get_potion_from_name(\"{self.potion}\"))"
 
 
 class SetDamageFunction(LootFunction):
@@ -154,6 +163,11 @@ def parse_loot_table(version: str, json_pools) -> LootTableContext:
     for json_pool in json_pools:
         min_rolls, max_rolls, roll_count_function = parse_pool_rolls(json_pool["rolls"])
 
+        pool_loot_functions = []
+        for json_pool_function_entry in json_pool.get("functions", []):
+            pool_loot_function = parse_loot_function(json_pool_function_entry, None)
+            pool_loot_functions.append(pool_loot_function)
+
         pool_entries: list[PoolEntry] = []
         for entry_idx, json_entry in enumerate(json_pool["entries"]):
             entry_type = json_entry["type"]
@@ -172,6 +186,7 @@ def parse_loot_table(version: str, json_pools) -> LootTableContext:
             for json_function_entry in json_entry.get("functions", []):
                 loot_function = parse_loot_function(json_function_entry, entry_name)
                 loot_functions.append(loot_function)
+            loot_functions.extend(pool_loot_functions)
 
             pool_entries.append(PoolEntry(entry_name, entry_weight, loot_functions))
 
@@ -191,7 +206,7 @@ def parse_pool_rolls(json_rolls) -> (int, int, str):
     return int(min_rolls), int(max_rolls), roll_count_function
 
 
-def parse_loot_function(json_function_entry, entry_name: str) -> LootFunction:
+def parse_loot_function(json_function_entry, entry_name: str | None) -> LootFunction:
     json_function = json_function_entry["function"]
     if json_function.startswith('minecraft:'):
         json_function = json_function[len('minecraft:'):]
@@ -215,9 +230,14 @@ def parse_loot_function(json_function_entry, entry_name: str) -> LootFunction:
             max_dur = duration_entry['max']
             mob_effects.append((effect_name, int(min_dur), int(max_dur)))
         return SetEffectFunction(mob_effects)
+    if json_function == 'set_potion':
+        id = json_function_entry['id']
+        return SetPotionFunction(id)
     if json_function == 'set_damage':
         return SetDamageFunction()
     if json_function == 'set_ominous_bottle_amplifier':
+        return SkipCallsFunction(1)
+    if json_function == 'set_instrument':
         return SkipCallsFunction(1)
     if json_function == 'enchant_randomly':
         enchantments = json_function_entry.get("enchantments", json_function_entry.get("options", None))
@@ -237,10 +257,10 @@ def parse_loot_function(json_function_entry, entry_name: str) -> LootFunction:
         is_treasure = json_function_entry.get("treasure", json_function_entry.get("is_treasure", True))
         return EnchantWithLevelsFunction(entry_name, int(min_level), int(max_level), options, int(is_treasure))
     if json_function == 'exploration_map':
-        warn(f"Ignored loot function 'exploration_map'")
+        warn(f"Ignored loot function '{json_function}'")
         return NoOpFunction()
     if json_function == 'set_name':
-        warn(f"Ignored loot function 'set_name'")
+        warn(f"Ignored loot function '{json_function}'")
         return NoOpFunction()
 
     warn(f"Unsupported loot function '{json_function}'")
@@ -373,6 +393,10 @@ def gen_c_loot_table_header(c_file_name: str) -> str:
         """)
 
     return file_content
+
+
+def warn(msg):
+    print(f"\033[33mWarning:\033[0m {msg}")
 
 
 if __name__ == '__main__':
