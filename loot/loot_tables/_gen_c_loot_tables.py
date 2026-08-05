@@ -164,7 +164,7 @@ def parse_loot_table(version: str, json_pools) -> LootTableContext:
         min_rolls, max_rolls, roll_count_function = parse_pool_rolls(json_pool["rolls"])
 
         pool_loot_functions = []
-        for json_pool_function_entry in json_pool.get("functions", []):
+        for json_pool_function_entry in json_pool.get("functions", json_pool.get("modifier", [])):
             pool_loot_function = parse_loot_function(json_pool_function_entry, None)
             pool_loot_functions.append(pool_loot_function)
 
@@ -183,7 +183,10 @@ def parse_loot_table(version: str, json_pools) -> LootTableContext:
             entry_weight = json_entry.get("weight", 1)
 
             loot_functions: list[LootFunction] = []
-            for json_function_entry in json_entry.get("functions", []):
+            json_functions = json_entry.get("functions", json_entry.get("modifier", []))
+            if isinstance(json_functions, dict):
+                json_functions = [json_functions]
+            for json_function_entry in json_functions:
                 loot_function = parse_loot_function(json_function_entry, entry_name)
                 loot_functions.append(loot_function)
             loot_functions.extend(pool_loot_functions)
@@ -207,7 +210,7 @@ def parse_pool_rolls(json_rolls) -> (int, int, str):
 
 
 def parse_loot_function(json_function_entry, entry_name: str | None) -> LootFunction:
-    json_function = json_function_entry["function"]
+    json_function = json_function_entry.get("function", json_function_entry.get("type"))
     if json_function.startswith('minecraft:'):
         json_function = json_function[len('minecraft:'):]
 
@@ -256,10 +259,7 @@ def parse_loot_function(json_function_entry, entry_name: str | None) -> LootFunc
         options = json_function_entry.get("options", None)
         is_treasure = json_function_entry.get("treasure", json_function_entry.get("is_treasure", True))
         return EnchantWithLevelsFunction(entry_name, int(min_level), int(max_level), options, int(is_treasure))
-    if json_function == 'exploration_map':
-        warn(f"Ignored loot function '{json_function}'")
-        return NoOpFunction()
-    if json_function == 'set_name':
+    if json_function in {'exploration_map', 'set_name', 'filtered'}:
         warn(f"Ignored loot function '{json_function}'")
         return NoOpFunction()
 

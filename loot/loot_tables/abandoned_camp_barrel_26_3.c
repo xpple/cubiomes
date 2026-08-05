@@ -9,38 +9,55 @@
 
 static int initialised = 0;
 
-static char* item_names[15] = {"minecraft:arrow", "minecraft:bone", "minecraft:bowl", "minecraft:bread", "minecraft:coal", "minecraft:cobweb", "minecraft:fishing_rod", "minecraft:glass_bottle", "minecraft:leather", "minecraft:bundle", "minecraft:rabbit_hide", "minecraft:string", "minecraft:wheat", "minecraft:white_candle", "minecraft:wooden_axe"};
-static int global_item_ids[15] = {ITEM_ARROW, ITEM_BONE, ITEM_BOWL, ITEM_BREAD, ITEM_COAL, ITEM_COBWEB, ITEM_FISHING_ROD, ITEM_GLASS_BOTTLE, ITEM_LEATHER, ITEM_BUNDLE, ITEM_RABBIT_HIDE, ITEM_STRING, ITEM_WHEAT, ITEM_WHITE_CANDLE, ITEM_WOODEN_AXE};
+static char* item_names[17] = {"minecraft:arrow", "minecraft:bone", "minecraft:bowl", "minecraft:bread", "minecraft:coal", "minecraft:cobweb", "minecraft:glass_bottle", "minecraft:leather", "minecraft:rabbit_hide", "minecraft:string", "minecraft:wheat", "minecraft:white_candle", "minecraft:white_cushion", "minecraft:straw_bed", "minecraft:bundle", "minecraft:wooden_axe", "minecraft:fishing_rod"};
+static int global_item_ids[17] = {ITEM_ARROW, ITEM_BONE, ITEM_BOWL, ITEM_BREAD, ITEM_COAL, ITEM_COBWEB, ITEM_GLASS_BOTTLE, ITEM_LEATHER, ITEM_RABBIT_HIDE, ITEM_STRING, ITEM_WHEAT, ITEM_WHITE_CANDLE, ITEM_WHITE_CUSHION, ITEM_STRAW_BED, ITEM_BUNDLE, ITEM_WOODEN_AXE, ITEM_FISHING_ROD};
 
-static int precomputed_loot__0[15] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
-static int entry_to_item__0[15] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
-static int entry_functions_count__0[15] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-static int entry_functions_index__0[15] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
-static LootFunction loot_functions__0[15];
+static int precomputed_loot__0[14] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+static int entry_to_item__0[14] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+static int entry_functions_count__0[14] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+static int entry_functions_index__0[14] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+static LootFunction loot_functions__0[14];
 static const LootPool abandoned_camp_barrel_26_3__0 = {
     .min_rolls = 4,
     .max_rolls = 8,
     .roll_count_function = roll_count_uniform,
-    .entry_count = 15,
-    .total_weight = 15,
+    .entry_count = 14,
+    .total_weight = 14,
     .precomputed_loot = precomputed_loot__0,
     .entry_to_item = entry_to_item__0,
     .entry_functions_count = entry_functions_count__0,
     .entry_functions_index = entry_functions_index__0,
     .loot_functions = loot_functions__0,
 };
+static int precomputed_loot__1[3] = {0, 1, 2};
+static int entry_to_item__1[3] = {14, 15, 16};
+static int entry_functions_count__1[3] = {1, 1, 1};
+static int entry_functions_index__1[3] = {0, 1, 2};
+static LootFunction loot_functions__1[3];
+static const LootPool abandoned_camp_barrel_26_3__1 = {
+    .min_rolls = 1,
+    .max_rolls = 1,
+    .roll_count_function = roll_count_constant,
+    .entry_count = 3,
+    .total_weight = 3,
+    .precomputed_loot = precomputed_loot__1,
+    .entry_to_item = entry_to_item__1,
+    .entry_functions_count = entry_functions_count__1,
+    .entry_functions_index = entry_functions_index__1,
+    .loot_functions = loot_functions__1,
+};
 
-static LootPool loot_pools[1] = {abandoned_camp_barrel_26_3__0};
+static LootPool loot_pools[2] = {abandoned_camp_barrel_26_3__0, abandoned_camp_barrel_26_3__1};
 static LootTableContext context = {
     .version = MC_26_3,
-    .item_count = 15,
+    .item_count = 17,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
     .unresolved_subtable_count = 0,
     .subtable_count = 0,
     .subtable_pool_offset = NULL,
     .subtable_pool_count = NULL,
-    .pool_count = 1,
+    .pool_count = 2,
     .loot_pools = loot_pools,
 };
 
@@ -52,15 +69,18 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__0->loot_functions[3]), 1, 3);
     create_set_count(&(loot_pool__0->loot_functions[4]), 2, 4);
     create_set_count(&(loot_pool__0->loot_functions[5]), 1, 1);
-    create_set_count(&(loot_pool__0->loot_functions[6]), 1, 1);
+    create_set_count(&(loot_pool__0->loot_functions[6]), 1, 3);
     create_set_count(&(loot_pool__0->loot_functions[7]), 1, 3);
-    create_set_count(&(loot_pool__0->loot_functions[8]), 1, 3);
-    create_set_count(&(loot_pool__0->loot_functions[9]), 1, 1);
+    create_set_count(&(loot_pool__0->loot_functions[8]), 1, 4);
+    create_set_count(&(loot_pool__0->loot_functions[9]), 1, 2);
     create_set_count(&(loot_pool__0->loot_functions[10]), 1, 4);
-    create_set_count(&(loot_pool__0->loot_functions[11]), 1, 2);
-    create_set_count(&(loot_pool__0->loot_functions[12]), 1, 4);
-    create_set_count(&(loot_pool__0->loot_functions[13]), 1, 3);
-    create_set_count(&(loot_pool__0->loot_functions[14]), 1, 1);
+    create_set_count(&(loot_pool__0->loot_functions[11]), 1, 3);
+    create_set_count(&(loot_pool__0->loot_functions[12]), 1, 2);
+    create_set_count(&(loot_pool__0->loot_functions[13]), 2, 4);
+    LootPool* loot_pool__1 = &(context.loot_pools[1]);
+    create_set_count(&(loot_pool__1->loot_functions[0]), 1, 1);
+    create_set_count(&(loot_pool__1->loot_functions[1]), 1, 1);
+    create_set_count(&(loot_pool__1->loot_functions[2]), 1, 1);
 }
 
 LootTableContext* init_abandoned_camp_barrel_26_3() {

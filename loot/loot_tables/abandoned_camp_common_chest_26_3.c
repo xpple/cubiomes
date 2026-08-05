@@ -9,8 +9,8 @@
 
 static int initialised = 0;
 
-static char* item_names[26] = {"minecraft:arrow", "minecraft:map", "minecraft:bone", "minecraft:cobweb", "minecraft:compass", "minecraft:map", "minecraft:firework_rocket", "minecraft:fishing_rod", "minecraft:flint_and_steel", "minecraft:glass_bottle", "minecraft:lead", "minecraft:leather", "minecraft:bundle", "minecraft:rabbit_hide", "minecraft:saddle", "minecraft:white_candle", "minecraft:bow", "minecraft:bucket", "minecraft:copper_axe", "minecraft:copper_boots", "minecraft:copper_chestplate", "minecraft:copper_leggings", "minecraft:copper_spear", "minecraft:copper_sword", "minecraft:spyglass", "minecraft:shears"};
-static int global_item_ids[26] = {ITEM_ARROW, ITEM_MAP, ITEM_BONE, ITEM_COBWEB, ITEM_COMPASS, ITEM_MAP, ITEM_FIREWORK_ROCKET, ITEM_FISHING_ROD, ITEM_FLINT_AND_STEEL, ITEM_GLASS_BOTTLE, ITEM_LEAD, ITEM_LEATHER, ITEM_BUNDLE, ITEM_RABBIT_HIDE, ITEM_SADDLE, ITEM_WHITE_CANDLE, ITEM_BOW, ITEM_BUCKET, ITEM_COPPER_AXE, ITEM_COPPER_BOOTS, ITEM_COPPER_CHESTPLATE, ITEM_COPPER_LEGGINGS, ITEM_COPPER_SPEAR, ITEM_COPPER_SWORD, ITEM_SPYGLASS, ITEM_SHEARS};
+static char* item_names[34] = {"minecraft:arrow", "minecraft:map", "minecraft:bone", "minecraft:cobweb", "minecraft:compass", "minecraft:map", "minecraft:gunpowder", "minecraft:fishing_rod", "minecraft:flint_and_steel", "minecraft:glass_bottle", "minecraft:lead", "minecraft:leather", "minecraft:bundle", "minecraft:rabbit_hide", "minecraft:saddle", "minecraft:white_candle", "minecraft:bow", "minecraft:bucket", "minecraft:copper_axe", "minecraft:copper_boots", "minecraft:copper_chestplate", "minecraft:copper_leggings", "minecraft:copper_spear", "minecraft:copper_sword", "minecraft:spyglass", "minecraft:shears", "minecraft:abandoned_campsite_map", "minecraft:abandoned_campsite_map", "minecraft:abandoned_campsite_map", "minecraft:abandoned_campsite_map", "minecraft:abandoned_campsite_map", "minecraft:abandoned_campsite_map", "minecraft:abandoned_campsite_map", "minecraft:abandoned_campsite_map"};
+static int global_item_ids[34] = {ITEM_ARROW, ITEM_MAP, ITEM_BONE, ITEM_COBWEB, ITEM_COMPASS, ITEM_MAP, ITEM_GUNPOWDER, ITEM_FISHING_ROD, ITEM_FLINT_AND_STEEL, ITEM_GLASS_BOTTLE, ITEM_LEAD, ITEM_LEATHER, ITEM_BUNDLE, ITEM_RABBIT_HIDE, ITEM_SADDLE, ITEM_WHITE_CANDLE, ITEM_BOW, ITEM_BUCKET, ITEM_COPPER_AXE, ITEM_COPPER_BOOTS, ITEM_COPPER_CHESTPLATE, ITEM_COPPER_LEGGINGS, ITEM_COPPER_SPEAR, ITEM_COPPER_SWORD, ITEM_SPYGLASS, ITEM_SHEARS, ITEM_ABANDONED_CAMPSITE_MAP, ITEM_ABANDONED_CAMPSITE_MAP, ITEM_ABANDONED_CAMPSITE_MAP, ITEM_ABANDONED_CAMPSITE_MAP, ITEM_ABANDONED_CAMPSITE_MAP, ITEM_ABANDONED_CAMPSITE_MAP, ITEM_ABANDONED_CAMPSITE_MAP, ITEM_ABANDONED_CAMPSITE_MAP};
 
 static int precomputed_loot__0[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 static int entry_to_item__0[16] = {0, 1, 2, 3, 4, 1, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
@@ -46,18 +46,35 @@ static const LootPool abandoned_camp_common_chest_26_3__1 = {
     .entry_functions_index = entry_functions_index__1,
     .loot_functions = loot_functions__1,
 };
+static int precomputed_loot__2[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+static int entry_to_item__2[8] = {26, 26, 26, 26, 26, 26, 26, 26};
+static int entry_functions_count__2[8] = {3, 3, 3, 3, 3, 3, 3, 3};
+static int entry_functions_index__2[8] = {0, 3, 6, 9, 12, 15, 18, 21};
+static LootFunction loot_functions__2[24];
+static const LootPool abandoned_camp_common_chest_26_3__2 = {
+    .min_rolls = 1,
+    .max_rolls = 1,
+    .roll_count_function = roll_count_constant,
+    .entry_count = 8,
+    .total_weight = 8,
+    .precomputed_loot = precomputed_loot__2,
+    .entry_to_item = entry_to_item__2,
+    .entry_functions_count = entry_functions_count__2,
+    .entry_functions_index = entry_functions_index__2,
+    .loot_functions = loot_functions__2,
+};
 
-static LootPool loot_pools[2] = {abandoned_camp_common_chest_26_3__0, abandoned_camp_common_chest_26_3__1};
+static LootPool loot_pools[3] = {abandoned_camp_common_chest_26_3__0, abandoned_camp_common_chest_26_3__1, abandoned_camp_common_chest_26_3__2};
 static LootTableContext context = {
     .version = MC_26_3,
-    .item_count = 26,
+    .item_count = 34,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
     .unresolved_subtable_count = 0,
     .subtable_count = 0,
     .subtable_pool_offset = NULL,
     .subtable_pool_count = NULL,
-    .pool_count = 2,
+    .pool_count = 3,
     .loot_pools = loot_pools,
 };
 
@@ -90,6 +107,31 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__1->loot_functions[7]), 1, 1);
     create_set_count(&(loot_pool__1->loot_functions[8]), 1, 1);
     create_set_count(&(loot_pool__1->loot_functions[9]), 1, 1);
+    LootPool* loot_pool__2 = &(context.loot_pools[2]);
+    create_no_op(&(loot_pool__2->loot_functions[0]));
+    create_no_op(&(loot_pool__2->loot_functions[1]));
+    create_no_op(&(loot_pool__2->loot_functions[2]));
+    create_no_op(&(loot_pool__2->loot_functions[3]));
+    create_no_op(&(loot_pool__2->loot_functions[4]));
+    create_no_op(&(loot_pool__2->loot_functions[5]));
+    create_no_op(&(loot_pool__2->loot_functions[6]));
+    create_no_op(&(loot_pool__2->loot_functions[7]));
+    create_no_op(&(loot_pool__2->loot_functions[8]));
+    create_no_op(&(loot_pool__2->loot_functions[9]));
+    create_no_op(&(loot_pool__2->loot_functions[10]));
+    create_no_op(&(loot_pool__2->loot_functions[11]));
+    create_no_op(&(loot_pool__2->loot_functions[12]));
+    create_no_op(&(loot_pool__2->loot_functions[13]));
+    create_no_op(&(loot_pool__2->loot_functions[14]));
+    create_no_op(&(loot_pool__2->loot_functions[15]));
+    create_no_op(&(loot_pool__2->loot_functions[16]));
+    create_no_op(&(loot_pool__2->loot_functions[17]));
+    create_no_op(&(loot_pool__2->loot_functions[18]));
+    create_no_op(&(loot_pool__2->loot_functions[19]));
+    create_no_op(&(loot_pool__2->loot_functions[20]));
+    create_no_op(&(loot_pool__2->loot_functions[21]));
+    create_no_op(&(loot_pool__2->loot_functions[22]));
+    create_no_op(&(loot_pool__2->loot_functions[23]));
 }
 
 LootTableContext* init_abandoned_camp_common_chest_26_3() {

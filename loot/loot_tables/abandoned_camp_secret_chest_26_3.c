@@ -9,8 +9,8 @@
 
 static int initialised = 0;
 
-static char* item_names[13] = {"minecraft:diamond", "minecraft:potion", "minecraft:potion", "minecraft:potion", "minecraft:potion", "minecraft:map", "minecraft:copper_ingot", "minecraft:gold_ingot", "minecraft:iron_ingot", "minecraft:iron_axe", "minecraft:iron_boots", "minecraft:iron_leggings", "minecraft:iron_spear"};
-static int global_item_ids[13] = {ITEM_DIAMOND, ITEM_POTION, ITEM_POTION, ITEM_POTION, ITEM_POTION, ITEM_MAP, ITEM_COPPER_INGOT, ITEM_GOLD_INGOT, ITEM_IRON_INGOT, ITEM_IRON_AXE, ITEM_IRON_BOOTS, ITEM_IRON_LEGGINGS, ITEM_IRON_SPEAR};
+static char* item_names[20] = {"minecraft:diamond", "minecraft:potion", "minecraft:potion", "minecraft:potion", "minecraft:potion", "minecraft:map", "minecraft:copper_ingot", "minecraft:gold_ingot", "minecraft:iron_ingot", "minecraft:iron_axe", "minecraft:iron_boots", "minecraft:iron_leggings", "minecraft:iron_spear", "minecraft:ancient_city_map", "minecraft:trial_explorer_map", "minecraft:mineshaft_map", "minecraft:desert_pyramid_map", "minecraft:jungle_explorer_map", "minecraft:warm_ocean_ruins_map", "minecraft:woodland_explorer_map"};
+static int global_item_ids[20] = {ITEM_DIAMOND, ITEM_POTION, ITEM_POTION, ITEM_POTION, ITEM_POTION, ITEM_MAP, ITEM_COPPER_INGOT, ITEM_GOLD_INGOT, ITEM_IRON_INGOT, ITEM_IRON_AXE, ITEM_IRON_BOOTS, ITEM_IRON_LEGGINGS, ITEM_IRON_SPEAR, ITEM_ANCIENT_CITY_MAP, ITEM_TRIAL_EXPLORER_MAP, ITEM_MINESHAFT_MAP, ITEM_DESERT_PYRAMID_MAP, ITEM_JUNGLE_EXPLORER_MAP, ITEM_WARM_OCEAN_RUINS_MAP, ITEM_WOODLAND_EXPLORER_MAP};
 
 static int precomputed_loot__0[5] = {0, 1, 2, 3, 4};
 static int entry_to_item__0[5] = {0, 1, 1, 1, 1};
@@ -63,18 +63,35 @@ static const LootPool abandoned_camp_secret_chest_26_3__2 = {
     .entry_functions_index = entry_functions_index__2,
     .loot_functions = loot_functions__2,
 };
+static int precomputed_loot__3[7] = {0, 1, 2, 3, 4, 5, 6};
+static int entry_to_item__3[7] = {13, 14, 15, 16, 17, 18, 19};
+static int entry_functions_count__3[7] = {2, 2, 2, 2, 2, 2, 2};
+static int entry_functions_index__3[7] = {0, 2, 4, 6, 8, 10, 12};
+static LootFunction loot_functions__3[14];
+static const LootPool abandoned_camp_secret_chest_26_3__3 = {
+    .min_rolls = 1,
+    .max_rolls = 1,
+    .roll_count_function = roll_count_constant,
+    .entry_count = 7,
+    .total_weight = 7,
+    .precomputed_loot = precomputed_loot__3,
+    .entry_to_item = entry_to_item__3,
+    .entry_functions_count = entry_functions_count__3,
+    .entry_functions_index = entry_functions_index__3,
+    .loot_functions = loot_functions__3,
+};
 
-static LootPool loot_pools[3] = {abandoned_camp_secret_chest_26_3__0, abandoned_camp_secret_chest_26_3__1, abandoned_camp_secret_chest_26_3__2};
+static LootPool loot_pools[4] = {abandoned_camp_secret_chest_26_3__0, abandoned_camp_secret_chest_26_3__1, abandoned_camp_secret_chest_26_3__2, abandoned_camp_secret_chest_26_3__3};
 static LootTableContext context = {
     .version = MC_26_3,
-    .item_count = 13,
+    .item_count = 20,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
     .unresolved_subtable_count = 0,
     .subtable_count = 0,
     .subtable_pool_offset = NULL,
     .subtable_pool_count = NULL,
-    .pool_count = 3,
+    .pool_count = 4,
     .loot_pools = loot_pools,
 };
 
@@ -99,6 +116,21 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__2->loot_functions[1]), 1, 1);
     create_set_count(&(loot_pool__2->loot_functions[2]), 1, 1);
     create_set_count(&(loot_pool__2->loot_functions[3]), 1, 1);
+    LootPool* loot_pool__3 = &(context.loot_pools[3]);
+    create_no_op(&(loot_pool__3->loot_functions[0]));
+    create_no_op(&(loot_pool__3->loot_functions[1]));
+    create_no_op(&(loot_pool__3->loot_functions[2]));
+    create_no_op(&(loot_pool__3->loot_functions[3]));
+    create_no_op(&(loot_pool__3->loot_functions[4]));
+    create_no_op(&(loot_pool__3->loot_functions[5]));
+    create_no_op(&(loot_pool__3->loot_functions[6]));
+    create_no_op(&(loot_pool__3->loot_functions[7]));
+    create_no_op(&(loot_pool__3->loot_functions[8]));
+    create_no_op(&(loot_pool__3->loot_functions[9]));
+    create_no_op(&(loot_pool__3->loot_functions[10]));
+    create_no_op(&(loot_pool__3->loot_functions[11]));
+    create_no_op(&(loot_pool__3->loot_functions[12]));
+    create_no_op(&(loot_pool__3->loot_functions[13]));
 }
 
 LootTableContext* init_abandoned_camp_secret_chest_26_3() {
