@@ -219,8 +219,8 @@ static void ensureMineshaft(DungeonWorld *c, int idx) {
 }
 
 static double terrainDensity(DungeonWorld *c, int x, int y, int z) {
-    if (y >= 152) return -1.0;
-    double dens[2][2][20];
+    if (y > SURFACE_COL_TOP) return -1.0;
+    double dens[2][2][SURFACE_DENS_CELLS];
     int px = x >> 2, pz = z >> 2;
     for (int dx = 0; dx <= 1; dx++)
         for (int dz = 0; dz <= 1; dz++)

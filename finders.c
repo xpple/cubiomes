@@ -2442,7 +2442,7 @@ STRUCT(NaturalWaterCache) {
 };
 
 static void naturalWaterColumnDensity(const Generator *g, const SurfaceNoise *sn, int x, int z,
-                                 double dens[2][2][20]) {
+                                 double dens[2][2][SURFACE_DENS_CELLS]) {
     int px = x >> 2, pz = z >> 2;
     for (int dx = 0; dx <= 1; dx++)
         for (int dz = 0; dz <= 1; dz++)
@@ -2459,7 +2459,7 @@ static int naturalWaterAt(NaturalWaterCache *hasWater, int lx, int y, int lz) {
         extern int couldBeNaturalWater(Generator *g, int x, int y, int z);
         if (!couldBeNaturalWater((Generator*)hasWater->g, x, y, z))
             return 0;
-        double dens[2][2][20];
+        double dens[2][2][SURFACE_DENS_CELLS];
         naturalWaterColumnDensity(hasWater->g, hasWater->sn, x, z, dens);
         uint64_t bits = 0;
         double fx = (x & 3) / 4.0, fz = (z & 3) / 4.0;
@@ -2937,7 +2937,7 @@ static inline int lakeMaskGet(const uint8_t *mask, int cx16, int cz16, int x, in
     return (mask[idx >> 3] >> (idx & 7)) & 1;
 }
 
-static inline double lakeColDensAt(const double dens[2][2][20], int x, int z, int y) {
+static inline double lakeColDensAt(const double dens[2][2][SURFACE_DENS_CELLS], int x, int z, int y) {
     int py = y >> 3;
     double fx = (x & 3) / 4.0, fy = (y & 7) / 8.0, fz = (z & 3) / 4.0;
     double l00 = lerp(fy, dens[0][0][py], dens[0][0][py+1]);
@@ -2991,7 +2991,7 @@ static int lakeBlockKind(const Generator *g, const SurfaceNoise *sn, const LakeW
     // natural terrain
     {
         static uint64_t cSeed[4]; static int cX[4], cZ[4], cValid[4], cNext;
-        static double cDens[4][2][2][20];
+        static double cDens[4][2][2][SURFACE_DENS_CELLS];
         int slot = -1;
         for (int i = 0; i < 4; i++)
             if (cValid[i] && cSeed[i] == g->seed && cX[i] == x && cZ[i] == z) { slot = i; break; }

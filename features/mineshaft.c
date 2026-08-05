@@ -510,36 +510,16 @@ static int isAirBlock(Generator *g, const SurfaceNoise *sn, ChunkMask *cm, int x
     return 0;
 }
 
-#define DENSITY_CELLS 20
-static void computeColumnDensity(Generator *g, const SurfaceNoise *sn, int x, int z,
-                                double dens[2][2][DENSITY_CELLS]) {
-    int px = x >> 2, pz = z >> 2;
-    for (int dx = 0; dx <= 1; dx++)
-        for (int dz = 0; dz <= 1; dz++)
-            surfaceCornerDens(g, sn, px + dx, pz + dz, dens[dx][dz]);
-}
-
-static inline double columnDensityAt(const double dens[2][2][DENSITY_CELLS], int x, int z, int y) {
-    int py = y >> 3;
-    double fx = (x & 3) / 4.0, fy = (y & 7) / 8.0, fz = (z & 3) / 4.0;
-    double l00 = lerp(fy, dens[0][0][py], dens[0][0][py+1]);
-    double l10 = lerp(fy, dens[1][0][py], dens[1][0][py+1]);
-    double l01 = lerp(fy, dens[0][1][py], dens[0][1][py+1]);
-    double l11 = lerp(fy, dens[1][1][py], dens[1][1][py+1]);
-    double lx0 = lerp(fx, l00, l10);
-    double lx1 = lerp(fx, l01, l11);
-    return lerp(fz, lx0, lx1);
-}
 
 static int topSolidBlock(Generator *g, const SurfaceNoise *sn, ChunkMask *cm, int x, int z) {
     int li = ((z - cm->cz) << 4) | (x - cm->cx);
     if (cm->topBlockValid[li]) return cm->topBlock[li];
 
-    double dens[2][2][DENSITY_CELLS];
-    computeColumnDensity(g, sn, x, z, dens);
+    double dens[2][2][SURFACE_DENS_CELLS];
+    surfaceDensCell(g, sn, x, z, dens);
 
     int top = 0;
-    for (int y = DENSITY_CELLS * 8 - 9; y > 0; y--) {
+    for (int y = SURFACE_COL_TOP; y > 0; y--) {
         int o = getDetails(cm, x, y, z);
         if (o != DETAIL_NONE) {
             if (o == DETAIL_SOLID) { top = y; break; }
@@ -551,7 +531,7 @@ static int topSolidBlock(Generator *g, const SurfaceNoise *sn, ChunkMask *cm, in
         }
         if (getMask(cm->air, cm->cx, cm->cz, x, y, z))
             continue;
-        if (columnDensityAt(dens, x, z, y) > 0) { top = y; break; }
+        if (surfaceDensityAt(dens, x, y, z) > 0) { top = y; break; }
     }
     cm->topBlock[li] = (int16_t)top;
     cm->topBlockValid[li] = 1;
