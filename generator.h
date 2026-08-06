@@ -127,7 +127,7 @@ Layer *setupLayer(Layer *l, mapfunc_t *map, int mc,
  */
 int genArea(const Layer *layer, int *out, int areaX, int areaZ, int areaWidth, int areaHeight);
 
-/**
+/*
  * Map an approximation of the Overworld surface height.
  * The horizontal scaling is 1:4. If non-null, the ids are filled with the
  * biomes of the area. The height (written to y[w*h]) is in blocks.
@@ -137,6 +137,60 @@ int genArea(const Layer *layer, int *out, int areaX, int areaZ, int areaWidth, i
 int mapApproxHeight(float *y, int *ids, const Generator *g,
     const SurfaceNoise *sn, int x, int z, int w, int h);
 
+/*
+ * Tests if overworld block is below 0 density (water will spawn there)
+ * It is per-block and only supported for B1.8-1.17 (returns 0 for other versions)
+ * Takes initialized generator and surface noise. XYZ are block coordinates
+ */
+int isNaturalWater(const Generator *g, const SurfaceNoise *sn, int x, int y, int z);
+
+/* The noise column is 33 cells tall (the full 0-256 range), but only the bottom
+ * cells are needed to find the surface, so the default is 20 (y=151). Raise this
+ * to reach higher terrain, at the cost of more noise sampling per corner and a
+ * larger cache. Everything below derives from it so it is the only number to change
+*/
+#define SURFACE_DENS_CELLS 20 // # of cells surfaceCornerDens returns
+
+// Converts number of cells to highest y position
+#define SURFACE_COL_TOP ((SURFACE_DENS_CELLS - 2) * 8 + 7)
+
+/* The vertical density profile at one corner of the noise grid, at cell
+ * coordinates (cx,cz): one value per 8 block tall cell going up from y=0, where
+ * greater than zero is solid. surfaceDensityAt interpolates between four of
+ * these to get the density at an exact block
+ *
+ * Each value is the 3D terrain noise plus a vertical gradient that is positive
+ * low down and negative high up, which is what gives the world a surface. The
+ * biomes decide where that surface sits: the 5x5 biomes around the corner are
+ * averaged, weighted by distance and depth, into a depth that moves it up or
+ * down and a scale that stretches it
+ *
+ * This is the expensive part of a density lookup, so the profile is cached per
+ * corner. The cache only changes how long a lookup takes, never the result
+*/
+void surfaceCornerDens(const Generator *g, const SurfaceNoise *sn, int cx, int cz,
+                       double out[SURFACE_DENS_CELLS]);
+
+/* Terrain noise is only evaluated on a grid (4 blocks horizontally and 8 vertically)
+ * surfaceCornerDens gives one grid corner at cell coordinates,
+ * this gives the 2x2 of corners surrounding a block, which is what you need
+ * to interpolate down to that block
+*/
+void surfaceDensCell(const Generator *g, const SurfaceNoise *sn, int x, int z,
+                     double cell[2][2][SURFACE_DENS_CELLS]);
+
+/* Terrain density at an exact block, blended from the cell around it
+ * Greater than zero is solid
+*/
+double surfaceDensityAt(const double cell[2][2][SURFACE_DENS_CELLS], int x, int y, int z);
+
+/* Gets the surface height of an individual block, i.e. the first free block above
+ * the terrain. oceanFloor picks the heightmap: 0 stops at sea level (y=63), since anything
+ * below it is water and so never free, 1 keeps going down to the floor
+ * Only supported for the overworld in B1.8-1.17 (returns -1 otherwise)
+*/
+int getSingleBlockSurfaceHeight(const Generator *g, const SurfaceNoise *sn, int x, int z,
+                          int oceanFloor);
 
 #ifdef __cplusplus
 }

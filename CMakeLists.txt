@@ -33,6 +33,7 @@ set(HEADERS
 	features/fortress.h
 	features/ore.h
 	features/stronghold.h
+	features/mineshaft.h
 	loot/items.h
 	loot/logging.h
 	loot/loot_functions.h
@@ -89,6 +90,7 @@ set(HEADERS
 	loot/loot_tables/shipwreck_treasure_1_13.h
 	loot/loot_tables/shipwreck_treasure_1_20.h
 	loot/loot_tables/shipwreck_treasure_1_21_11.h
+	loot/loot_tables/simple_dungeon_1_14.h
 	loot/loot_tables/stronghold_corridor_1_13.h
 	loot/loot_tables/stronghold_corridor_1_18.h
 	loot/loot_tables/stronghold_corridor_1_20.h
@@ -115,6 +117,8 @@ set(SOURCES
 	features/fortress.c
 	features/ore.c
 	features/stronghold.c
+	features/mineshaft.c
+	features/dungeon.c
 	loot/items.c
 	loot/loot_functions.c
 	loot/loot_tables.c
@@ -169,6 +173,7 @@ set(SOURCES
 	loot/loot_tables/shipwreck_treasure_1_13.c
 	loot/loot_tables/shipwreck_treasure_1_20.c
 	loot/loot_tables/shipwreck_treasure_1_21_11.c
+	loot/loot_tables/simple_dungeon_1_14.c
 	loot/loot_tables/stronghold_corridor_1_13.c
 	loot/loot_tables/stronghold_corridor_1_18.c
 	loot/loot_tables/stronghold_corridor_1_20.c
