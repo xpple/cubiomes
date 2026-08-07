@@ -2,6 +2,7 @@
 #define STRONGHOLD_H_
 
 #include "../finders.h"
+#include "dungeon.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -12,13 +13,6 @@ extern "C" {
  * that are generated is limited to 'n'. A buffer length of around 400 should
  * be sufficient in practice, but a stronghold can in theory contain many more
  * than that. The number of generated pieces is given by the return value.
- *
- * This code does not adjust the Y-coordinate of the pieces, so the starting
- * piece will always be at Y=64. This can be enabled by removing the
- * `mc <= MC_1_12_2 && !env.portal` check, and additionally removing
- * `&& !env.generationStopped` from the `while (list->next)` loop. The reason
- * this code is not executed by default is that the Y-coordinate is not
- * relevant (for the most part) for loot/eye generation.
  *
  * This function does not compute loot seeds or portal room eye count, use
  * `getStrongholdLoot` for that.
@@ -56,6 +50,7 @@ enum {
  * to p.additionalData using a bit array (e.g. 0b101011011100 would mean
  * 7 eyes are generated).
  *
+ * Warning: very slow
  * @param list the pieces list
  * @param n the maximum number of pieces to generate
  * @param ssconf the salt config, use getStructureSaltConfig to obtain it
@@ -63,9 +58,10 @@ enum {
  * @param seed the world seed (lower 48 bits suffice)
  * @param chunkX the chunk X-coordinate
  * @param chunkZ the chunk Z-coordinate
+ * @param dungeonsOut optional (pass NULL). Used internally to track dungeon locations (they indirectly influence stronghold chest loot)
  * @return the number of pieces that were generated
  */
-int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, uint64_t seed, int chunkX, int chunkZ);
+int getStrongholdLoot(Generator *g, SurfaceNoise *sn, Piece *list, int n, StructureSaltConfig ssconf, int mc, uint64_t seed, int chunkX, int chunkZ, DungeonRoomList *dungeonsOut);
 
 #ifdef __cplusplus
 }

@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[21] = {"minecraft:diamond", "minecraft:iron_ingot", "minecraft:gold_ingot", "minecraft:emerald", "minecraft:bone", "minecraft:spider_eye", "minecraft:rotten_flesh", "minecraft:leather", "minecraft:copper_horse_armor", "minecraft:iron_horse_armor", "minecraft:golden_horse_armor", "minecraft:diamond_horse_armor", "minecraft:book", "minecraft:golden_apple", "minecraft:enchanted_golden_apple", "minecraft:bone", "minecraft:gunpowder", "minecraft:rotten_flesh", "minecraft:string", "minecraft:sand", "minecraft:dune_armor_trim_smithing_template"};
 static int global_item_ids[21] = {ITEM_DIAMOND, ITEM_IRON_INGOT, ITEM_GOLD_INGOT, ITEM_EMERALD, ITEM_BONE, ITEM_SPIDER_EYE, ITEM_ROTTEN_FLESH, ITEM_LEATHER, ITEM_COPPER_HORSE_ARMOR, ITEM_IRON_HORSE_ARMOR, ITEM_GOLDEN_HORSE_ARMOR, ITEM_DIAMOND_HORSE_ARMOR, ITEM_BOOK, ITEM_GOLDEN_APPLE, ITEM_ENCHANTED_GOLDEN_APPLE, ITEM_BONE, ITEM_GUNPOWDER, ITEM_ROTTEN_FLESH, ITEM_STRING, ITEM_SAND, ITEM_DUNE_ARMOR_TRIM_SMITHING_TEMPLATE};
@@ -66,7 +66,7 @@ static const LootPool desert_pyramid_1_21_11__2 = {
 
 static LootPool loot_pools[3] = {desert_pyramid_1_21_11__0, desert_pyramid_1_21_11__1, desert_pyramid_1_21_11__2};
 static LootTableContext context = {
-    .version = MC_1_21_11,
+    .version = 0, // set by init
     .item_count = 21,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -78,7 +78,8 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     create_set_count(&(loot_pool__0->loot_functions[0]), 1, 3);
     create_set_count(&(loot_pool__0->loot_functions[1]), 1, 5);
@@ -88,7 +89,7 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__0->loot_functions[5]), 1, 3);
     create_set_count(&(loot_pool__0->loot_functions[6]), 3, 7);
     create_set_count(&(loot_pool__0->loot_functions[7]), 1, 5);
-    create_enchant_randomly_tag(&(loot_pool__0->loot_functions[8]), MC_1_21_11, get_item_type("minecraft:book"), "#minecraft:on_random_loot", 0);
+    create_enchant_randomly_tag(&(loot_pool__0->loot_functions[8]), version, get_item_type("minecraft:book"), "#minecraft:on_random_loot", 0);
     LootPool* loot_pool__1 = &(context.loot_pools[1]);
     create_set_count(&(loot_pool__1->loot_functions[0]), 1, 8);
     create_set_count(&(loot_pool__1->loot_functions[1]), 1, 8);
@@ -99,10 +100,13 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__2->loot_functions[0]), 2, 2);
 }
 
-LootTableContext* init_desert_pyramid_1_21_11() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_desert_pyramid_1_21_11(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }

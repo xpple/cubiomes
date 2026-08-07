@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[12] = {"minecraft:map", "minecraft:compass", "minecraft:map", "minecraft:clock", "minecraft:paper", "minecraft:feather", "minecraft:book", "minecraft:coast_armor_trim_smithing_template", "minecraft:copper_nautilus_armor", "minecraft:iron_nautilus_armor", "minecraft:golden_nautilus_armor", "minecraft:diamond_nautilus_armor"};
 static int global_item_ids[12] = {ITEM_MAP, ITEM_COMPASS, ITEM_MAP, ITEM_CLOCK, ITEM_PAPER, ITEM_FEATHER, ITEM_BOOK, ITEM_COAST_ARMOR_TRIM_SMITHING_TEMPLATE, ITEM_COPPER_NAUTILUS_ARMOR, ITEM_IRON_NAUTILUS_ARMOR, ITEM_GOLDEN_NAUTILUS_ARMOR, ITEM_DIAMOND_NAUTILUS_ARMOR};
@@ -83,7 +83,7 @@ static const LootPool shipwreck_map_1_21_11__3 = {
 
 static LootPool loot_pools[4] = {shipwreck_map_1_21_11__0, shipwreck_map_1_21_11__1, shipwreck_map_1_21_11__2, shipwreck_map_1_21_11__3};
 static LootTableContext context = {
-    .version = MC_1_21_11,
+    .version = 0, // set by init
     .item_count = 12,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -95,7 +95,8 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     create_no_op(&(loot_pool__0->loot_functions[0]));
     create_no_op(&(loot_pool__0->loot_functions[1]));
@@ -112,10 +113,13 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__3->loot_functions[3]), 1, 1);
 }
 
-LootTableContext* init_shipwreck_map_1_21_11() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_shipwreck_map_1_21_11(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }

@@ -766,7 +766,163 @@ int mapApproxHeight(float *y, int *ids, const Generator *g, const SurfaceNoise *
     return 0;
 }
 
+STRUCT(CornerDensEntry) {
+    uint64_t seed;
+    int cx, cz;
+    int mc, dim; // the biomes feeding the kernel depend on both of these
+    uint32_t flags; // and on LARGE_BIOMES
+    int valid;
+    double dens[SURFACE_DENS_CELLS];
+};
 
+static CornerDensEntry cornerDensCache[256 * 256];
+
+void surfaceCornerDens(const Generator *g, const SurfaceNoise *sn, int cx, int cz, double out[SURFACE_DENS_CELLS])
+{
+    uint32_t i = (cx & 255) | ((cz & 255) << 8);
+    CornerDensEntry *e = &cornerDensCache[i];
+    if (e->valid && e->seed == g->seed && e->cx == cx && e->cz == cz &&
+        e->mc == g->mc && e->dim == g->dim && e->flags == g->flags) {
+        memcpy(out, e->dens, sizeof(e->dens));
+        return;
+    }
+
+    Range r = {4, cx-2, cz-2, 5, 5, 0, 1};
+    int *bigCache = allocCache(g, r);
+    genBiomes(g, bigCache, r);
+
+    double d0, s0;
+    float wt = 0, ws = 0, wd = 0;
+    int ii, jj;
+    getBiomeDepthAndScale(bigCache[2*r.sx + 2], &d0, &s0, 0);
+    float f3 = (float) d0;
+    for (ii = 0; ii < 5; ii++)
+    {
+        for (jj = 0; jj < 5; jj++)
+        {
+            double d, s;
+            int id = bigCache[jj*r.sx + ii];
+            getBiomeDepthAndScale(id, &d, &s, 0);
+            float f4 = (float) d, f5 = (float) s;
+            float kern = 10.0f / (float) sqrt((double)((float)((ii-2)*(ii-2) + (jj-2)*(jj-2)) + 0.2f));
+            float f8 = f4 > f3 ? 0.5f : 1.0f;
+            float weight = f8 * kern / (f4 + 2.0f);
+            ws += f5 * weight;
+            wd += f4 * weight;
+            wt += weight;
+        }
+    }
+    free(bigCache);
+    float f10 = wd / wt;
+    float f11 = ws / wt;
+    double wdd = (double)(f10 * 0.5f - 0.125f) * 0.265625;
+    double wss = 96.0 / (double)(f11 * 0.9f + 0.1f);
+
+    double off = sampleOctaveAmp(&sn->octdepth, cx*200, 10, cz*200, 1, 0, 1);
+    off *= 65535./8000;
+    if (off < 0) off = -0.3 * off;
+    off = off * 3 - 2;
+    if (off > 1) off = 1;
+    off *= 17./64;
+    if (off < 0) off *= 1./28;
+    else off *= 1./40;
+
+    for (int qy = 0; qy < SURFACE_DENS_CELLS; qy++)
+    {
+        double n0 = sampleSurfaceNoise(sn, cx, qy, cz);
+        double fall = 1 - 2 * qy / 32.0 + off - 0.46875;
+        fall = wss * (fall + wdd);
+        n0 += (fall > 0 ? 4*fall : fall);
+        out[qy] = n0;
+    }
+
+    e->seed = g->seed;
+    e->cx = cx;
+    e->cz = cz;
+    e->mc = g->mc;
+    e->dim = g->dim;
+    e->flags = g->flags;
+    memcpy(e->dens, out, sizeof(e->dens));
+    e->valid = 1;
+}
+
+void surfaceDensCell(const Generator *g, const SurfaceNoise *sn, int x, int z,
+        double cell[2][2][SURFACE_DENS_CELLS])
+{
+    int px = x >> 2, pz = z >> 2, dx, dz;
+    for (dx = 0; dx <= 1; dx++)
+        for (dz = 0; dz <= 1; dz++)
+            surfaceCornerDens(g, sn, px + dx, pz + dz, cell[dx][dz]);
+}
+
+double surfaceDensityAt(const double cell[2][2][SURFACE_DENS_CELLS], int x, int y, int z)
+{
+    int py = y >> 3;
+    double fx = (x & 3) / 4.0, fy = (y & 7) / 8.0, fz = (z & 3) / 4.0;
+    double l00 = lerp(fy, cell[0][0][py], cell[0][0][py+1]);
+    double l10 = lerp(fy, cell[1][0][py], cell[1][0][py+1]);
+    double l01 = lerp(fy, cell[0][1][py], cell[0][1][py+1]);
+    double l11 = lerp(fy, cell[1][1][py], cell[1][1][py+1]);
+    double lx0 = lerp(fx, l00, l10);
+    double lx1 = lerp(fx, l01, l11);
+    return lerp(fz, lx0, lx1);
+}
+
+int getSingleBlockSurfaceHeight(const Generator *g, const SurfaceNoise *sn, int x, int z,
+        int oceanFloor)
+{
+    double cell[2][2][SURFACE_DENS_CELLS];
+    int y;
+
+    if (g->dim != DIM_OVERWORLD)
+        return -1;
+    if (g->mc <= MC_B1_7 || g->mc > MC_1_17) // 1.18+ uses a different terrain generator
+        return -1;
+
+    surfaceDensCell(g, sn, x, z, cell);
+    for (y = SURFACE_COL_TOP; y >= 0; y--)
+    {
+        if (surfaceDensityAt(cell, x, y, z) > 0)
+            return y + 1;
+        if (!oceanFloor && y < 63) // everything below this automatically gets flooded anyway
+            return 63;
+    }
+    return 0;
+}
+
+int isNaturalWater(const Generator *g, const SurfaceNoise *sn, int x, int y, int z)
+{
+    if (g->dim != DIM_OVERWORLD)
+        return 0;
+    if (g->mc >= MC_1_18 || g->mc <= MC_B1_7)
+        return 0;
+    if (y >= 63 || y < 0)
+        return 0;
+
+    int px = x >> 2, py = y >> 3, pz = z >> 2;
+    double fx = (x & 3) / 4.0, fy = (y & 7) / 8.0, fz = (z & 3) / 4.0;
+
+    double dens[2][2][2];
+    int dx, dz;
+    for (dx = 0; dx <= 1; dx++)
+    {
+        for (dz = 0; dz <= 1; dz++)
+        {
+            double col[SURFACE_DENS_CELLS];
+            surfaceCornerDens(g, sn, px + dx, pz + dz, col);
+            dens[dx][dz][0] = col[py];
+            dens[dx][dz][1] = col[py + 1];
+        }
+    }
+
+    double l00 = lerp(fy, dens[0][0][0], dens[0][0][1]);
+    double l10 = lerp(fy, dens[1][0][0], dens[1][0][1]);
+    double l01 = lerp(fy, dens[0][1][0], dens[0][1][1]);
+    double l11 = lerp(fy, dens[1][1][0], dens[1][1][1]);
+    double lx0 = lerp(fx, l00, l10);
+    double lx1 = lerp(fx, l01, l11);
+    return lerp(fz, lx0, lx1) <= 0;
+}
 
 
 

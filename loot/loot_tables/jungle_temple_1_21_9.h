@@ -4,6 +4,6 @@
 
 #include "../loot_table_context.h"
 
-LootTableContext* init_jungle_temple_1_21_9();
+LootTableContext* init_jungle_temple_1_21_9(int version);
 
 #endif //JUNGLE_TEMPLE_1_21_9_H

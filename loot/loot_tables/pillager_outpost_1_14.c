@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[11] = {"minecraft:crossbow", "minecraft:wheat", "minecraft:potato", "minecraft:carrot", "minecraft:dark_oak_log", "minecraft:experience_bottle", "minecraft:string", "minecraft:arrow", "minecraft:tripwire_hook", "minecraft:iron_ingot", "minecraft:book"};
 static int global_item_ids[11] = {ITEM_CROSSBOW, ITEM_WHEAT, ITEM_POTATO, ITEM_CARROT, ITEM_DARK_OAK_LOG, ITEM_EXPERIENCE_BOTTLE, ITEM_STRING, ITEM_ARROW, ITEM_TRIPWIRE_HOOK, ITEM_IRON_INGOT, ITEM_BOOK};
@@ -83,7 +83,7 @@ static const LootPool pillager_outpost_1_14__3 = {
 
 static LootPool loot_pools[4] = {pillager_outpost_1_14__0, pillager_outpost_1_14__1, pillager_outpost_1_14__2, pillager_outpost_1_14__3};
 static LootTableContext context = {
-    .version = MC_1_14,
+    .version = 0, // set by init
     .item_count = 11,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -95,7 +95,8 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     LootPool* loot_pool__1 = &(context.loot_pools[1]);
     create_set_count(&(loot_pool__1->loot_functions[0]), 3, 5);
@@ -108,13 +109,16 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__3->loot_functions[1]), 2, 7);
     create_set_count(&(loot_pool__3->loot_functions[2]), 1, 3);
     create_set_count(&(loot_pool__3->loot_functions[3]), 1, 3);
-    create_enchant_randomly(&(loot_pool__3->loot_functions[4]), MC_1_14, get_item_type("minecraft:book"), 0);
+    create_enchant_randomly(&(loot_pool__3->loot_functions[4]), version, get_item_type("minecraft:book"), 0);
 }
 
-LootTableContext* init_pillager_outpost_1_14() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_pillager_outpost_1_14(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }

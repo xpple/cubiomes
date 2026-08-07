@@ -33,6 +33,19 @@ set(HEADERS
 	features/fortress.h
 	features/ore.h
 	features/stronghold.h
+	features/mineshaft.h
+	jigsaw/jigsaw.h
+	jigsaw/jigsaw_data.h
+	jigsaw/jigsaw_1_16_1.h
+	jigsaw/jigsaw_1_16_5.h
+	jigsaw/jigsaw_1_18_2.h
+	jigsaw/jigsaw_1_19_2.h
+	jigsaw/jigsaw_1_19_4.h
+	jigsaw/jigsaw_1_20_1.h
+	jigsaw/jigsaw_1_20_6.h
+	jigsaw/jigsaw_1_21_11.h
+	jigsaw/jigsaw_1_21_4.h
+	jigsaw/jigsaw_1_21_8.h
 	loot/items.h
 	loot/logging.h
 	loot/loot_functions.h
@@ -43,11 +56,15 @@ set(HEADERS
 	loot/loot_tables/bastion_bridge_1_16_1.h
 	loot/loot_tables/bastion_bridge_1_16_5.h
 	loot/loot_tables/bastion_bridge_1_20.h
+	loot/loot_tables/bastion_hoglin_stable_1_16_1.h
+	loot/loot_tables/bastion_hoglin_stable_1_16_5.h
 	loot/loot_tables/bastion_other_1_16_1.h
 	loot/loot_tables/bastion_other_1_16_5.h
 	loot/loot_tables/bastion_other_1_20.h
 	loot/loot_tables/bastion_other_1_21_1.h
 	loot/loot_tables/bastion_other_1_21_9.h
+	loot/loot_tables/bastion_treasure_1_16_1.h
+	loot/loot_tables/bastion_treasure_1_16_5.h
 	loot/loot_tables/buried_treasure_1_13.h
 	loot/loot_tables/buried_treasure_1_18.h
 	loot/loot_tables/buried_treasure_1_21_11.h
@@ -89,6 +106,7 @@ set(HEADERS
 	loot/loot_tables/shipwreck_treasure_1_13.h
 	loot/loot_tables/shipwreck_treasure_1_20.h
 	loot/loot_tables/shipwreck_treasure_1_21_11.h
+	loot/loot_tables/simple_dungeon_1_14.h
 	loot/loot_tables/stronghold_corridor_1_13.h
 	loot/loot_tables/stronghold_corridor_1_18.h
 	loot/loot_tables/stronghold_corridor_1_20.h
@@ -97,6 +115,22 @@ set(HEADERS
 	loot/loot_tables/stronghold_crossing_1_13.h
 	loot/loot_tables/stronghold_library_1_13.h
 	loot/loot_tables/stronghold_library_1_20.h
+	loot/loot_tables/village_armorer_1_16_1.h
+	loot/loot_tables/village_butcher_1_16_1.h
+	loot/loot_tables/village_cartographer_1_16_1.h
+	loot/loot_tables/village_desert_house_1_16_1.h
+	loot/loot_tables/village_fisher_1_16_1.h
+	loot/loot_tables/village_fletcher_1_16_1.h
+	loot/loot_tables/village_mason_1_16_1.h
+	loot/loot_tables/village_plains_house_1_16_1.h
+	loot/loot_tables/village_savanna_house_1_16_1.h
+	loot/loot_tables/village_shepherd_1_16_1.h
+	loot/loot_tables/village_snowy_house_1_16_1.h
+	loot/loot_tables/village_taiga_house_1_16_1.h
+	loot/loot_tables/village_tannery_1_16_1.h
+	loot/loot_tables/village_temple_1_16_1.h
+	loot/loot_tables/village_toolsmith_1_16_1.h
+	loot/loot_tables/village_weaponsmith_1_16_1.h
 	loot/cjson/cJSON.h
 )
 set(SOURCES
@@ -115,6 +149,19 @@ set(SOURCES
 	features/fortress.c
 	features/ore.c
 	features/stronghold.c
+	features/mineshaft.c
+	features/dungeon.c
+	jigsaw/jigsaw.c
+	jigsaw/jigsaw_1_16_1.c
+	jigsaw/jigsaw_1_16_5.c
+	jigsaw/jigsaw_1_18_2.c
+	jigsaw/jigsaw_1_19_2.c
+	jigsaw/jigsaw_1_19_4.c
+	jigsaw/jigsaw_1_20_1.c
+	jigsaw/jigsaw_1_20_6.c
+	jigsaw/jigsaw_1_21_11.c
+	jigsaw/jigsaw_1_21_4.c
+	jigsaw/jigsaw_1_21_8.c
 	loot/items.c
 	loot/loot_functions.c
 	loot/loot_tables.c
@@ -123,11 +170,15 @@ set(SOURCES
 	loot/loot_tables/bastion_bridge_1_16_1.c
 	loot/loot_tables/bastion_bridge_1_16_5.c
 	loot/loot_tables/bastion_bridge_1_20.c
+	loot/loot_tables/bastion_hoglin_stable_1_16_1.c
+	loot/loot_tables/bastion_hoglin_stable_1_16_5.c
 	loot/loot_tables/bastion_other_1_16_1.c
 	loot/loot_tables/bastion_other_1_16_5.c
 	loot/loot_tables/bastion_other_1_20.c
 	loot/loot_tables/bastion_other_1_21_1.c
 	loot/loot_tables/bastion_other_1_21_9.c
+	loot/loot_tables/bastion_treasure_1_16_1.c
+	loot/loot_tables/bastion_treasure_1_16_5.c
 	loot/loot_tables/buried_treasure_1_13.c
 	loot/loot_tables/buried_treasure_1_18.c
 	loot/loot_tables/buried_treasure_1_21_11.c
@@ -169,6 +220,7 @@ set(SOURCES
 	loot/loot_tables/shipwreck_treasure_1_13.c
 	loot/loot_tables/shipwreck_treasure_1_20.c
 	loot/loot_tables/shipwreck_treasure_1_21_11.c
+	loot/loot_tables/simple_dungeon_1_14.c
 	loot/loot_tables/stronghold_corridor_1_13.c
 	loot/loot_tables/stronghold_corridor_1_18.c
 	loot/loot_tables/stronghold_corridor_1_20.c
@@ -177,6 +229,22 @@ set(SOURCES
 	loot/loot_tables/stronghold_crossing_1_13.c
 	loot/loot_tables/stronghold_library_1_13.c
 	loot/loot_tables/stronghold_library_1_20.c
+	loot/loot_tables/village_armorer_1_16_1.c
+	loot/loot_tables/village_butcher_1_16_1.c
+	loot/loot_tables/village_cartographer_1_16_1.c
+	loot/loot_tables/village_desert_house_1_16_1.c
+	loot/loot_tables/village_fisher_1_16_1.c
+	loot/loot_tables/village_fletcher_1_16_1.c
+	loot/loot_tables/village_mason_1_16_1.c
+	loot/loot_tables/village_plains_house_1_16_1.c
+	loot/loot_tables/village_savanna_house_1_16_1.c
+	loot/loot_tables/village_shepherd_1_16_1.c
+	loot/loot_tables/village_snowy_house_1_16_1.c
+	loot/loot_tables/village_taiga_house_1_16_1.c
+	loot/loot_tables/village_tannery_1_16_1.c
+	loot/loot_tables/village_temple_1_16_1.c
+	loot/loot_tables/village_toolsmith_1_16_1.c
+	loot/loot_tables/village_weaponsmith_1_16_1.c
 	loot/cjson/cJSON.c
 )
 

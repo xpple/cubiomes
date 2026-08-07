@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[8] = {"minecraft:apple", "minecraft:coal", "minecraft:gold_nugget", "minecraft:stone_axe", "minecraft:rotten_flesh", "minecraft:emerald", "minecraft:wheat", "minecraft:golden_apple"};
 static int global_item_ids[8] = {ITEM_APPLE, ITEM_COAL, ITEM_GOLD_NUGGET, ITEM_STONE_AXE, ITEM_ROTTEN_FLESH, ITEM_EMERALD, ITEM_WHEAT, ITEM_GOLDEN_APPLE};
@@ -49,7 +49,7 @@ static const LootPool igloo_chest_1_13__1 = {
 
 static LootPool loot_pools[2] = {igloo_chest_1_13__0, igloo_chest_1_13__1};
 static LootTableContext context = {
-    .version = MC_1_13,
+    .version = 0, // set by init
     .item_count = 8,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -61,7 +61,8 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     create_set_count(&(loot_pool__0->loot_functions[0]), 1, 3);
     create_set_count(&(loot_pool__0->loot_functions[1]), 1, 4);
@@ -70,10 +71,13 @@ static void create_loot_functions() {
     LootPool* loot_pool__1 = &(context.loot_pools[1]);
 }
 
-LootTableContext* init_igloo_chest_1_13() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_igloo_chest_1_13(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }

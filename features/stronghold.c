@@ -2,6 +2,10 @@
 
 #include <string.h>
 
+#include "piece.h"
+#include "mineshaft.h"
+#include "dungeon.h"
+
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
@@ -134,7 +138,8 @@ static int addStrongholdPiece(StrongholdPieceEnv *env, int typ, int x, int y, in
     }
 
 L_box_end:;
-    Piece *p = env->list + *env->n;
+
+    ;Piece *p = env->list + *env->n;
     p->name = stronghold_info[typ].name;
     p->pos = pos;
     p->bb0 = b0;
@@ -387,6 +392,7 @@ int getStrongholdPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, i
         env.rng = &rng;
         env.portal = &portal;
         env.imposedPiece = -1;
+        env.ntyp[0] = 1;
         env.typlast = -1;
         env.nmax = n;
         env.totalWeight = 145;
@@ -432,9 +438,11 @@ int getStrongholdPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, i
             extendStrongholdPiece(&env, q);
         }
 
-        // necessary for <=1.12.2 to simulate random calls
-        // optional for >1.12.2, could add flag for accurate heights
-        if (mc <= MC_1_12_2 && !env.portal) {
+        if (mc > MC_1_12_2 && *env.portal) {
+            int sz = 0; Piece *dq = list; while (dq->next) { dq = dq->next; sz++; }
+            for (; sz >= 1; sz--) nextInt(&rng, sz);
+        }
+        if ((mc <= MC_1_12_2 && !env.portal) || (mc > MC_1_12_2 && *env.portal)) {
             int minY = p->bb0.y;
             int maxY = p->bb1.y;
             for (int i = 0; i < count; i++) {
@@ -469,51 +477,6 @@ int getStrongholdPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, i
     return *env.n;
 }
 
-static inline void rotPos(Pos3 bb0, Pos3 bb1, int *x, int *z, int rot) {
-    int posX, posZ;
-    switch (rot) {
-    case 0: posX = bb0.x + *x, posZ = bb1.z - *z; break;
-    case 1: posX = bb0.x + *z, posZ = bb0.z + *x; break;
-    case 2: posX = bb0.x + *x, posZ = bb0.z + *z; break;
-    case 3: posX = bb1.x - *z, posZ = bb0.z + *x; break;
-    default: UNREACHABLE();
-    }
-    *x = posX, *z = posZ;
-}
-
-static void generateBox(Piece *p, int cx, int cz, int x0, int y0, int z0, int x1, int y1, int z1, int skipAir, RandomSource rnd) {
-    if (!skipAir) {
-        int w = x1 - x0 + 1;
-        int d = z1 - z0 + 1;
-        int h = y1 - y0 + 1;
-        int skips = w * d * h;
-        if (!(w == 1 || d == 1 || h == 1)) {
-            skips -= (w - 2) * (d - 2) * (h - 2);
-        }
-        rnd.skipN(rnd.state, skips);
-        return;
-    }
-
-    for (int y = y0; y <= y1; y++) {
-        for (int x = x0; x <= x1; x++) {
-            for (int z = z0; z <= z1; z++) {
-                int tx = x, tz = z;
-                rotPos(p->bb0, p->bb1, &tx, &tz, p->rot);
-                if (tx >= cx && tx < cx + 16 && tz >= cz && tz < cz + 16) {
-                    if (y == y0 || y == y1 || x == x0 || x == x1 || z == z0 || z == z1) {
-                        rnd.nextFloat(rnd.state);
-                    }
-                }
-            }
-        }
-    }
-}
-
-ATTR(always_inline)
-static inline void generateMaybeBox(int x0, int y0, int z0, int x1, int y1, int z1, RandomSource rnd) {
-    rnd.skipN(rnd.state, (y1-y0+1) * (x1-x0+1) * (z1-z0+1));
-}
-
 static const Pos eye_positions[] = {
     {4, 8},
     {5, 8},
@@ -529,11 +492,12 @@ static const Pos eye_positions[] = {
     {7, 11},
 };
 
-int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, uint64_t seed, int chunkX, int chunkZ) {
+int getStrongholdLoot(Generator *g, SurfaceNoise *sn, Piece *list, int n, StructureSaltConfig ssconf, int mc, uint64_t seed, int chunkX, int chunkZ, DungeonRoomList *dungeonsOut) {
+    if (g && (mc < MC_1_14 || mc > MC_1_16_5)) // carver/lake/mineshaft/dungeon logic is different in 1.17+ and 1.13-
+        return -1;
+
     int count = getStrongholdPieces(list, n, mc, seed, chunkX, chunkZ);
-    if (!count) {
-        return 0;
-    }
+
     const int legacy = mc <= MC_1_17;
     int minX = list->bb0.x;
     int minZ = list->bb0.z;
@@ -551,9 +515,154 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
     int cMaxX = maxX & ~15;
     int cMaxZ = maxZ & ~15;
 
+    Pos3List mineshaftAir;
+    createPos3List(&mineshaftAir, 64);
+    if (g) {
+        int sMinY = list[0].bb0.y, sMaxY = list[0].bb1.y;
+        for (int i = 0; i < count; ++i) {
+            sMinY = MIN(sMinY, list[i].bb0.y);
+            sMaxY = MAX(sMaxY, list[i].bb1.y);
+        }
+        Piece *msPieces = (Piece*)malloc(2048 * sizeof(Piece));
+        Piece *msLoot = (Piece*)malloc(2048 * sizeof(Piece));
+        for (int rx = (minX >> 4) - 8; rx <= (maxX >> 4) + 8; ++rx) {
+            for (int rz = (minZ >> 4) - 8; rz <= (maxZ >> 4) + 8; ++rz) {
+                Pos mp;
+                if (!getStructurePos(Mineshaft, mc, seed, rx, rz, &mp)) continue;
+                if (!isViableStructurePos(Mineshaft, g, mp.x, mp.z, 0)) continue;
+                int mn = getMineshaftPieces(g, msPieces, 2048, mc, seed, rx, rz);
+                int hit = 0;
+                for (int i = 0; i < mn; ++i) {
+                    Piece *q = &msPieces[i];
+                    if (q->bb1.x >= minX && q->bb0.x <= maxX &&
+                        q->bb1.z >= minZ && q->bb0.z <= maxZ &&
+                        q->bb1.y >= sMinY && q->bb0.y <= sMaxY) { hit = 1; break; }
+                }
+                if (!hit) continue;
+                StructureSaltConfig msconf;
+                getStructureSaltConfig(Mineshaft, mc, getBiomeAt(g, 4, mp.x, 64, mp.z), &msconf);
+                getMineshaftLoot(g, sn, msLoot, 2048, msconf, mc, seed, rx, rz, &mineshaftAir);
+            }
+        }
+        free(msPieces);
+        free(msLoot);
+    }
+
+    Pos3List lakeAirAll, lakeWaterAll;
+    createPos3List(&lakeAirAll, 32);
+    createPos3List(&lakeWaterAll, 32);
+
+    int lcx0 = (minX - 1) >> 4, lcx1 = (maxX + 1) >> 4;
+    int lcz0 = (minZ - 1) >> 4, lcz1 = (maxZ + 1) >> 4;
+    int nchunks = (lcx1 - lcx0 + 1) * (lcz1 - lcz0 + 1);
+    Pos3List *dungeonAirBySrc = NULL, *dungeonSolidBySrc = NULL;
+
+    if (g) {
+        int *chunkXs = (int*)malloc(nchunks * sizeof(int));
+        int *chunkZs = (int*)malloc(nchunks * sizeof(int));
+        int *cellToIdx = (int*)malloc(nchunks * sizeof(int));
+        int k = 0;
+
+        for (int cxc = lcx0; cxc <= lcx1; ++cxc) {
+            for (int czc = lcz0; czc <= lcz1; ++czc) {
+                chunkXs[k] = cxc << 4; chunkZs[k] = czc << 4;
+                cellToIdx[k] = k;
+                ++k;
+            }
+        }
+
+        DungeonCarverCache *cc = (DungeonCarverCache*)calloc(nchunks, sizeof(DungeonCarverCache));
+        uint8_t **lakeDetails = (uint8_t**)calloc(nchunks, sizeof(uint8_t*));
+
+        dungeonAirBySrc = (Pos3List*)malloc(nchunks * sizeof(Pos3List));
+        dungeonSolidBySrc = (Pos3List*)malloc(nchunks * sizeof(Pos3List));
+        for (int q = 0; q < nchunks; ++q) {
+            createPos3List(&dungeonAirBySrc[q], 4);
+            createPos3List(&dungeonSolidBySrc[q], 4);
+        }
+        DungeonWorld dctx;
+        dctx.g = g; dctx.sn = sn;
+        dctx.mc = mc; dctx.seed = seed;
+        dctx.lcx0 = lcx0; dctx.lcz0 = lcz0;
+        dctx.ncx = lcx1 - lcx0 + 1; dctx.ncz = lcz1 - lcz0 + 1;
+        dctx.cc = cc; dctx.chunkXs = chunkXs; dctx.chunkZs = chunkZs;
+        dctx.cellToIdx = cellToIdx;
+        dctx.lakeDetails = lakeDetails;
+        dctx.dungeonDetails = (uint8_t**)calloc(nchunks, sizeof(uint8_t*));
+        dctx.carverAirMask = (uint8_t**)calloc(nchunks, sizeof(uint8_t*));
+        dctx.carverWaterMask = (uint8_t**)calloc(nchunks, sizeof(uint8_t*));
+        dctx.mineshaftAirMask = (uint8_t**)calloc(nchunks, sizeof(uint8_t*));
+        dctx.mineshaftAir = &mineshaftAir;
+        dctx.dungeonAirBySrc = dungeonAirBySrc; dctx.dungeonSolidBySrc = dungeonSolidBySrc;
+        dctx.pieces = list; dctx.pieceCount = count;
+
+        for (int ci = 0; ci < nchunks; ++ci)
+            dungeonSimChunk(&dctx, ci, &lakeAirAll, &lakeWaterAll, dungeonsOut);
+
+        for (int q = 0; q < nchunks; ++q) {
+            if (lakeDetails[q]) free(lakeDetails[q]);
+            if (cc[q].valid) { freePos3List(&cc[q].air); freePos3List(&cc[q].water); }
+            if (dctx.dungeonDetails[q]) free(dctx.dungeonDetails[q]);
+            if (dctx.carverAirMask[q]) free(dctx.carverAirMask[q]);
+            if (dctx.carverWaterMask[q]) free(dctx.carverWaterMask[q]);
+            if (dctx.mineshaftAirMask[q]) free(dctx.mineshaftAirMask[q]);
+        }
+        free(dctx.dungeonDetails);
+        free(dctx.carverAirMask);
+        free(dctx.carverWaterMask);
+        free(dctx.mineshaftAirMask);
+
+        free(cc);
+        free(lakeDetails);
+        free(chunkXs);
+        free(chunkZs);
+        free(cellToIdx);
+    }
+
     // slow code ahead
     for (int cx = cMinX; cx <= cMaxX; cx += 16) {
         for (int cz = cMinZ; cz <= cMaxZ; cz += 16) {
+
+            uint8_t airMask[8192], waterMask[8192], dungeonAirMask[8192], dungeonSolidMask[8192];
+            if (g) {
+                Pos3List airList, waterList;
+                createPos3List(&airList, 16);
+                createPos3List(&waterList, 16);
+                applyAllCarvers(g, sn, cx >> 4, cz >> 4, &airList, &waterList);
+                for (int i = 0; i < mineshaftAir.size; ++i)
+                    appendPos3List(&airList, mineshaftAir.pos3s[i]);
+                for (int i = 0; i < lakeAirAll.size; ++i)
+                    appendPos3List(&airList, lakeAirAll.pos3s[i]);
+                for (int i = 0; i < lakeWaterAll.size; ++i)
+                    appendPos3List(&waterList, lakeWaterAll.pos3s[i]);
+                dungeonFillMask(airMask, &airList, cx, cz);
+                dungeonFillMask(waterMask, &waterList, cx, cz);
+                freePos3List(&airList);
+                freePos3List(&waterList);
+
+                // dungeon writes from chunks decorated after this one are not
+                // visible to this chunk's STRONGHOLDS step
+                int gidx = ((cx >> 4) - lcx0) * (lcz1 - lcz0 + 1) + ((cz >> 4) - lcz0);
+                Pos3List dungeonAirList, dungeonSolidList;
+                createPos3List(&dungeonAirList, 16);
+                createPos3List(&dungeonSolidList, 16);
+                for (int s = 0; s <= gidx && s < nchunks; ++s) {
+                    for (int i = 0; i < dungeonAirBySrc[s].size; ++i)
+                        appendPos3List(&dungeonAirList, dungeonAirBySrc[s].pos3s[i]);
+                    for (int i = 0; i < dungeonSolidBySrc[s].size; ++i)
+                        appendPos3List(&dungeonSolidList, dungeonSolidBySrc[s].pos3s[i]);
+                }
+                dungeonFillMask(dungeonAirMask, &dungeonAirList, cx, cz);
+                dungeonFillMask(dungeonSolidMask, &dungeonSolidList, cx, cz);
+                freePos3List(&dungeonAirList);
+                freePos3List(&dungeonSolidList);
+            } else {
+                memset(airMask, 0, sizeof(airMask));
+                memset(waterMask, 0, sizeof(waterMask));
+                memset(dungeonAirMask, 0, sizeof(dungeonAirMask));
+                memset(dungeonSolidMask, 0, sizeof(dungeonSolidMask));
+            }
+
             CREATE_RANDOM_SOURCE(rnd, legacy);
             uint64_t populationSeed = getPopulationSeed(mc, seed, cx, cz);
             rnd.setSeed(rnd.state, populationSeed + ssconf.generationStep * 10000 + ssconf.decoratorIndex);
@@ -565,7 +674,7 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                 }
                 switch (p->type) {
                 case SH_STRAIGHT:
-                    generateBox(p, cx, cz, 0, 0, 0, 4, 4, 6, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 4, 4, 6, 1, rnd, airMask, waterMask, dungeonAirMask, dungeonSolidMask);
                     rnd.nextFloat(rnd.state);
                     rnd.nextFloat(rnd.state);
                     rnd.nextFloat(rnd.state);
@@ -573,7 +682,7 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                     p->chestCount = 0;
                     break;
                 case SH_PRISON_HALL:
-                    generateBox(p, cx, cz, 0, 0, 0, 8, 4, 10, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 8, 4, 10, 1, rnd, airMask, waterMask, dungeonAirMask, dungeonSolidMask);
                     rnd.skipN(rnd.state, 12);
                     // generateBox(p, cx, cz, 4, 1, 1, 4, 3, 1, 0, rnd);
                     // generateBox(p, cx, cz, 4, 1, 3, 4, 3, 3, 0, rnd);
@@ -583,11 +692,11 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                     break;
                 case SH_LEFT_TURN:
                 case SH_RIGHT_TURN:
-                    generateBox(p, cx, cz, 0, 0, 0, 4, 4, 4, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 4, 4, 4, 1, rnd, airMask, waterMask, dungeonAirMask, dungeonSolidMask);
                     p->chestCount = 0;
                     break;
                 case SH_ROOM_CROSSING: {
-                    generateBox(p, cx, cz, 0, 0, 0, 10, 6, 10, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 10, 6, 10, 1, rnd, airMask, waterMask, dungeonAirMask, dungeonSolidMask);
                     if (!p->additionalData) {
                         p->chestCount = 0;
                         break;
@@ -604,15 +713,15 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                     break;
                 }
                 case SH_STRAIGHT_STAIRS_DOWN:
-                    generateBox(p, cx, cz, 0, 0, 0, 4, 10, 7, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 4, 10, 7, 1, rnd, airMask, waterMask, dungeonAirMask, dungeonSolidMask);
                     p->chestCount = 0;
                     break;
                 case SH_STAIRS_DOWN:
-                    generateBox(p, cx, cz, 0, 0, 0, 4, 10, 4, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 4, 10, 4, 1, rnd, airMask, waterMask, dungeonAirMask, dungeonSolidMask);
                     p->chestCount = 0;
                     break;
                 case SH_FIVE_CROSSING:
-                    generateBox(p, cx, cz, 0, 0, 0, 9, 8, 10, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 9, 8, 10, 1, rnd, airMask, waterMask, dungeonAirMask, dungeonSolidMask);
                     rnd.skipN(rnd.state, 109);
                     // generateBox(p, cx, cz, 1, 2, 1, 8, 2, 6, 0, rnd);
                     // generateBox(p, cx, cz, 4, 1, 5, 4, 4, 9, 0, rnd);
@@ -623,7 +732,7 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                     p->chestCount = 0;
                     break;
                 case SH_CHEST_CORRIDOR: {
-                    generateBox(p, cx, cz, 0, 0, 0, 4, 4, 6, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 4, 4, 6, 1, rnd, airMask, waterMask, dungeonAirMask, dungeonSolidMask);
                     int chestPosX = 3, chestPosZ = 3;
                     rotPos(p->bb0, p->bb1, &chestPosX, &chestPosZ, p->rot);
                     if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
@@ -645,7 +754,7 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                         p->chestCount = 1;
                     }
 
-                    generateBox(p, cx, cz, 0, 0, 0, 13, currentHeight - 1, 14, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 13, currentHeight - 1, 14, 1, rnd, airMask, waterMask, dungeonAirMask, dungeonSolidMask);
                     generateMaybeBox(2, 1, 1, 11, 4, 13, rnd);
                     int chestPosX = 3, chestPosZ = 5;
                     rotPos(p->bb0, p->bb1, &chestPosX, &chestPosZ, p->rot);
@@ -700,5 +809,16 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
             }
         }
     }
+    if (dungeonAirBySrc) {
+        for (int q = 0; q < nchunks; ++q) {
+            freePos3List(&dungeonAirBySrc[q]);
+            freePos3List(&dungeonSolidBySrc[q]);
+        }
+        free(dungeonAirBySrc);
+        free(dungeonSolidBySrc);
+    }
+    freePos3List(&mineshaftAir);
+    freePos3List(&lakeAirAll);
+    freePos3List(&lakeWaterAll);
     return count;
 }

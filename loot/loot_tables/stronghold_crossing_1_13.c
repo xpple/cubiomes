@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[8] = {"minecraft:iron_ingot", "minecraft:gold_ingot", "minecraft:redstone", "minecraft:coal", "minecraft:bread", "minecraft:apple", "minecraft:iron_pickaxe", "minecraft:book"};
 static int global_item_ids[8] = {ITEM_IRON_INGOT, ITEM_GOLD_INGOT, ITEM_REDSTONE, ITEM_COAL, ITEM_BREAD, ITEM_APPLE, ITEM_IRON_PICKAXE, ITEM_BOOK};
@@ -32,7 +32,7 @@ static const LootPool stronghold_crossing_1_13__0 = {
 
 static LootPool loot_pools[1] = {stronghold_crossing_1_13__0};
 static LootTableContext context = {
-    .version = MC_1_13,
+    .version = 0, // set by init
     .item_count = 8,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -44,7 +44,8 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     create_set_count(&(loot_pool__0->loot_functions[0]), 1, 5);
     create_set_count(&(loot_pool__0->loot_functions[1]), 1, 3);
@@ -52,13 +53,16 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__0->loot_functions[3]), 3, 8);
     create_set_count(&(loot_pool__0->loot_functions[4]), 1, 3);
     create_set_count(&(loot_pool__0->loot_functions[5]), 1, 3);
-    create_enchant_with_levels(&(loot_pool__0->loot_functions[6]), MC_1_13, "minecraft:book", get_item_type("minecraft:book"), 30, 30, 1);
+    create_enchant_with_levels(&(loot_pool__0->loot_functions[6]), version, "minecraft:book", get_item_type("minecraft:book"), 30, 30, 1);
 }
 
-LootTableContext* init_stronghold_crossing_1_13() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_stronghold_crossing_1_13(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }

@@ -7,7 +7,7 @@
 #include "../loot_table_context.h"
 #include "../loot_table_parser.h"
 
-static int initialised = 0;
+static int initialised_version = 0;
 
 static char* item_names[19] = {"minecraft:lodestone", "minecraft:crossbow", "minecraft:spectral_arrow", "minecraft:gilded_blackstone", "minecraft:crying_obsidian", "minecraft:gold_block", "minecraft:gold_ingot", "minecraft:iron_ingot", "minecraft:golden_sword", "minecraft:golden_chestplate", "minecraft:golden_helmet", "minecraft:golden_leggings", "minecraft:golden_boots", "minecraft:golden_axe", "minecraft:string", "minecraft:leather", "minecraft:arrow", "minecraft:iron_nugget", "minecraft:gold_nugget"};
 static int global_item_ids[19] = {ITEM_LODESTONE, ITEM_CROSSBOW, ITEM_SPECTRAL_ARROW, ITEM_GILDED_BLACKSTONE, ITEM_CRYING_OBSIDIAN, ITEM_GOLD_BLOCK, ITEM_GOLD_INGOT, ITEM_IRON_INGOT, ITEM_GOLDEN_SWORD, ITEM_GOLDEN_CHESTPLATE, ITEM_GOLDEN_HELMET, ITEM_GOLDEN_LEGGINGS, ITEM_GOLDEN_BOOTS, ITEM_GOLDEN_AXE, ITEM_STRING, ITEM_LEATHER, ITEM_ARROW, ITEM_IRON_NUGGET, ITEM_GOLD_NUGGET};
@@ -66,7 +66,7 @@ static const LootPool bastion_bridge_1_16_5__2 = {
 
 static LootPool loot_pools[3] = {bastion_bridge_1_16_5__0, bastion_bridge_1_16_5__1, bastion_bridge_1_16_5__2};
 static LootTableContext context = {
-    .version = MC_1_16_5,
+    .version = 0, // set by init
     .item_count = 19,
     .item_names = item_names,
     .global_item_ids = global_item_ids,
@@ -78,12 +78,13 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {
+static void create_loot_functions(int version) {
+    (void)version; // unused when the table has no enchantment functions
     LootPool* loot_pool__0 = &(context.loot_pools[0]);
     create_set_count(&(loot_pool__0->loot_functions[0]), 1, 1);
     LootPool* loot_pool__1 = &(context.loot_pools[1]);
     create_skip_calls(&(loot_pool__1->loot_functions[0]), 1);
-    create_enchant_randomly(&(loot_pool__1->loot_functions[1]), MC_1_16_5, get_item_type("minecraft:crossbow"), 0);
+    create_enchant_randomly(&(loot_pool__1->loot_functions[1]), version, get_item_type("minecraft:crossbow"), 0);
     create_set_count(&(loot_pool__1->loot_functions[2]), 10, 28);
     create_set_count(&(loot_pool__1->loot_functions[3]), 8, 12);
     create_set_count(&(loot_pool__1->loot_functions[4]), 3, 8);
@@ -92,15 +93,15 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__1->loot_functions[7]), 4, 9);
     create_set_count(&(loot_pool__1->loot_functions[8]), 1, 1);
     create_set_count(&(loot_pool__1->loot_functions[9]), 1, 1);
-    create_enchant_randomly(&(loot_pool__1->loot_functions[10]), MC_1_16_5, get_item_type("minecraft:golden_chestplate"), 0);
+    create_enchant_randomly(&(loot_pool__1->loot_functions[10]), version, get_item_type("minecraft:golden_chestplate"), 0);
     create_set_count(&(loot_pool__1->loot_functions[11]), 1, 1);
-    create_enchant_randomly(&(loot_pool__1->loot_functions[12]), MC_1_16_5, get_item_type("minecraft:golden_helmet"), 0);
+    create_enchant_randomly(&(loot_pool__1->loot_functions[12]), version, get_item_type("minecraft:golden_helmet"), 0);
     create_set_count(&(loot_pool__1->loot_functions[13]), 1, 1);
-    create_enchant_randomly(&(loot_pool__1->loot_functions[14]), MC_1_16_5, get_item_type("minecraft:golden_leggings"), 0);
+    create_enchant_randomly(&(loot_pool__1->loot_functions[14]), version, get_item_type("minecraft:golden_leggings"), 0);
     create_set_count(&(loot_pool__1->loot_functions[15]), 1, 1);
-    create_enchant_randomly(&(loot_pool__1->loot_functions[16]), MC_1_16_5, get_item_type("minecraft:golden_boots"), 0);
+    create_enchant_randomly(&(loot_pool__1->loot_functions[16]), version, get_item_type("minecraft:golden_boots"), 0);
     create_set_count(&(loot_pool__1->loot_functions[17]), 1, 1);
-    create_enchant_randomly(&(loot_pool__1->loot_functions[18]), MC_1_16_5, get_item_type("minecraft:golden_axe"), 0);
+    create_enchant_randomly(&(loot_pool__1->loot_functions[18]), version, get_item_type("minecraft:golden_axe"), 0);
     LootPool* loot_pool__2 = &(context.loot_pools[2]);
     create_set_count(&(loot_pool__2->loot_functions[0]), 1, 6);
     create_set_count(&(loot_pool__2->loot_functions[1]), 1, 3);
@@ -109,10 +110,13 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__2->loot_functions[4]), 2, 6);
 }
 
-LootTableContext* init_bastion_bridge_1_16_5() {
-    if (!initialised) {
-        create_loot_functions();
-        initialised = 1;
+LootTableContext* init_bastion_bridge_1_16_5(int version) {
+    // Rebuild if the requested version differs: enchantment registries are
+    // version dependent, and one table file serves a range of versions.
+    if (initialised_version != version) {
+        context.version = version;
+        create_loot_functions(version);
+        initialised_version = version;
     }
     return &context;
 }

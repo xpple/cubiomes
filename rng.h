@@ -132,6 +132,11 @@ static inline int nextInt(uint64_t *seed, const int n)
     return val;
 }
 
+static inline int nextBoolean(uint64_t *seed)
+{
+    return next(seed, 1);
+}
+
 static inline uint64_t nextLong(uint64_t *seed)
 {
     return ((uint64_t) next(seed, 32) << 32) + next(seed, 32);
@@ -322,6 +327,11 @@ static inline int xNextIntJ(Xoroshiro *xr, uint32_t n)
     return val;
 }
 
+static inline int xNextBooleanJ(Xoroshiro *xr)
+{
+    return (int) (xNextLongJ(xr) >> (64 - 1));
+}
+
 static inline double xNextDoubleJ(Xoroshiro *xr)
 {
     uint64_t a = xNextLong(xr);
@@ -350,6 +360,7 @@ STRUCT(RandomSource)
     void (*setSeed)(void *state, uint64_t seed);
     uint64_t (*nextLong)(void *state);
     int (*nextInt)(void *state, int n);
+    int (*nextBoolean)(void *state);
     float (*nextFloat)(void *state);
     double (*nextDouble)(void *state);
     int (*nextIntBetween)(void *state, int min, int max);
@@ -363,6 +374,7 @@ static inline RandomSource createJavaRandom(uint64_t *seed)
         .setSeed = (void (*)(void *, uint64_t)) setSeed,
         .nextLong = (uint64_t (*)(void *)) nextLong,
         .nextInt = (int (*)(void *, int)) nextInt,
+        .nextBoolean = (int (*)(void *)) nextBoolean,
         .nextFloat = (float (*)(void *)) nextFloat,
         .nextDouble = (double (*)(void *)) nextDouble,
         .nextIntBetween = (int (*)(void *, int, int)) nextIntBetween,
@@ -377,6 +389,7 @@ static inline RandomSource createXoroshiro(Xoroshiro *xr)
         .setSeed = (void (*)(void *, uint64_t)) xSetSeed,
         .nextLong = (uint64_t (*)(void *)) xNextLongJ,
         .nextInt = (int (*)(void *, int)) xNextIntJ,
+        .nextBoolean = (int (*)(void *)) xNextBooleanJ,
         .nextFloat = (float (*)(void *)) xNextFloat,
         .nextDouble = (double (*)(void *)) xNextDoubleJ,
         .nextIntBetween = (int (*)(void *, int, int)) xNextIntJBetween,

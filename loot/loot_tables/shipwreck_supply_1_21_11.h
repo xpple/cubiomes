@@ -4,6 +4,6 @@
 
 #include "../loot_table_context.h"
 
-LootTableContext* init_shipwreck_supply_1_21_11();
+LootTableContext* init_shipwreck_supply_1_21_11(int version);
 
 #endif //SHIPWRECK_SUPPLY_1_21_11_H
