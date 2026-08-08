@@ -42,7 +42,8 @@ enum MCVersion
     MC_1_21 = MC_1_21_11,
     MC_26_1,
     MC_26_2,
-    MC_NEWEST = MC_26_2,
+    MC_26_3,
+    MC_NEWEST = MC_26_3,
 };
 
 enum Dimension
@@ -181,6 +182,8 @@ enum BiomeID
     pale_garden                     = 186,
     // 26.2 Chaos Cubed
     sulfur_caves                    = 187,
+    // 26.3
+    dappled_forest                  = 188,
 };
 
 

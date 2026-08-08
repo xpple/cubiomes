@@ -11,17 +11,22 @@ int biomeExists(int mc, int id)
         if (id >= small_end_islands && id <= end_barrens)
             return 1;
 
-        if (id == sulfur_caves)
+        switch (id)
+        {
+        case dappled_forest:
+            return mc >= MC_26_3;
+        case sulfur_caves:
             return mc >= MC_26_2;
-
-        if (id == pale_garden)
+        case pale_garden:
             return mc >= MC_1_21_4;
-
-        if (id == cherry_grove)
+        case cherry_grove:
             return mc >= MC_1_20;
-
-        if (id == deep_dark || id == mangrove_swamp)
+        case deep_dark:
+        case mangrove_swamp:
             return mc >= MC_1_19_2;
+        default:
+            break;
+        }
 
         switch (id)
         {
@@ -207,6 +212,14 @@ int isOverworld(int mc, int id)
     case dripstone_caves:
     case lush_caves:
         return mc >= MC_1_18;
+    case deep_dark:
+        return mc >= MC_1_19_2;
+    case cherry_grove:
+        return mc >= MC_1_20;
+    case pale_garden:
+        return mc >= MC_1_21_4;
+    case dappled_forest:
+        return mc >= MC_26_3;
     }
     return 1;
 }
@@ -282,6 +295,7 @@ int getCategory(int mc, int id)
     case tall_birch_forest:
     case tall_birch_hills:
     case dark_forest_hills:
+    case dappled_forest:
         return forest;
 
     case snowy_tundra:
