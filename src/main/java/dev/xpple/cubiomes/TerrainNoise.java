@@ -17,11 +17,18 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
  * struct TerrainNoise {
  *     Generator g;
  *     BlendedNoise base3dNoise;
- *     SplineStack ss;
- *     Spline *factorSpline;
- *     Spline *jaggednessSpline;
- *     PerlinNoise oct[90];
- *     DoublePerlinNoise noises[21];
+ *     union {
+ *         struct {
+ *             SplineStack ss;
+ *             Spline *factorSpline;
+ *             Spline *jaggednessSpline;
+ *             PerlinNoise oct[90];
+ *             DoublePerlinNoise noises[21];
+ *         };
+ *         struct {
+ *             SurfaceNoise sn;
+ *         };
+ *     };
  * }
  * }
  */
@@ -34,11 +41,18 @@ public class TerrainNoise {
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
         Generator.layout().withName("g"),
         BlendedNoise.layout().withName("base3dNoise"),
-        SplineStack.layout().withName("ss"),
-        Cubiomes.C_POINTER.withName("factorSpline"),
-        Cubiomes.C_POINTER.withName("jaggednessSpline"),
-        MemoryLayout.sequenceLayout(90, PerlinNoise.layout()).withName("oct"),
-        MemoryLayout.sequenceLayout(21, DoublePerlinNoise.layout()).withName("noises")
+        MemoryLayout.unionLayout(
+            MemoryLayout.structLayout(
+                SplineStack.layout().withName("ss"),
+                Cubiomes.C_POINTER.withName("factorSpline"),
+                Cubiomes.C_POINTER.withName("jaggednessSpline"),
+                MemoryLayout.sequenceLayout(90, PerlinNoise.layout()).withName("oct"),
+                MemoryLayout.sequenceLayout(21, DoublePerlinNoise.layout()).withName("noises")
+            ).withName("$anon$40:9"),
+            MemoryLayout.structLayout(
+                SurfaceNoise.layout().withName("sn")
+            ).withName("$anon$48:9")
+        ).withName("$anon$38:5")
     ).withName("TerrainNoise");
 
     /**
@@ -136,7 +150,7 @@ public class TerrainNoise {
         MemorySegment.copy(fieldValue, 0L, struct, base3dNoise$OFFSET, base3dNoise$LAYOUT.byteSize());
     }
 
-    private static final GroupLayout ss$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("ss"));
+    private static final GroupLayout ss$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("$anon$38:5"), groupElement("$anon$40:9"), groupElement("ss"));
 
     /**
      * Layout for field:
@@ -148,7 +162,7 @@ public class TerrainNoise {
         return ss$LAYOUT;
     }
 
-    private static final long ss$OFFSET = $LAYOUT.byteOffset(groupElement("ss"));
+    private static final long ss$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$38:5"), groupElement("$anon$40:9"), groupElement("ss"));
 
     /**
      * Offset for field:
@@ -180,7 +194,7 @@ public class TerrainNoise {
         MemorySegment.copy(fieldValue, 0L, struct, ss$OFFSET, ss$LAYOUT.byteSize());
     }
 
-    private static final AddressLayout factorSpline$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("factorSpline"));
+    private static final AddressLayout factorSpline$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("$anon$38:5"), groupElement("$anon$40:9"), groupElement("factorSpline"));
 
     /**
      * Layout for field:
@@ -192,7 +206,7 @@ public class TerrainNoise {
         return factorSpline$LAYOUT;
     }
 
-    private static final long factorSpline$OFFSET = $LAYOUT.byteOffset(groupElement("factorSpline"));
+    private static final long factorSpline$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$38:5"), groupElement("$anon$40:9"), groupElement("factorSpline"));
 
     /**
      * Offset for field:
@@ -224,7 +238,7 @@ public class TerrainNoise {
         struct.set(factorSpline$LAYOUT, factorSpline$OFFSET, fieldValue);
     }
 
-    private static final AddressLayout jaggednessSpline$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("jaggednessSpline"));
+    private static final AddressLayout jaggednessSpline$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("$anon$38:5"), groupElement("$anon$40:9"), groupElement("jaggednessSpline"));
 
     /**
      * Layout for field:
@@ -236,7 +250,7 @@ public class TerrainNoise {
         return jaggednessSpline$LAYOUT;
     }
 
-    private static final long jaggednessSpline$OFFSET = $LAYOUT.byteOffset(groupElement("jaggednessSpline"));
+    private static final long jaggednessSpline$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$38:5"), groupElement("$anon$40:9"), groupElement("jaggednessSpline"));
 
     /**
      * Offset for field:
@@ -268,7 +282,7 @@ public class TerrainNoise {
         struct.set(jaggednessSpline$LAYOUT, jaggednessSpline$OFFSET, fieldValue);
     }
 
-    private static final SequenceLayout oct$LAYOUT = (SequenceLayout)$LAYOUT.select(groupElement("oct"));
+    private static final SequenceLayout oct$LAYOUT = (SequenceLayout)$LAYOUT.select(groupElement("$anon$38:5"), groupElement("$anon$40:9"), groupElement("oct"));
 
     /**
      * Layout for field:
@@ -280,7 +294,7 @@ public class TerrainNoise {
         return oct$LAYOUT;
     }
 
-    private static final long oct$OFFSET = $LAYOUT.byteOffset(groupElement("oct"));
+    private static final long oct$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$38:5"), groupElement("$anon$40:9"), groupElement("oct"));
 
     /**
      * Offset for field:
@@ -351,7 +365,7 @@ public class TerrainNoise {
         MemorySegment.copy(fieldValue, 0L, oct(struct, index0), 0L, PerlinNoise.layout().byteSize());
     }
 
-    private static final SequenceLayout noises$LAYOUT = (SequenceLayout)$LAYOUT.select(groupElement("noises"));
+    private static final SequenceLayout noises$LAYOUT = (SequenceLayout)$LAYOUT.select(groupElement("$anon$38:5"), groupElement("$anon$40:9"), groupElement("noises"));
 
     /**
      * Layout for field:
@@ -363,7 +377,7 @@ public class TerrainNoise {
         return noises$LAYOUT;
     }
 
-    private static final long noises$OFFSET = $LAYOUT.byteOffset(groupElement("noises"));
+    private static final long noises$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$38:5"), groupElement("$anon$40:9"), groupElement("noises"));
 
     /**
      * Offset for field:
@@ -432,6 +446,50 @@ public class TerrainNoise {
      */
     public static void noises(MemorySegment struct, long index0, MemorySegment fieldValue) {
         MemorySegment.copy(fieldValue, 0L, noises(struct, index0), 0L, DoublePerlinNoise.layout().byteSize());
+    }
+
+    private static final GroupLayout sn$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("$anon$38:5"), groupElement("$anon$48:9"), groupElement("sn"));
+
+    /**
+     * Layout for field:
+     * {@snippet lang=c :
+     * SurfaceNoise sn
+     * }
+     */
+    public static final GroupLayout sn$layout() {
+        return sn$LAYOUT;
+    }
+
+    private static final long sn$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$38:5"), groupElement("$anon$48:9"), groupElement("sn"));
+
+    /**
+     * Offset for field:
+     * {@snippet lang=c :
+     * SurfaceNoise sn
+     * }
+     */
+    public static final long sn$offset() {
+        return sn$OFFSET;
+    }
+
+    /**
+     * Getter for field:
+     * {@snippet lang=c :
+     * SurfaceNoise sn
+     * }
+     */
+    public static MemorySegment sn(MemorySegment struct) {
+        return struct.asSlice(sn$OFFSET, sn$LAYOUT.byteSize());
+    }
+
+    /**
+     * Setter for field:
+     * {@snippet lang=c :
+     * SurfaceNoise sn
+     * }
+     */
+    public static void sn(MemorySegment struct, MemorySegment fieldValue) {
+        MemorySegment.copy(fieldValue, 0L, struct, sn$OFFSET, sn$LAYOUT.byteSize());
     }
 
     /**

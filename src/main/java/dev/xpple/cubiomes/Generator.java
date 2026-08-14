@@ -32,9 +32,13 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
  *         struct {
  *             BiomeNoiseBeta bnb;
  *         };
+ *         struct {
+ *             NetherNoise nn;
+ *         };
+ *         struct {
+ *             EndNoise en;
+ *         };
  *     };
- *     NetherNoise nn;
- *     EndNoise en;
  * }
  * }
  */
@@ -56,16 +60,20 @@ public class Generator {
                 LayerStack.layout().withName("ls"),
                 MemoryLayout.sequenceLayout(5, Layer.layout()).withName("xlayer"),
                 Cubiomes.C_POINTER.withName("entry")
-            ).withName("$anon$24:9"),
+            ).withName("$anon$25:9"),
             MemoryLayout.structLayout(
                 BiomeNoise.layout().withName("bn")
-            ).withName("$anon$29:9"),
+            ).withName("$anon$30:9"),
             MemoryLayout.structLayout(
                 BiomeNoiseBeta.layout().withName("bnb")
-            ).withName("$anon$32:9")
-        ).withName("$anon$23:5"),
-        NetherNoise.layout().withName("nn"),
-        EndNoise.layout().withName("en")
+            ).withName("$anon$33:9"),
+            MemoryLayout.structLayout(
+                NetherNoise.layout().withName("nn")
+            ).withName("$anon$38:9"),
+            MemoryLayout.structLayout(
+                EndNoise.layout().withName("en")
+            ).withName("$anon$42:9")
+        ).withName("$anon$23:5")
     ).withName("Generator");
 
     /**
@@ -295,7 +303,7 @@ public class Generator {
         struct.set(sha$LAYOUT, sha$OFFSET, fieldValue);
     }
 
-    private static final GroupLayout ls$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("$anon$23:5"), groupElement("$anon$24:9"), groupElement("ls"));
+    private static final GroupLayout ls$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("$anon$23:5"), groupElement("$anon$25:9"), groupElement("ls"));
 
     /**
      * Layout for field:
@@ -307,7 +315,7 @@ public class Generator {
         return ls$LAYOUT;
     }
 
-    private static final long ls$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$23:5"), groupElement("$anon$24:9"), groupElement("ls"));
+    private static final long ls$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$23:5"), groupElement("$anon$25:9"), groupElement("ls"));
 
     /**
      * Offset for field:
@@ -339,7 +347,7 @@ public class Generator {
         MemorySegment.copy(fieldValue, 0L, struct, ls$OFFSET, ls$LAYOUT.byteSize());
     }
 
-    private static final SequenceLayout xlayer$LAYOUT = (SequenceLayout)$LAYOUT.select(groupElement("$anon$23:5"), groupElement("$anon$24:9"), groupElement("xlayer"));
+    private static final SequenceLayout xlayer$LAYOUT = (SequenceLayout)$LAYOUT.select(groupElement("$anon$23:5"), groupElement("$anon$25:9"), groupElement("xlayer"));
 
     /**
      * Layout for field:
@@ -351,7 +359,7 @@ public class Generator {
         return xlayer$LAYOUT;
     }
 
-    private static final long xlayer$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$23:5"), groupElement("$anon$24:9"), groupElement("xlayer"));
+    private static final long xlayer$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$23:5"), groupElement("$anon$25:9"), groupElement("xlayer"));
 
     /**
      * Offset for field:
@@ -422,7 +430,7 @@ public class Generator {
         MemorySegment.copy(fieldValue, 0L, xlayer(struct, index0), 0L, Layer.layout().byteSize());
     }
 
-    private static final AddressLayout entry$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("$anon$23:5"), groupElement("$anon$24:9"), groupElement("entry"));
+    private static final AddressLayout entry$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("$anon$23:5"), groupElement("$anon$25:9"), groupElement("entry"));
 
     /**
      * Layout for field:
@@ -434,7 +442,7 @@ public class Generator {
         return entry$LAYOUT;
     }
 
-    private static final long entry$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$23:5"), groupElement("$anon$24:9"), groupElement("entry"));
+    private static final long entry$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$23:5"), groupElement("$anon$25:9"), groupElement("entry"));
 
     /**
      * Offset for field:
@@ -466,7 +474,7 @@ public class Generator {
         struct.set(entry$LAYOUT, entry$OFFSET, fieldValue);
     }
 
-    private static final GroupLayout bn$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("$anon$23:5"), groupElement("$anon$29:9"), groupElement("bn"));
+    private static final GroupLayout bn$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("$anon$23:5"), groupElement("$anon$30:9"), groupElement("bn"));
 
     /**
      * Layout for field:
@@ -478,7 +486,7 @@ public class Generator {
         return bn$LAYOUT;
     }
 
-    private static final long bn$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$23:5"), groupElement("$anon$29:9"), groupElement("bn"));
+    private static final long bn$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$23:5"), groupElement("$anon$30:9"), groupElement("bn"));
 
     /**
      * Offset for field:
@@ -510,7 +518,7 @@ public class Generator {
         MemorySegment.copy(fieldValue, 0L, struct, bn$OFFSET, bn$LAYOUT.byteSize());
     }
 
-    private static final GroupLayout bnb$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("$anon$23:5"), groupElement("$anon$32:9"), groupElement("bnb"));
+    private static final GroupLayout bnb$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("$anon$23:5"), groupElement("$anon$33:9"), groupElement("bnb"));
 
     /**
      * Layout for field:
@@ -522,7 +530,7 @@ public class Generator {
         return bnb$LAYOUT;
     }
 
-    private static final long bnb$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$23:5"), groupElement("$anon$32:9"), groupElement("bnb"));
+    private static final long bnb$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$23:5"), groupElement("$anon$33:9"), groupElement("bnb"));
 
     /**
      * Offset for field:
@@ -554,7 +562,7 @@ public class Generator {
         MemorySegment.copy(fieldValue, 0L, struct, bnb$OFFSET, bnb$LAYOUT.byteSize());
     }
 
-    private static final GroupLayout nn$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("nn"));
+    private static final GroupLayout nn$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("$anon$23:5"), groupElement("$anon$38:9"), groupElement("nn"));
 
     /**
      * Layout for field:
@@ -566,7 +574,7 @@ public class Generator {
         return nn$LAYOUT;
     }
 
-    private static final long nn$OFFSET = $LAYOUT.byteOffset(groupElement("nn"));
+    private static final long nn$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$23:5"), groupElement("$anon$38:9"), groupElement("nn"));
 
     /**
      * Offset for field:
@@ -598,7 +606,7 @@ public class Generator {
         MemorySegment.copy(fieldValue, 0L, struct, nn$OFFSET, nn$LAYOUT.byteSize());
     }
 
-    private static final GroupLayout en$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("en"));
+    private static final GroupLayout en$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("$anon$23:5"), groupElement("$anon$42:9"), groupElement("en"));
 
     /**
      * Layout for field:
@@ -610,7 +618,7 @@ public class Generator {
         return en$LAYOUT;
     }
 
-    private static final long en$OFFSET = $LAYOUT.byteOffset(groupElement("en"));
+    private static final long en$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$23:5"), groupElement("$anon$42:9"), groupElement("en"));
 
     /**
      * Offset for field:

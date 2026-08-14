@@ -7464,6 +7464,139 @@ class Cubiomes_1 extends Cubiomes$shared {
         }
     }
 
+    private static class getSurfaceHeight {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_DOUBLE
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("getSurfaceHeight");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int getSurfaceHeight(const double ncol00[], const double ncol01[], const double ncol10[], const double ncol11[], int colymin, int colymax, int blockspercell, double dx, double dz)
+     * }
+     */
+    public static FunctionDescriptor getSurfaceHeight$descriptor() {
+        return getSurfaceHeight.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int getSurfaceHeight(const double ncol00[], const double ncol01[], const double ncol10[], const double ncol11[], int colymin, int colymax, int blockspercell, double dx, double dz)
+     * }
+     */
+    public static MethodHandle getSurfaceHeight$handle() {
+        return getSurfaceHeight.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int getSurfaceHeight(const double ncol00[], const double ncol01[], const double ncol10[], const double ncol11[], int colymin, int colymax, int blockspercell, double dx, double dz)
+     * }
+     */
+    public static MemorySegment getSurfaceHeight$address() {
+        return getSurfaceHeight.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int getSurfaceHeight(const double ncol00[], const double ncol01[], const double ncol10[], const double ncol11[], int colymin, int colymax, int blockspercell, double dx, double dz)
+     * }
+     */
+    public static int getSurfaceHeight(MemorySegment ncol00, MemorySegment ncol01, MemorySegment ncol10, MemorySegment ncol11, int colymin, int colymax, int blockspercell, double dx, double dz) {
+        var mh$ = getSurfaceHeight.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("getSurfaceHeight", ncol00, ncol01, ncol10, ncol11, colymin, colymax, blockspercell, dx, dz);
+            }
+            return (int)mh$.invokeExact(ncol00, ncol01, ncol10, ncol11, colymin, colymax, blockspercell, dx, dz);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class sampleNoiseColumnEnd {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Cubiomes.C_POINTER,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleNoiseColumnEnd");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void sampleNoiseColumnEnd(double column[], const SurfaceNoise *sn, const EndNoise *en, int x, int z, int colymin, int colymax)
+     * }
+     */
+    public static FunctionDescriptor sampleNoiseColumnEnd$descriptor() {
+        return sampleNoiseColumnEnd.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void sampleNoiseColumnEnd(double column[], const SurfaceNoise *sn, const EndNoise *en, int x, int z, int colymin, int colymax)
+     * }
+     */
+    public static MethodHandle sampleNoiseColumnEnd$handle() {
+        return sampleNoiseColumnEnd.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void sampleNoiseColumnEnd(double column[], const SurfaceNoise *sn, const EndNoise *en, int x, int z, int colymin, int colymax)
+     * }
+     */
+    public static MemorySegment sampleNoiseColumnEnd$address() {
+        return sampleNoiseColumnEnd.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void sampleNoiseColumnEnd(double column[], const SurfaceNoise *sn, const EndNoise *en, int x, int z, int colymin, int colymax)
+     * }
+     */
+    public static void sampleNoiseColumnEnd(MemorySegment column, MemorySegment sn, MemorySegment en, int x, int z, int colymin, int colymax) {
+        var mh$ = sampleNoiseColumnEnd.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("sampleNoiseColumnEnd", column, sn, en, x, z, colymin, colymax);
+            }
+            mh$.invokeExact(column, sn, en, x, z, colymin, colymax);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
     private static class getEndSurfaceHeight {
         public static final FunctionDescriptor DESC = FunctionDescriptor.of(
             Cubiomes.C_INT,
@@ -8905,8 +9038,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     }
 
     private static class initBlendedNoise {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_INT,
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
             Cubiomes.C_POINTER,
             Cubiomes.C_LONG,
             Cubiomes.C_INT
@@ -8920,7 +9052,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * int initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
+     * void initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
      * }
      */
     public static FunctionDescriptor initBlendedNoise$descriptor() {
@@ -8930,7 +9062,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * int initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
+     * void initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
      * }
      */
     public static MethodHandle initBlendedNoise$handle() {
@@ -8940,7 +9072,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * int initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
+     * void initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
      * }
      */
     public static MemorySegment initBlendedNoise$address() {
@@ -8949,16 +9081,16 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * int initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
+     * void initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
      * }
      */
-    public static int initBlendedNoise(MemorySegment bn, long ws, int dim) {
+    public static void initBlendedNoise(MemorySegment bn, long ws, int dim) {
         var mh$ = initBlendedNoise.HANDLE;
         try {
             if (TRACE_DOWNCALLS) {
                 traceDowncall("initBlendedNoise", bn, ws, dim);
             }
-            return (int)mh$.invokeExact(bn, ws, dim);
+            mh$.invokeExact(bn, ws, dim);
         } catch (Error | RuntimeException ex) {
            throw ex;
         } catch (Throwable ex$) {
@@ -9811,6 +9943,1549 @@ class Cubiomes_1 extends Cubiomes$shared {
            throw new AssertionError("should not reach here", ex$);
         }
     }
+    private static final int OTP_PILLAR = (int)0L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_PILLAR = 0
+     * }
+     */
+    public static int OTP_PILLAR() {
+        return OTP_PILLAR;
+    }
+    private static final int OTP_PILLAR_RARENESS = (int)1L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_PILLAR_RARENESS = 1
+     * }
+     */
+    public static int OTP_PILLAR_RARENESS() {
+        return OTP_PILLAR_RARENESS;
+    }
+    private static final int OTP_PILLAR_THICKNESS = (int)2L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_PILLAR_THICKNESS = 2
+     * }
+     */
+    public static int OTP_PILLAR_THICKNESS() {
+        return OTP_PILLAR_THICKNESS;
+    }
+    private static final int OTP_SPAGHETTI_2D = (int)3L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_SPAGHETTI_2D = 3
+     * }
+     */
+    public static int OTP_SPAGHETTI_2D() {
+        return OTP_SPAGHETTI_2D;
+    }
+    private static final int OTP_SPAGHETTI_2D_ELEVATION = (int)4L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_SPAGHETTI_2D_ELEVATION = 4
+     * }
+     */
+    public static int OTP_SPAGHETTI_2D_ELEVATION() {
+        return OTP_SPAGHETTI_2D_ELEVATION;
+    }
+    private static final int OTP_SPAGHETTI_2D_MODULATOR = (int)5L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_SPAGHETTI_2D_MODULATOR = 5
+     * }
+     */
+    public static int OTP_SPAGHETTI_2D_MODULATOR() {
+        return OTP_SPAGHETTI_2D_MODULATOR;
+    }
+    private static final int OTP_SPAGHETTI_2D_THICKNESS = (int)6L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_SPAGHETTI_2D_THICKNESS = 6
+     * }
+     */
+    public static int OTP_SPAGHETTI_2D_THICKNESS() {
+        return OTP_SPAGHETTI_2D_THICKNESS;
+    }
+    private static final int OTP_SPAGHETTI_3D_1 = (int)7L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_SPAGHETTI_3D_1 = 7
+     * }
+     */
+    public static int OTP_SPAGHETTI_3D_1() {
+        return OTP_SPAGHETTI_3D_1;
+    }
+    private static final int OTP_SPAGHETTI_3D_2 = (int)8L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_SPAGHETTI_3D_2 = 8
+     * }
+     */
+    public static int OTP_SPAGHETTI_3D_2() {
+        return OTP_SPAGHETTI_3D_2;
+    }
+    private static final int OTP_SPAGHETTI_3D_RARITY = (int)9L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_SPAGHETTI_3D_RARITY = 9
+     * }
+     */
+    public static int OTP_SPAGHETTI_3D_RARITY() {
+        return OTP_SPAGHETTI_3D_RARITY;
+    }
+    private static final int OTP_SPAGHETTI_3D_THICKNESS = (int)10L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_SPAGHETTI_3D_THICKNESS = 10
+     * }
+     */
+    public static int OTP_SPAGHETTI_3D_THICKNESS() {
+        return OTP_SPAGHETTI_3D_THICKNESS;
+    }
+    private static final int OTP_SPAGHETTI_ROUGHNESS = (int)11L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_SPAGHETTI_ROUGHNESS = 11
+     * }
+     */
+    public static int OTP_SPAGHETTI_ROUGHNESS() {
+        return OTP_SPAGHETTI_ROUGHNESS;
+    }
+    private static final int OTP_SPAGHETTI_ROUGHNESS_MODULATOR = (int)12L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_SPAGHETTI_ROUGHNESS_MODULATOR = 12
+     * }
+     */
+    public static int OTP_SPAGHETTI_ROUGHNESS_MODULATOR() {
+        return OTP_SPAGHETTI_ROUGHNESS_MODULATOR;
+    }
+    private static final int OTP_CAVE_ENTRANCE = (int)13L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_CAVE_ENTRANCE = 13
+     * }
+     */
+    public static int OTP_CAVE_ENTRANCE() {
+        return OTP_CAVE_ENTRANCE;
+    }
+    private static final int OTP_CAVE_LAYER = (int)14L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_CAVE_LAYER = 14
+     * }
+     */
+    public static int OTP_CAVE_LAYER() {
+        return OTP_CAVE_LAYER;
+    }
+    private static final int OTP_CAVE_CHEESE = (int)15L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_CAVE_CHEESE = 15
+     * }
+     */
+    public static int OTP_CAVE_CHEESE() {
+        return OTP_CAVE_CHEESE;
+    }
+    private static final int OTP_NOODLE = (int)16L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_NOODLE = 16
+     * }
+     */
+    public static int OTP_NOODLE() {
+        return OTP_NOODLE;
+    }
+    private static final int OTP_NOODLE_THICKNESS = (int)17L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_NOODLE_THICKNESS = 17
+     * }
+     */
+    public static int OTP_NOODLE_THICKNESS() {
+        return OTP_NOODLE_THICKNESS;
+    }
+    private static final int OTP_NOODLE_RIDGE_A = (int)18L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_NOODLE_RIDGE_A = 18
+     * }
+     */
+    public static int OTP_NOODLE_RIDGE_A() {
+        return OTP_NOODLE_RIDGE_A;
+    }
+    private static final int OTP_NOODLE_RIDGE_B = (int)19L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_NOODLE_RIDGE_B = 19
+     * }
+     */
+    public static int OTP_NOODLE_RIDGE_B() {
+        return OTP_NOODLE_RIDGE_B;
+    }
+    private static final int OTP_JAGGED = (int)20L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_JAGGED = 20
+     * }
+     */
+    public static int OTP_JAGGED() {
+        return OTP_JAGGED;
+    }
+    private static final int OTP_MAX = (int)21L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.OTP_MAX = 21
+     * }
+     */
+    public static int OTP_MAX() {
+        return OTP_MAX;
+    }
+
+    private static class setupTerrainNoise {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("setupTerrainNoise");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void setupTerrainNoise(TerrainNoise *params, int mc, int flags)
+     * }
+     */
+    public static FunctionDescriptor setupTerrainNoise$descriptor() {
+        return setupTerrainNoise.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void setupTerrainNoise(TerrainNoise *params, int mc, int flags)
+     * }
+     */
+    public static MethodHandle setupTerrainNoise$handle() {
+        return setupTerrainNoise.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void setupTerrainNoise(TerrainNoise *params, int mc, int flags)
+     * }
+     */
+    public static MemorySegment setupTerrainNoise$address() {
+        return setupTerrainNoise.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void setupTerrainNoise(TerrainNoise *params, int mc, int flags)
+     * }
+     */
+    public static void setupTerrainNoise(MemorySegment params, int mc, int flags) {
+        var mh$ = setupTerrainNoise.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("setupTerrainNoise", params, mc, flags);
+            }
+            mh$.invokeExact(params, mc, flags);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class initTerrainNoise {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Cubiomes.C_POINTER,
+            Cubiomes.C_LONG,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("initTerrainNoise");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void initTerrainNoise(TerrainNoise *params, uint64_t ws, int dim)
+     * }
+     */
+    public static FunctionDescriptor initTerrainNoise$descriptor() {
+        return initTerrainNoise.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void initTerrainNoise(TerrainNoise *params, uint64_t ws, int dim)
+     * }
+     */
+    public static MethodHandle initTerrainNoise$handle() {
+        return initTerrainNoise.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void initTerrainNoise(TerrainNoise *params, uint64_t ws, int dim)
+     * }
+     */
+    public static MemorySegment initTerrainNoise$address() {
+        return initTerrainNoise.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void initTerrainNoise(TerrainNoise *params, uint64_t ws, int dim)
+     * }
+     */
+    public static void initTerrainNoise(MemorySegment params, long ws, int dim) {
+        var mh$ = initTerrainNoise.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("initTerrainNoise", params, ws, dim);
+            }
+            mh$.invokeExact(params, ws, dim);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class sampleSpaghettiRoughness {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleSpaghettiRoughness");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * double sampleSpaghettiRoughness(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static FunctionDescriptor sampleSpaghettiRoughness$descriptor() {
+        return sampleSpaghettiRoughness.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * double sampleSpaghettiRoughness(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static MethodHandle sampleSpaghettiRoughness$handle() {
+        return sampleSpaghettiRoughness.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * double sampleSpaghettiRoughness(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static MemorySegment sampleSpaghettiRoughness$address() {
+        return sampleSpaghettiRoughness.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * double sampleSpaghettiRoughness(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static double sampleSpaghettiRoughness(MemorySegment params, int x, int y, int z) {
+        var mh$ = sampleSpaghettiRoughness.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("sampleSpaghettiRoughness", params, x, y, z);
+            }
+            return (double)mh$.invokeExact(params, x, y, z);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class sampleSpaghetti2dThicknessModulator {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleSpaghetti2dThicknessModulator");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * double sampleSpaghetti2dThicknessModulator(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static FunctionDescriptor sampleSpaghetti2dThicknessModulator$descriptor() {
+        return sampleSpaghetti2dThicknessModulator.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * double sampleSpaghetti2dThicknessModulator(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static MethodHandle sampleSpaghetti2dThicknessModulator$handle() {
+        return sampleSpaghetti2dThicknessModulator.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * double sampleSpaghetti2dThicknessModulator(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static MemorySegment sampleSpaghetti2dThicknessModulator$address() {
+        return sampleSpaghetti2dThicknessModulator.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * double sampleSpaghetti2dThicknessModulator(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static double sampleSpaghetti2dThicknessModulator(MemorySegment params, int x, int y, int z) {
+        var mh$ = sampleSpaghetti2dThicknessModulator.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("sampleSpaghetti2dThicknessModulator", params, x, y, z);
+            }
+            return (double)mh$.invokeExact(params, x, y, z);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class sampleSpaghetti2d {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleSpaghetti2d");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * double sampleSpaghetti2d(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static FunctionDescriptor sampleSpaghetti2d$descriptor() {
+        return sampleSpaghetti2d.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * double sampleSpaghetti2d(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static MethodHandle sampleSpaghetti2d$handle() {
+        return sampleSpaghetti2d.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * double sampleSpaghetti2d(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static MemorySegment sampleSpaghetti2d$address() {
+        return sampleSpaghetti2d.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * double sampleSpaghetti2d(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static double sampleSpaghetti2d(MemorySegment params, int x, int y, int z) {
+        var mh$ = sampleSpaghetti2d.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("sampleSpaghetti2d", params, x, y, z);
+            }
+            return (double)mh$.invokeExact(params, x, y, z);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class sampleSpaghetti3d {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleSpaghetti3d");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * double sampleSpaghetti3d(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static FunctionDescriptor sampleSpaghetti3d$descriptor() {
+        return sampleSpaghetti3d.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * double sampleSpaghetti3d(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static MethodHandle sampleSpaghetti3d$handle() {
+        return sampleSpaghetti3d.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * double sampleSpaghetti3d(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static MemorySegment sampleSpaghetti3d$address() {
+        return sampleSpaghetti3d.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * double sampleSpaghetti3d(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static double sampleSpaghetti3d(MemorySegment params, int x, int y, int z) {
+        var mh$ = sampleSpaghetti3d.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("sampleSpaghetti3d", params, x, y, z);
+            }
+            return (double)mh$.invokeExact(params, x, y, z);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class sampleCaveEntrance {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleCaveEntrance");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * double sampleCaveEntrance(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static FunctionDescriptor sampleCaveEntrance$descriptor() {
+        return sampleCaveEntrance.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * double sampleCaveEntrance(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static MethodHandle sampleCaveEntrance$handle() {
+        return sampleCaveEntrance.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * double sampleCaveEntrance(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static MemorySegment sampleCaveEntrance$address() {
+        return sampleCaveEntrance.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * double sampleCaveEntrance(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static double sampleCaveEntrance(MemorySegment params, int x, int y, int z) {
+        var mh$ = sampleCaveEntrance.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("sampleCaveEntrance", params, x, y, z);
+            }
+            return (double)mh$.invokeExact(params, x, y, z);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class sampleEntrances {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_DOUBLE
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleEntrances");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * double sampleEntrances(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness)
+     * }
+     */
+    public static FunctionDescriptor sampleEntrances$descriptor() {
+        return sampleEntrances.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * double sampleEntrances(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness)
+     * }
+     */
+    public static MethodHandle sampleEntrances$handle() {
+        return sampleEntrances.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * double sampleEntrances(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness)
+     * }
+     */
+    public static MemorySegment sampleEntrances$address() {
+        return sampleEntrances.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * double sampleEntrances(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness)
+     * }
+     */
+    public static double sampleEntrances(MemorySegment params, int x, int y, int z, double spaghettiRoughness) {
+        var mh$ = sampleEntrances.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("sampleEntrances", params, x, y, z, spaghettiRoughness);
+            }
+            return (double)mh$.invokeExact(params, x, y, z, spaghettiRoughness);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class sampleCaveLayer {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleCaveLayer");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * double sampleCaveLayer(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static FunctionDescriptor sampleCaveLayer$descriptor() {
+        return sampleCaveLayer.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * double sampleCaveLayer(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static MethodHandle sampleCaveLayer$handle() {
+        return sampleCaveLayer.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * double sampleCaveLayer(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static MemorySegment sampleCaveLayer$address() {
+        return sampleCaveLayer.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * double sampleCaveLayer(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static double sampleCaveLayer(MemorySegment params, int x, int y, int z) {
+        var mh$ = sampleCaveLayer.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("sampleCaveLayer", params, x, y, z);
+            }
+            return (double)mh$.invokeExact(params, x, y, z);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class sampleSlopedCheese {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_DOUBLE
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleSlopedCheese");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * double sampleSlopedCheese(TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged)
+     * }
+     */
+    public static FunctionDescriptor sampleSlopedCheese$descriptor() {
+        return sampleSlopedCheese.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * double sampleSlopedCheese(TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged)
+     * }
+     */
+    public static MethodHandle sampleSlopedCheese$handle() {
+        return sampleSlopedCheese.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * double sampleSlopedCheese(TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged)
+     * }
+     */
+    public static MemorySegment sampleSlopedCheese$address() {
+        return sampleSlopedCheese.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * double sampleSlopedCheese(TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged)
+     * }
+     */
+    public static double sampleSlopedCheese(MemorySegment params, int x, int y, int z, double depth, double factor, double jagged) {
+        var mh$ = sampleSlopedCheese.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("sampleSlopedCheese", params, x, y, z, depth, factor, jagged);
+            }
+            return (double)mh$.invokeExact(params, x, y, z, depth, factor, jagged);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class sampleCaveCheese {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_DOUBLE
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleCaveCheese");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * double sampleCaveCheese(TerrainNoise *params, int x, int y, int z, double slopedCheese)
+     * }
+     */
+    public static FunctionDescriptor sampleCaveCheese$descriptor() {
+        return sampleCaveCheese.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * double sampleCaveCheese(TerrainNoise *params, int x, int y, int z, double slopedCheese)
+     * }
+     */
+    public static MethodHandle sampleCaveCheese$handle() {
+        return sampleCaveCheese.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * double sampleCaveCheese(TerrainNoise *params, int x, int y, int z, double slopedCheese)
+     * }
+     */
+    public static MemorySegment sampleCaveCheese$address() {
+        return sampleCaveCheese.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * double sampleCaveCheese(TerrainNoise *params, int x, int y, int z, double slopedCheese)
+     * }
+     */
+    public static double sampleCaveCheese(MemorySegment params, int x, int y, int z, double slopedCheese) {
+        var mh$ = sampleCaveCheese.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("sampleCaveCheese", params, x, y, z, slopedCheese);
+            }
+            return (double)mh$.invokeExact(params, x, y, z, slopedCheese);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class samplePillars {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("samplePillars");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * double samplePillars(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static FunctionDescriptor samplePillars$descriptor() {
+        return samplePillars.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * double samplePillars(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static MethodHandle samplePillars$handle() {
+        return samplePillars.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * double samplePillars(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static MemorySegment samplePillars$address() {
+        return samplePillars.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * double samplePillars(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static double samplePillars(MemorySegment params, int x, int y, int z) {
+        var mh$ = samplePillars.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("samplePillars", params, x, y, z);
+            }
+            return (double)mh$.invokeExact(params, x, y, z);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class sampleNoodle {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleNoodle");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * double sampleNoodle(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static FunctionDescriptor sampleNoodle$descriptor() {
+        return sampleNoodle.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * double sampleNoodle(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static MethodHandle sampleNoodle$handle() {
+        return sampleNoodle.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * double sampleNoodle(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static MemorySegment sampleNoodle$address() {
+        return sampleNoodle.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * double sampleNoodle(TerrainNoise *params, int x, int y, int z)
+     * }
+     */
+    public static double sampleNoodle(MemorySegment params, int x, int y, int z) {
+        var mh$ = sampleNoodle.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("sampleNoodle", params, x, y, z);
+            }
+            return (double)mh$.invokeExact(params, x, y, z);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class sampleUnderground {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_DOUBLE
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleUnderground");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * double sampleUnderground(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
+     * }
+     */
+    public static FunctionDescriptor sampleUnderground$descriptor() {
+        return sampleUnderground.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * double sampleUnderground(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
+     * }
+     */
+    public static MethodHandle sampleUnderground$handle() {
+        return sampleUnderground.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * double sampleUnderground(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
+     * }
+     */
+    public static MemorySegment sampleUnderground$address() {
+        return sampleUnderground.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * double sampleUnderground(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
+     * }
+     */
+    public static double sampleUnderground(MemorySegment params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese) {
+        var mh$ = sampleUnderground.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("sampleUnderground", params, x, y, z, spaghettiRoughness, entrances, slopedCheese);
+            }
+            return (double)mh$.invokeExact(params, x, y, z, spaghettiRoughness, entrances, slopedCheese);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class sampleFinalDensity {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_DOUBLE
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleFinalDensity");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * double sampleFinalDensity(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
+     * }
+     */
+    public static FunctionDescriptor sampleFinalDensity$descriptor() {
+        return sampleFinalDensity.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * double sampleFinalDensity(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
+     * }
+     */
+    public static MethodHandle sampleFinalDensity$handle() {
+        return sampleFinalDensity.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * double sampleFinalDensity(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
+     * }
+     */
+    public static MemorySegment sampleFinalDensity$address() {
+        return sampleFinalDensity.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * double sampleFinalDensity(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
+     * }
+     */
+    public static double sampleFinalDensity(MemorySegment params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese) {
+        var mh$ = sampleFinalDensity.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("sampleFinalDensity", params, x, y, z, spaghettiRoughness, entrances, slopedCheese);
+            }
+            return (double)mh$.invokeExact(params, x, y, z, spaghettiRoughness, entrances, slopedCheese);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class sampleNetherFinalDensity {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleNetherFinalDensity");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * double sampleNetherFinalDensity(BlendedNoise *base3dNoise, int x, int y, int z)
+     * }
+     */
+    public static FunctionDescriptor sampleNetherFinalDensity$descriptor() {
+        return sampleNetherFinalDensity.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * double sampleNetherFinalDensity(BlendedNoise *base3dNoise, int x, int y, int z)
+     * }
+     */
+    public static MethodHandle sampleNetherFinalDensity$handle() {
+        return sampleNetherFinalDensity.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * double sampleNetherFinalDensity(BlendedNoise *base3dNoise, int x, int y, int z)
+     * }
+     */
+    public static MemorySegment sampleNetherFinalDensity$address() {
+        return sampleNetherFinalDensity.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * double sampleNetherFinalDensity(BlendedNoise *base3dNoise, int x, int y, int z)
+     * }
+     */
+    public static double sampleNetherFinalDensity(MemorySegment base3dNoise, int x, int y, int z) {
+        var mh$ = sampleNetherFinalDensity.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("sampleNetherFinalDensity", base3dNoise, x, y, z);
+            }
+            return (double)mh$.invokeExact(base3dNoise, x, y, z);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class samplePreliminarySurfaceLevel {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("samplePreliminarySurfaceLevel");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z)
+     * }
+     */
+    public static FunctionDescriptor samplePreliminarySurfaceLevel$descriptor() {
+        return samplePreliminarySurfaceLevel.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z)
+     * }
+     */
+    public static MethodHandle samplePreliminarySurfaceLevel$handle() {
+        return samplePreliminarySurfaceLevel.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z)
+     * }
+     */
+    public static MemorySegment samplePreliminarySurfaceLevel$address() {
+        return samplePreliminarySurfaceLevel.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z)
+     * }
+     */
+    public static int samplePreliminarySurfaceLevel(MemorySegment params, int x, int z) {
+        var mh$ = samplePreliminarySurfaceLevel.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("samplePreliminarySurfaceLevel", params, x, z);
+            }
+            return (int)mh$.invokeExact(params, x, z);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class sampleNoiseColumn {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleNoiseColumn");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * }
+     */
+    public static FunctionDescriptor sampleNoiseColumn$descriptor() {
+        return sampleNoiseColumn.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * }
+     */
+    public static MethodHandle sampleNoiseColumn$handle() {
+        return sampleNoiseColumn.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * }
+     */
+    public static MemorySegment sampleNoiseColumn$address() {
+        return sampleNoiseColumn.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * }
+     */
+    public static void sampleNoiseColumn(MemorySegment params, int cellX, int cellZ, int colYMin, int colYMax, MemorySegment column) {
+        var mh$ = sampleNoiseColumn.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("sampleNoiseColumn", params, cellX, cellZ, colYMin, colYMax, column);
+            }
+            mh$.invokeExact(params, cellX, cellZ, colYMin, colYMax, column);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class sampleNetherNoiseColumn {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleNetherNoiseColumn");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void sampleNetherNoiseColumn(BlendedNoise *base3dNoise, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * }
+     */
+    public static FunctionDescriptor sampleNetherNoiseColumn$descriptor() {
+        return sampleNetherNoiseColumn.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void sampleNetherNoiseColumn(BlendedNoise *base3dNoise, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * }
+     */
+    public static MethodHandle sampleNetherNoiseColumn$handle() {
+        return sampleNetherNoiseColumn.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void sampleNetherNoiseColumn(BlendedNoise *base3dNoise, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * }
+     */
+    public static MemorySegment sampleNetherNoiseColumn$address() {
+        return sampleNetherNoiseColumn.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void sampleNetherNoiseColumn(BlendedNoise *base3dNoise, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * }
+     */
+    public static void sampleNetherNoiseColumn(MemorySegment base3dNoise, int cellX, int cellZ, int colYMin, int colYMax, MemorySegment column) {
+        var mh$ = sampleNetherNoiseColumn.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("sampleNetherNoiseColumn", base3dNoise, cellX, cellZ, colYMin, colYMax, column);
+            }
+            mh$.invokeExact(base3dNoise, cellX, cellZ, colYMin, colYMax, column);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class generateColumn {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_DOUBLE,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("generateColumn");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int generateColumn(int blocks[], const double *ds00, const double *ds01, const double *ds10, const double *ds11, int colYMin, int colYMax, int cellHeight, double percentX, double percentZ, interpFunc interpFunc, int worldMinY, int flag)
+     * }
+     */
+    public static FunctionDescriptor generateColumn$descriptor() {
+        return generateColumn.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int generateColumn(int blocks[], const double *ds00, const double *ds01, const double *ds10, const double *ds11, int colYMin, int colYMax, int cellHeight, double percentX, double percentZ, interpFunc interpFunc, int worldMinY, int flag)
+     * }
+     */
+    public static MethodHandle generateColumn$handle() {
+        return generateColumn.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int generateColumn(int blocks[], const double *ds00, const double *ds01, const double *ds10, const double *ds11, int colYMin, int colYMax, int cellHeight, double percentX, double percentZ, interpFunc interpFunc, int worldMinY, int flag)
+     * }
+     */
+    public static MemorySegment generateColumn$address() {
+        return generateColumn.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int generateColumn(int blocks[], const double *ds00, const double *ds01, const double *ds10, const double *ds11, int colYMin, int colYMax, int cellHeight, double percentX, double percentZ, interpFunc interpFunc, int worldMinY, int flag)
+     * }
+     */
+    public static int generateColumn(MemorySegment blocks, MemorySegment ds00, MemorySegment ds01, MemorySegment ds10, MemorySegment ds11, int colYMin, int colYMax, int cellHeight, double percentX, double percentZ, MemorySegment interpFunc, int worldMinY, int flag) {
+        var mh$ = generateColumn.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("generateColumn", blocks, ds00, ds01, ds10, ds11, colYMin, colYMax, cellHeight, percentX, percentZ, interpFunc, worldMinY, flag);
+            }
+            return (int)mh$.invokeExact(blocks, ds00, ds01, ds10, ds11, colYMin, colYMax, cellHeight, percentX, percentZ, interpFunc, worldMinY, flag);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class generateRegion {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("generateRegion");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
+     * }
+     */
+    public static FunctionDescriptor generateRegion$descriptor() {
+        return generateRegion.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
+     * }
+     */
+    public static MethodHandle generateRegion$handle() {
+        return generateRegion.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
+     * }
+     */
+    public static MemorySegment generateRegion$address() {
+        return generateRegion.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
+     * }
+     */
+    public static void generateRegion(MemorySegment params, int chunkX, int chunkZ, int chunkW, int chunkH, MemorySegment blocks, int colYMin, int colYMax, MemorySegment ys, int flag) {
+        var mh$ = generateRegion.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("generateRegion", params, chunkX, chunkZ, chunkW, chunkH, blocks, colYMin, colYMax, ys, flag);
+            }
+            mh$.invokeExact(params, chunkX, chunkZ, chunkW, chunkH, blocks, colYMin, colYMax, ys, flag);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
     private static final int Feature = (int)0L;
     /**
      * {@snippet lang=c :
@@ -10000,64 +11675,73 @@ class Cubiomes_1 extends Cubiomes$shared {
     public static int Bastion() {
         return Bastion;
     }
-    private static final int End_City = (int)20L;
+    private static final int Nether_Fossil = (int)20L;
     /**
      * {@snippet lang=c :
-     * enum StructureType.End_City = 20
+     * enum StructureType.Nether_Fossil = 20
+     * }
+     */
+    public static int Nether_Fossil() {
+        return Nether_Fossil;
+    }
+    private static final int End_City = (int)21L;
+    /**
+     * {@snippet lang=c :
+     * enum StructureType.End_City = 21
      * }
      */
     public static int End_City() {
         return End_City;
     }
-    private static final int End_Gateway = (int)21L;
+    private static final int End_Gateway = (int)22L;
     /**
      * {@snippet lang=c :
-     * enum StructureType.End_Gateway = 21
+     * enum StructureType.End_Gateway = 22
      * }
      */
     public static int End_Gateway() {
         return End_Gateway;
     }
-    private static final int End_Island = (int)22L;
+    private static final int End_Island = (int)23L;
     /**
      * {@snippet lang=c :
-     * enum StructureType.End_Island = 22
+     * enum StructureType.End_Island = 23
      * }
      */
     public static int End_Island() {
         return End_Island;
     }
-    private static final int Trail_Ruins = (int)23L;
+    private static final int Trail_Ruins = (int)24L;
     /**
      * {@snippet lang=c :
-     * enum StructureType.Trail_Ruins = 23
+     * enum StructureType.Trail_Ruins = 24
      * }
      */
     public static int Trail_Ruins() {
         return Trail_Ruins;
     }
-    private static final int Trial_Chambers = (int)24L;
+    private static final int Trial_Chambers = (int)25L;
     /**
      * {@snippet lang=c :
-     * enum StructureType.Trial_Chambers = 24
+     * enum StructureType.Trial_Chambers = 25
      * }
      */
     public static int Trial_Chambers() {
         return Trial_Chambers;
     }
-    private static final int Stronghold = (int)25L;
+    private static final int Stronghold = (int)26L;
     /**
      * {@snippet lang=c :
-     * enum StructureType.Stronghold = 25
+     * enum StructureType.Stronghold = 26
      * }
      */
     public static int Stronghold() {
         return Stronghold;
     }
-    private static final int FEATURE_NUM = (int)26L;
+    private static final int FEATURE_NUM = (int)27L;
     /**
      * {@snippet lang=c :
-     * enum StructureType.FEATURE_NUM = 26
+     * enum StructureType.FEATURE_NUM = 27
      * }
      */
     public static int FEATURE_NUM() {
@@ -11919,6 +13603,133 @@ class Cubiomes_1 extends Cubiomes$shared {
                 traceDowncall("isViableEndCityTerrain", g, sn, blockX, blockZ);
             }
             return (int)mh$.invokeExact(g, sn, blockX, blockZ);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class isViableNetherFossilTerrain {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("isViableNetherFossilTerrain");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int isViableNetherFossilTerrain(int cx, int cz, StructureVariant *sv, BlendedNoise *base3dNoise, int mc)
+     * }
+     */
+    public static FunctionDescriptor isViableNetherFossilTerrain$descriptor() {
+        return isViableNetherFossilTerrain.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int isViableNetherFossilTerrain(int cx, int cz, StructureVariant *sv, BlendedNoise *base3dNoise, int mc)
+     * }
+     */
+    public static MethodHandle isViableNetherFossilTerrain$handle() {
+        return isViableNetherFossilTerrain.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int isViableNetherFossilTerrain(int cx, int cz, StructureVariant *sv, BlendedNoise *base3dNoise, int mc)
+     * }
+     */
+    public static MemorySegment isViableNetherFossilTerrain$address() {
+        return isViableNetherFossilTerrain.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int isViableNetherFossilTerrain(int cx, int cz, StructureVariant *sv, BlendedNoise *base3dNoise, int mc)
+     * }
+     */
+    public static int isViableNetherFossilTerrain(int cx, int cz, MemorySegment sv, MemorySegment base3dNoise, int mc) {
+        var mh$ = isViableNetherFossilTerrain.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("isViableNetherFossilTerrain", cx, cz, sv, base3dNoise, mc);
+            }
+            return (int)mh$.invokeExact(cx, cz, sv, base3dNoise, mc);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class netherFossilHasGhast {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_LONG,
+            Cubiomes.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("netherFossilHasGhast");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int netherFossilHasGhast(int cx, int cz, uint64_t seed, StructureVariant *sv)
+     * }
+     */
+    public static FunctionDescriptor netherFossilHasGhast$descriptor() {
+        return netherFossilHasGhast.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int netherFossilHasGhast(int cx, int cz, uint64_t seed, StructureVariant *sv)
+     * }
+     */
+    public static MethodHandle netherFossilHasGhast$handle() {
+        return netherFossilHasGhast.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int netherFossilHasGhast(int cx, int cz, uint64_t seed, StructureVariant *sv)
+     * }
+     */
+    public static MemorySegment netherFossilHasGhast$address() {
+        return netherFossilHasGhast.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int netherFossilHasGhast(int cx, int cz, uint64_t seed, StructureVariant *sv)
+     * }
+     */
+    public static int netherFossilHasGhast(int cx, int cz, long seed, MemorySegment sv) {
+        var mh$ = netherFossilHasGhast.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("netherFossilHasGhast", cx, cz, seed, sv);
+            }
+            return (int)mh$.invokeExact(cx, cz, seed, sv);
         } catch (Error | RuntimeException ex) {
            throw ex;
         } catch (Throwable ex$) {
@@ -14021,1670 +15832,6 @@ class Cubiomes_1 extends Cubiomes$shared {
                 traceDowncall("carveCave", seed, mc, chunkX, chunkZ, ccc, caveCarverType, biomes, poses);
             }
             mh$.invokeExact(seed, mc, chunkX, chunkZ, ccc, caveCarverType, biomes, poses);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-    private static final int OTP_PILLAR = (int)0L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_PILLAR = 0
-     * }
-     */
-    public static int OTP_PILLAR() {
-        return OTP_PILLAR;
-    }
-    private static final int OTP_PILLAR_RARENESS = (int)1L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_PILLAR_RARENESS = 1
-     * }
-     */
-    public static int OTP_PILLAR_RARENESS() {
-        return OTP_PILLAR_RARENESS;
-    }
-    private static final int OTP_PILLAR_THICKNESS = (int)2L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_PILLAR_THICKNESS = 2
-     * }
-     */
-    public static int OTP_PILLAR_THICKNESS() {
-        return OTP_PILLAR_THICKNESS;
-    }
-    private static final int OTP_SPAGHETTI_2D = (int)3L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_SPAGHETTI_2D = 3
-     * }
-     */
-    public static int OTP_SPAGHETTI_2D() {
-        return OTP_SPAGHETTI_2D;
-    }
-    private static final int OTP_SPAGHETTI_2D_ELEVATION = (int)4L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_SPAGHETTI_2D_ELEVATION = 4
-     * }
-     */
-    public static int OTP_SPAGHETTI_2D_ELEVATION() {
-        return OTP_SPAGHETTI_2D_ELEVATION;
-    }
-    private static final int OTP_SPAGHETTI_2D_MODULATOR = (int)5L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_SPAGHETTI_2D_MODULATOR = 5
-     * }
-     */
-    public static int OTP_SPAGHETTI_2D_MODULATOR() {
-        return OTP_SPAGHETTI_2D_MODULATOR;
-    }
-    private static final int OTP_SPAGHETTI_2D_THICKNESS = (int)6L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_SPAGHETTI_2D_THICKNESS = 6
-     * }
-     */
-    public static int OTP_SPAGHETTI_2D_THICKNESS() {
-        return OTP_SPAGHETTI_2D_THICKNESS;
-    }
-    private static final int OTP_SPAGHETTI_3D_1 = (int)7L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_SPAGHETTI_3D_1 = 7
-     * }
-     */
-    public static int OTP_SPAGHETTI_3D_1() {
-        return OTP_SPAGHETTI_3D_1;
-    }
-    private static final int OTP_SPAGHETTI_3D_2 = (int)8L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_SPAGHETTI_3D_2 = 8
-     * }
-     */
-    public static int OTP_SPAGHETTI_3D_2() {
-        return OTP_SPAGHETTI_3D_2;
-    }
-    private static final int OTP_SPAGHETTI_3D_RARITY = (int)9L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_SPAGHETTI_3D_RARITY = 9
-     * }
-     */
-    public static int OTP_SPAGHETTI_3D_RARITY() {
-        return OTP_SPAGHETTI_3D_RARITY;
-    }
-    private static final int OTP_SPAGHETTI_3D_THICKNESS = (int)10L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_SPAGHETTI_3D_THICKNESS = 10
-     * }
-     */
-    public static int OTP_SPAGHETTI_3D_THICKNESS() {
-        return OTP_SPAGHETTI_3D_THICKNESS;
-    }
-    private static final int OTP_SPAGHETTI_ROUGHNESS = (int)11L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_SPAGHETTI_ROUGHNESS = 11
-     * }
-     */
-    public static int OTP_SPAGHETTI_ROUGHNESS() {
-        return OTP_SPAGHETTI_ROUGHNESS;
-    }
-    private static final int OTP_SPAGHETTI_ROUGHNESS_MODULATOR = (int)12L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_SPAGHETTI_ROUGHNESS_MODULATOR = 12
-     * }
-     */
-    public static int OTP_SPAGHETTI_ROUGHNESS_MODULATOR() {
-        return OTP_SPAGHETTI_ROUGHNESS_MODULATOR;
-    }
-    private static final int OTP_CAVE_ENTRANCE = (int)13L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_CAVE_ENTRANCE = 13
-     * }
-     */
-    public static int OTP_CAVE_ENTRANCE() {
-        return OTP_CAVE_ENTRANCE;
-    }
-    private static final int OTP_CAVE_LAYER = (int)14L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_CAVE_LAYER = 14
-     * }
-     */
-    public static int OTP_CAVE_LAYER() {
-        return OTP_CAVE_LAYER;
-    }
-    private static final int OTP_CAVE_CHEESE = (int)15L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_CAVE_CHEESE = 15
-     * }
-     */
-    public static int OTP_CAVE_CHEESE() {
-        return OTP_CAVE_CHEESE;
-    }
-    private static final int OTP_NOODLE = (int)16L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_NOODLE = 16
-     * }
-     */
-    public static int OTP_NOODLE() {
-        return OTP_NOODLE;
-    }
-    private static final int OTP_NOODLE_THICKNESS = (int)17L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_NOODLE_THICKNESS = 17
-     * }
-     */
-    public static int OTP_NOODLE_THICKNESS() {
-        return OTP_NOODLE_THICKNESS;
-    }
-    private static final int OTP_NOODLE_RIDGE_A = (int)18L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_NOODLE_RIDGE_A = 18
-     * }
-     */
-    public static int OTP_NOODLE_RIDGE_A() {
-        return OTP_NOODLE_RIDGE_A;
-    }
-    private static final int OTP_NOODLE_RIDGE_B = (int)19L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_NOODLE_RIDGE_B = 19
-     * }
-     */
-    public static int OTP_NOODLE_RIDGE_B() {
-        return OTP_NOODLE_RIDGE_B;
-    }
-    private static final int OTP_JAGGED = (int)20L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_JAGGED = 20
-     * }
-     */
-    public static int OTP_JAGGED() {
-        return OTP_JAGGED;
-    }
-    private static final int OTP_MAX = (int)21L;
-    /**
-     * {@snippet lang=c :
-     * enum <anonymous>.OTP_MAX = 21
-     * }
-     */
-    public static int OTP_MAX() {
-        return OTP_MAX;
-    }
-
-    private static class setupTerrainNoise {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("setupTerrainNoise");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int setupTerrainNoise(TerrainNoise *params, int mc, int flags)
-     * }
-     */
-    public static FunctionDescriptor setupTerrainNoise$descriptor() {
-        return setupTerrainNoise.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int setupTerrainNoise(TerrainNoise *params, int mc, int flags)
-     * }
-     */
-    public static MethodHandle setupTerrainNoise$handle() {
-        return setupTerrainNoise.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int setupTerrainNoise(TerrainNoise *params, int mc, int flags)
-     * }
-     */
-    public static MemorySegment setupTerrainNoise$address() {
-        return setupTerrainNoise.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int setupTerrainNoise(TerrainNoise *params, int mc, int flags)
-     * }
-     */
-    public static int setupTerrainNoise(MemorySegment params, int mc, int flags) {
-        var mh$ = setupTerrainNoise.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("setupTerrainNoise", params, mc, flags);
-            }
-            return (int)mh$.invokeExact(params, mc, flags);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class initTerrainNoise {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_LONG,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("initTerrainNoise");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int initTerrainNoise(TerrainNoise *params, uint64_t ws, int dim)
-     * }
-     */
-    public static FunctionDescriptor initTerrainNoise$descriptor() {
-        return initTerrainNoise.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int initTerrainNoise(TerrainNoise *params, uint64_t ws, int dim)
-     * }
-     */
-    public static MethodHandle initTerrainNoise$handle() {
-        return initTerrainNoise.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int initTerrainNoise(TerrainNoise *params, uint64_t ws, int dim)
-     * }
-     */
-    public static MemorySegment initTerrainNoise$address() {
-        return initTerrainNoise.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int initTerrainNoise(TerrainNoise *params, uint64_t ws, int dim)
-     * }
-     */
-    public static int initTerrainNoise(MemorySegment params, long ws, int dim) {
-        var mh$ = initTerrainNoise.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("initTerrainNoise", params, ws, dim);
-            }
-            return (int)mh$.invokeExact(params, ws, dim);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class sampleSpaghettiRoughness {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleSpaghettiRoughness");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * double sampleSpaghettiRoughness(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static FunctionDescriptor sampleSpaghettiRoughness$descriptor() {
-        return sampleSpaghettiRoughness.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * double sampleSpaghettiRoughness(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static MethodHandle sampleSpaghettiRoughness$handle() {
-        return sampleSpaghettiRoughness.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * double sampleSpaghettiRoughness(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static MemorySegment sampleSpaghettiRoughness$address() {
-        return sampleSpaghettiRoughness.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * double sampleSpaghettiRoughness(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static double sampleSpaghettiRoughness(MemorySegment params, int x, int y, int z) {
-        var mh$ = sampleSpaghettiRoughness.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("sampleSpaghettiRoughness", params, x, y, z);
-            }
-            return (double)mh$.invokeExact(params, x, y, z);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class sampleSpaghetti2dThicknessModulator {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleSpaghetti2dThicknessModulator");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * double sampleSpaghetti2dThicknessModulator(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static FunctionDescriptor sampleSpaghetti2dThicknessModulator$descriptor() {
-        return sampleSpaghetti2dThicknessModulator.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * double sampleSpaghetti2dThicknessModulator(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static MethodHandle sampleSpaghetti2dThicknessModulator$handle() {
-        return sampleSpaghetti2dThicknessModulator.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * double sampleSpaghetti2dThicknessModulator(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static MemorySegment sampleSpaghetti2dThicknessModulator$address() {
-        return sampleSpaghetti2dThicknessModulator.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * double sampleSpaghetti2dThicknessModulator(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static double sampleSpaghetti2dThicknessModulator(MemorySegment params, int x, int y, int z) {
-        var mh$ = sampleSpaghetti2dThicknessModulator.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("sampleSpaghetti2dThicknessModulator", params, x, y, z);
-            }
-            return (double)mh$.invokeExact(params, x, y, z);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class sampleSpaghetti2d {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleSpaghetti2d");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * double sampleSpaghetti2d(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static FunctionDescriptor sampleSpaghetti2d$descriptor() {
-        return sampleSpaghetti2d.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * double sampleSpaghetti2d(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static MethodHandle sampleSpaghetti2d$handle() {
-        return sampleSpaghetti2d.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * double sampleSpaghetti2d(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static MemorySegment sampleSpaghetti2d$address() {
-        return sampleSpaghetti2d.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * double sampleSpaghetti2d(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static double sampleSpaghetti2d(MemorySegment params, int x, int y, int z) {
-        var mh$ = sampleSpaghetti2d.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("sampleSpaghetti2d", params, x, y, z);
-            }
-            return (double)mh$.invokeExact(params, x, y, z);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class sampleSpaghetti3d {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleSpaghetti3d");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * double sampleSpaghetti3d(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static FunctionDescriptor sampleSpaghetti3d$descriptor() {
-        return sampleSpaghetti3d.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * double sampleSpaghetti3d(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static MethodHandle sampleSpaghetti3d$handle() {
-        return sampleSpaghetti3d.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * double sampleSpaghetti3d(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static MemorySegment sampleSpaghetti3d$address() {
-        return sampleSpaghetti3d.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * double sampleSpaghetti3d(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static double sampleSpaghetti3d(MemorySegment params, int x, int y, int z) {
-        var mh$ = sampleSpaghetti3d.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("sampleSpaghetti3d", params, x, y, z);
-            }
-            return (double)mh$.invokeExact(params, x, y, z);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class sampleCaveEntrance {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleCaveEntrance");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * double sampleCaveEntrance(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static FunctionDescriptor sampleCaveEntrance$descriptor() {
-        return sampleCaveEntrance.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * double sampleCaveEntrance(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static MethodHandle sampleCaveEntrance$handle() {
-        return sampleCaveEntrance.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * double sampleCaveEntrance(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static MemorySegment sampleCaveEntrance$address() {
-        return sampleCaveEntrance.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * double sampleCaveEntrance(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static double sampleCaveEntrance(MemorySegment params, int x, int y, int z) {
-        var mh$ = sampleCaveEntrance.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("sampleCaveEntrance", params, x, y, z);
-            }
-            return (double)mh$.invokeExact(params, x, y, z);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class sampleEntrances {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_DOUBLE
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleEntrances");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * double sampleEntrances(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness)
-     * }
-     */
-    public static FunctionDescriptor sampleEntrances$descriptor() {
-        return sampleEntrances.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * double sampleEntrances(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness)
-     * }
-     */
-    public static MethodHandle sampleEntrances$handle() {
-        return sampleEntrances.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * double sampleEntrances(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness)
-     * }
-     */
-    public static MemorySegment sampleEntrances$address() {
-        return sampleEntrances.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * double sampleEntrances(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness)
-     * }
-     */
-    public static double sampleEntrances(MemorySegment params, int x, int y, int z, double spaghettiRoughness) {
-        var mh$ = sampleEntrances.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("sampleEntrances", params, x, y, z, spaghettiRoughness);
-            }
-            return (double)mh$.invokeExact(params, x, y, z, spaghettiRoughness);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class sampleCaveLayer {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleCaveLayer");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * double sampleCaveLayer(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static FunctionDescriptor sampleCaveLayer$descriptor() {
-        return sampleCaveLayer.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * double sampleCaveLayer(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static MethodHandle sampleCaveLayer$handle() {
-        return sampleCaveLayer.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * double sampleCaveLayer(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static MemorySegment sampleCaveLayer$address() {
-        return sampleCaveLayer.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * double sampleCaveLayer(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static double sampleCaveLayer(MemorySegment params, int x, int y, int z) {
-        var mh$ = sampleCaveLayer.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("sampleCaveLayer", params, x, y, z);
-            }
-            return (double)mh$.invokeExact(params, x, y, z);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class sampleSlopedCheese {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_DOUBLE
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleSlopedCheese");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * double sampleSlopedCheese(TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged)
-     * }
-     */
-    public static FunctionDescriptor sampleSlopedCheese$descriptor() {
-        return sampleSlopedCheese.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * double sampleSlopedCheese(TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged)
-     * }
-     */
-    public static MethodHandle sampleSlopedCheese$handle() {
-        return sampleSlopedCheese.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * double sampleSlopedCheese(TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged)
-     * }
-     */
-    public static MemorySegment sampleSlopedCheese$address() {
-        return sampleSlopedCheese.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * double sampleSlopedCheese(TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged)
-     * }
-     */
-    public static double sampleSlopedCheese(MemorySegment params, int x, int y, int z, double depth, double factor, double jagged) {
-        var mh$ = sampleSlopedCheese.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("sampleSlopedCheese", params, x, y, z, depth, factor, jagged);
-            }
-            return (double)mh$.invokeExact(params, x, y, z, depth, factor, jagged);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class sampleCaveCheese {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_DOUBLE
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleCaveCheese");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * double sampleCaveCheese(TerrainNoise *params, int x, int y, int z, double slopedCheese)
-     * }
-     */
-    public static FunctionDescriptor sampleCaveCheese$descriptor() {
-        return sampleCaveCheese.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * double sampleCaveCheese(TerrainNoise *params, int x, int y, int z, double slopedCheese)
-     * }
-     */
-    public static MethodHandle sampleCaveCheese$handle() {
-        return sampleCaveCheese.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * double sampleCaveCheese(TerrainNoise *params, int x, int y, int z, double slopedCheese)
-     * }
-     */
-    public static MemorySegment sampleCaveCheese$address() {
-        return sampleCaveCheese.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * double sampleCaveCheese(TerrainNoise *params, int x, int y, int z, double slopedCheese)
-     * }
-     */
-    public static double sampleCaveCheese(MemorySegment params, int x, int y, int z, double slopedCheese) {
-        var mh$ = sampleCaveCheese.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("sampleCaveCheese", params, x, y, z, slopedCheese);
-            }
-            return (double)mh$.invokeExact(params, x, y, z, slopedCheese);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class samplePillars {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("samplePillars");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * double samplePillars(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static FunctionDescriptor samplePillars$descriptor() {
-        return samplePillars.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * double samplePillars(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static MethodHandle samplePillars$handle() {
-        return samplePillars.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * double samplePillars(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static MemorySegment samplePillars$address() {
-        return samplePillars.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * double samplePillars(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static double samplePillars(MemorySegment params, int x, int y, int z) {
-        var mh$ = samplePillars.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("samplePillars", params, x, y, z);
-            }
-            return (double)mh$.invokeExact(params, x, y, z);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class sampleNoodle {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleNoodle");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * double sampleNoodle(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static FunctionDescriptor sampleNoodle$descriptor() {
-        return sampleNoodle.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * double sampleNoodle(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static MethodHandle sampleNoodle$handle() {
-        return sampleNoodle.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * double sampleNoodle(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static MemorySegment sampleNoodle$address() {
-        return sampleNoodle.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * double sampleNoodle(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static double sampleNoodle(MemorySegment params, int x, int y, int z) {
-        var mh$ = sampleNoodle.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("sampleNoodle", params, x, y, z);
-            }
-            return (double)mh$.invokeExact(params, x, y, z);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class sampleUnderground {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_DOUBLE
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleUnderground");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * double sampleUnderground(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
-     * }
-     */
-    public static FunctionDescriptor sampleUnderground$descriptor() {
-        return sampleUnderground.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * double sampleUnderground(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
-     * }
-     */
-    public static MethodHandle sampleUnderground$handle() {
-        return sampleUnderground.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * double sampleUnderground(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
-     * }
-     */
-    public static MemorySegment sampleUnderground$address() {
-        return sampleUnderground.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * double sampleUnderground(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
-     * }
-     */
-    public static double sampleUnderground(MemorySegment params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese) {
-        var mh$ = sampleUnderground.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("sampleUnderground", params, x, y, z, spaghettiRoughness, entrances, slopedCheese);
-            }
-            return (double)mh$.invokeExact(params, x, y, z, spaghettiRoughness, entrances, slopedCheese);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class sampleFinalDensity {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_DOUBLE
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleFinalDensity");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * double sampleFinalDensity(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
-     * }
-     */
-    public static FunctionDescriptor sampleFinalDensity$descriptor() {
-        return sampleFinalDensity.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * double sampleFinalDensity(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
-     * }
-     */
-    public static MethodHandle sampleFinalDensity$handle() {
-        return sampleFinalDensity.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * double sampleFinalDensity(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
-     * }
-     */
-    public static MemorySegment sampleFinalDensity$address() {
-        return sampleFinalDensity.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * double sampleFinalDensity(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
-     * }
-     */
-    public static double sampleFinalDensity(MemorySegment params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese) {
-        var mh$ = sampleFinalDensity.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("sampleFinalDensity", params, x, y, z, spaghettiRoughness, entrances, slopedCheese);
-            }
-            return (double)mh$.invokeExact(params, x, y, z, spaghettiRoughness, entrances, slopedCheese);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class sampleNetherFinalDensity {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleNetherFinalDensity");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * double sampleNetherFinalDensity(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static FunctionDescriptor sampleNetherFinalDensity$descriptor() {
-        return sampleNetherFinalDensity.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * double sampleNetherFinalDensity(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static MethodHandle sampleNetherFinalDensity$handle() {
-        return sampleNetherFinalDensity.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * double sampleNetherFinalDensity(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static MemorySegment sampleNetherFinalDensity$address() {
-        return sampleNetherFinalDensity.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * double sampleNetherFinalDensity(TerrainNoise *params, int x, int y, int z)
-     * }
-     */
-    public static double sampleNetherFinalDensity(MemorySegment params, int x, int y, int z) {
-        var mh$ = sampleNetherFinalDensity.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("sampleNetherFinalDensity", params, x, y, z);
-            }
-            return (double)mh$.invokeExact(params, x, y, z);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class samplePreliminarySurfaceLevel {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("samplePreliminarySurfaceLevel");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z)
-     * }
-     */
-    public static FunctionDescriptor samplePreliminarySurfaceLevel$descriptor() {
-        return samplePreliminarySurfaceLevel.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z)
-     * }
-     */
-    public static MethodHandle samplePreliminarySurfaceLevel$handle() {
-        return samplePreliminarySurfaceLevel.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z)
-     * }
-     */
-    public static MemorySegment samplePreliminarySurfaceLevel$address() {
-        return samplePreliminarySurfaceLevel.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z)
-     * }
-     */
-    public static int samplePreliminarySurfaceLevel(MemorySegment params, int x, int z) {
-        var mh$ = samplePreliminarySurfaceLevel.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("samplePreliminarySurfaceLevel", params, x, z);
-            }
-            return (int)mh$.invokeExact(params, x, z);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class sampleNoiseColumn {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleNoiseColumn");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, double buffer[49])
-     * }
-     */
-    public static FunctionDescriptor sampleNoiseColumn$descriptor() {
-        return sampleNoiseColumn.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, double buffer[49])
-     * }
-     */
-    public static MethodHandle sampleNoiseColumn$handle() {
-        return sampleNoiseColumn.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, double buffer[49])
-     * }
-     */
-    public static MemorySegment sampleNoiseColumn$address() {
-        return sampleNoiseColumn.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, double buffer[49])
-     * }
-     */
-    public static void sampleNoiseColumn(MemorySegment params, int cellX, int cellZ, MemorySegment buffer) {
-        var mh$ = sampleNoiseColumn.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("sampleNoiseColumn", params, cellX, cellZ, buffer);
-            }
-            mh$.invokeExact(params, cellX, cellZ, buffer);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class sampleNetherNoiseColumn {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleNetherNoiseColumn");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void sampleNetherNoiseColumn(TerrainNoise *params, int cellX, int cellZ, double buffer[17])
-     * }
-     */
-    public static FunctionDescriptor sampleNetherNoiseColumn$descriptor() {
-        return sampleNetherNoiseColumn.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void sampleNetherNoiseColumn(TerrainNoise *params, int cellX, int cellZ, double buffer[17])
-     * }
-     */
-    public static MethodHandle sampleNetherNoiseColumn$handle() {
-        return sampleNetherNoiseColumn.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void sampleNetherNoiseColumn(TerrainNoise *params, int cellX, int cellZ, double buffer[17])
-     * }
-     */
-    public static MemorySegment sampleNetherNoiseColumn$address() {
-        return sampleNetherNoiseColumn.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void sampleNetherNoiseColumn(TerrainNoise *params, int cellX, int cellZ, double buffer[17])
-     * }
-     */
-    public static void sampleNetherNoiseColumn(MemorySegment params, int cellX, int cellZ, MemorySegment buffer) {
-        var mh$ = sampleNetherNoiseColumn.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("sampleNetherNoiseColumn", params, cellX, cellZ, buffer);
-            }
-            mh$.invokeExact(params, cellX, cellZ, buffer);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class generateColumn {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("generateColumn");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int generateColumn(int x, int z, int blocks[384], const double ds00[49], const double ds01[49], const double ds10[49], const double ds11[49], int flag)
-     * }
-     */
-    public static FunctionDescriptor generateColumn$descriptor() {
-        return generateColumn.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int generateColumn(int x, int z, int blocks[384], const double ds00[49], const double ds01[49], const double ds10[49], const double ds11[49], int flag)
-     * }
-     */
-    public static MethodHandle generateColumn$handle() {
-        return generateColumn.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int generateColumn(int x, int z, int blocks[384], const double ds00[49], const double ds01[49], const double ds10[49], const double ds11[49], int flag)
-     * }
-     */
-    public static MemorySegment generateColumn$address() {
-        return generateColumn.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int generateColumn(int x, int z, int blocks[384], const double ds00[49], const double ds01[49], const double ds10[49], const double ds11[49], int flag)
-     * }
-     */
-    public static int generateColumn(int x, int z, MemorySegment blocks, MemorySegment ds00, MemorySegment ds01, MemorySegment ds10, MemorySegment ds11, int flag) {
-        var mh$ = generateColumn.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("generateColumn", x, z, blocks, ds00, ds01, ds10, ds11, flag);
-            }
-            return (int)mh$.invokeExact(x, z, blocks, ds00, ds01, ds10, ds11, flag);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class generateNetherColumn {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("generateNetherColumn");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * int generateNetherColumn(int x, int z, int blocks[128], const double ds00[17], const double ds01[17], const double ds10[17], const double ds11[17])
-     * }
-     */
-    public static FunctionDescriptor generateNetherColumn$descriptor() {
-        return generateNetherColumn.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * int generateNetherColumn(int x, int z, int blocks[128], const double ds00[17], const double ds01[17], const double ds10[17], const double ds11[17])
-     * }
-     */
-    public static MethodHandle generateNetherColumn$handle() {
-        return generateNetherColumn.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * int generateNetherColumn(int x, int z, int blocks[128], const double ds00[17], const double ds01[17], const double ds10[17], const double ds11[17])
-     * }
-     */
-    public static MemorySegment generateNetherColumn$address() {
-        return generateNetherColumn.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int generateNetherColumn(int x, int z, int blocks[128], const double ds00[17], const double ds01[17], const double ds10[17], const double ds11[17])
-     * }
-     */
-    public static int generateNetherColumn(int x, int z, MemorySegment blocks, MemorySegment ds00, MemorySegment ds01, MemorySegment ds10, MemorySegment ds11) {
-        var mh$ = generateNetherColumn.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("generateNetherColumn", x, z, blocks, ds00, ds01, ds10, ds11);
-            }
-            return (int)mh$.invokeExact(x, z, blocks, ds00, ds01, ds10, ds11);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class generateRegion {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("generateRegion");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[384], int *ys, int flag)
-     * }
-     */
-    public static FunctionDescriptor generateRegion$descriptor() {
-        return generateRegion.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[384], int *ys, int flag)
-     * }
-     */
-    public static MethodHandle generateRegion$handle() {
-        return generateRegion.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[384], int *ys, int flag)
-     * }
-     */
-    public static MemorySegment generateRegion$address() {
-        return generateRegion.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[384], int *ys, int flag)
-     * }
-     */
-    public static void generateRegion(MemorySegment params, int chunkX, int chunkZ, int chunkW, int chunkH, MemorySegment blocks, MemorySegment ys, int flag) {
-        var mh$ = generateRegion.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("generateRegion", params, chunkX, chunkZ, chunkW, chunkH, blocks, ys, flag);
-            }
-            mh$.invokeExact(params, chunkX, chunkZ, chunkW, chunkH, blocks, ys, flag);
-        } catch (Error | RuntimeException ex) {
-           throw ex;
-        } catch (Throwable ex$) {
-           throw new AssertionError("should not reach here", ex$);
-        }
-    }
-
-    private static class generateNetherRegion {
-        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER
-        );
-
-        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("generateNetherRegion");
-
-        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
-    }
-
-    /**
-     * Function descriptor for:
-     * {@snippet lang=c :
-     * void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128])
-     * }
-     */
-    public static FunctionDescriptor generateNetherRegion$descriptor() {
-        return generateNetherRegion.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang=c :
-     * void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128])
-     * }
-     */
-    public static MethodHandle generateNetherRegion$handle() {
-        return generateNetherRegion.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang=c :
-     * void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128])
-     * }
-     */
-    public static MemorySegment generateNetherRegion$address() {
-        return generateNetherRegion.ADDR;
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128])
-     * }
-     */
-    public static void generateNetherRegion(MemorySegment params, int chunkX, int chunkZ, int chunkW, int chunkH, MemorySegment blocks) {
-        var mh$ = generateNetherRegion.HANDLE;
-        try {
-            if (TRACE_DOWNCALLS) {
-                traceDowncall("generateNetherRegion", params, chunkX, chunkZ, chunkW, chunkH, blocks);
-            }
-            mh$.invokeExact(params, chunkX, chunkZ, chunkW, chunkH, blocks);
         } catch (Error | RuntimeException ex) {
            throw ex;
         } catch (Throwable ex$) {
@@ -20759,33 +20906,6 @@ class Cubiomes_1 extends Cubiomes$shared {
      */
     public static int POTION_STRONG_SLOWNESS() {
         return POTION_STRONG_SLOWNESS;
-    }
-    private static final int POTION_TURTLE_MASTER = (int)19L;
-    /**
-     * {@snippet lang=c :
-     * enum PotionType.POTION_TURTLE_MASTER = 19
-     * }
-     */
-    public static int POTION_TURTLE_MASTER() {
-        return POTION_TURTLE_MASTER;
-    }
-    private static final int POTION_LONG_TURTLE_MASTER = (int)20L;
-    /**
-     * {@snippet lang=c :
-     * enum PotionType.POTION_LONG_TURTLE_MASTER = 20
-     * }
-     */
-    public static int POTION_LONG_TURTLE_MASTER() {
-        return POTION_LONG_TURTLE_MASTER;
-    }
-    private static final int POTION_STRONG_TURTLE_MASTER = (int)21L;
-    /**
-     * {@snippet lang=c :
-     * enum PotionType.POTION_STRONG_TURTLE_MASTER = 21
-     * }
-     */
-    public static int POTION_STRONG_TURTLE_MASTER() {
-        return POTION_STRONG_TURTLE_MASTER;
     }
 }
 

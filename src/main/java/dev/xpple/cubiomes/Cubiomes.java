@@ -17,6 +17,33 @@ public class Cubiomes extends Cubiomes_1 {
     Cubiomes() {
         // Should not be called directly
     }
+    private static final int POTION_TURTLE_MASTER = (int)19L;
+    /**
+     * {@snippet lang=c :
+     * enum PotionType.POTION_TURTLE_MASTER = 19
+     * }
+     */
+    public static int POTION_TURTLE_MASTER() {
+        return POTION_TURTLE_MASTER;
+    }
+    private static final int POTION_LONG_TURTLE_MASTER = (int)20L;
+    /**
+     * {@snippet lang=c :
+     * enum PotionType.POTION_LONG_TURTLE_MASTER = 20
+     * }
+     */
+    public static int POTION_LONG_TURTLE_MASTER() {
+        return POTION_LONG_TURTLE_MASTER;
+    }
+    private static final int POTION_STRONG_TURTLE_MASTER = (int)21L;
+    /**
+     * {@snippet lang=c :
+     * enum PotionType.POTION_STRONG_TURTLE_MASTER = 21
+     * }
+     */
+    public static int POTION_STRONG_TURTLE_MASTER() {
+        return POTION_STRONG_TURTLE_MASTER;
+    }
     private static final int POTION_WATER_BREATHING = (int)22L;
     /**
      * {@snippet lang=c :
