@@ -2,7 +2,7 @@
 #define FINDERS_H_
 
 
-#include "generator.h"
+#include "terrainnoise.h"
 
 
 #ifdef __cplusplus
@@ -34,6 +34,7 @@ enum StructureType
     Geode,
     Fortress,
     Bastion,
+    Nether_Fossil,
     End_City,
     End_Gateway,
     End_Island,
@@ -549,6 +550,32 @@ int isViableStructureTerrain(int structType, Generator *g, int blockX, int block
  */
 int isViableEndCityTerrain(const Generator *g, const SurfaceNoise *sn,
         int blockX, int blockZ);
+
+/**
+ * Verifies whether the terrain is viable for the nether fossil to generate.
+ *
+ * Populates sv.y with the accurate y coordinate.
+ *
+ * @param cx the chunk X coordinate
+ * @param cz the chunk Z coordinate
+ * @param sv the structure variant info
+ * @param base3dNoise the nether terrain noise
+ * @param mc
+ * @return 1 if viable
+ */
+int isViableNetherFossilTerrain(int cx, int cz, StructureVariant *sv, BlendedNoise *base3dNoise, int mc);
+
+/**
+ * Checks whether the nether fossil has a dried ghast. Before calling this function,
+ * call isViableNetherFossilTerrain first.
+ *
+ * @param cx the chunk X coordinate
+ * @param cz the chunk Z coordinate
+ * @param seed the world seed
+ * @param sv the structure variant info
+ * @return 1 if the nether fossil has a dried ghast
+ */
+int netherFossilHasGhast(int cx, int cz, uint64_t seed, StructureVariant* sv);
 
 
 //==============================================================================

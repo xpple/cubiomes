@@ -230,6 +230,17 @@ int genNetherScaled(const NetherNoise *nn, int *out, Range r, int mc, uint64_t s
 void setEndSeed(EndNoise *en, int mc, uint64_t seed);
 int mapEndBiome(const EndNoise *en, int *out, int x, int z, int w, int h);
 int mapEnd(const EndNoise *en, int *out, int x, int z, int w, int h);
+/* Given bordering noise columns and a fractional position between those,
+ * determine the surface block height (i.e. where the interpolated noise > 0).
+ * Note that the noise columns should be of size: ncolxz[ colheight+1 ]
+ */
+int getSurfaceHeight(
+        const double ncol00[], const double ncol01[],
+        const double ncol10[], const double ncol11[],
+        int colymin, int colymax, int blockspercell, double dx, double dz);
+
+void sampleNoiseColumnEnd(double column[], const SurfaceNoise *sn,
+        const EndNoise *en, int x, int z, int colymin, int colymax);
 int getEndSurfaceHeight(int mc, uint64_t seed, int x, int z);
 int mapEndSurfaceHeight(float *y, const EndNoise *en, const SurfaceNoise *sn,
     int x, int z, int w, int h, int scale, int ymin);
@@ -331,9 +342,8 @@ Range getVoronoiSrcRange(Range r);
  * @param bn the blended noise instance
  * @param ws the world seed
  * @param dim the dimension
- * @return 0 on failure
  */
-int initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim);
+void initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim);
 
 /**
  * Sample `base_3d_noise` using a blended noise instance.

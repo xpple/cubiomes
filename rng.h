@@ -99,6 +99,12 @@ int32_t floormod(int32_t a, int32_t b) {
     return r + ((a ^ b) < 0 && !!r) * b;
 }
 
+static inline uint64_t getSeedAt(int x, int y, int z) {
+    int64_t l = (int64_t)(x * 3129871) ^ (int64_t)z * 116129781L ^ (int64_t)y;
+    l = l * l * 42317861L + l * 11L;
+    return (uint64_t) (l >> 16);
+}
+
 ///=============================================================================
 ///                    C implementation of Java Random
 ///=============================================================================
@@ -199,6 +205,13 @@ static inline int nextIntBetween(uint64_t *seed, const int min, const int max)
 
 static inline float nextFloatBetween(uint64_t *seed, const float minInclusive, const float maxExclusive) {
     return nextFloat(seed) * (maxExclusive - minInclusive) + minInclusive;
+}
+
+static inline uint64_t jAtPos(uint64_t seed, int x, int y, int z)
+{
+    uint64_t rnd = getSeedAt(x, y, z) ^ seed;
+    setSeed(&rnd, rnd);
+    return rnd;
 }
 
 
@@ -334,13 +347,11 @@ static inline int xNextIntJBetween(Xoroshiro *xr, const int min, const int max)
     return xNextIntJ(xr, max - min + 1) + min;
 }
 
-static inline Xoroshiro xAtPos(Xoroshiro *xr, int x, int y, int z)
+static inline Xoroshiro xAtPos(Xoroshiro xr, int x, int y, int z)
 {
-    int64_t l = (int64_t)(x * 3129871) ^ (int64_t)z * 116129781L ^ (int64_t)y;
-    l = l * l * 42317861L + l * 11L;
-    l >>= 16;
+    uint64_t l = getSeedAt(x, y, z);
 
-    return (Xoroshiro) {(uint64_t)l ^ xr->lo, xr->hi};
+    return (Xoroshiro) {l ^ xr.lo, xr.hi};
 }
 
 // expand as necessary
@@ -473,6 +484,10 @@ static inline double lerp2(
     return lerp(dy, lerp(dx, v00, v10), lerp(dx, v01, v11));
 }
 
+typedef double (*interpFunc)(double dx, double dy, double dz,
+        double v000, double v100, double v010, double v110,
+        double v001, double v101, double v011, double v111);
+
 static inline double lerp3(
         double dx, double dy, double dz,
         double v000, double v100, double v010, double v110,
@@ -481,6 +496,13 @@ static inline double lerp3(
     v000 = lerp2(dx, dy, v000, v100, v010, v110);
     v001 = lerp2(dx, dy, v001, v101, v011, v111);
     return lerp(dz, v000, v001);
+}
+
+static inline double lerp3old(double dx, double dy, double dz,
+        double v000, double v100, double v010, double v110,
+        double v001, double v101, double v011, double v111)
+{
+    return lerp3(dy, dx, dz, v000, v100, v010, v110, v001, v101, v011, v111);
 }
 
 static inline double clamp(double value, double min, double max)

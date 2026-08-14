@@ -134,6 +134,7 @@ int getStructureConfig_default(int structureType, int mc, StructureConfig *sconf
     s_fortress_115          = {        0, 16,  8, Fortress,         DIM_NETHER,0},
     s_fortress              = { 30084232, 27, 23, Fortress,         DIM_NETHER,0},
     s_bastion               = { 30084232, 27, 23, Bastion,          DIM_NETHER,0},
+    s_nether_fossil         = { 14357921,  2,  1, Nether_Fossil,    DIM_NETHER,0},
     s_end_city              = { 10387313, 20,  9, End_City,         DIM_END,0},
     // for the scattered return gateways
     s_end_gateway_115       = {    30000,  1,  1, End_Gateway,      DIM_END, 700},
@@ -202,6 +203,9 @@ int getStructureConfig_default(int structureType, int mc, StructureConfig *sconf
         return mc >= MC_1_0;
     case Bastion:
         *sconf = s_bastion;
+        return mc >= MC_1_16_1;
+    case Nether_Fossil:
+        *sconf = s_nether_fossil;
         return mc >= MC_1_16_1;
     case End_Gateway:
         if      (mc <= MC_1_15) *sconf = s_end_gateway_115;
@@ -324,6 +328,9 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
     ss_fortress_1161 =               {7,  0},
     ss_fortress_1194 =               {7,  1},
 
+    ss_nether_fossil_116 =           {7,  1},
+    ss_nether_fossil_1194 =          {7,  2},
+
     ss_end_city_113 =                {3,  0},
     ss_end_city_end_highlands_113 =  {3,  1},
     ss_end_city_1161 =               {4, 10},
@@ -415,6 +422,10 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
         else if (mc < MC_1_19_4) *ssconf = ss_fortress_1161;
         else *ssconf = ss_fortress_1194;
         return mc >= MC_1_13;
+    case Nether_Fossil:
+        if (mc < MC_1_19_4) *ssconf = ss_nether_fossil_116;
+        else *ssconf = ss_nether_fossil_1194;
+        return mc >= MC_1_16_1;
     case End_City:
         if (mc < MC_1_16_1) *ssconf = biome == end_highlands ? ss_end_city_end_highlands_113 : ss_end_city_113;
         else if (mc < MC_1_18) *ssconf = ss_end_city_1161;
@@ -461,7 +472,11 @@ int getStructurePos(int structureType, int mc, uint64_t seed, int regX, int regZ
     case Ancient_City:
     case Trail_Ruins:
     case Trial_Chambers:
+    // case Nether_Fossil:
         *pos = getFeaturePos(sconf, seed, regX, regZ);
+        return 1;
+    case Nether_Fossil: // not random
+        *pos = (Pos) {(int)((uint64_t)regX << 5), (int)((uint64_t)regZ << 5)};
         return 1;
 
     case Monument:
@@ -1477,7 +1492,7 @@ int32_t getOreVeinBlockAt(int x, int y, int z, OreVeinParameters* params)
     if (abs + clampedMap(offset, 0.0, 20.0, -0.2, 0.0) < 0.4F) {
         return -1;
     }
-    Xoroshiro xr = xAtPos(&params->posRandom, x, y, z);
+    Xoroshiro xr = xAtPos(params->posRandom, x, y, z);
     if (xNextFloat(&xr) > 0.7F) {
         return -1;
     }
@@ -1608,6 +1623,10 @@ int isViableFeatureBiome(int mc, int structureType, int biomeID)
         if (mc <= MC_1_15) return 0;
         return (biomeID == nether_wastes || biomeID == soul_sand_valley ||
                 biomeID == warped_forest || biomeID == crimson_forest);
+
+    case Nether_Fossil:
+        if (mc <= MC_1_15) return 0;
+        return biomeID == soul_sand_valley;
 
     case End_City:
         if (mc <= MC_1_8) return 0;
@@ -2178,19 +2197,6 @@ int isViableStructureTerrain(int structType, Generator *g, int x, int z)
     return ret;
 }
 
-
-/* Given bordering noise columns and a fractional position between those,
- * determine the surface block height (i.e. where the interpolated noise > 0).
- * Note that the noise columns should be of size: ncolxz[ colheight+1 ]
- */
-int getSurfaceHeight(
-        const double ncol00[], const double ncol01[],
-        const double ncol10[], const double ncol11[],
-        int colymin, int colymax, int blockspercell, double dx, double dz);
-
-void sampleNoiseColumnEnd(double column[], const SurfaceNoise *sn,
-        const EndNoise *en, int x, int z, int colymin, int colymax);
-
 int isViableEndCityTerrain(const Generator *g, const SurfaceNoise *sn,
         int blockX, int blockZ)
 {
@@ -2275,6 +2281,133 @@ int isViableEndCityTerrain(const Generator *g, const SurfaceNoise *sn,
     if (h10 < h00) h00 = h10;
     if (h11 < h00) h00 = h11;
     return h00 >= 60 ? h00 : 0;
+}
+
+int isViableNetherFossilTerrain(int cx, int cz, StructureVariant *sv, BlendedNoise *base3dNoise, int mc) {
+    const int seaLevel = 32;
+
+    int x = (cx << 4) + sv->x;
+    int z = (cz << 4) + sv->z;
+    int y = sv->y;
+    int cellWidth = 4;
+    int cellHeight = 8;
+    int cellX = x >> 2;
+    int cellZ = z >> 2;
+
+    // nether fossils initially generate at 32 <= y <= 125
+    // since they can't generate below sea level, we only
+    // need to generate the upper columns
+
+    int colYMin = floordiv(seaLevel, cellHeight);
+    int colYMax = 16;
+    int colCount = colYMax - colYMin + 1;
+
+    double ds00[colCount];
+    double ds01[colCount];
+    double ds10[colCount];
+    double ds11[colCount];
+    sampleNetherNoiseColumn(base3dNoise, cellX, cellZ, colYMin, colYMax, ds00);
+    sampleNetherNoiseColumn(base3dNoise, cellX, cellZ + 1, colYMin, colYMax, ds01);
+    sampleNetherNoiseColumn(base3dNoise, cellX + 1, cellZ, colYMin, colYMax, ds10);
+    sampleNetherNoiseColumn(base3dNoise, cellX + 1, cellZ + 1, colYMin, colYMax, ds11);
+
+    int blocks[(colYMax - colYMin) * cellHeight];
+    interpFunc interpFunc = mc >= MC_1_18 ? &lerp3 : &lerp3old;
+    generateColumn(blocks, ds00, ds01, ds10, ds11, colYMin, colYMax, cellHeight, (x % cellWidth) / (double) cellWidth, (z % cellWidth) / (double) cellWidth, interpFunc, 0, 0);
+
+    while (y > seaLevel) {
+        int current = blocks[seaLevel + y];
+        int below = blocks[--y];
+        if (!current && below) {
+            break;
+        }
+    }
+
+    if (y <= seaLevel) {
+        return 0;
+    }
+
+    sv->y = y;
+
+    return 1;
+}
+
+int netherFossilHasGhast(int cx, int cz, uint64_t seed, StructureVariant* sv) {
+    static const struct { const int numBones; const Pos bones[10]; } bone_info[] = {
+        { 5, {{0, 0}, {0, 2}, {0, 4}, {3, 0}, {3, 2}}},
+        {10, {{0, 4}, {1, 2}, {1, 4}, {2, 0}, {2, 1}, {2, 2}, {2, 3}, {2, 4}, {3, 4}, {4, 4}}},
+        { 2, {{0, 0}, {0, 1}}},
+        { 2, {{0, 0}, {2, 0}}},
+        { 1, {{0, 0}}},
+        { 6, {{0, 2}, {0, 4}, {2, 0}, {4, 0}, {6, 2}, {6, 4}}},
+        { 3, {{0, 2}, {0, 4}, {1, 0}}},
+        { 1, {{2, 0}}},
+        { 3, {{0, 0}, {0, 2}, {0, 4}}},
+        { 1, {{2, 0}}},
+        { 6, {{0, 0}, {0, 3}, {0, 6}, {4, 0}, {4, 3}, {4, 6}}},
+        { 4, {{0, 0}, {0, 2}, {3, 0}, {3, 2}}},
+        { 3, {{0, 0}, {1, 3}, {2, 5}}},
+        { 6, {{0, 0}, {0, 3}, {1, 5}, {5, 5}, {6, 0}, {6, 3}}},
+    };
+
+    int x = (cx << 4) + sv->x;
+    int z = (cz << 4) + sv->z;
+    int y = sv->y;
+
+    Pos3 corner;
+    switch (sv->rotation) {
+    case 0: corner = (Pos3) {x + (sv->sx - 1), y + (sv->sy - 1), z + (sv->sz - 1)}; break;
+    case 1: corner = (Pos3) {x - (sv->sz - 1), y + (sv->sy - 1), z + (sv->sx - 1)}; break;
+    case 2: corner = (Pos3) {x - (sv->sx - 1), y + (sv->sy - 1), z - (sv->sz - 1)}; break;
+    case 3: corner = (Pos3) {x + (sv->sz - 1), y + (sv->sy - 1), z - (sv->sx - 1)}; break;
+    default: UNREACHABLE();
+    }
+
+    Pos3 center = {
+        (x + corner.x) / 2,
+        (y + corner.y) / 2,
+        (z + corner.z) / 2
+    };
+
+    uint64_t rnd;
+    setSeed(&rnd, seed);
+    rnd = nextLong(&rnd);
+    rnd = jAtPos(rnd, center.x, center.y, center.z);
+
+    if (nextFloat(&rnd) >= 0.5F) {
+        return 0;
+    }
+
+    int minX = MIN(x, corner.x);
+    int minZ = MIN(z, corner.z);
+
+    Pos ghastPos;
+    switch (sv->rotation) {
+    case 0:
+    case 2:
+        ghastPos = (Pos) {minX + nextInt(&rnd, sv->sx), minZ + nextInt(&rnd, sv->sz)}; break;
+    case 1:
+    case 3:
+        ghastPos = (Pos) {minX + nextInt(&rnd, sv->sz), minZ + nextInt(&rnd, sv->sx)}; break;
+    default: UNREACHABLE();
+    }
+
+    int numBones = bone_info[sv->start].numBones;
+    for (int i = 0; i < numBones; ++i) {
+        Pos bone = bone_info[sv->start].bones[i];
+        switch (sv->rotation) {
+        case 0: bone = (Pos) {x + bone.x, z + bone.z}; break;
+        case 1: bone = (Pos) {x - bone.x, z + bone.z}; break;
+        case 2: bone = (Pos) {x - bone.x, z - bone.z}; break;
+        case 3: bone = (Pos) {x + bone.x, z - bone.z}; break;
+        default: UNREACHABLE();
+        }
+        if (ghastPos.x == bone.x && ghastPos.z == bone.z) {
+            return 0;
+        }
+    }
+
+    return 1;
 }
 
 
@@ -2572,6 +2705,32 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
         r->sz = rpEndPos.z - rpStartPos.z;
         return 1;
 
+    case Nether_Fossil:
+        r->x = nextInt(&rng, 16);
+        r->z = nextInt(&rng, 16);
+        r->y = nextInt(&rng, 125 - 32 + 1) + 32;
+        r->rotation = nextInt(&rng, 4);
+        r->start = nextInt(&rng, 14);
+
+        switch (r->start) {
+        case 0: r->sx = 4, r->sy = 4, r->sz = 5; break;
+        case 1: r->sx = 5, r->sy = 1, r->sz = 5; break;
+        case 2: r->sx = 3, r->sy = 4, r->sz = 2; break;
+        case 3: r->sx = 3, r->sy = 4, r->sz = 1; break;
+        case 4: r->sx = 2, r->sy = 5, r->sz = 1; break;
+        case 5: r->sx = 7, r->sy = 5, r->sz = 5; break;
+        case 6: r->sx = 4, r->sy = 6, r->sz = 5; break;
+        case 7: r->sx = 3, r->sy = 5, r->sz = 1; break;
+        case 8: r->sx = 3, r->sy = 5, r->sz = 5; break;
+        case 9: r->sx = 3, r->sy = 7, r->sz = 1; break;
+        case 10: r->sx = 5, r->sy = 5, r->sz = 7; break;
+        case 11: r->sx = 4, r->sy = 4, r->sz = 3; break;
+        case 12: r->sx = 4, r->sy = 5, r->sz = 6; break;
+        case 13: r->sx = 7, r->sy = 7, r->sz = 6; break;
+        default: UNREACHABLE();
+        }
+        return 1;
+
     case Monument:
         r->x = r->z = -29;
         r->sx = r->sz = 58;
@@ -2724,6 +2883,7 @@ int getLootTableCountForStructure(int structure, int mc) {
     case Geode: return 0;
     case Fortress: return 1;
     case Bastion: return 4;
+    case Nether_Fossil: return 0;
     case End_City: return 1;
     case End_Gateway: return 0;
     case End_Island: return 0;
