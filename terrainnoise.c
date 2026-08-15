@@ -1,17 +1,6 @@
 #include "terrainnoise.h"
 
-#include <limits.h>
 #include <stdio.h>
-
-#ifndef BITMASK
-// https://c-faq.com/misc/bitsets.html
-#define BITMASK(b) (1 << ((b) % CHAR_BIT))
-#define BITSLOT(b) ((b) / CHAR_BIT)
-#define BITSET(a, b) ((a)[BITSLOT(b)] |= BITMASK(b))
-#define BITCLEAR(a, b) ((a)[BITSLOT(b)] &= ~BITMASK(b))
-#define BITTEST(a, b) ((a)[BITSLOT(b)] & BITMASK(b))
-#define BITNSLOTS(nb) ((nb + CHAR_BIT - 1) / CHAR_BIT)
-#endif
 
 static inline float peaksAndValleys(float weirdness) {
     return -(fabsf(fabsf(weirdness) - 0.6666667F) - 0.33333334F) * 3.0F;
@@ -254,16 +243,19 @@ static inline double yClampedGradient(double y, int fromY, int toY, double fromV
     return clampedMap(y, fromY, toY, fromValue, toValue);
 }
 
+ATTR(always_inline)
 static inline double mapFromUnitTo(double input, double fromY, double toY) {
     return ((fromY + toY) * 0.5) + (((toY - fromY) * 0.5) * input);
 }
 
+ATTR(always_inline)
 static inline double remap(double value, double inMin, double inMax, double outMin, double outMax) {
     const double slope = (outMax - outMin) / (inMax - inMin);
     const double intercept = outMin - inMin * slope;
     return value * slope + intercept;
 }
 
+ATTR(always_inline)
 static inline double rangeChoice(double input, double minInclusive, double maxExclusive, double whenInRange, double whenOutOfRange) {
     return input >= minInclusive && input < maxExclusive ? whenInRange : whenOutOfRange;
 }
@@ -274,11 +266,13 @@ static inline double yLimitedInterpolatable(double input, double whenInRange, in
     return rangeChoice(input, minY, maxY + 1, whenInRange, whenOutOfRange);
 }
 
+ATTR(always_inline)
 static inline double postProcess(double densityFunction) {
     double clamped = clamp(densityFunction * 0.64, -1.0, 1.0);
     return clamped / 2.0 - clamped * clamped * clamped / 24.0;
 }
 
+ATTR(always_inline)
 static inline double slide(double input, int minY, int height, int topStartOffset, int topEndOffset, double topDelta, int bottomStartOffset, int bottomEndOffset, double bottomDelta, int y) {
     double a = clampedMap(y, minY + height - topStartOffset, minY + height - topEndOffset, 1.0, 0.0);
     double b = lerp(a, topDelta, input);
@@ -286,14 +280,17 @@ static inline double slide(double input, int minY, int height, int topStartOffse
     return lerp(c, bottomDelta, b);
 }
 
+ATTR(always_inline)
 static inline double slideOverworld(double densityFunction, int y) {
     return slide(densityFunction, -64, 384, 80, 64, -0.078125, 0, 24, 0.1171875, y);
 }
 
+ATTR(always_inline)
 static inline double slideNetherLike(double densityFunction, int minY, int height, int y) {
     return slide(densityFunction, minY, height, 24, 0, 0.9375, -8, 24, 2.5, y);
 }
 
+ATTR(always_inline)
 static inline double getSpaghettiRarity2d(double value) {
     if (value < -0.75) {
         return 0.5;
@@ -306,6 +303,7 @@ static inline double getSpaghettiRarity2d(double value) {
     }
 }
 
+ATTR(always_inline)
 static inline double getSpaghettiRarity3d(double value) {
     if (value < -0.5) {
         return 0.75;
@@ -316,6 +314,7 @@ static inline double getSpaghettiRarity3d(double value) {
     }
 }
 
+ATTR(always_inline)
 static inline double noiseGradientDensity(double min, double max) {
     double f = max * min;
     return f > 0. ? f * 4. : f;
@@ -477,29 +476,36 @@ void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, int colYMin, 
     }
 }
 
-int generateColumn(int blocks[], const double *ds00, const double *ds01, const double *ds10, const double *ds11, int colYMin, int colYMax, int cellHeight, double percentX, double percentZ, interpFunc interpFunc, int worldMinY, int flag) {
+int generateColumn(uint8_t blocks[], const double *ds00, const double *ds01, const double *ds10, const double *ds11, int colYMin, int colYMax, int cellHeight, double percentX, double percentZ, int interpFunc, int worldMinY, int flag) {
     for (int cellY = colYMax - 1; cellY >= colYMin; --cellY) {
-        int idx = cellY - colYMin;
-        const double noise000 = ds00[idx];
-        const double noise001 = ds01[idx];
-        const double noise100 = ds10[idx];
-        const double noise101 = ds11[idx];
-        const double noise010 = ds00[idx + 1];
-        const double noise011 = ds01[idx + 1];
-        const double noise110 = ds10[idx + 1];
-        const double noise111 = ds11[idx + 1];
+        const int cellIdx = cellY - colYMin;
+        const double noise000 = ds00[cellIdx];
+        const double noise001 = ds01[cellIdx];
+        const double noise100 = ds10[cellIdx];
+        const double noise101 = ds11[cellIdx];
+        const double noise010 = ds00[cellIdx + 1];
+        const double noise011 = ds01[cellIdx + 1];
+        const double noise110 = ds10[cellIdx + 1];
+        const double noise111 = ds11[cellIdx + 1];
 
+        const int cellBlockIdx = cellIdx * cellHeight;
         for (int relY = cellHeight - 1; relY >= 0; --relY) {
-            double percentY = relY / (double) cellHeight;
-            double noise = interpFunc(percentX, percentY, percentZ, noise000, noise100, noise010, noise110, noise001, noise101, noise011, noise111);
-            int y = worldMinY + cellY * cellHeight + relY;
+            const double percentY = relY / (double) cellHeight;
+            double noise;
+            // using a function pointer is significantly slower due to inlining problems
+            switch (interpFunc) {
+            case INTERP_PRE_1_18: noise = lerp3(percentY, percentX, percentZ, noise000, noise100, noise010, noise110, noise001, noise101, noise011, noise111); break;
+            case INTERP_1_18: noise = lerp3(percentX, percentY, percentZ, noise000, noise100, noise010, noise110, noise001, noise101, noise011, noise111); break;
+            default: UNREACHABLE();
+            }
 
-            int block = noise > 0.0;
+            const uint8_t block = noise > 0.0;
             if (blocks) {
-                blocks[idx * cellHeight + relY] = block;
+                blocks[cellBlockIdx + relY] = block;
             }
 
             if (flag && block) {
+                const int y = worldMinY + cellY * cellHeight + relY;
                 return y + 1;
             }
         }
@@ -507,7 +513,7 @@ int generateColumn(int blocks[], const double *ds00, const double *ds01, const d
     return worldMinY;
 }
 
-void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[], int colYMin, int colYMax, int* ys, int flag) {
+void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, uint8_t (*blocks)[], int colYMin, int colYMax, int* ys, int flag) {
     const int blockH = chunkH << 4;
 
     int cellWidth, cellHeight;
@@ -524,55 +530,45 @@ void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, in
     default: UNREACHABLE();
     }
 
-    int (*blocks2)[(colYMax - colYMin) * cellHeight] = (int (*)[(colYMax - colYMin) * cellHeight]) blocks;
+    int height = (colYMax - colYMin) * cellHeight;
+    uint8_t (*blocks2)[height] = (uint8_t (*)[height]) blocks;
 
     const int chunkCellsW = floordiv(chunkW << 4, cellWidth) + 1;
     const int chunkCellsH = floordiv(chunkH << 4, cellWidth) + 1;
     const int minCellX = floordiv(chunkX << 4, cellWidth);
     const int minCellZ = floordiv(chunkZ << 4, cellWidth);
 
-    const interpFunc interpFunc = params->g.mc >= MC_1_18 ? &lerp3 : &lerp3old;
-    const int worldMinY = params->g.mc >= MC_1_18 && params->g.mc == DIM_OVERWORLD ? -64 : 0;
+    const int interpFunc = params->g.mc >= MC_1_18 ? INTERP_1_18 : INTERP_PRE_1_18;
+    const int worldMinY = params->g.mc >= MC_1_18 && params->g.dim == DIM_OVERWORLD ? -64 : 0;
 
     const int cells = chunkCellsW * chunkCellsH;
     double (*ds)[colYMax - colYMin + 1] = malloc(cells * sizeof(*ds));
-    char* bitSet = calloc(BITNSLOTS(cells), sizeof(char));
+
+    for (int relCellX = 0; relCellX < chunkCellsW; ++relCellX) {
+        const int cellX = minCellX + relCellX;
+        for (int relCellZ = 0; relCellZ < chunkCellsH; ++relCellZ) {
+            const int cellZ = minCellZ + relCellZ;
+            const int idx = relCellX * chunkCellsH + relCellZ;
+            sampleNoiseColumn(params, cellX, cellZ, colYMin, colYMax, ds[idx]);
+        }
+    }
 
     for (int relCellX = 0; relCellX < chunkCellsW - 1; ++relCellX) {
         const int relBlockX = relCellX * cellWidth;
-        const int cellX = minCellX + relCellX;
         for (int relCellZ = 0; relCellZ < chunkCellsH - 1; ++relCellZ) {
             const int relBlockZ = relCellZ * cellWidth;
-            const int cellZ = minCellZ + relCellZ;
 
-            int idx;
-            double* ds00 = ds[idx = (relCellX + 0) * chunkCellsH + (relCellZ + 0)];
-            if (!BITTEST(bitSet, idx)) {
-                sampleNoiseColumn(params, cellX, cellZ, colYMin, colYMax, ds00);
-                BITSET(bitSet, idx);
-            }
-            double* ds01 = ds[idx = (relCellX + 0) * chunkCellsH + (relCellZ + 1)];
-            if (!BITTEST(bitSet, idx)) {
-                sampleNoiseColumn(params, cellX, cellZ + 1, colYMin, colYMax, ds01);
-                BITSET(bitSet, idx);
-            }
-            double* ds10 = ds[idx = (relCellX + 1) * chunkCellsH + (relCellZ + 0)];
-            if (!BITTEST(bitSet, idx)) {
-                sampleNoiseColumn(params, cellX + 1, cellZ, colYMin, colYMax, ds10);
-                BITSET(bitSet, idx);
-            }
-            double* ds11 = ds[idx = (relCellX + 1) * chunkCellsH + (relCellZ + 1)];
-            if (!BITTEST(bitSet, idx)) {
-                sampleNoiseColumn(params, cellX + 1, cellZ + 1, colYMin, colYMax, ds11);
-                BITSET(bitSet, idx);
-            }
+            const double *ds00 = ds[(relCellX + 0) * chunkCellsH + (relCellZ + 0)];
+            const double *ds01 = ds[(relCellX + 0) * chunkCellsH + (relCellZ + 1)];
+            const double *ds10 = ds[(relCellX + 1) * chunkCellsH + (relCellZ + 0)];
+            const double *ds11 = ds[(relCellX + 1) * chunkCellsH + (relCellZ + 1)];
 
             for (int relX = 0; relX < cellWidth; ++relX) {
                 const double percentX = relX / (double) cellWidth;
                 for (int relZ = 0; relZ < cellWidth; ++relZ) {
                     const double percentZ = relZ / (double) cellWidth;
-                    idx = (relBlockX + relX) * blockH + (relBlockZ + relZ);
-                    int y = generateColumn(blocks ? blocks2[idx] : NULL, ds00, ds01, ds10, ds11, colYMin, colYMax, cellHeight, percentX, percentZ, interpFunc, worldMinY, flag);
+                    const int idx = (relBlockX + relX) * blockH + (relBlockZ + relZ);
+                    const int y = generateColumn(blocks ? blocks2[idx] : NULL, ds00, ds01, ds10, ds11, colYMin, colYMax, cellHeight, percentX, percentZ, interpFunc, worldMinY, flag);
                     if (ys) {
                         ys[idx] = y;
                     }
@@ -581,7 +577,6 @@ void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, in
         }
     }
     free(ds);
-    free(bitSet);
 }
 
 double sampleNetherFinalDensity(BlendedNoise* base3dNoise, int x, int y, int z) {

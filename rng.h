@@ -484,10 +484,6 @@ static inline double lerp2(
     return lerp(dy, lerp(dx, v00, v10), lerp(dx, v01, v11));
 }
 
-typedef double (*interpFunc)(double dx, double dy, double dz,
-        double v000, double v100, double v010, double v110,
-        double v001, double v101, double v011, double v111);
-
 static inline double lerp3(
         double dx, double dy, double dz,
         double v000, double v100, double v010, double v110,
@@ -496,13 +492,6 @@ static inline double lerp3(
     v000 = lerp2(dx, dy, v000, v100, v010, v110);
     v001 = lerp2(dx, dy, v001, v101, v011, v111);
     return lerp(dz, v000, v001);
-}
-
-static inline double lerp3old(double dx, double dy, double dz,
-        double v000, double v100, double v010, double v110,
-        double v001, double v101, double v011, double v111)
-{
-    return lerp3(dy, dx, dz, v000, v100, v010, v110, v001, v101, v011, v111);
 }
 
 static inline double clamp(double value, double min, double max)

@@ -2285,22 +2285,21 @@ int isViableEndCityTerrain(const Generator *g, const SurfaceNoise *sn,
 
 int isViableNetherFossilTerrain(int cx, int cz, StructureVariant *sv, BlendedNoise *base3dNoise, int mc) {
     const int seaLevel = 32;
+    const int cellHeight = 8;
+    const int interpFunc = mc >= MC_1_18 ? INTERP_1_18 : INTERP_PRE_1_18;
 
     int x = (cx << 4) + sv->x;
     int z = (cz << 4) + sv->z;
     int y = sv->y;
-    int cellWidth = 4;
-    int cellHeight = 8;
     int cellX = x >> 2;
     int cellZ = z >> 2;
 
     // nether fossils initially generate at 32 <= y <= 125
     // since they can't generate below sea level, we only
     // need to generate the upper columns
-
-    int colYMin = floordiv(seaLevel, cellHeight);
-    int colYMax = 16;
-    int colCount = colYMax - colYMin + 1;
+    const int colYMin = 4;
+    const int colYMax = 16;
+    const int colCount = colYMax - colYMin + 1;
 
     double ds00[colCount];
     double ds01[colCount];
@@ -2311,13 +2310,13 @@ int isViableNetherFossilTerrain(int cx, int cz, StructureVariant *sv, BlendedNoi
     sampleNetherNoiseColumn(base3dNoise, cellX + 1, cellZ, colYMin, colYMax, ds10);
     sampleNetherNoiseColumn(base3dNoise, cellX + 1, cellZ + 1, colYMin, colYMax, ds11);
 
-    int blocks[(colYMax - colYMin) * cellHeight];
-    interpFunc interpFunc = mc >= MC_1_18 ? &lerp3 : &lerp3old;
-    generateColumn(blocks, ds00, ds01, ds10, ds11, colYMin, colYMax, cellHeight, (x % cellWidth) / (double) cellWidth, (z % cellWidth) / (double) cellWidth, interpFunc, 0, 0);
+    uint8_t blocks[(colYMax - colYMin) * cellHeight];
+    generateColumn(blocks, ds00, ds01, ds10, ds11, colYMin, colYMax, cellHeight, (x & 3) / 4.0, (z & 3) / 4.0, interpFunc, 0, 0);
 
+    int offset = colYMin * cellHeight;
     while (y > seaLevel) {
-        int current = blocks[seaLevel + y];
-        int below = blocks[--y];
+        int current = blocks[y - offset];
+        int below = blocks[--y - offset];
         if (!current && below) {
             break;
         }
