@@ -2007,7 +2007,7 @@ Range getVoronoiSrcRange(Range r)
     return s;
 }
 
-int initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
+void initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
 {
     static const int jhash_terrain = 0x62d03a68; // minecraft:terrain
     static const uint64_t md5_terrain[2] = {0x1ee555222ef96f14, 0xe2bedfdbebe43d33}; // minecraft:terrain
@@ -2034,10 +2034,7 @@ int initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
         bn->yFactor = 160.0;
         bn->smearScaleMultiplier = 4.0;
         break;
-    default:
-        fprintf(stderr, "ERR initBlendedNoise: invalid dimension %d\n", dim);
-        memset(bn, 0, sizeof(BlendedNoise));
-        return 0;
+    default: UNREACHABLE();
     }
     bn->xzMultiplier = 684.412 * bn->xzScale;
     bn->yMultiplier = 684.412 * bn->yScale;
@@ -2079,8 +2076,6 @@ int initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
     }
     default: UNREACHABLE();
     }
-
-    return 1;
 }
 
 double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z)

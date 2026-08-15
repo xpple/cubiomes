@@ -99,6 +99,12 @@ int32_t floormod(int32_t a, int32_t b) {
     return r + ((a ^ b) < 0 && !!r) * b;
 }
 
+static inline uint64_t getSeedAt(int x, int y, int z) {
+    int64_t l = (int64_t)(x * 3129871) ^ (int64_t)z * 116129781L ^ (int64_t)y;
+    l = l * l * 42317861L + l * 11L;
+    return (uint64_t) (l >> 16);
+}
+
 ///=============================================================================
 ///                    C implementation of Java Random
 ///=============================================================================
@@ -199,6 +205,13 @@ static inline int nextIntBetween(uint64_t *seed, const int min, const int max)
 
 static inline float nextFloatBetween(uint64_t *seed, const float minInclusive, const float maxExclusive) {
     return nextFloat(seed) * (maxExclusive - minInclusive) + minInclusive;
+}
+
+static inline uint64_t jAtPos(uint64_t seed, int x, int y, int z)
+{
+    uint64_t rnd = getSeedAt(x, y, z) ^ seed;
+    setSeed(&rnd, rnd);
+    return rnd;
 }
 
 
@@ -334,13 +347,11 @@ static inline int xNextIntJBetween(Xoroshiro *xr, const int min, const int max)
     return xNextIntJ(xr, max - min + 1) + min;
 }
 
-static inline Xoroshiro xAtPos(Xoroshiro *xr, int x, int y, int z)
+static inline Xoroshiro xAtPos(Xoroshiro xr, int x, int y, int z)
 {
-    int64_t l = (int64_t)(x * 3129871) ^ (int64_t)z * 116129781L ^ (int64_t)y;
-    l = l * l * 42317861L + l * 11L;
-    l >>= 16;
+    uint64_t l = getSeedAt(x, y, z);
 
-    return (Xoroshiro) {(uint64_t)l ^ xr->lo, xr->hi};
+    return (Xoroshiro) {l ^ xr.lo, xr.hi};
 }
 
 // expand as necessary

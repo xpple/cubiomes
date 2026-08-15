@@ -35,12 +35,20 @@ STRUCT(TerrainNoise)
     // shared
     BlendedNoise base3dNoise;
 
-    // overworld
-    SplineStack ss;
-    Spline* factorSpline;
-    Spline* jaggednessSpline;
-    PerlinNoise oct[2*45];
-    DoublePerlinNoise noises[OTP_MAX];
+    union {
+        // overworld >=1.18
+        struct {
+            SplineStack ss;
+            Spline* factorSpline;
+            Spline* jaggednessSpline;
+            PerlinNoise oct[2*45];
+            DoublePerlinNoise noises[OTP_MAX];
+        };
+        // end, <1.18 overworld
+        struct {
+            SurfaceNoise sn;
+        };
+    };
 };
 
 #ifdef __cplusplus
@@ -48,18 +56,28 @@ extern "C"
 {
 #endif
 
-int setupTerrainNoise(TerrainNoise *params, int mc, int flags);
+enum {
+    INTERP_PRE_1_18,
+    INTERP_1_18,
+};
+
+/**
+ * Set up terrain noise for a given version and the specified biome generator flags.
+ *
+ * @param params the terrain noise parameters
+ * @param mc the Minecraft version
+ * @param flags the biome generator flags
+ */
+void setupTerrainNoise(TerrainNoise *params, int mc, int flags);
 
 /**
  * Initialise terrain noise parameters with the world seed.
  *
  * @param params the terrain noise parameters
  * @param ws the world seed
- * @param mc the Minecraft version
- * @param largeBiomes whether large biomes should be used for the biome noise
- * @return 0 on failure
+ * @param dim the dimension
  */
-int initTerrainNoise(TerrainNoise *params, uint64_t ws, int dim);
+void initTerrainNoise(TerrainNoise *params, uint64_t ws, int dim);
 
 /**
  * Sample `overworld/caves/spaghetti_roughness_function`.
@@ -214,7 +232,16 @@ double sampleUnderground(TerrainNoise *params, int x, int y, int z, double spagh
  */
 double sampleFinalDensity(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese);
 
-double sampleNetherFinalDensity(TerrainNoise *params, int x, int y, int z);
+/**
+ * Sample `final_density`.
+ *
+ * @param base3dNoise the nether terrain noise
+ * @param x the world X-coordinate
+ * @param y the world Y-coordinate
+ * @param z the world Z-coordinate
+ * @return the sampled value
+ */
+double sampleNetherFinalDensity(BlendedNoise* base3dNoise, int x, int y, int z);
 
 /**
  * Sample `preliminary_surface_level`.
@@ -227,50 +254,93 @@ double sampleNetherFinalDensity(TerrainNoise *params, int x, int y, int z);
 int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z);
 
 /**
- * Sample the terrain noise column at the given cell coordinates. Minecraft's terrain
- * generates at 1:4 XZ scale, so cell = block >> 2. The Y buffer is at 1:8 scale, which
- * is why it has size 384 / 8 = 48, plus one to interpolate the last vertical cell.
+ * Sample the terrain noise column at the given cell coordinates.
+ *
+ * For the overworld and nether, the terrain generates at 1:4 XZ scale, so cell = block >> 2.
+ * The vertical scale is 1:8.
+ *
+ * For the end, the terrain generates at 1:8 XZ scale (so cell = block >> 3). The vertical
+ * scale is 1:4.
+ *
+ * The colYMin and colYMax parameters determine the minimum and maximum cells to sample. The
+ * column array must therefore be of the form column[colYMax - colYMin + 1]. For example, to
+ * generate a full column for the 1.18+ overworld, the array size must be 49. To generate a
+ * full column for the end, the array size must be 33.
  *
  * @param params the terrain noise parameters
  * @param cellX the cell X-coordinate
  * @param cellZ the cell Z-coordinate
- * @param buffer the Y buffer
+ * @param colYMin the minimum Y column (nonnegative)
+ * @param colYMax the maximum Y column (nonnegative)
+ * @param column the Y column
  */
-void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, double buffer[48 + 1]);
+void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[]);
 
-void sampleNetherNoiseColumn(TerrainNoise *params, int cellX, int cellZ, double buffer[16 + 1]);
+/**
+ * Sample the nether terrain noise column at the given cell coordinates. See
+ * sampleNoiseColumn for more info.
+ *
+ * @param base3dNoise the terrain noise
+ * @param cellX the cell X-coordinate
+ * @param cellZ the cell Z-coordinate
+ * @param colYMin the minimum Y column (nonnegative)
+ * @param colYMax the maximum Y column (nonnegative)
+ * @param column the Y column
+ */
+void sampleNetherNoiseColumn(BlendedNoise* base3dNoise, int cellX, int cellZ, int colYMin, int colYMax, double column[]);
 
 /**
  * Generate a terrain column at the given block coordinates. If not NULL, the result will
- * be written to blocks. The dsxz buffers can be obtained through sampleNoiseColumn. If
- * the flag is set, the generation will stop as soon as a solid block is found, and will
- * return the Y-coordinate of the above air block. Note that if blocks is NULL and the flag
- * is not set, the function is essentially useless.
+ * be written to blocks. The dsxz buffers can be obtained through sampleNoiseColumn. See
+ * also that function for documentation about the size of the dsxz parameters, and
+ * colYMin and colYMax.
  *
- * @param x the block X-coordinate
- * @param z the block Z-coordinate
+ * The cell height is 8 for the overworld and nether, and 4 for the end. The blocks array
+ * must therefore be of the form uint8_t blocks[(colYMax - colYMin) * cellHeight].
+ *
+ * The parameters percentX and percentZ can be computed as (block % cellWidth) / (double)
+ * cellWidth, where block is the block coordinate, and cellWidth is the width of a noise
+ * cell. For the overworld and nether, that is 4. For the end, that is 8.
+ *
+ * The interpFunc parameter determines the interpolation function used to combine the
+ * cell columns. For >=1.18 that is INTERP_1_18, for <1.18 that is INTERP_PRE_1_18.
+ *
+ * If the flag parameter is set, the generation will stop as soon as a solid block is found,
+ * and will return the Y-coordinate of the above air block. Note that if blocks is NULL and
+ * the flag is not set, the function is essentially useless.
+ *
  * @param blocks the target blocks, can be NULL
  * @param ds00 the (0, 0) noise column
  * @param ds01 the (0, 1) noise column
  * @param ds10 the (1, 0) noise column
  * @param ds11 the (1, 1) noise column
+ * @param colYMin the minimum Y column (nonnegative)
+ * @param colYMax the maximum Y column (nonnegative)
+ * @param cellHeight the vertical (Y) cell size
+ * @param percentX the relative X as percentage of the width
+ * @param percentZ the relative Z as percentage of the width
+ * @param interpFunc the noise cell interpolation function
+ * @param worldMinY the world minimum Y coordinate (e.g. -64 for >=1.18 overworld)
  * @param flag the boolean flag for the stop condition
- * @return the last air block if the flag was set, -64 otherwise
+ * @return the last air block if the flag was set, the world minimum y coordinate otherwise
  */
-int generateColumn(int x, int z, int blocks[384], const double ds00[48 + 1], const double ds01[48 + 1], const double ds10[48 + 1], const double ds11[48 + 1], int flag);
-
-/**
- * The documentation from generateColumn applies to this function also, except that blocks cannot be NULL.
- */
-int generateNetherColumn(int x, int z, int blocks[128], const double ds00[16 + 1], const double ds01[16 + 1], const double ds10[16 + 1], const double ds11[16 + 1]);
+int generateColumn(uint8_t blocks[], const double *ds00, const double *ds01, const double *ds10, const double *ds11, int colYMin, int colYMax, int cellHeight, double percentX, double percentZ, int interpFunc, int worldMinY, int flag);
 
 /**
  * Generate a region of terrain using memoisation to prevent recalculating noise columns. One
- * can use int (*blocks)[384] = malloc(blockW * blockH * sizeof(*blocks)); to allocate the array.
- * Similarly, the blocks can then be accessed using blocks[relX * blockH + relZ][y]. Here blockH =
- * chunkH << 4, relX ranges over [0, chunkW << 4), relZ ranges over [0, chunkH << 4) and y ranges
- * over [0, 384). If the flag is true, ys are written to like relX * blockH + relZ. In this case,
- * blocks can also be NULL, so that only ys will be written to.
+ * can use uint8_t (*blocks)[h] = malloc(blockW * blockH * sizeof(*blocks)); to allocate the
+ * array, where h == (colYMax - colYMin) * cellHeight. See sampleNoiseColumn for more
+ * information, including about the colYMin and colYMax parameters. The blocks array can be
+ * accessed using blocks[relX * blockH + relZ][y]. Here blockH = chunkH << 4, relX ranges over
+ * [0, chunkW << 4), relZ ranges over [0, chunkH << 4) and y ranges over [0, h).
+ *
+ * cellWidth is the width of a noise cell. For the overworld and nether, that is 4. For the end,
+ * that is 8. The cell height is 8 for the overworld and nether, and 4 for the end.
+ *
+ * If the flag is true, ys are written to like relX * blockH + relZ.
+ *
+ * Both the blocks array and the ys array can be NULL. Setting both to NULL renders the function
+ * useless.
  *
  * @param params the terrain noise parameters
  * @param chunkX the chunk X-coordinate
@@ -278,15 +348,12 @@ int generateNetherColumn(int x, int z, int blocks[128], const double ds00[16 + 1
  * @param chunkW the chunk width
  * @param chunkH the chunk height
  * @param blocks the target blocks, can be NULL
+ * @param colYMin the minimum Y column (nonnegative)
+ * @param colYMax the maximum Y column (nonnegative)
  * @param ys the target Y coordinates
  * @param flag the boolean flag for the stop condition
  */
-void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[384], int* ys, int flag);
-
-/**
- * The documentation from generateRegion applies to this function also, except that blocks cannot be NULL.
- */
-void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128]);
+void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, uint8_t (*blocks)[], int colYMin, int colYMax, int* ys, int flag);
 
 #ifdef __cplusplus
 }

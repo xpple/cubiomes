@@ -21,6 +21,7 @@ STRUCT(Generator)
     uint64_t sha;
 
     union {
+        // overworld
         struct { // MC 1.0 - 1.17
             LayerStack ls;
             Layer xlayer[5]; // buffer for custom entry layers @{1,4,16,64,256}
@@ -33,9 +34,15 @@ STRUCT(Generator)
             BiomeNoiseBeta bnb;
             //SurfaceNoiseBeta snb;
         };
+        // nether
+        struct { // MC 1.16
+            NetherNoise nn;
+        };
+        // end
+        struct { // MC 1.9
+            EndNoise en;
+        };
     };
-    NetherNoise nn; // MC 1.16
-    EndNoise en; // MC 1.9
 };
 
 

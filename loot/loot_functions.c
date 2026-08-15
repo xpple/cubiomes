@@ -867,7 +867,7 @@ static int is_tag_match(const char* tag, const char* name)
     return strcmp(tag[0] == '#' ? tag + 1 : tag, name) == 0;
 }
 
-static int get_non_treasure_1_21(Enchantment out[], const int cap, const ItemType item, const int version)
+static int get_non_treasure_1_21(Enchantment out[], const int cap, const ItemType item, const int version, const int use_overrides)
 {
     // Members of vanilla tag '#minecraft:non_treasure' (1.21.x), in tag file order.
     static const Enchantment non_treasure_pre_1_21_11[] = {
@@ -955,7 +955,7 @@ static int get_non_treasure_1_21(Enchantment out[], const int cap, const ItemTyp
     for (size_t i = 0; i < non_treasure_len; i++)
     {
         const Enchantment ench = non_treasure[i];
-        if (!is_applicable(ench, item, 1))
+        if (!is_applicable(ench, item, use_overrides))
             continue;
         if (n < cap)
             out[n] = ench;
@@ -964,7 +964,7 @@ static int get_non_treasure_1_21(Enchantment out[], const int cap, const ItemTyp
     return n <= cap ? n : cap;
 }
 
-static int get_on_random_loot_1_21(Enchantment out[], const int cap, const ItemType item, const int version)
+static int get_on_random_loot_1_21(Enchantment out[], const int cap, const ItemType item, const int version, const int use_overrides)
 {
     // From vanilla tag expansion (1.21.x client jar):
     //   on_random_loot = #non_treasure + binding_curse + vanishing_curse + frost_walker + mending
@@ -975,11 +975,11 @@ static int get_on_random_loot_1_21(Enchantment out[], const int cap, const ItemT
         MENDING,
     };
 
-    int n = get_non_treasure_1_21(out, cap, item, version);
+    int n = get_non_treasure_1_21(out, cap, item, version, use_overrides);
     for (size_t i = 0; i < sizeof(tail) / sizeof(tail[0]); i++)
     {
         const Enchantment ench = tail[i];
-        if (!is_applicable(ench, item, 1))
+        if (!is_applicable(ench, item, use_overrides))
             continue;
         if (n < cap)
             out[n] = ench;
@@ -1090,12 +1090,12 @@ void create_enchant_randomly_tag(LootFunction* lf, const int version, const Item
     if (is_tag_match(tag, "minecraft:on_random_loot"))
     {
         (void)allowTreasure;
-        n = get_on_random_loot_1_21(list, (int)(sizeof(list) / sizeof(list[0])), item, version);
+        n = get_on_random_loot_1_21(list, (int)(sizeof(list) / sizeof(list[0])), item, version, 1);
     }
     else if (is_tag_match(tag, "minecraft:non_treasure") || is_tag_match(tag, "minecraft:in_enchanting_table"))
     {
         (void)allowTreasure;
-        n = get_non_treasure_1_21(list, (int)(sizeof(list) / sizeof(list[0])), item, version);
+        n = get_non_treasure_1_21(list, (int)(sizeof(list) / sizeof(list[0])), item, version, 1);
     }
 
     if (n <= 0)
@@ -1171,11 +1171,11 @@ void create_enchant_with_levels_tag(LootFunction* lf, const int version, const c
 
     if (is_tag_match(tag, "minecraft:on_random_loot"))
     {
-        num_applicable = get_on_random_loot_1_21((Enchantment*)applicable, 64, item_type, version);
+        num_applicable = get_on_random_loot_1_21((Enchantment*)applicable, 64, item_type, version, 0);
     }
     else if (is_tag_match(tag, "minecraft:non_treasure") || is_tag_match(tag, "minecraft:in_enchanting_table"))
     {
-        num_applicable = get_non_treasure_1_21((Enchantment*)applicable, 64, item_type, version);
+        num_applicable = get_non_treasure_1_21((Enchantment*)applicable, 64, item_type, version, 0);
     }
     else
     {
