@@ -10141,6 +10141,24 @@ class Cubiomes_1 extends Cubiomes$shared {
     public static int OTP_MAX() {
         return OTP_MAX;
     }
+    private static final int INTERP_PRE_1_18 = (int)0L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.INTERP_PRE_1_18 = 0
+     * }
+     */
+    public static int INTERP_PRE_1_18() {
+        return INTERP_PRE_1_18;
+    }
+    private static final int INTERP_1_18 = (int)1L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.INTERP_1_18 = 1
+     * }
+     */
+    public static int INTERP_1_18() {
+        return INTERP_1_18;
+    }
 
     private static class setupTerrainNoise {
         public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
@@ -11360,7 +11378,7 @@ class Cubiomes_1 extends Cubiomes$shared {
             Cubiomes.C_INT,
             Cubiomes.C_DOUBLE,
             Cubiomes.C_DOUBLE,
-            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
             Cubiomes.C_INT,
             Cubiomes.C_INT
         );
@@ -11373,7 +11391,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * int generateColumn(int blocks[], const double *ds00, const double *ds01, const double *ds10, const double *ds11, int colYMin, int colYMax, int cellHeight, double percentX, double percentZ, interpFunc interpFunc, int worldMinY, int flag)
+     * int generateColumn(uint8_t blocks[], const double *ds00, const double *ds01, const double *ds10, const double *ds11, int colYMin, int colYMax, int cellHeight, double percentX, double percentZ, int interpFunc, int worldMinY, int flag)
      * }
      */
     public static FunctionDescriptor generateColumn$descriptor() {
@@ -11383,7 +11401,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * int generateColumn(int blocks[], const double *ds00, const double *ds01, const double *ds10, const double *ds11, int colYMin, int colYMax, int cellHeight, double percentX, double percentZ, interpFunc interpFunc, int worldMinY, int flag)
+     * int generateColumn(uint8_t blocks[], const double *ds00, const double *ds01, const double *ds10, const double *ds11, int colYMin, int colYMax, int cellHeight, double percentX, double percentZ, int interpFunc, int worldMinY, int flag)
      * }
      */
     public static MethodHandle generateColumn$handle() {
@@ -11393,7 +11411,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * int generateColumn(int blocks[], const double *ds00, const double *ds01, const double *ds10, const double *ds11, int colYMin, int colYMax, int cellHeight, double percentX, double percentZ, interpFunc interpFunc, int worldMinY, int flag)
+     * int generateColumn(uint8_t blocks[], const double *ds00, const double *ds01, const double *ds10, const double *ds11, int colYMin, int colYMax, int cellHeight, double percentX, double percentZ, int interpFunc, int worldMinY, int flag)
      * }
      */
     public static MemorySegment generateColumn$address() {
@@ -11402,10 +11420,10 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * int generateColumn(int blocks[], const double *ds00, const double *ds01, const double *ds10, const double *ds11, int colYMin, int colYMax, int cellHeight, double percentX, double percentZ, interpFunc interpFunc, int worldMinY, int flag)
+     * int generateColumn(uint8_t blocks[], const double *ds00, const double *ds01, const double *ds10, const double *ds11, int colYMin, int colYMax, int cellHeight, double percentX, double percentZ, int interpFunc, int worldMinY, int flag)
      * }
      */
-    public static int generateColumn(MemorySegment blocks, MemorySegment ds00, MemorySegment ds01, MemorySegment ds10, MemorySegment ds11, int colYMin, int colYMax, int cellHeight, double percentX, double percentZ, MemorySegment interpFunc, int worldMinY, int flag) {
+    public static int generateColumn(MemorySegment blocks, MemorySegment ds00, MemorySegment ds01, MemorySegment ds10, MemorySegment ds11, int colYMin, int colYMax, int cellHeight, double percentX, double percentZ, int interpFunc, int worldMinY, int flag) {
         var mh$ = generateColumn.HANDLE;
         try {
             if (TRACE_DOWNCALLS) {
@@ -11441,7 +11459,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
+     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, uint8_t (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
      * }
      */
     public static FunctionDescriptor generateRegion$descriptor() {
@@ -11451,7 +11469,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
+     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, uint8_t (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
      * }
      */
     public static MethodHandle generateRegion$handle() {
@@ -11461,7 +11479,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
+     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, uint8_t (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
      * }
      */
     public static MemorySegment generateRegion$address() {
@@ -11470,7 +11488,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
+     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, uint8_t (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
      * }
      */
     public static void generateRegion(MemorySegment params, int chunkX, int chunkZ, int chunkW, int chunkH, MemorySegment blocks, int colYMin, int colYMax, MemorySegment ys, int flag) {
@@ -20888,24 +20906,6 @@ class Cubiomes_1 extends Cubiomes$shared {
      */
     public static int POTION_SLOWNESS() {
         return POTION_SLOWNESS;
-    }
-    private static final int POTION_LONG_SLOWNESS = (int)17L;
-    /**
-     * {@snippet lang=c :
-     * enum PotionType.POTION_LONG_SLOWNESS = 17
-     * }
-     */
-    public static int POTION_LONG_SLOWNESS() {
-        return POTION_LONG_SLOWNESS;
-    }
-    private static final int POTION_STRONG_SLOWNESS = (int)18L;
-    /**
-     * {@snippet lang=c :
-     * enum PotionType.POTION_STRONG_SLOWNESS = 18
-     * }
-     */
-    public static int POTION_STRONG_SLOWNESS() {
-        return POTION_STRONG_SLOWNESS;
     }
 }
 
