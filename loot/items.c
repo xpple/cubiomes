@@ -5,8 +5,7 @@
 #include "items.h"
 
 int item_name2global_id(const char* name) {
-    if (strcmp(name, "minecraft:abandoned_campsite_map") == 0) return ITEM_ABANDONED_CAMPSITE_MAP;
-    if (strcmp(name, "minecraft:ancient_city_map") == 0) return ITEM_ANCIENT_CITY_MAP;
+    if (strcmp(name, "minecraft:abandoned_camp_map") == 0) return ITEM_ABANDONED_CAMP_MAP;
     if (strcmp(name, "minecraft:ancient_debris") == 0) return ITEM_ANCIENT_DEBRIS;
     if (strcmp(name, "minecraft:apple") == 0) return ITEM_APPLE;
     if (strcmp(name, "minecraft:arrow") == 0) return ITEM_ARROW;
@@ -21,6 +20,8 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:bread") == 0) return ITEM_BREAD;
     if (strcmp(name, "minecraft:bucket") == 0) return ITEM_BUCKET;
     if (strcmp(name, "minecraft:bundle") == 0) return ITEM_BUNDLE;
+    if (strcmp(name, "minecraft:buried_ancient_city_map") == 0) return ITEM_BURIED_ANCIENT_CITY_MAP;
+    if (strcmp(name, "minecraft:buried_mineshaft_map") == 0) return ITEM_BURIED_MINESHAFT_MAP;
     if (strcmp(name, "minecraft:carrot") == 0) return ITEM_CARROT;
     if (strcmp(name, "minecraft:chain") == 0) return ITEM_CHAIN;
     if (strcmp(name, "minecraft:iron_chain") == 0) return ITEM_IRON_CHAIN;
@@ -117,7 +118,6 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:lodestone") == 0) return ITEM_LODESTONE;
     if (strcmp(name, "minecraft:magma_cream") == 0) return ITEM_MAGMA_CREAM;
     if (strcmp(name, "minecraft:map") == 0) return ITEM_MAP;
-    if (strcmp(name, "minecraft:mineshaft_map") == 0) return ITEM_MINESHAFT_MAP;
     if (strcmp(name, "minecraft:moss_block") == 0) return ITEM_MOSS_BLOCK;
     if (strcmp(name, "minecraft:music_disc_otherside") == 0) return ITEM_MUSIC_DISC_OTHERSIDE;
     if (strcmp(name, "minecraft:music_disc_pigstep") == 0) return ITEM_MUSIC_DISC_PIGSTEP;
@@ -168,8 +168,7 @@ const char* global_id2item_name(int global_id, int mc) {
         if (global_id == ITEM_IRON_CHAIN) return "minecraft:iron_chain";
     }
     switch (global_id) {
-    case ITEM_ABANDONED_CAMPSITE_MAP: return "minecraft:abandoned_campsite_map";
-    case ITEM_ANCIENT_CITY_MAP: return "minecraft:ancient_city_map";
+    case ITEM_ABANDONED_CAMP_MAP: return "minecraft:abandoned_camp_map";
     case ITEM_ANCIENT_DEBRIS: return "minecraft:ancient_debris";
     case ITEM_APPLE: return "minecraft:apple";
     case ITEM_ARROW: return "minecraft:arrow";
@@ -184,6 +183,8 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_BREAD: return "minecraft:bread";
     case ITEM_BUCKET: return "minecraft:bucket";
     case ITEM_BUNDLE: return "minecraft:bundle";
+    case ITEM_BURIED_ANCIENT_CITY_MAP: return "minecraft:buried_ancient_city_map";
+    case ITEM_BURIED_MINESHAFT_MAP: return "minecraft:buried_mineshaft_map";
     case ITEM_CARROT: return "minecraft:carrot";
     case ITEM_CHAIN: return "minecraft:chain";
     case ITEM_CLOCK: return "minecraft:clock";
@@ -278,7 +279,6 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_LODESTONE: return "minecraft:lodestone";
     case ITEM_MAGMA_CREAM: return "minecraft:magma_cream";
     case ITEM_MAP: return "minecraft:map";
-    case ITEM_MINESHAFT_MAP: return "minecraft:mineshaft_map";
     case ITEM_MOSS_BLOCK: return "minecraft:moss_block";
     case ITEM_MUSIC_DISC_OTHERSIDE: return "minecraft:music_disc_otherside";
     case ITEM_MUSIC_DISC_PIGSTEP: return "minecraft:music_disc_pigstep";
