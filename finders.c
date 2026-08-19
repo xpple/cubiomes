@@ -2745,11 +2745,13 @@ int getVariant(StructureVariant *r, int structType, int mc, uint64_t seed,
                 if (r->underground)
                     r->airpocket = 1;
                 else
-                    r->airpocket = nextFloat(&rng) < 0.5f;
+                    r->airpocket = mc <= MC_26_2 ? nextFloat(&rng) < 0.5f : 0;
             }
             else if (r->biome == jungle)
             {
-                r->airpocket = nextFloat(&rng) < 0.5f;
+                r->airpocket = mc <= MC_26_2 ? nextFloat(&rng) < 0.5f : 0;
+            } else {
+                r->airpocket = 0;
             }
         }
         r->giant = nextFloat(&rng) < 0.05f;

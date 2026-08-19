@@ -242,6 +242,8 @@ def parse_loot_function(json_function_entry, entry_name: str | None) -> LootFunc
         return SkipCallsFunction(1)
     if json_function == 'set_instrument':
         return SkipCallsFunction(1)
+    if json_function == 'exploration_map':
+        return NoOpFunction()
     if json_function == 'enchant_randomly':
         enchantments = json_function_entry.get("enchantments", json_function_entry.get("options", None))
         treasure = json_function_entry.get("treasure", False)
@@ -259,7 +261,7 @@ def parse_loot_function(json_function_entry, entry_name: str | None) -> LootFunc
         options = json_function_entry.get("options", None)
         is_treasure = json_function_entry.get("treasure", json_function_entry.get("is_treasure", True))
         return EnchantWithLevelsFunction(entry_name, int(min_level), int(max_level), options, int(is_treasure))
-    if json_function in {'exploration_map', 'set_name', 'filtered'}:
+    if json_function in {'set_name', 'filtered'}:
         warn(f"Ignored loot function '{json_function}'")
         return NoOpFunction()
 
