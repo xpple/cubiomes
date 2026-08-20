@@ -28,7 +28,7 @@ typedef double      f64;
 
 #define STRUCT(S) typedef struct S S; struct S
 
-#if __GNUC__
+#ifdef __GNUC__
 
 #define IABS(X)                 __builtin_abs(X)
 #define PREFETCH(PTR,RW,LOC)    __builtin_prefetch(PTR,RW,LOC)
@@ -50,7 +50,7 @@ static inline uint32_t BSWAP32(uint32_t x) {
         ((x & 0x00ff0000) >>  8) | ((x & 0xff000000) >> 24);
     return x;
 }
-#if _MSC_VER
+#ifdef _MSC_VER
 #define UNREACHABLE()           __assume(0)
 #else
 #define UNREACHABLE()           exit(1) // [[noreturn]]
@@ -278,24 +278,25 @@ static inline float xNextFloat(Xoroshiro *xr)
 
 static inline void calcVecMul(const uint64_t m[128][2], Xoroshiro* xr) {
     // see xradv.c for details
-    uint64_t v[2] = {xr->hi, xr->lo};
-    uint64_t rv[2] = {0};
+    uint64_t hi = 0, lo = 0;
 
+    #pragma GCC unroll 64
     for (int r = 0; r < 64; ++r) {
-        int bit = (__builtin_popcountll(m[r][0] & v[0]) & 1) ^ (__builtin_popcountll(m[r][1] & v[1]) & 1);
+        const int bit = (__builtin_popcountll(m[r][0] & xr->hi) ^ __builtin_popcountll(m[r][1] & xr->lo)) & 1;
         if (bit) {
-            rv[0] |= 1ULL << (64 - r - 1);
+            hi |= 1ULL << (64 - r - 1);
         }
     }
+    #pragma GCC unroll 64
     for (int r = 0; r < 64; ++r) {
-        const int bit = (__builtin_popcountll(m[r + 64][0] & v[0]) & 1) ^ (__builtin_popcountll(m[r + 64][1] & v[1]) & 1);
+        const int bit = (__builtin_popcountll(m[r + 64][0] & xr->hi) ^ __builtin_popcountll(m[r + 64][1] & xr->lo)) & 1;
         if (bit) {
-            rv[1] |= 1ULL << (64 - r - 1);
+            lo |= 1ULL << (64 - r - 1);
         }
     }
 
-    xr->hi = rv[0];
-    xr->lo = rv[1];
+    xr->hi = hi;
+    xr->lo = lo;
 }
 
 static inline void xSkipN(Xoroshiro *xr, uint64_t count)
