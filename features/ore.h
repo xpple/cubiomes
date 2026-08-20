@@ -65,7 +65,7 @@ STRUCT(OreConfig)
     int32_t         step;
     int32_t         size;
     int32_t         repeatCount;
-    int           (*heightProvider)(RandomSource rnd, int, int, int);
+    int           (*heightProvider)(RandomSource *rnd, int, int, int);
     int32_t         h1; // the parameters for the height provider
     int32_t         h2; // since the provider takes 2 or 3 arguments,
     int32_t         h3; // the third parameter is sometimes unused
@@ -82,48 +82,48 @@ STRUCT(OreConfig)
 //==============================================================================
 
 // <=1.16.5
-static inline int providerRange(RandomSource rnd, const int bottomOffset, const int topOffset, const int maximumY) {
-    return rnd.nextInt(rnd.state, maximumY - topOffset) + bottomOffset;
+static inline int providerRange(RandomSource *rnd, const int bottomOffset, const int topOffset, const int maximumY) {
+    return absNextInt(rnd, maximumY - topOffset) + bottomOffset;
 }
 
 // <=1.16.5
-static inline int providerDepthAverage(RandomSource rnd, const int baseline, const int spread, const int h3) {
-    int a = rnd.nextInt(rnd.state, spread);
-    int b = rnd.nextInt(rnd.state, spread);
+static inline int providerDepthAverage(RandomSource *rnd, const int baseline, const int spread, const int h3) {
+    int a = absNextInt(rnd, spread);
+    int b = absNextInt(rnd, spread);
     return a + b - spread + baseline;
 }
 
 // <=1.16.5
-static inline int providerEmeraldOre(RandomSource rnd, int h1, int h2, int h3) {
-    return rnd.nextInt(rnd.state, 28) + 4;
+static inline int providerEmeraldOre(RandomSource *rnd, int h1, int h2, int h3) {
+    return absNextInt(rnd, 28) + 4;
 }
 
 // <=1.16.5
-static inline int providerMagmaOre(RandomSource rnd, int h1, int h2, int h3) {
-    return 32 - 5 + rnd.nextInt(rnd.state, 10);
+static inline int providerMagmaOre(RandomSource *rnd, int h1, int h2, int h3) {
+    return 32 - 5 + absNextInt(rnd, 10);
 }
 
 // >=1.17
-static inline int providerUniformRange(RandomSource rnd, const int minOffset, const int maxOffset, const int h3) {
+static inline int providerUniformRange(RandomSource *rnd, const int minOffset, const int maxOffset, const int h3) {
     if (minOffset > maxOffset) {
         return minOffset;
     }
-    return rnd.nextIntBetween(rnd.state, minOffset, maxOffset);
+    return absNextIntBetween(rnd, minOffset, maxOffset);
 }
 
 // >=1.17
-static inline int providerTriangleRange(RandomSource rnd, const int minOffset, const int maxOffset, const int h3) {
+static inline int providerTriangleRange(RandomSource *rnd, const int minOffset, const int maxOffset, const int h3) {
     if (minOffset > maxOffset) {
         return minOffset;
     }
     const int range = maxOffset - minOffset;
     if (range <= 0) {
-        return rnd.nextIntBetween(rnd.state, minOffset, maxOffset);
+        return absNextIntBetween(rnd, minOffset, maxOffset);
     }
     const int midPoint = range / 2;
     const int midPoint2 = range - midPoint;
-    int a = rnd.nextIntBetween(rnd.state, 0, midPoint2);
-    int b = rnd.nextIntBetween(rnd.state, 0, midPoint);
+    int a = absNextIntBetween(rnd, 0, midPoint2);
+    int b = absNextIntBetween(rnd, 0, midPoint);
     return minOffset + a + b;
 }
 
@@ -170,11 +170,11 @@ int isViableOreBiome(int mc, int oreType, int biomeID);
  */
 Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig config, int chunkX, int chunkZ);
 
-Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource rnd);
+Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource *rnd);
 
-void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource rnd, Pos3List* pos3s);
+void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource *rnd, Pos3List* pos3s);
 
-void generateVeinPart(int mc, OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List* pos3s);
+void generateVeinPart(int mc, OreConfig config, RandomSource *rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List* pos3s);
 
 #ifdef __cplusplus
 }

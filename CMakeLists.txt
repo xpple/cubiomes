@@ -181,6 +181,7 @@ set(SOURCES
 )
 
 add_library(objects OBJECT ${SOURCES})
+target_compile_options(objects PRIVATE -mpopcnt)
 set_property(TARGET objects PROPERTY POSITION_INDEPENDENT_CODE 1)
 
 add_library(cubiomes SHARED $<TARGET_OBJECTS:objects>)

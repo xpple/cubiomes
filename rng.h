@@ -58,17 +58,6 @@ static inline uint32_t BSWAP32(uint32_t x) {
 
 #endif
 
-// Use with care
-#define CREATE_RANDOM_SOURCE(name, legacy) \
-    RandomSource name;                     \
-    uint64_t _r;                           \
-    Xoroshiro _xr;                         \
-    if (legacy) {                          \
-        name = createJavaRandom(&_r);      \
-    } else {                               \
-        name = createXoroshiro(&_xr);      \
-    }
-
 /// imitate amd64/x64 rotate instructions
 
 static inline ATTR(const, always_inline, artificial)
@@ -282,14 +271,14 @@ static inline void calcVecMul(const uint64_t m[128][2], Xoroshiro* xr) {
 
     #pragma GCC unroll 64
     for (int r = 0; r < 64; ++r) {
-        const int bit = (__builtin_popcountll(m[r][0] & xr->hi) ^ __builtin_popcountll(m[r][1] & xr->lo)) & 1;
+        const int bit = __builtin_popcountll((m[r][0] & xr->hi) ^ (m[r][1] & xr->lo)) & 1;
         if (bit) {
             hi |= 1ULL << (64 - r - 1);
         }
     }
     #pragma GCC unroll 64
     for (int r = 0; r < 64; ++r) {
-        const int bit = (__builtin_popcountll(m[r + 64][0] & xr->hi) ^ __builtin_popcountll(m[r + 64][1] & xr->lo)) & 1;
+        const int bit = __builtin_popcountll((m[r + 64][0] & xr->hi) ^ (m[r + 64][1] & xr->lo)) & 1;
         if (bit) {
             lo |= 1ULL << (64 - r - 1);
         }
@@ -309,6 +298,11 @@ static inline void xSkipN(Xoroshiro *xr, uint64_t count)
         count >>= 1;
         ++pow;
     }
+}
+
+static inline int xNextIntBetween(Xoroshiro *xr, const int min, const int max)
+{
+    return xNextInt(xr, max - min + 1) + min;
 }
 
 static inline uint64_t xNextLongJ(Xoroshiro *xr)
@@ -355,45 +349,82 @@ static inline Xoroshiro xAtPos(Xoroshiro xr, int x, int y, int z)
     return (Xoroshiro) {l ^ xr.lo, xr.hi};
 }
 
-// expand as necessary
-STRUCT(RandomSource)
-{
-    void *state;
-    void (*setSeed)(void *state, uint64_t seed);
-    uint64_t (*nextLong)(void *state);
-    int (*nextInt)(void *state, int n);
-    float (*nextFloat)(void *state);
-    double (*nextDouble)(void *state);
-    int (*nextIntBetween)(void *state, int min, int max);
-    void (*skipN)(void *state, uint64_t n);
+enum {
+    JAVA_RANDOM,
+    XOROSHIRO,
+    XOROSHIRO_J,
 };
 
-static inline RandomSource createJavaRandom(uint64_t *seed)
+STRUCT(RandomSource)
 {
-    return (RandomSource) {
-        .state = seed,
-        .setSeed = (void (*)(void *, uint64_t)) setSeed,
-        .nextLong = (uint64_t (*)(void *)) nextLong,
-        .nextInt = (int (*)(void *, int)) nextInt,
-        .nextFloat = (float (*)(void *)) nextFloat,
-        .nextDouble = (double (*)(void *)) nextDouble,
-        .nextIntBetween = (int (*)(void *, int, int)) nextIntBetween,
-        .skipN = (void (*)(void *, uint64_t)) skipNextN,
+    int type;
+    union {
+        uint64_t jr;
+        Xoroshiro xr;
     };
+};
+
+static inline void absSetSeed(RandomSource *rnd, uint64_t seed) {
+    switch (rnd->type) {
+        case JAVA_RANDOM: setSeed(&rnd->jr, seed); return;
+        case XOROSHIRO: xSetSeed(&rnd->xr, seed); return;
+        case XOROSHIRO_J: xSetSeed(&rnd->xr, seed); return;
+        default: UNREACHABLE();
+    }
 }
 
-static inline RandomSource createXoroshiro(Xoroshiro *xr)
-{
-    return (RandomSource) {
-        .state = xr,
-        .setSeed = (void (*)(void *, uint64_t)) xSetSeed,
-        .nextLong = (uint64_t (*)(void *)) xNextLongJ,
-        .nextInt = (int (*)(void *, int)) xNextIntJ,
-        .nextFloat = (float (*)(void *)) xNextFloat,
-        .nextDouble = (double (*)(void *)) xNextDoubleJ,
-        .nextIntBetween = (int (*)(void *, int, int)) xNextIntJBetween,
-        .skipN = (void (*)(void *, uint64_t)) xSkipN,
-    };
+static inline uint64_t absNextLong(RandomSource *rnd) {
+    switch (rnd->type) {
+        case JAVA_RANDOM: return nextLong(&rnd->jr);
+        case XOROSHIRO: return xNextLong(&rnd->xr);
+        case XOROSHIRO_J: return xNextLongJ(&rnd->xr);
+        default: UNREACHABLE();
+    }
+}
+
+static inline int absNextInt(RandomSource *rnd, int n) {
+    switch (rnd->type) {
+        case JAVA_RANDOM: return nextInt(&rnd->jr, n);
+        case XOROSHIRO: return xNextInt(&rnd->xr, n);
+        case XOROSHIRO_J: return xNextIntJ(&rnd->xr, n);
+        default: UNREACHABLE();
+    }
+}
+
+static inline float absNextFloat(RandomSource *rnd) {
+    switch (rnd->type) {
+        case JAVA_RANDOM: return nextFloat(&rnd->jr);
+        case XOROSHIRO: return xNextFloat(&rnd->xr);
+        case XOROSHIRO_J: return xNextFloat(&rnd->xr);
+        default: UNREACHABLE();
+    }
+}
+
+static inline double absNextDouble(RandomSource *rnd) {
+    switch (rnd->type) {
+        case JAVA_RANDOM: return nextDouble(&rnd->jr);
+        case XOROSHIRO: return xNextDouble(&rnd->xr);
+        case XOROSHIRO_J: return xNextDoubleJ(&rnd->xr);
+        default: UNREACHABLE();
+    }
+}
+
+static inline int absNextIntBetween(RandomSource *rnd, int min, int max) {
+    switch (rnd->type) {
+        case JAVA_RANDOM: return nextIntBetween(&rnd->jr, min, max);
+        case XOROSHIRO: return xNextIntBetween(&rnd->xr, min, max);
+        case XOROSHIRO_J: return xNextIntJBetween(&rnd->xr, min, max);
+        default: UNREACHABLE();
+    }
+}
+
+static inline void absSkipN(RandomSource *rnd, uint64_t n) {
+    switch (rnd->type) {
+        case JAVA_RANDOM: skipNextN(&rnd->jr, n); return;
+        case XOROSHIRO: xSkipN(&rnd->xr, n); return;
+        case XOROSHIRO_J: xSkipN(&rnd->xr, n); return;
+        default: UNREACHABLE();
+    }
 }
 
 //==============================================================================

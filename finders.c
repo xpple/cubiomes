@@ -2911,14 +2911,14 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         p->chestPoses[3] = (Pos) {minBlockX + 12, minBlockZ + 10};
         // chests generate in the same chunk as structure
         uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
-        CREATE_RANDOM_SOURCE(rnd, legacy);
-        rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+        RandomSource rnd = {.type = legacy ? JAVA_RANDOM : XOROSHIRO_J};
+        absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
         if (mc > MC_1_17_1) {
-            rnd.nextInt(rnd.state, 3); // updateHeightPositionToLowestGroundHeight call in >=1.18
+            absNextInt(&rnd, 3); // updateHeightPositionToLowestGroundHeight call in >=1.18
         }
         for (int i = 0; i < p->chestCount; ++i) {
             p->lootTables[i] = "desert_pyramid";
-            p->lootSeeds[i] = rnd.nextLong(rnd.state);
+            p->lootSeeds[i] = absNextLong(&rnd);
         }
         return 1;
     }
@@ -2956,10 +2956,10 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         bottomPiece->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
         // chest generates in the same chunk as structure
         uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
-        CREATE_RANDOM_SOURCE(rnd, legacy);
-        rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
-        rnd.nextLong(rnd.state); // LootTableSeed from placeInWorld is not used
-        bottomPiece->lootSeeds[0] = rnd.nextLong(rnd.state);
+        RandomSource rnd = {.type = legacy ? JAVA_RANDOM : XOROSHIRO_J};
+        absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+        absNextLong(&rnd); // LootTableSeed from placeInWorld is not used
+        bottomPiece->lootSeeds[0] = absNextLong(&rnd);
         return sv->size + 2;
     }
     case Jungle_Pyramid: {
@@ -2977,16 +2977,16 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         p->chestPoses[3] = (Pos) {minBlockX + 1 + 7, minBlockZ + 1 + 10};
         // chests generate in the same chunk as structure
         uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
-        CREATE_RANDOM_SOURCE(rnd, legacy);
-        rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
-        rnd.skipN(rnd.state, 1511);
-        p->lootSeeds[0] = rnd.nextLong(rnd.state);
-        rnd.skipN(rnd.state, 1513 - 1511 - 1 - 1);
-        p->lootSeeds[1] = rnd.nextLong(rnd.state);
-        rnd.skipN(rnd.state, 1515 - 1513 - 1 - 1);
-        p->lootSeeds[2] = rnd.nextLong(rnd.state);
-        rnd.skipN(rnd.state, 1528 - 1515 - 1 - 1);
-        p->lootSeeds[3] = rnd.nextLong(rnd.state);
+        RandomSource rnd = {.type = legacy ? JAVA_RANDOM : XOROSHIRO_J};
+        absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+        absSkipN(&rnd, 1511);
+        p->lootSeeds[0] = absNextLong(&rnd);
+        absSkipN(&rnd, 1513 - 1511 - 1 - 1);
+        p->lootSeeds[1] = absNextLong(&rnd);
+        absSkipN(&rnd, 1515 - 1513 - 1 - 1);
+        p->lootSeeds[2] = absNextLong(&rnd);
+        absSkipN(&rnd, 1528 - 1515 - 1 - 1);
+        p->lootSeeds[3] = absNextLong(&rnd);
         return 1;
     }
     case Outpost: {
@@ -3006,9 +3006,9 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         }
         p->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
         uint64_t populationSeed = getPopulationSeed(mc, seed, chestPosX & ~15, chestPosZ & ~15);
-        CREATE_RANDOM_SOURCE(rnd, legacy);
-        rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
-        p->lootSeeds[0] = rnd.nextLong(rnd.state);
+        RandomSource rnd = {.type = legacy ? JAVA_RANDOM : XOROSHIRO_J};
+        absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+        p->lootSeeds[0] = absNextLong(&rnd);
         return 1;
     }
     case Shipwreck: {
@@ -3080,137 +3080,137 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             default: UNREACHABLE();
             }
         }
-        CREATE_RANDOM_SOURCE(rnd, legacy);
+        RandomSource rnd = {.type = legacy ? JAVA_RANDOM : XOROSHIRO_J};
         // sorry...
         switch (p->chestCount) {
         case 1: {
             uint64_t populationSeed = getPopulationSeed(mc, seed, p->chestPoses[0].x & ~15, p->chestPoses[0].z & ~15);
-            rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+            absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
             if (isBeached) {
-                rnd.nextInt(rnd.state, 3);
+                absNextInt(&rnd, 3);
             }
-            p->lootSeeds[0] = rnd.nextLong(rnd.state);
+            p->lootSeeds[0] = absNextLong(&rnd);
             break;
         }
         case 2: {
             if (p->chestPoses[0].x >> 4 == p->chestPoses[1].x >> 4 && p->chestPoses[0].z >> 4 == p->chestPoses[1].z >> 4) {
                 uint64_t populationSeed = getPopulationSeed(mc, seed, p->chestPoses[0].x & ~15, p->chestPoses[0].z & ~15);
-                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
                 if (isBeached) {
-                    rnd.nextInt(rnd.state, 3);
+                    absNextInt(&rnd, 3);
                 }
-                rnd.nextLong(rnd.state);
-                rnd.nextLong(rnd.state);
-                p->lootSeeds[0] = rnd.nextLong(rnd.state);
-                p->lootSeeds[1] = rnd.nextLong(rnd.state);
+                absNextLong(&rnd);
+                absNextLong(&rnd);
+                p->lootSeeds[0] = absNextLong(&rnd);
+                p->lootSeeds[1] = absNextLong(&rnd);
             } else {
                 uint64_t populationSeed;
                 populationSeed = getPopulationSeed(mc, seed, p->chestPoses[0].x & ~15, p->chestPoses[0].z & ~15);
-                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
                 if (isBeached) {
-                    rnd.nextInt(rnd.state, 3);
+                    absNextInt(&rnd, 3);
                 }
-                rnd.nextLong(rnd.state);
-                p->lootSeeds[0] = rnd.nextLong(rnd.state);
+                absNextLong(&rnd);
+                p->lootSeeds[0] = absNextLong(&rnd);
                 populationSeed = getPopulationSeed(mc, seed, p->chestPoses[1].x & ~15, p->chestPoses[1].z & ~15);
-                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
                 if (isBeached) {
-                    rnd.nextInt(rnd.state, 3);
+                    absNextInt(&rnd, 3);
                 }
-                rnd.nextLong(rnd.state);
-                p->lootSeeds[1] = rnd.nextLong(rnd.state);
+                absNextLong(&rnd);
+                p->lootSeeds[1] = absNextLong(&rnd);
             }
             break;
         } case 3: {
             if (p->chestPoses[0].x >> 4 == p->chestPoses[1].x >> 4 && p->chestPoses[1].x >> 4 == p->chestPoses[2].x >> 4 && p->chestPoses[0].z >> 4 == p->chestPoses[1].z >> 4 && p->chestPoses[1].z >> 4 == p->chestPoses[2].z >> 4) {
                 uint64_t populationSeed = getPopulationSeed(mc, seed, p->chestPoses[0].x & ~15, p->chestPoses[0].z & ~15);
-                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
                 if (isBeached) {
-                    rnd.nextInt(rnd.state, 3);
+                    absNextInt(&rnd, 3);
                 }
-                rnd.nextLong(rnd.state);
-                rnd.nextLong(rnd.state);
-                rnd.nextLong(rnd.state);
-                p->lootSeeds[0] = rnd.nextLong(rnd.state);
-                p->lootSeeds[1] = rnd.nextLong(rnd.state);
-                p->lootSeeds[2] = rnd.nextLong(rnd.state);
+                absNextLong(&rnd);
+                absNextLong(&rnd);
+                absNextLong(&rnd);
+                p->lootSeeds[0] = absNextLong(&rnd);
+                p->lootSeeds[1] = absNextLong(&rnd);
+                p->lootSeeds[2] = absNextLong(&rnd);
             } else if (p->chestPoses[0].x >> 4 == p->chestPoses[1].x >> 4 && p->chestPoses[0].z >> 4 == p->chestPoses[1].z >> 4) {
                 uint64_t populationSeed;
                 populationSeed = getPopulationSeed(mc, seed, p->chestPoses[0].x & ~15, p->chestPoses[0].z & ~15);
-                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
                 if (isBeached) {
-                    rnd.nextInt(rnd.state, 3);
+                    absNextInt(&rnd, 3);
                 }
-                rnd.nextLong(rnd.state);
-                rnd.nextLong(rnd.state);
-                p->lootSeeds[0] = rnd.nextLong(rnd.state);
-                p->lootSeeds[1] = rnd.nextLong(rnd.state);
+                absNextLong(&rnd);
+                absNextLong(&rnd);
+                p->lootSeeds[0] = absNextLong(&rnd);
+                p->lootSeeds[1] = absNextLong(&rnd);
                 populationSeed = getPopulationSeed(mc, seed, p->chestPoses[2].x & ~15, p->chestPoses[2].z & ~15);
-                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
                 if (isBeached) {
-                    rnd.nextInt(rnd.state, 3);
+                    absNextInt(&rnd, 3);
                 }
-                rnd.nextLong(rnd.state);
-                p->lootSeeds[2] = rnd.nextLong(rnd.state);
+                absNextLong(&rnd);
+                p->lootSeeds[2] = absNextLong(&rnd);
             } else if (p->chestPoses[1].x >> 4 == p->chestPoses[2].x >> 4 && p->chestPoses[1].z >> 4 == p->chestPoses[2].z >> 4) {
                 uint64_t populationSeed;
                 populationSeed = getPopulationSeed(mc, seed, p->chestPoses[0].x & ~15, p->chestPoses[0].z & ~15);
-                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
                 if (isBeached) {
-                    rnd.nextInt(rnd.state, 3);
+                    absNextInt(&rnd, 3);
                 }
-                rnd.nextLong(rnd.state);
-                p->lootSeeds[0] = rnd.nextLong(rnd.state);
+                absNextLong(&rnd);
+                p->lootSeeds[0] = absNextLong(&rnd);
                 populationSeed = getPopulationSeed(mc, seed, p->chestPoses[1].x & ~15, p->chestPoses[1].z & ~15);
-                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
                 if (isBeached) {
-                    rnd.nextInt(rnd.state, 3);
+                    absNextInt(&rnd, 3);
                 }
-                rnd.nextLong(rnd.state);
-                rnd.nextLong(rnd.state);
-                p->lootSeeds[1] = rnd.nextLong(rnd.state);
-                p->lootSeeds[2] = rnd.nextLong(rnd.state);
+                absNextLong(&rnd);
+                absNextLong(&rnd);
+                p->lootSeeds[1] = absNextLong(&rnd);
+                p->lootSeeds[2] = absNextLong(&rnd);
             } else if (p->chestPoses[0].x >> 4 == p->chestPoses[2].x >> 4 && p->chestPoses[0].z >> 4 == p->chestPoses[2].z >> 4) {
                 uint64_t populationSeed;
                 populationSeed = getPopulationSeed(mc, seed, p->chestPoses[0].x & ~15, p->chestPoses[0].z & ~15);
-                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
                 if (isBeached) {
-                    rnd.nextInt(rnd.state, 3);
+                    absNextInt(&rnd, 3);
                 }
-                rnd.nextLong(rnd.state);
-                rnd.nextLong(rnd.state);
-                p->lootSeeds[0] = rnd.nextLong(rnd.state);
-                p->lootSeeds[2] = rnd.nextLong(rnd.state);
+                absNextLong(&rnd);
+                absNextLong(&rnd);
+                p->lootSeeds[0] = absNextLong(&rnd);
+                p->lootSeeds[2] = absNextLong(&rnd);
                 populationSeed = getPopulationSeed(mc, seed, p->chestPoses[1].x & ~15, p->chestPoses[1].z & ~15);
-                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
                 if (isBeached) {
-                    rnd.nextInt(rnd.state, 3);
+                    absNextInt(&rnd, 3);
                 }
-                rnd.nextLong(rnd.state);
-                p->lootSeeds[1] = rnd.nextLong(rnd.state);
+                absNextLong(&rnd);
+                p->lootSeeds[1] = absNextLong(&rnd);
             } else {
                 uint64_t populationSeed;
                 populationSeed = getPopulationSeed(mc, seed, p->chestPoses[0].x & ~15, p->chestPoses[0].z & ~15);
-                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
                 if (isBeached) {
-                    rnd.nextInt(rnd.state, 3);
+                    absNextInt(&rnd, 3);
                 }
-                rnd.nextLong(rnd.state);
-                p->lootSeeds[0] = rnd.nextLong(rnd.state);
+                absNextLong(&rnd);
+                p->lootSeeds[0] = absNextLong(&rnd);
                 populationSeed = getPopulationSeed(mc, seed, p->chestPoses[1].x & ~15, p->chestPoses[1].z & ~15);
-                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
                 if (isBeached) {
-                    rnd.nextInt(rnd.state, 3);
+                    absNextInt(&rnd, 3);
                 }
-                rnd.nextLong(rnd.state);
-                p->lootSeeds[1] = rnd.nextLong(rnd.state);
+                absNextLong(&rnd);
+                p->lootSeeds[1] = absNextLong(&rnd);
                 populationSeed = getPopulationSeed(mc, seed, p->chestPoses[2].x & ~15, p->chestPoses[2].z & ~15);
-                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
                 if (isBeached) {
-                    rnd.nextInt(rnd.state, 3);
+                    absNextInt(&rnd, 3);
                 }
-                rnd.nextLong(rnd.state);
-                p->lootSeeds[2] = rnd.nextLong(rnd.state);
+                absNextLong(&rnd);
+                p->lootSeeds[2] = absNextLong(&rnd);
             }
             break;
         }
@@ -3227,7 +3227,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
     }
     case Fortress: {
         int count = getFortressPieces(list, n, mc, seed, posX >> 4, posZ >> 4);
-        CREATE_RANDOM_SOURCE(rnd, legacy);
+        RandomSource rnd = {.type = legacy ? JAVA_RANDOM : XOROSHIRO_J};
         for (int i = 0; i < count; ++i) {
             Piece* piece = &list[i];
             int chestPosX, chestPosZ;
@@ -3266,15 +3266,15 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             piece->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
             // it is assumed that no two pieces have a chest in the same chunk
             uint64_t populationSeed = getPopulationSeed(mc, seed, chestPosX & ~15, chestPosZ & ~15);
-            rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
-            piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+            absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+            piece->lootSeeds[0] = absNextLong(&rnd);
         }
         return count;
     }
     case Bastion: {
         // TODO: simulate all pieces
         // this only simulates bastion pieces that always generate and have a chest
-        CREATE_RANDOM_SOURCE(rnd, legacy);
+        RandomSource rnd = {.type = legacy ? JAVA_RANDOM : XOROSHIRO_J};
         switch (sv->start) {
         case 0 /* units/air_base */: {
             Piece* piece = list;
@@ -3302,9 +3302,9 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             piece->chestPoses[1] = (Pos) {chestPos2X, chestPos2Z};
             // the chests always generate in the same chunk
             uint64_t populationSeed = getPopulationSeed(mc, seed, chestPos1X & ~15, chestPos1Z & ~15);
-            rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
-            piece->lootSeeds[0] = rnd.nextLong(rnd.state);
-            piece->lootSeeds[1] = rnd.nextLong(rnd.state);
+            absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+            piece->lootSeeds[0] = absNextLong(&rnd);
+            piece->lootSeeds[1] = absNextLong(&rnd);
             break;
         }
         case 1 /* hoglin_stable/air_base */: {
@@ -3322,8 +3322,8 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             }
             piece->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
             uint64_t populationSeed = getPopulationSeed(mc, seed, chestPosX & ~15, chestPosZ & ~15);
-            rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
-            piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+            absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+            piece->lootSeeds[0] = absNextLong(&rnd);
             break;
         }
         case 2 /* treasure/big_air_full */: {
@@ -3352,9 +3352,9 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             piece->chestPoses[1] = (Pos) {chestPos2X, chestPos2Z};
             // the chests always generate in the same chunk
             uint64_t populationSeed = getPopulationSeed(mc, seed, chestPos1X & ~15, chestPos1Z & ~15);
-            rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
-            piece->lootSeeds[0] = rnd.nextLong(rnd.state);
-            piece->lootSeeds[1] = rnd.nextLong(rnd.state);
+            absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+            piece->lootSeeds[0] = absNextLong(&rnd);
+            piece->lootSeeds[1] = absNextLong(&rnd);
             break;
         }
         case 3 /* bridge/starting_pieces/entrance_base */: {
@@ -3372,8 +3372,8 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             }
             piece->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
             uint64_t populationSeed = getPopulationSeed(mc, seed, chestPosX & ~15, chestPosZ & ~15);
-            rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
-            piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+            absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+            piece->lootSeeds[0] = absNextLong(&rnd);
             break;
         }
         default: UNREACHABLE();
@@ -3385,7 +3385,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             return -1;
         }
         int count = getEndCityPieces(list, seed, posX >> 4, posZ >> 4);
-        CREATE_RANDOM_SOURCE(rnd, legacy);
+        RandomSource rnd = {.type = legacy ? JAVA_RANDOM : XOROSHIRO_J};
         for (int i = 0; i < count; ++i) {
             Piece* piece = &list[i];
             int chestPos1X, chestPos1Z, chestPos2X, chestPos2Z;
@@ -3454,29 +3454,29 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             if (oneChest) {
                 piece->chestPoses[0] = (Pos) {chestPos1X, chestPos1Z};
                 uint64_t populationSeed = getPopulationSeed(mc, seed, chestPos1X & ~15, chestPos1Z & ~15);
-                rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
-                rnd.nextLong(rnd.state); // LootTableSeed from placeInWorld is not used
-                piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+                absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                absNextLong(&rnd); // LootTableSeed from placeInWorld is not used
+                piece->lootSeeds[0] = absNextLong(&rnd);
             } else {
                 piece->chestPoses[0] = (Pos) {chestPos1X, chestPos1Z};
                 piece->chestPoses[1] = (Pos) {chestPos2X, chestPos2Z};
                 if (chestPos1X >> 4 == chestPos2X >> 4 && chestPos1Z >> 4 == chestPos2Z >> 4) {
                     uint64_t populationSeed = getPopulationSeed(mc, seed, chestPos1X & ~15, chestPos1Z & ~15);
-                    rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
-                    rnd.nextLong(rnd.state);
-                    rnd.nextLong(rnd.state);
-                    piece->lootSeeds[0] = rnd.nextLong(rnd.state);
-                    piece->lootSeeds[1] = rnd.nextLong(rnd.state);
+                    absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                    absNextLong(&rnd);
+                    absNextLong(&rnd);
+                    piece->lootSeeds[0] = absNextLong(&rnd);
+                    piece->lootSeeds[1] = absNextLong(&rnd);
                 } else {
                     uint64_t populationSeed;
                     populationSeed = getPopulationSeed(mc, seed, chestPos1X & ~15, chestPos1Z & ~15);
-                    rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
-                    rnd.nextLong(rnd.state);
-                    piece->lootSeeds[0] = rnd.nextLong(rnd.state);
+                    absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                    absNextLong(&rnd);
+                    piece->lootSeeds[0] = absNextLong(&rnd);
                     populationSeed = getPopulationSeed(mc, seed, chestPos2X & ~15, chestPos2Z & ~15);
-                    rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
-                    rnd.nextLong(rnd.state);
-                    piece->lootSeeds[1] = rnd.nextLong(rnd.state);
+                    absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+                    absNextLong(&rnd);
+                    piece->lootSeeds[1] = absNextLong(&rnd);
                 }
             }
         }
@@ -3510,10 +3510,10 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
     }
     Piece* p = list;
     p->chestCount = 1;
-    CREATE_RANDOM_SOURCE(rnd, legacy);
+    RandomSource rnd = {.type = legacy ? JAVA_RANDOM : XOROSHIRO_J};
     uint64_t populationSeed = getPopulationSeed(mc, seed, minBlockX, minBlockZ);
-    rnd.setSeed(rnd.state, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
-    p->lootSeeds[0] = rnd.nextLong(rnd.state);
+    absSetSeed(&rnd, populationSeed + ssconf.decoratorIndex + 10000 * ssconf.generationStep);
+    p->lootSeeds[0] = absNextLong(&rnd);
     return 1;
 }
 
