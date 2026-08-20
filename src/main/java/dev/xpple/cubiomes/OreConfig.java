@@ -19,7 +19,7 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
  *     int32_t step;
  *     int32_t size;
  *     int32_t repeatCount;
- *     int (*heightProvider)(RandomSource, int, int, int);
+ *     int (*heightProvider)(RandomSource *, int, int, int);
  *     int32_t h1;
  *     int32_t h2;
  *     int32_t h3;
@@ -242,7 +242,7 @@ public class OreConfig {
 
     /**
      * {@snippet lang=c :
-     * int (*heightProvider)(RandomSource, int, int, int)
+     * int (*heightProvider)(RandomSource *, int, int, int)
      * }
      */
     public final static class heightProvider {
@@ -260,7 +260,7 @@ public class OreConfig {
 
         private static final FunctionDescriptor $DESC = FunctionDescriptor.of(
             Cubiomes.C_INT,
-            RandomSource.layout(),
+            Cubiomes.C_POINTER,
             Cubiomes.C_INT,
             Cubiomes.C_INT,
             Cubiomes.C_INT
@@ -304,7 +304,7 @@ public class OreConfig {
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * int (*heightProvider)(RandomSource, int, int, int)
+     * int (*heightProvider)(RandomSource *, int, int, int)
      * }
      */
     public static final AddressLayout heightProvider$layout() {
@@ -316,7 +316,7 @@ public class OreConfig {
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * int (*heightProvider)(RandomSource, int, int, int)
+     * int (*heightProvider)(RandomSource *, int, int, int)
      * }
      */
     public static final long heightProvider$offset() {
@@ -326,7 +326,7 @@ public class OreConfig {
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * int (*heightProvider)(RandomSource, int, int, int)
+     * int (*heightProvider)(RandomSource *, int, int, int)
      * }
      */
     public static MemorySegment heightProvider(MemorySegment struct) {
@@ -336,7 +336,7 @@ public class OreConfig {
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * int (*heightProvider)(RandomSource, int, int, int)
+     * int (*heightProvider)(RandomSource *, int, int, int)
      * }
      */
     public static void heightProvider(MemorySegment struct, MemorySegment fieldValue) {

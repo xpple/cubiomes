@@ -15,14 +15,11 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
 /**
  * {@snippet lang=c :
  * struct RandomSource {
- *     void *state;
- *     void (*setSeed)(void *, uint64_t);
- *     uint64_t (*nextLong)(void *);
- *     int (*nextInt)(void *, int);
- *     float (*nextFloat)(void *);
- *     double (*nextDouble)(void *);
- *     int (*nextIntBetween)(void *, int, int);
- *     void (*skipN)(void *, uint64_t);
+ *     int type;
+ *     union {
+ *         uint64_t jr;
+ *         Xoroshiro xr;
+ *     };
  * }
  * }
  */
@@ -33,14 +30,12 @@ public class RandomSource {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        Cubiomes.C_POINTER.withName("state"),
-        Cubiomes.C_POINTER.withName("setSeed"),
-        Cubiomes.C_POINTER.withName("nextLong"),
-        Cubiomes.C_POINTER.withName("nextInt"),
-        Cubiomes.C_POINTER.withName("nextFloat"),
-        Cubiomes.C_POINTER.withName("nextDouble"),
-        Cubiomes.C_POINTER.withName("nextIntBetween"),
-        Cubiomes.C_POINTER.withName("skipN")
+        Cubiomes.C_INT.withName("type"),
+        MemoryLayout.paddingLayout(4),
+        MemoryLayout.unionLayout(
+            Cubiomes.C_LONG.withName("jr"),
+            Xoroshiro.layout().withName("xr")
+        ).withName("$anon$361:5")
     ).withName("RandomSource");
 
     /**
@@ -50,751 +45,136 @@ public class RandomSource {
         return $LAYOUT;
     }
 
-    private static final AddressLayout state$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("state"));
+    private static final OfInt type$LAYOUT = (OfInt)$LAYOUT.select(groupElement("type"));
 
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * void *state
+     * int type
      * }
      */
-    public static final AddressLayout state$layout() {
-        return state$LAYOUT;
+    public static final OfInt type$layout() {
+        return type$LAYOUT;
     }
 
-    private static final long state$OFFSET = $LAYOUT.byteOffset(groupElement("state"));
+    private static final long type$OFFSET = $LAYOUT.byteOffset(groupElement("type"));
 
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * void *state
+     * int type
      * }
      */
-    public static final long state$offset() {
-        return state$OFFSET;
+    public static final long type$offset() {
+        return type$OFFSET;
     }
 
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * void *state
+     * int type
      * }
      */
-    public static MemorySegment state(MemorySegment struct) {
-        return struct.get(state$LAYOUT, state$OFFSET);
+    public static int type(MemorySegment struct) {
+        return struct.get(type$LAYOUT, type$OFFSET);
     }
 
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * void *state
+     * int type
      * }
      */
-    public static void state(MemorySegment struct, MemorySegment fieldValue) {
-        struct.set(state$LAYOUT, state$OFFSET, fieldValue);
+    public static void type(MemorySegment struct, int fieldValue) {
+        struct.set(type$LAYOUT, type$OFFSET, fieldValue);
     }
 
-    /**
-     * {@snippet lang=c :
-     * void (*setSeed)(void *, uint64_t)
-     * }
-     */
-    public final static class setSeed {
-
-        private setSeed() {
-            // Should not be called directly
-        }
-
-        /**
-         * The function pointer signature, expressed as a functional interface
-         */
-        public interface Function {
-            void apply(MemorySegment _x0, long _x1);
-        }
-
-        private static final FunctionDescriptor $DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER,
-            Cubiomes.C_LONG
-        );
-
-        /**
-         * The descriptor of this function pointer
-         */
-        public static FunctionDescriptor descriptor() {
-            return $DESC;
-        }
-
-        private static final MethodHandle UP$MH = Cubiomes.upcallHandle(setSeed.Function.class, "apply", $DESC);
-
-        /**
-         * Allocates a new upcall stub, whose implementation is defined by {@code fi}.
-         * The lifetime of the returned segment is managed by {@code arena}
-         */
-        public static MemorySegment allocate(setSeed.Function fi, Arena arena) {
-            return Linker.nativeLinker().upcallStub(UP$MH.bindTo(fi), $DESC, arena);
-        }
-
-        private static final MethodHandle DOWN$MH = Linker.nativeLinker().downcallHandle($DESC);
-
-        /**
-         * Invoke the upcall stub {@code funcPtr}, with given parameters
-         */
-        public static void invoke(MemorySegment funcPtr, MemorySegment _x0, long _x1) {
-            try {
-                 DOWN$MH.invokeExact(funcPtr, _x0, _x1);
-            } catch (Error | RuntimeException ex) {
-                throw ex;
-            } catch (Throwable ex$) {
-                throw new AssertionError("should not reach here", ex$);
-            }
-        }
-    }
-
-    private static final AddressLayout setSeed$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("setSeed"));
+    private static final OfLong jr$LAYOUT = (OfLong)$LAYOUT.select(groupElement("$anon$361:5"), groupElement("jr"));
 
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * void (*setSeed)(void *, uint64_t)
+     * uint64_t jr
      * }
      */
-    public static final AddressLayout setSeed$layout() {
-        return setSeed$LAYOUT;
+    public static final OfLong jr$layout() {
+        return jr$LAYOUT;
     }
 
-    private static final long setSeed$OFFSET = $LAYOUT.byteOffset(groupElement("setSeed"));
+    private static final long jr$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$361:5"), groupElement("jr"));
 
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * void (*setSeed)(void *, uint64_t)
+     * uint64_t jr
      * }
      */
-    public static final long setSeed$offset() {
-        return setSeed$OFFSET;
+    public static final long jr$offset() {
+        return jr$OFFSET;
     }
 
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * void (*setSeed)(void *, uint64_t)
+     * uint64_t jr
      * }
      */
-    public static MemorySegment setSeed(MemorySegment struct) {
-        return struct.get(setSeed$LAYOUT, setSeed$OFFSET);
+    public static long jr(MemorySegment struct) {
+        return struct.get(jr$LAYOUT, jr$OFFSET);
     }
 
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * void (*setSeed)(void *, uint64_t)
+     * uint64_t jr
      * }
      */
-    public static void setSeed(MemorySegment struct, MemorySegment fieldValue) {
-        struct.set(setSeed$LAYOUT, setSeed$OFFSET, fieldValue);
+    public static void jr(MemorySegment struct, long fieldValue) {
+        struct.set(jr$LAYOUT, jr$OFFSET, fieldValue);
     }
 
-    /**
-     * {@snippet lang=c :
-     * uint64_t (*nextLong)(void *)
-     * }
-     */
-    public final static class nextLong {
-
-        private nextLong() {
-            // Should not be called directly
-        }
-
-        /**
-         * The function pointer signature, expressed as a functional interface
-         */
-        public interface Function {
-            long apply(MemorySegment _x0);
-        }
-
-        private static final FunctionDescriptor $DESC = FunctionDescriptor.of(
-            Cubiomes.C_LONG,
-            Cubiomes.C_POINTER
-        );
-
-        /**
-         * The descriptor of this function pointer
-         */
-        public static FunctionDescriptor descriptor() {
-            return $DESC;
-        }
-
-        private static final MethodHandle UP$MH = Cubiomes.upcallHandle(nextLong.Function.class, "apply", $DESC);
-
-        /**
-         * Allocates a new upcall stub, whose implementation is defined by {@code fi}.
-         * The lifetime of the returned segment is managed by {@code arena}
-         */
-        public static MemorySegment allocate(nextLong.Function fi, Arena arena) {
-            return Linker.nativeLinker().upcallStub(UP$MH.bindTo(fi), $DESC, arena);
-        }
-
-        private static final MethodHandle DOWN$MH = Linker.nativeLinker().downcallHandle($DESC);
-
-        /**
-         * Invoke the upcall stub {@code funcPtr}, with given parameters
-         */
-        public static long invoke(MemorySegment funcPtr, MemorySegment _x0) {
-            try {
-                return (long) DOWN$MH.invokeExact(funcPtr, _x0);
-            } catch (Error | RuntimeException ex) {
-                throw ex;
-            } catch (Throwable ex$) {
-                throw new AssertionError("should not reach here", ex$);
-            }
-        }
-    }
-
-    private static final AddressLayout nextLong$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("nextLong"));
+    private static final GroupLayout xr$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("$anon$361:5"), groupElement("xr"));
 
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * uint64_t (*nextLong)(void *)
+     * Xoroshiro xr
      * }
      */
-    public static final AddressLayout nextLong$layout() {
-        return nextLong$LAYOUT;
+    public static final GroupLayout xr$layout() {
+        return xr$LAYOUT;
     }
 
-    private static final long nextLong$OFFSET = $LAYOUT.byteOffset(groupElement("nextLong"));
+    private static final long xr$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$361:5"), groupElement("xr"));
 
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * uint64_t (*nextLong)(void *)
+     * Xoroshiro xr
      * }
      */
-    public static final long nextLong$offset() {
-        return nextLong$OFFSET;
+    public static final long xr$offset() {
+        return xr$OFFSET;
     }
 
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * uint64_t (*nextLong)(void *)
+     * Xoroshiro xr
      * }
      */
-    public static MemorySegment nextLong(MemorySegment struct) {
-        return struct.get(nextLong$LAYOUT, nextLong$OFFSET);
+    public static MemorySegment xr(MemorySegment struct) {
+        return struct.asSlice(xr$OFFSET, xr$LAYOUT.byteSize());
     }
 
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * uint64_t (*nextLong)(void *)
+     * Xoroshiro xr
      * }
      */
-    public static void nextLong(MemorySegment struct, MemorySegment fieldValue) {
-        struct.set(nextLong$LAYOUT, nextLong$OFFSET, fieldValue);
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int (*nextInt)(void *, int)
-     * }
-     */
-    public final static class nextInt {
-
-        private nextInt() {
-            // Should not be called directly
-        }
-
-        /**
-         * The function pointer signature, expressed as a functional interface
-         */
-        public interface Function {
-            int apply(MemorySegment _x0, int _x1);
-        }
-
-        private static final FunctionDescriptor $DESC = FunctionDescriptor.of(
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT
-        );
-
-        /**
-         * The descriptor of this function pointer
-         */
-        public static FunctionDescriptor descriptor() {
-            return $DESC;
-        }
-
-        private static final MethodHandle UP$MH = Cubiomes.upcallHandle(nextInt.Function.class, "apply", $DESC);
-
-        /**
-         * Allocates a new upcall stub, whose implementation is defined by {@code fi}.
-         * The lifetime of the returned segment is managed by {@code arena}
-         */
-        public static MemorySegment allocate(nextInt.Function fi, Arena arena) {
-            return Linker.nativeLinker().upcallStub(UP$MH.bindTo(fi), $DESC, arena);
-        }
-
-        private static final MethodHandle DOWN$MH = Linker.nativeLinker().downcallHandle($DESC);
-
-        /**
-         * Invoke the upcall stub {@code funcPtr}, with given parameters
-         */
-        public static int invoke(MemorySegment funcPtr, MemorySegment _x0, int _x1) {
-            try {
-                return (int) DOWN$MH.invokeExact(funcPtr, _x0, _x1);
-            } catch (Error | RuntimeException ex) {
-                throw ex;
-            } catch (Throwable ex$) {
-                throw new AssertionError("should not reach here", ex$);
-            }
-        }
-    }
-
-    private static final AddressLayout nextInt$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("nextInt"));
-
-    /**
-     * Layout for field:
-     * {@snippet lang=c :
-     * int (*nextInt)(void *, int)
-     * }
-     */
-    public static final AddressLayout nextInt$layout() {
-        return nextInt$LAYOUT;
-    }
-
-    private static final long nextInt$OFFSET = $LAYOUT.byteOffset(groupElement("nextInt"));
-
-    /**
-     * Offset for field:
-     * {@snippet lang=c :
-     * int (*nextInt)(void *, int)
-     * }
-     */
-    public static final long nextInt$offset() {
-        return nextInt$OFFSET;
-    }
-
-    /**
-     * Getter for field:
-     * {@snippet lang=c :
-     * int (*nextInt)(void *, int)
-     * }
-     */
-    public static MemorySegment nextInt(MemorySegment struct) {
-        return struct.get(nextInt$LAYOUT, nextInt$OFFSET);
-    }
-
-    /**
-     * Setter for field:
-     * {@snippet lang=c :
-     * int (*nextInt)(void *, int)
-     * }
-     */
-    public static void nextInt(MemorySegment struct, MemorySegment fieldValue) {
-        struct.set(nextInt$LAYOUT, nextInt$OFFSET, fieldValue);
-    }
-
-    /**
-     * {@snippet lang=c :
-     * float (*nextFloat)(void *)
-     * }
-     */
-    public final static class nextFloat {
-
-        private nextFloat() {
-            // Should not be called directly
-        }
-
-        /**
-         * The function pointer signature, expressed as a functional interface
-         */
-        public interface Function {
-            float apply(MemorySegment _x0);
-        }
-
-        private static final FunctionDescriptor $DESC = FunctionDescriptor.of(
-            Cubiomes.C_FLOAT,
-            Cubiomes.C_POINTER
-        );
-
-        /**
-         * The descriptor of this function pointer
-         */
-        public static FunctionDescriptor descriptor() {
-            return $DESC;
-        }
-
-        private static final MethodHandle UP$MH = Cubiomes.upcallHandle(nextFloat.Function.class, "apply", $DESC);
-
-        /**
-         * Allocates a new upcall stub, whose implementation is defined by {@code fi}.
-         * The lifetime of the returned segment is managed by {@code arena}
-         */
-        public static MemorySegment allocate(nextFloat.Function fi, Arena arena) {
-            return Linker.nativeLinker().upcallStub(UP$MH.bindTo(fi), $DESC, arena);
-        }
-
-        private static final MethodHandle DOWN$MH = Linker.nativeLinker().downcallHandle($DESC);
-
-        /**
-         * Invoke the upcall stub {@code funcPtr}, with given parameters
-         */
-        public static float invoke(MemorySegment funcPtr, MemorySegment _x0) {
-            try {
-                return (float) DOWN$MH.invokeExact(funcPtr, _x0);
-            } catch (Error | RuntimeException ex) {
-                throw ex;
-            } catch (Throwable ex$) {
-                throw new AssertionError("should not reach here", ex$);
-            }
-        }
-    }
-
-    private static final AddressLayout nextFloat$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("nextFloat"));
-
-    /**
-     * Layout for field:
-     * {@snippet lang=c :
-     * float (*nextFloat)(void *)
-     * }
-     */
-    public static final AddressLayout nextFloat$layout() {
-        return nextFloat$LAYOUT;
-    }
-
-    private static final long nextFloat$OFFSET = $LAYOUT.byteOffset(groupElement("nextFloat"));
-
-    /**
-     * Offset for field:
-     * {@snippet lang=c :
-     * float (*nextFloat)(void *)
-     * }
-     */
-    public static final long nextFloat$offset() {
-        return nextFloat$OFFSET;
-    }
-
-    /**
-     * Getter for field:
-     * {@snippet lang=c :
-     * float (*nextFloat)(void *)
-     * }
-     */
-    public static MemorySegment nextFloat(MemorySegment struct) {
-        return struct.get(nextFloat$LAYOUT, nextFloat$OFFSET);
-    }
-
-    /**
-     * Setter for field:
-     * {@snippet lang=c :
-     * float (*nextFloat)(void *)
-     * }
-     */
-    public static void nextFloat(MemorySegment struct, MemorySegment fieldValue) {
-        struct.set(nextFloat$LAYOUT, nextFloat$OFFSET, fieldValue);
-    }
-
-    /**
-     * {@snippet lang=c :
-     * double (*nextDouble)(void *)
-     * }
-     */
-    public final static class nextDouble {
-
-        private nextDouble() {
-            // Should not be called directly
-        }
-
-        /**
-         * The function pointer signature, expressed as a functional interface
-         */
-        public interface Function {
-            double apply(MemorySegment _x0);
-        }
-
-        private static final FunctionDescriptor $DESC = FunctionDescriptor.of(
-            Cubiomes.C_DOUBLE,
-            Cubiomes.C_POINTER
-        );
-
-        /**
-         * The descriptor of this function pointer
-         */
-        public static FunctionDescriptor descriptor() {
-            return $DESC;
-        }
-
-        private static final MethodHandle UP$MH = Cubiomes.upcallHandle(nextDouble.Function.class, "apply", $DESC);
-
-        /**
-         * Allocates a new upcall stub, whose implementation is defined by {@code fi}.
-         * The lifetime of the returned segment is managed by {@code arena}
-         */
-        public static MemorySegment allocate(nextDouble.Function fi, Arena arena) {
-            return Linker.nativeLinker().upcallStub(UP$MH.bindTo(fi), $DESC, arena);
-        }
-
-        private static final MethodHandle DOWN$MH = Linker.nativeLinker().downcallHandle($DESC);
-
-        /**
-         * Invoke the upcall stub {@code funcPtr}, with given parameters
-         */
-        public static double invoke(MemorySegment funcPtr, MemorySegment _x0) {
-            try {
-                return (double) DOWN$MH.invokeExact(funcPtr, _x0);
-            } catch (Error | RuntimeException ex) {
-                throw ex;
-            } catch (Throwable ex$) {
-                throw new AssertionError("should not reach here", ex$);
-            }
-        }
-    }
-
-    private static final AddressLayout nextDouble$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("nextDouble"));
-
-    /**
-     * Layout for field:
-     * {@snippet lang=c :
-     * double (*nextDouble)(void *)
-     * }
-     */
-    public static final AddressLayout nextDouble$layout() {
-        return nextDouble$LAYOUT;
-    }
-
-    private static final long nextDouble$OFFSET = $LAYOUT.byteOffset(groupElement("nextDouble"));
-
-    /**
-     * Offset for field:
-     * {@snippet lang=c :
-     * double (*nextDouble)(void *)
-     * }
-     */
-    public static final long nextDouble$offset() {
-        return nextDouble$OFFSET;
-    }
-
-    /**
-     * Getter for field:
-     * {@snippet lang=c :
-     * double (*nextDouble)(void *)
-     * }
-     */
-    public static MemorySegment nextDouble(MemorySegment struct) {
-        return struct.get(nextDouble$LAYOUT, nextDouble$OFFSET);
-    }
-
-    /**
-     * Setter for field:
-     * {@snippet lang=c :
-     * double (*nextDouble)(void *)
-     * }
-     */
-    public static void nextDouble(MemorySegment struct, MemorySegment fieldValue) {
-        struct.set(nextDouble$LAYOUT, nextDouble$OFFSET, fieldValue);
-    }
-
-    /**
-     * {@snippet lang=c :
-     * int (*nextIntBetween)(void *, int, int)
-     * }
-     */
-    public final static class nextIntBetween {
-
-        private nextIntBetween() {
-            // Should not be called directly
-        }
-
-        /**
-         * The function pointer signature, expressed as a functional interface
-         */
-        public interface Function {
-            int apply(MemorySegment _x0, int _x1, int _x2);
-        }
-
-        private static final FunctionDescriptor $DESC = FunctionDescriptor.of(
-            Cubiomes.C_INT,
-            Cubiomes.C_POINTER,
-            Cubiomes.C_INT,
-            Cubiomes.C_INT
-        );
-
-        /**
-         * The descriptor of this function pointer
-         */
-        public static FunctionDescriptor descriptor() {
-            return $DESC;
-        }
-
-        private static final MethodHandle UP$MH = Cubiomes.upcallHandle(nextIntBetween.Function.class, "apply", $DESC);
-
-        /**
-         * Allocates a new upcall stub, whose implementation is defined by {@code fi}.
-         * The lifetime of the returned segment is managed by {@code arena}
-         */
-        public static MemorySegment allocate(nextIntBetween.Function fi, Arena arena) {
-            return Linker.nativeLinker().upcallStub(UP$MH.bindTo(fi), $DESC, arena);
-        }
-
-        private static final MethodHandle DOWN$MH = Linker.nativeLinker().downcallHandle($DESC);
-
-        /**
-         * Invoke the upcall stub {@code funcPtr}, with given parameters
-         */
-        public static int invoke(MemorySegment funcPtr, MemorySegment _x0, int _x1, int _x2) {
-            try {
-                return (int) DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2);
-            } catch (Error | RuntimeException ex) {
-                throw ex;
-            } catch (Throwable ex$) {
-                throw new AssertionError("should not reach here", ex$);
-            }
-        }
-    }
-
-    private static final AddressLayout nextIntBetween$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("nextIntBetween"));
-
-    /**
-     * Layout for field:
-     * {@snippet lang=c :
-     * int (*nextIntBetween)(void *, int, int)
-     * }
-     */
-    public static final AddressLayout nextIntBetween$layout() {
-        return nextIntBetween$LAYOUT;
-    }
-
-    private static final long nextIntBetween$OFFSET = $LAYOUT.byteOffset(groupElement("nextIntBetween"));
-
-    /**
-     * Offset for field:
-     * {@snippet lang=c :
-     * int (*nextIntBetween)(void *, int, int)
-     * }
-     */
-    public static final long nextIntBetween$offset() {
-        return nextIntBetween$OFFSET;
-    }
-
-    /**
-     * Getter for field:
-     * {@snippet lang=c :
-     * int (*nextIntBetween)(void *, int, int)
-     * }
-     */
-    public static MemorySegment nextIntBetween(MemorySegment struct) {
-        return struct.get(nextIntBetween$LAYOUT, nextIntBetween$OFFSET);
-    }
-
-    /**
-     * Setter for field:
-     * {@snippet lang=c :
-     * int (*nextIntBetween)(void *, int, int)
-     * }
-     */
-    public static void nextIntBetween(MemorySegment struct, MemorySegment fieldValue) {
-        struct.set(nextIntBetween$LAYOUT, nextIntBetween$OFFSET, fieldValue);
-    }
-
-    /**
-     * {@snippet lang=c :
-     * void (*skipN)(void *, uint64_t)
-     * }
-     */
-    public final static class skipN {
-
-        private skipN() {
-            // Should not be called directly
-        }
-
-        /**
-         * The function pointer signature, expressed as a functional interface
-         */
-        public interface Function {
-            void apply(MemorySegment _x0, long _x1);
-        }
-
-        private static final FunctionDescriptor $DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER,
-            Cubiomes.C_LONG
-        );
-
-        /**
-         * The descriptor of this function pointer
-         */
-        public static FunctionDescriptor descriptor() {
-            return $DESC;
-        }
-
-        private static final MethodHandle UP$MH = Cubiomes.upcallHandle(skipN.Function.class, "apply", $DESC);
-
-        /**
-         * Allocates a new upcall stub, whose implementation is defined by {@code fi}.
-         * The lifetime of the returned segment is managed by {@code arena}
-         */
-        public static MemorySegment allocate(skipN.Function fi, Arena arena) {
-            return Linker.nativeLinker().upcallStub(UP$MH.bindTo(fi), $DESC, arena);
-        }
-
-        private static final MethodHandle DOWN$MH = Linker.nativeLinker().downcallHandle($DESC);
-
-        /**
-         * Invoke the upcall stub {@code funcPtr}, with given parameters
-         */
-        public static void invoke(MemorySegment funcPtr, MemorySegment _x0, long _x1) {
-            try {
-                 DOWN$MH.invokeExact(funcPtr, _x0, _x1);
-            } catch (Error | RuntimeException ex) {
-                throw ex;
-            } catch (Throwable ex$) {
-                throw new AssertionError("should not reach here", ex$);
-            }
-        }
-    }
-
-    private static final AddressLayout skipN$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("skipN"));
-
-    /**
-     * Layout for field:
-     * {@snippet lang=c :
-     * void (*skipN)(void *, uint64_t)
-     * }
-     */
-    public static final AddressLayout skipN$layout() {
-        return skipN$LAYOUT;
-    }
-
-    private static final long skipN$OFFSET = $LAYOUT.byteOffset(groupElement("skipN"));
-
-    /**
-     * Offset for field:
-     * {@snippet lang=c :
-     * void (*skipN)(void *, uint64_t)
-     * }
-     */
-    public static final long skipN$offset() {
-        return skipN$OFFSET;
-    }
-
-    /**
-     * Getter for field:
-     * {@snippet lang=c :
-     * void (*skipN)(void *, uint64_t)
-     * }
-     */
-    public static MemorySegment skipN(MemorySegment struct) {
-        return struct.get(skipN$LAYOUT, skipN$OFFSET);
-    }
-
-    /**
-     * Setter for field:
-     * {@snippet lang=c :
-     * void (*skipN)(void *, uint64_t)
-     * }
-     */
-    public static void skipN(MemorySegment struct, MemorySegment fieldValue) {
-        struct.set(skipN$LAYOUT, skipN$OFFSET, fieldValue);
+    public static void xr(MemorySegment struct, MemorySegment fieldValue) {
+        MemorySegment.copy(fieldValue, 0L, struct, xr$OFFSET, xr$LAYOUT.byteSize());
     }
 
     /**

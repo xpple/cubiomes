@@ -105,6 +105,33 @@ class Cubiomes_1 extends Cubiomes$shared {
      * }
      */
     public static final OfDouble f64 = Cubiomes.C_DOUBLE;
+    private static final int JAVA_RANDOM = (int)0L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.JAVA_RANDOM = 0
+     * }
+     */
+    public static int JAVA_RANDOM() {
+        return JAVA_RANDOM;
+    }
+    private static final int XOROSHIRO = (int)1L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.XOROSHIRO = 1
+     * }
+     */
+    public static int XOROSHIRO() {
+        return XOROSHIRO;
+    }
+    private static final int XOROSHIRO_J = (int)2L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.XOROSHIRO_J = 2
+     * }
+     */
+    public static int XOROSHIRO_J() {
+        return XOROSHIRO_J;
+    }
 
     private static class perlinInit {
         public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
@@ -18167,7 +18194,7 @@ class Cubiomes_1 extends Cubiomes$shared {
             OreConfig.layout(),
             Cubiomes.C_INT,
             Cubiomes.C_INT,
-            RandomSource.layout()
+            Cubiomes.C_POINTER
         );
 
         public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("generateBaseOrePosition");
@@ -18178,7 +18205,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource rnd)
+     * Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource *rnd)
      * }
      */
     public static FunctionDescriptor generateBaseOrePosition$descriptor() {
@@ -18188,7 +18215,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource rnd)
+     * Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource *rnd)
      * }
      */
     public static MethodHandle generateBaseOrePosition$handle() {
@@ -18198,7 +18225,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource rnd)
+     * Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource *rnd)
      * }
      */
     public static MemorySegment generateBaseOrePosition$address() {
@@ -18207,7 +18234,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource rnd)
+     * Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource *rnd)
      * }
      */
     public static MemorySegment generateBaseOrePosition(SegmentAllocator allocator, int mc, MemorySegment config, int chunkX, int chunkZ, MemorySegment rnd) {
@@ -18230,7 +18257,7 @@ class Cubiomes_1 extends Cubiomes$shared {
             Cubiomes.C_POINTER,
             OreConfig.layout(),
             Pos3.layout(),
-            RandomSource.layout(),
+            Cubiomes.C_POINTER,
             Cubiomes.C_POINTER
         );
 
@@ -18242,7 +18269,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource rnd, Pos3List *pos3s)
+     * void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource *rnd, Pos3List *pos3s)
      * }
      */
     public static FunctionDescriptor generateOrePositions$descriptor() {
@@ -18252,7 +18279,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource rnd, Pos3List *pos3s)
+     * void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource *rnd, Pos3List *pos3s)
      * }
      */
     public static MethodHandle generateOrePositions$handle() {
@@ -18262,7 +18289,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource rnd, Pos3List *pos3s)
+     * void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource *rnd, Pos3List *pos3s)
      * }
      */
     public static MemorySegment generateOrePositions$address() {
@@ -18271,7 +18298,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource rnd, Pos3List *pos3s)
+     * void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource *rnd, Pos3List *pos3s)
      * }
      */
     public static void generateOrePositions(MemorySegment g, MemorySegment sn, MemorySegment config, MemorySegment pos, MemorySegment rnd, MemorySegment pos3s) {
@@ -18292,7 +18319,7 @@ class Cubiomes_1 extends Cubiomes$shared {
         public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
             Cubiomes.C_INT,
             OreConfig.layout(),
-            RandomSource.layout(),
+            Cubiomes.C_POINTER,
             Cubiomes.C_DOUBLE,
             Cubiomes.C_DOUBLE,
             Cubiomes.C_DOUBLE,
@@ -18315,7 +18342,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * void generateVeinPart(int mc, OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List *pos3s)
+     * void generateVeinPart(int mc, OreConfig config, RandomSource *rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List *pos3s)
      * }
      */
     public static FunctionDescriptor generateVeinPart$descriptor() {
@@ -18325,7 +18352,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * void generateVeinPart(int mc, OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List *pos3s)
+     * void generateVeinPart(int mc, OreConfig config, RandomSource *rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List *pos3s)
      * }
      */
     public static MethodHandle generateVeinPart$handle() {
@@ -18335,7 +18362,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * void generateVeinPart(int mc, OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List *pos3s)
+     * void generateVeinPart(int mc, OreConfig config, RandomSource *rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List *pos3s)
      * }
      */
     public static MemorySegment generateVeinPart$address() {
@@ -18344,7 +18371,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * void generateVeinPart(int mc, OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List *pos3s)
+     * void generateVeinPart(int mc, OreConfig config, RandomSource *rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List *pos3s)
      * }
      */
     public static void generateVeinPart(int mc, MemorySegment config, MemorySegment rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, MemorySegment pos3s) {
@@ -20879,33 +20906,6 @@ class Cubiomes_1 extends Cubiomes$shared {
      */
     public static int POTION_SWIFTNESS() {
         return POTION_SWIFTNESS;
-    }
-    private static final int POTION_LONG_SWIFTNESS = (int)14L;
-    /**
-     * {@snippet lang=c :
-     * enum PotionType.POTION_LONG_SWIFTNESS = 14
-     * }
-     */
-    public static int POTION_LONG_SWIFTNESS() {
-        return POTION_LONG_SWIFTNESS;
-    }
-    private static final int POTION_STRONG_SWIFTNESS = (int)15L;
-    /**
-     * {@snippet lang=c :
-     * enum PotionType.POTION_STRONG_SWIFTNESS = 15
-     * }
-     */
-    public static int POTION_STRONG_SWIFTNESS() {
-        return POTION_STRONG_SWIFTNESS;
-    }
-    private static final int POTION_SLOWNESS = (int)16L;
-    /**
-     * {@snippet lang=c :
-     * enum PotionType.POTION_SLOWNESS = 16
-     * }
-     */
-    public static int POTION_SLOWNESS() {
-        return POTION_SLOWNESS;
     }
 }
 
