@@ -22,5 +22,13 @@ int init_shipwreck_treasure(LootTableContext** context, int version);
 int init_stronghold_corridor(LootTableContext** context, int version);
 int init_stronghold_crossing(LootTableContext** context, int version);
 int init_stronghold_library(LootTableContext** context, int version);
+int init_reward(LootTableContext** context, int version);
+int init_reward_common(LootTableContext** context, int version);
+int init_reward_ominous(LootTableContext** context, int version);
+int init_reward_ominous_common(LootTableContext** context, int version);
+int init_reward_ominous_rare(LootTableContext** context, int version);
+int init_reward_ominous_unique(LootTableContext** context, int version);
+int init_reward_rare(LootTableContext** context, int version);
+int init_reward_unique(LootTableContext** context, int version);
 
 #endif //LOOT_TABLES_H

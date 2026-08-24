@@ -27,6 +27,7 @@ typedef double      f64;
 
 
 #define STRUCT(S) typedef struct S S; struct S
+#define UNION(S) typedef union S S; union S
 
 #ifdef __GNUC__
 
@@ -355,6 +356,12 @@ enum {
     XOROSHIRO_J,
 };
 
+UNION(RandomState)
+{
+    uint64_t jr;
+    Xoroshiro xr;
+};
+
 STRUCT(RandomSource)
 {
     int type;
@@ -370,6 +377,15 @@ static inline void absSetSeed(RandomSource *rnd, uint64_t seed) {
         case XOROSHIRO: xSetSeed(&rnd->xr, seed); return;
         case XOROSHIRO_J: xSetSeed(&rnd->xr, seed); return;
         default: UNREACHABLE();
+    }
+}
+
+static inline void absSetSeedInternal(RandomSource *rnd, RandomState seed) {
+    switch (rnd->type) {
+    case JAVA_RANDOM: rnd->jr = seed.jr; return;
+    case XOROSHIRO: rnd->xr = seed.xr; return;
+    case XOROSHIRO_J: rnd->xr = seed.xr; return;
+    default: UNREACHABLE();
     }
 }
 

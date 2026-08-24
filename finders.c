@@ -2917,7 +2917,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             absNextInt(&rnd, 3); // updateHeightPositionToLowestGroundHeight call in >=1.18
         }
         for (int i = 0; i < p->chestCount; ++i) {
-            p->lootTables[i] = "desert_pyramid";
+            p->lootTables[i] = "chests/desert_pyramid";
             p->lootSeeds[i] = absNextLong(&rnd);
         }
         return 1;
@@ -2944,7 +2944,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         bottomPiece->name = "igloo/bottom";
         bottomPiece->pos = (Pos3) {minBlockX, 90 - 3 - sv->size * 3, minBlockZ - 2};
         bottomPiece->chestCount = 1;
-        bottomPiece->lootTables[0] = "igloo_chest";
+        bottomPiece->lootTables[0] = "chests/igloo_chest";
         int chestPosX, chestPosZ;
         switch ((sv->rotation << 1) | sv->mirror) {
         case 0b00: chestPosX = minBlockX + 8 - 7; chestPosZ = minBlockZ + 8 - 4; break; //
@@ -2967,12 +2967,12 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         p->name = "TeJP";
         p->pos = (Pos3) {minBlockX, 64, minBlockZ};
         p->chestCount = 4;
-        p->lootTables[0] = "jungle_temple_dispenser";
-        p->lootTables[1] = "jungle_temple_dispenser";
+        p->lootTables[0] = "chests/jungle_temple_dispenser";
+        p->lootTables[1] = "chests/jungle_temple_dispenser";
         p->chestPoses[0] = (Pos) {minBlockX + 1 + 3, minBlockZ + 1 + 1};
         p->chestPoses[1] = (Pos) {minBlockX + 1 + 9, minBlockZ + 1 + 3};
-        p->lootTables[2] = "jungle_temple";
-        p->lootTables[3] = "jungle_temple";
+        p->lootTables[2] = "chests/jungle_temple";
+        p->lootTables[3] = "chests/jungle_temple";
         p->chestPoses[2] = (Pos) {minBlockX + 1 + 8, minBlockZ + 1 + 3};
         p->chestPoses[3] = (Pos) {minBlockX + 1 + 7, minBlockZ + 1 + 10};
         // chests generate in the same chunk as structure
@@ -2995,7 +2995,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         p->name = "pillager_outpost/watchtower";
         p->pos = (Pos3) {minBlockX, 64, minBlockZ};
         p->chestCount = 1;
-        p->lootTables[0] = "pillager_outpost";
+        p->lootTables[0] = "chests/pillager_outpost";
         int chestPosX, chestPosZ;
         switch (sv->rotation) {
         case 0: chestPosX = p->pos.x + 10; chestPosZ = p->pos.z + 10; break; // 0
@@ -3013,26 +3013,26 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
     }
     case Shipwreck: {
         static const struct { const char *name; const int sx, sy, sz; const int chestCount; const char *lootTables[3]; const Pos chestPoses[3]; } sw_info[] = {
-        {"shipwreck/with_mast", 9, 21, 28, 3, {"shipwreck_supply", "shipwreck_map", "shipwreck_treasure"}, {(Pos) {4, 9}, (Pos) {5, 18}, (Pos) {6, 24}}},
-        {"shipwreck/upsidedown_full", 9, 9, 28, 3, {"shipwreck_treasure", "shipwreck_map", "shipwreck_supply"}, {(Pos) {2, 24}, (Pos) {3, 17}, (Pos) {4, 8}}},
-        {"shipwreck/upsidedown_fronthalf", 9, 9, 22, 2, {"shipwreck_map", "shipwreck_supply"}, {(Pos) {3, 17}, (Pos) {4, 8}}},
-        {"shipwreck/upsidedown_backhalf", 9, 9, 16, 2, {"shipwreck_treasure", "shipwreck_map"}, {(Pos) {2, 12}, (Pos) {3, 5}}},
-        {"shipwreck/sideways_full", 9, 9, 28, 3, {"shipwreck_treasure", "shipwreck_supply", "shipwreck_map"}, {(Pos) {3, 24}, (Pos) {5, 8}, (Pos) {6, 19}}},
-        {"shipwreck/sideways_fronthalf", 9, 9, 24, 1, {"shipwreck_supply"}, {(Pos) {5, 8}}},
-        {"shipwreck/sideways_backhalf", 9, 9, 17, 2, {"shipwreck_treasure", "shipwreck_map"}, {(Pos) {3, 13}, (Pos) {6, 8}}},
-        {"shipwreck/rightsideup_full", 9, 9, 28, 3, {"shipwreck_supply", "shipwreck_map", "shipwreck_treasure"}, {(Pos) {4, 8}, (Pos) {5, 18}, (Pos) {6, 24}}},
-        {"shipwreck/rightsideup_fronthalf", 9, 9, 24, 1, {"shipwreck_supply"}, {(Pos) {4, 8}}},
-        {"shipwreck/rightsideup_backhalf", 9, 9, 16, 2, {"shipwreck_map", "shipwreck_treasure"}, {(Pos) {5, 6}, (Pos) {6, 12}}},
-        {"shipwreck/with_mast_degraded", 9, 21, 28, 3, {"shipwreck_supply", "shipwreck_map", "shipwreck_treasure"}, {(Pos) {4, 9}, (Pos) {5, 18}, (Pos) {6, 24}}},
-        {"shipwreck/upsidedown_full_degraded", 9, 9, 28, 3, {"shipwreck_treasure", "shipwreck_map", "shipwreck_supply"}, {(Pos) {2, 24}, (Pos) {3, 17}, (Pos) {4, 8}}},
-        {"shipwreck/upsidedown_fronthalf_degraded", 9, 9, 22, 2, {"shipwreck_map", "shipwreck_supply"}, {(Pos) {3, 17}, (Pos) {4, 8}}},
-        {"shipwreck/upsidedown_backhalf_degraded", 9, 9, 16, 2, {"shipwreck_treasure", "shipwreck_map"}, {(Pos) {2, 12}, (Pos) {3, 5}}},
-        {"shipwreck/sideways_full_degraded", 9, 9, 28, 3, {"shipwreck_treasure", "shipwreck_supply", "shipwreck_map"}, {(Pos) {3, 24}, (Pos) {5, 8}, (Pos) {6, 19}}},
-        {"shipwreck/sideways_fronthalf_degraded", 9, 9, 24, 1, {"shipwreck_supply"}, {(Pos) {5, 8}}},
-        {"shipwreck/sideways_backhalf_degraded", 9, 9, 17, 2, {"shipwreck_treasure", "shipwreck_map"}, {(Pos) {3, 13}, (Pos) {6, 8}}},
-        {"shipwreck/rightsideup_full_degraded", 9, 9, 28, 3, {"shipwreck_supply", "shipwreck_map", "shipwreck_treasure"}, {(Pos) {4, 8}, (Pos) {5, 18}, (Pos) {6, 24}}},
-        {"shipwreck/rightsideup_fronthalf_degraded", 9, 9, 24, 1, {"shipwreck_supply"}, {(Pos) {4, 8}}},
-        {"shipwreck/rightsideup_backhalf_degraded", 9, 9, 16, 2, {"shipwreck_map", "shipwreck_treasure"}, {(Pos) {5, 6}, (Pos) {6, 12}}}
+        {"shipwreck/with_mast", 9, 21, 28, 3, {"chests/shipwreck_supply", "chests/shipwreck_map", "chests/shipwreck_treasure"}, {(Pos) {4, 9}, (Pos) {5, 18}, (Pos) {6, 24}}},
+        {"shipwreck/upsidedown_full", 9, 9, 28, 3, {"chests/shipwreck_treasure", "chests/shipwreck_map", "chests/shipwreck_supply"}, {(Pos) {2, 24}, (Pos) {3, 17}, (Pos) {4, 8}}},
+        {"shipwreck/upsidedown_fronthalf", 9, 9, 22, 2, {"chests/shipwreck_map", "chests/shipwreck_supply"}, {(Pos) {3, 17}, (Pos) {4, 8}}},
+        {"shipwreck/upsidedown_backhalf", 9, 9, 16, 2, {"chests/shipwreck_treasure", "chests/shipwreck_map"}, {(Pos) {2, 12}, (Pos) {3, 5}}},
+        {"shipwreck/sideways_full", 9, 9, 28, 3, {"chests/shipwreck_treasure", "chests/shipwreck_supply", "chests/shipwreck_map"}, {(Pos) {3, 24}, (Pos) {5, 8}, (Pos) {6, 19}}},
+        {"shipwreck/sideways_fronthalf", 9, 9, 24, 1, {"chests/shipwreck_supply"}, {(Pos) {5, 8}}},
+        {"shipwreck/sideways_backhalf", 9, 9, 17, 2, {"chests/shipwreck_treasure", "chests/shipwreck_map"}, {(Pos) {3, 13}, (Pos) {6, 8}}},
+        {"shipwreck/rightsideup_full", 9, 9, 28, 3, {"chests/shipwreck_supply", "chests/shipwreck_map", "chests/shipwreck_treasure"}, {(Pos) {4, 8}, (Pos) {5, 18}, (Pos) {6, 24}}},
+        {"shipwreck/rightsideup_fronthalf", 9, 9, 24, 1, {"chests/shipwreck_supply"}, {(Pos) {4, 8}}},
+        {"shipwreck/rightsideup_backhalf", 9, 9, 16, 2, {"chests/shipwreck_map", "chests/shipwreck_treasure"}, {(Pos) {5, 6}, (Pos) {6, 12}}},
+        {"shipwreck/with_mast_degraded", 9, 21, 28, 3, {"chests/shipwreck_supply", "chests/shipwreck_map", "chests/shipwreck_treasure"}, {(Pos) {4, 9}, (Pos) {5, 18}, (Pos) {6, 24}}},
+        {"shipwreck/upsidedown_full_degraded", 9, 9, 28, 3, {"chests/shipwreck_treasure", "chests/shipwreck_map", "chests/shipwreck_supply"}, {(Pos) {2, 24}, (Pos) {3, 17}, (Pos) {4, 8}}},
+        {"shipwreck/upsidedown_fronthalf_degraded", 9, 9, 22, 2, {"chests/shipwreck_map", "chests/shipwreck_supply"}, {(Pos) {3, 17}, (Pos) {4, 8}}},
+        {"shipwreck/upsidedown_backhalf_degraded", 9, 9, 16, 2, {"chests/shipwreck_treasure", "chests/shipwreck_map"}, {(Pos) {2, 12}, (Pos) {3, 5}}},
+        {"shipwreck/sideways_full_degraded", 9, 9, 28, 3, {"chests/shipwreck_treasure", "chests/shipwreck_supply", "chests/shipwreck_map"}, {(Pos) {3, 24}, (Pos) {5, 8}, (Pos) {6, 19}}},
+        {"shipwreck/sideways_fronthalf_degraded", 9, 9, 24, 1, {"chests/shipwreck_supply"}, {(Pos) {5, 8}}},
+        {"shipwreck/sideways_backhalf_degraded", 9, 9, 17, 2, {"chests/shipwreck_treasure", "chests/shipwreck_map"}, {(Pos) {3, 13}, (Pos) {6, 8}}},
+        {"shipwreck/rightsideup_full_degraded", 9, 9, 28, 3, {"chests/shipwreck_supply", "chests/shipwreck_map", "chests/shipwreck_treasure"}, {(Pos) {4, 8}, (Pos) {5, 18}, (Pos) {6, 24}}},
+        {"shipwreck/rightsideup_fronthalf_degraded", 9, 9, 24, 1, {"chests/shipwreck_supply"}, {(Pos) {4, 8}}},
+        {"shipwreck/rightsideup_backhalf_degraded", 9, 9, 16, 2, {"chests/shipwreck_map", "chests/shipwreck_treasure"}, {(Pos) {5, 6}, (Pos) {6, 12}}}
         };
 
         Piece* p = list;
@@ -3236,7 +3236,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
                 if (!piece->chestCount) {
                     continue;
                 }
-                piece->lootTables[0] = "nether_bridge";
+                piece->lootTables[0] = "chests/nether_bridge";
                 switch (piece->rot) {
                 case 0: chestPosX = piece->pos.x - 1 + 3; chestPosZ = piece->pos.z - 1 + 3; break; // 0
                 case 1: chestPosX = piece->pos.x - 1 - 3; chestPosZ = piece->pos.z - 1 + 3; break; // 90
@@ -3250,7 +3250,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
                 if (!piece->chestCount) {
                     continue;
                 }
-                piece->lootTables[0] = "nether_bridge";
+                piece->lootTables[0] = "chests/nether_bridge";
                 switch (piece->rot) {
                 case 0: chestPosX = piece->pos.x - 1 + 1; chestPosZ = piece->pos.z - 1 + 3; break; // 0
                 case 1: chestPosX = piece->pos.x - 1 - 3; chestPosZ = piece->pos.z - 1 + 1; break; // 90
@@ -3280,8 +3280,8 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             Piece* piece = list;
             piece->name = "bastion/units/walls/wall_base";
             piece->chestCount = 2;
-            piece->lootTables[0] = "bastion_other";
-            piece->lootTables[1] = "bastion_other";
+            piece->lootTables[0] = "chests/bastion_other";
+            piece->lootTables[1] = "chests/bastion_other";
             int chestPos1X, chestPos1Z;
             switch (sv->rotation) {
             case 0: chestPos1X = minBlockX - 6; chestPos1Z = minBlockZ + 20; break;
@@ -3311,7 +3311,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             Piece* piece = list;
             piece->name = "bastion/hoglin_stable/ramparts/ramparts_3";
             piece->chestCount = 1;
-            piece->lootTables[0] = "bastion_other";
+            piece->lootTables[0] = "chests/bastion_other";
             int chestPosX, chestPosZ;
             switch (sv->rotation) {
             case 0: chestPosX = minBlockX - 4; chestPosZ = minBlockZ + 29; break;
@@ -3330,8 +3330,8 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             Piece* piece = list;
             piece->name = "bastion/treasure/ramparts/mid_wall_main";
             piece->chestCount = 2;
-            piece->lootTables[0] = "bastion_other";
-            piece->lootTables[1] = "bastion_other";
+            piece->lootTables[0] = "chests/bastion_other";
+            piece->lootTables[1] = "chests/bastion_other";
             int chestPos1X, chestPos1Z;
             switch (sv->rotation) {
             case 0: chestPos1X = minBlockX + 17; chestPos1Z = minBlockZ - 23; break;
@@ -3361,7 +3361,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             Piece* piece = list;
             piece->name = "bastion/bridge/starting_pieces/entrance";
             piece->chestCount = 1;
-            piece->lootTables[0] = "bastion_bridge";
+            piece->lootTables[0] = "chests/bastion_bridge";
             int chestPosX, chestPosZ;
             switch (sv->rotation) {
             case 0: chestPosX = minBlockX + 9; chestPosZ = minBlockZ + 4; break;
@@ -3393,8 +3393,8 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             switch (piece->type) {
             case FAT_TOWER_TOP: {
                 piece->chestCount = 2;
-                piece->lootTables[0] = "end_city_treasure";
-                piece->lootTables[1] = "end_city_treasure";
+                piece->lootTables[0] = "chests/end_city_treasure";
+                piece->lootTables[1] = "chests/end_city_treasure";
                 oneChest = 0;
                 switch (piece->rot) {
                 case 0: chestPos1X = piece->pos.x - 1 + 3; chestPos1Z = piece->pos.z - 1 + 11; break; // 0
@@ -3414,8 +3414,8 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             }
             case END_SHIP: {
                 piece->chestCount = 2;
-                piece->lootTables[0] = "end_city_treasure";
-                piece->lootTables[1] = "end_city_treasure";
+                piece->lootTables[0] = "chests/end_city_treasure";
+                piece->lootTables[1] = "chests/end_city_treasure";
                 oneChest = 0;
                 switch (piece->rot) {
                 case 0: chestPos1X = piece->pos.x - 1 + 5; chestPos1Z = piece->pos.z - 1 + 7; break; // 0
@@ -3435,7 +3435,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
             }
             case THIRD_FLOOR_2: {
                 piece->chestCount = 1;
-                piece->lootTables[0] = "end_city_treasure";
+                piece->lootTables[0] = "chests/end_city_treasure";
                 oneChest = 1;
                 switch (piece->rot) {
                 case 0: chestPos1X = piece->pos.x - 1 + 6; chestPos1Z = piece->pos.z - 1 + 2; break; // 0
@@ -3488,7 +3488,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         Piece* p = list;
         p->name = "BTP";
         p->pos = (Pos3) {minBlockX + 9, 90, minBlockZ + 9};
-        p->lootTables[0] = "buried_treasure";
+        p->lootTables[0] = "chests/buried_treasure";
         p->chestPoses[0] = (Pos) {p->pos.x, p->pos.z};
         break;
     }
@@ -3500,7 +3500,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         Piece* p = list;
         p->name = "RUPO";
         p->pos = (Pos3) {minBlockX, 0, minBlockZ};
-        p->lootTables[0] = "ruined_portal";
+        p->lootTables[0] = "chests/ruined_portal";
         // rough estimate
         p->chestPoses[0] = (Pos) {minBlockX, minBlockZ};
         break;

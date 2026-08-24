@@ -598,7 +598,7 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                     if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
                         p->chestCount = 1;
                         p->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
-                        p->lootTables[0] = "stronghold_crossing";
+                        p->lootTables[0] = "chests/stronghold_crossing";
                         p->lootSeeds[0] = absNextLong(&rnd);
                     }
                     break;
@@ -629,7 +629,7 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                     if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
                         p->chestCount = 1;
                         p->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
-                        p->lootTables[0] = "stronghold_corridor";
+                        p->lootTables[0] = "chests/stronghold_corridor";
                         p->lootSeeds[0] = absNextLong(&rnd);
                     }
                     break;
@@ -651,7 +651,7 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                     rotPos(p->bb0, p->bb1, &chestPosX, &chestPosZ, p->rot);
                     if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
                         p->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
-                        p->lootTables[0] = "stronghold_library";
+                        p->lootTables[0] = "chests/stronghold_library";
                         p->lootSeeds[0] = absNextLong(&rnd);
                     }
                     if (isTall) {
@@ -659,7 +659,7 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                         rotPos(p->bb0, p->bb1, &chestPosX, &chestPosZ, p->rot);
                         if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
                             p->chestPoses[1] = (Pos) {chestPosX, chestPosZ};
-                            p->lootTables[1] = "stronghold_library";
+                            p->lootTables[1] = "chests/stronghold_library";
                             p->lootSeeds[1] = absNextLong(&rnd);
                         }
                     }

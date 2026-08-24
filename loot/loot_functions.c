@@ -100,38 +100,53 @@ const struct Potion POTIONS[POTION_NUM] = {
 };
 
 // ----------------------------------------------------------------------------------------
+// loot conditions
+
+static int random_chance_condition(RandomSource* rand, const void* params) {
+    float *params_float = (float*)params;
+    float probability = params_float[0];
+    return absNextFloat(rand) < probability;
+}
+
+void create_random_chance(LootItemCondition* lic, float chance) {
+    lic->fun = random_chance_condition;
+    lic->params = lic->params_float;
+    lic->params_float[0] = chance;
+}
+
+// ----------------------------------------------------------------------------------------
 // the actual loot functions
 
-static void set_count_uniform_function(uint64_t* rand, ItemStack* is, const void* params)
+static void set_count_uniform_function(RandomSource* rand, ItemStack* is, const void* params)
 {
     const int* params_int = (const int*)params;
     const int bound = params_int[1] - params_int[0] + 1;
-    const int cnt = nextInt(rand, bound) + params_int[0];
+    const int cnt = absNextInt(rand, bound) + params_int[0];
     is->count = cnt;
 }
 
-static void set_count_constant_function(uint64_t* rand, ItemStack* is, const void* params)
+static void set_count_constant_function(RandomSource* rand, ItemStack* is, const void* params)
 {
     const int* params_int = (const int*)params;
     is->count = params_int[0];
 }
 
-static void set_effect_function(uint64_t* rand, ItemStack* is, const void* params)
+static void set_effect_function(RandomSource* rand, ItemStack* is, const void* params)
 {
     int* varparams_int = (int*)params;
     int count = varparams_int[0];
-    int effectOffset = nextInt(rand, count);
+    int effectOffset = absNextInt(rand, count);
     MobEffectEntry* varparams_mob_effect = (MobEffectEntry *)(varparams_int + 1);
     MobEffectEntry effect_entry = varparams_mob_effect[effectOffset];
     is->mob_effect.effect = effect_entry.mob_effect->effect;
-    int duration = nextIntBetween(rand, effect_entry.min, effect_entry.max);
+    int duration = absNextIntBetween(rand, effect_entry.min, effect_entry.max);
     if (!effect_entry.mob_effect->is_instantaneous) {
         duration *= 20;
     }
     is->mob_effect.duration = duration;
 }
 
-static void set_potion_function(uint64_t* rand, ItemStack* is, const void* params)
+static void set_potion_function(RandomSource* rand, ItemStack* is, const void* params)
 {
     int* varparams_int = (int*)params;
     Potion potion = *(Potion *)varparams_int;
@@ -141,25 +156,25 @@ static void set_potion_function(uint64_t* rand, ItemStack* is, const void* param
     }
 }
 
-static void skip_n_calls_function(uint64_t* rand, ItemStack* is, const void* params)
+static void skip_n_calls_function(RandomSource* rand, ItemStack* is, const void* params)
 {
     const int* params_int = (const int*)params;
-    skipNextN(rand, params_int[0]);
+    absSkipN(rand, params_int[0]);
 }
 
-static void skip_one_call_function(uint64_t* rand, ItemStack* is, const void* params)
+static void skip_one_call_function(RandomSource* rand, ItemStack* is, const void* params)
 {
-    skipNextN(rand, 1);
+    absSkipN(rand, 1);
 }
 
-static void no_op_function(uint64_t* rand, ItemStack* is, const void* params)
+static void no_op_function(RandomSource* rand, ItemStack* is, const void* params)
 {
     // do nothing
 }
 
 // enchantments
 
-static void set_enchantment_random_level_function(uint64_t* rand, ItemStack* is, const void* params)
+static void set_enchantment_random_level_function(RandomSource* rand, ItemStack* is, const void* params)
 {
     const int* params_int = (const int*)params;
     // params[0] - enchantment id
@@ -168,12 +183,12 @@ static void set_enchantment_random_level_function(uint64_t* rand, ItemStack* is,
     is->enchantment_count = 1;
     is->enchantments[0].enchantment = params_int[0];
 
-    nextInt(rand, 1); // choose a "random" enchantment, nextInt(1) call
+    absNextInt(rand, 1); // choose a "random" enchantment, nextInt(1) call
     const int bound = params_int[1];
-    is->enchantments[0].level = nextInt(rand, bound) + 1;
+    is->enchantments[0].level = absNextInt(rand, bound) + 1;
 }
 
-static void enchant_randomly_function(uint64_t* rand, ItemStack* is, const void* params)
+static void enchant_randomly_function(RandomSource* rand, ItemStack* is, const void* params)
 {
     const int* varparams_int = (const int*)params;
     // params[0] - number of enchantments
@@ -184,12 +199,12 @@ static void enchant_randomly_function(uint64_t* rand, ItemStack* is, const void*
 
     is->enchantment_count = 1;
 
-    int enchantmentID = nextInt(rand, numEnchants);
+    int enchantmentID = absNextInt(rand, numEnchants);
     is->enchantments[0].enchantment = varparams_int[2 * enchantmentID + 1];
 
     int maxLevel = varparams_int[2 * enchantmentID + 2];
     if (maxLevel > 1)
-        is->enchantments[0].level = nextInt(rand, maxLevel) + 1;
+        is->enchantments[0].level = absNextInt(rand, maxLevel) + 1;
     else
         is->enchantments[0].level = 1;
 }
@@ -202,10 +217,10 @@ static inline int java_round_positive(float f)
     return (int)floor(f + 0.5F);
 }
 
-static inline int choose_enchantment(uint64_t* rand, int enchantmentVec[], const int vecSize, const int totalWeight)
+static inline int choose_enchantment(RandomSource* rand, int enchantmentVec[], const int vecSize, const int totalWeight)
 {
     const int vecCapacity = vecSize * 3;
-    int w = nextInt(rand, totalWeight);
+    int w = absNextInt(rand, totalWeight);
     for (int i = 2; i < vecCapacity; i += 3)
     {
         w -= enchantmentVec[i];
@@ -292,7 +307,7 @@ static inline void remove_incompatible_enchantments(int enchantmentIndex, int en
     *vecSize -= (moveBack / 3); // shrink the vector
 }
 
-static void enchant_with_levels_function(uint64_t* rand, ItemStack* is, const void* params)
+static void enchant_with_levels_function(RandomSource* rand, ItemStack* is, const void* params)
 {
     const int** varparams_int_arr = (const int**)params;
     // params[0][0] - item enchantability
@@ -312,11 +327,11 @@ static void enchant_with_levels_function(uint64_t* rand, ItemStack* is, const vo
     // calculate effective level
     int level = minLevel;
     if (minLevel != maxLevel)
-        level += nextInt(rand, maxLevel - minLevel + 1);
+        level += absNextInt(rand, maxLevel - minLevel + 1);
 
     const int delta = enchantability / 4 + 1;
-    level += 1 + nextInt(rand, delta) + nextInt(rand, delta);
-    const float amplifier = (nextFloat(rand) + nextFloat(rand) - 1.0F) * 0.15F;
+    level += 1 + absNextInt(rand, delta) + absNextInt(rand, delta);
+    const float amplifier = (absNextFloat(rand) + absNextFloat(rand) - 1.0F) * 0.15F;
     level = java_round_positive((float)level + (float)level * amplifier);
 
     // copy the available enchantment results to a local array
@@ -334,7 +349,7 @@ static void enchant_with_levels_function(uint64_t* rand, ItemStack* is, const vo
     is->enchantments[0].level = enchantmentVec[index + 1];
     is->enchantment_count++;
 
-    while (nextInt(rand, 50) <= level)
+    while (absNextInt(rand, 50) <= level)
     {
         remove_incompatible_enchantments(index, enchantmentVec, &vecSize, &totalWeight);
         if (vecSize == 0) break;
@@ -345,6 +360,20 @@ static void enchant_with_levels_function(uint64_t* rand, ItemStack* is, const vo
         is->enchantment_count++;
 
         level /= 2;
+    }
+}
+
+static void set_enchantments_function(RandomSource* rand, ItemStack* is, const void* params) {
+    int* params_int = (int*)params;
+    const int length = params_int[0];
+
+    for (int i = 0; i < length; i++)
+    {
+        Enchantment enchantment = params_int[1 + 2 * i];
+        int level = params_int[1 + 2 * i + 1];
+        EnchantInstance* instance = &is->enchantments[is->enchantment_count++];
+        instance->enchantment = enchantment;
+        instance->level = level;
     }
 }
 
@@ -1206,6 +1235,22 @@ void create_enchant_with_levels_tag(LootFunction* lf, const int version, const c
     lf->fun = enchant_with_levels_function;
 }
 
+void create_set_enchantments(LootFunction* lf, const Enchantment* enchantments, const int* levels, const int list_length)
+{
+    init_function(lf);
+    lf->varparams_int = (int*)malloc((2 * list_length + 1) * sizeof(int));
+    lf->params = lf->varparams_int;
+    lf->varparams_int[0] = list_length;
+
+    for (int i = 0; i < list_length; i++)
+    {
+        lf->varparams_int[1 + 2 * i] = enchantments[i];
+        lf->varparams_int[1 + 2 * i + 1] = levels[i];
+    }
+
+    lf->fun = set_enchantments_function;
+}
+
 // ----------------------------------------------------------------------------------------
 // Extra utilities
 
@@ -1288,7 +1333,7 @@ void test_enchant_vec()
         memcpy(enchantmentVec, vec + 2, sizeof(int) * vecSize * 3);
 
         int numEnchants = 0;
-        uint64_t rand = 0;
+        RandomSource rand = {.type = JAVA_RANDOM, .jr = 0};
 
         while (vecSize > 0)
         {
