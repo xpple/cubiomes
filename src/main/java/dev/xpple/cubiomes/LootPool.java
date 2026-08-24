@@ -15,6 +15,8 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
 /**
  * {@snippet lang=c :
  * struct LootPool {
+ *     int condition_count;
+ *     LootItemCondition *conditions;
  *     int min_rolls;
  *     int max_rolls;
  *     RollCountFunction roll_count_function;
@@ -35,6 +37,9 @@ public class LootPool {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
+        Cubiomes.C_INT.withName("condition_count"),
+        MemoryLayout.paddingLayout(4),
+        Cubiomes.C_POINTER.withName("conditions"),
         Cubiomes.C_INT.withName("min_rolls"),
         Cubiomes.C_INT.withName("max_rolls"),
         Cubiomes.C_POINTER.withName("roll_count_function"),
@@ -54,6 +59,94 @@ public class LootPool {
      */
     public static final GroupLayout layout() {
         return $LAYOUT;
+    }
+
+    private static final OfInt condition_count$LAYOUT = (OfInt)$LAYOUT.select(groupElement("condition_count"));
+
+    /**
+     * Layout for field:
+     * {@snippet lang=c :
+     * int condition_count
+     * }
+     */
+    public static final OfInt condition_count$layout() {
+        return condition_count$LAYOUT;
+    }
+
+    private static final long condition_count$OFFSET = $LAYOUT.byteOffset(groupElement("condition_count"));
+
+    /**
+     * Offset for field:
+     * {@snippet lang=c :
+     * int condition_count
+     * }
+     */
+    public static final long condition_count$offset() {
+        return condition_count$OFFSET;
+    }
+
+    /**
+     * Getter for field:
+     * {@snippet lang=c :
+     * int condition_count
+     * }
+     */
+    public static int condition_count(MemorySegment struct) {
+        return struct.get(condition_count$LAYOUT, condition_count$OFFSET);
+    }
+
+    /**
+     * Setter for field:
+     * {@snippet lang=c :
+     * int condition_count
+     * }
+     */
+    public static void condition_count(MemorySegment struct, int fieldValue) {
+        struct.set(condition_count$LAYOUT, condition_count$OFFSET, fieldValue);
+    }
+
+    private static final AddressLayout conditions$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("conditions"));
+
+    /**
+     * Layout for field:
+     * {@snippet lang=c :
+     * LootItemCondition *conditions
+     * }
+     */
+    public static final AddressLayout conditions$layout() {
+        return conditions$LAYOUT;
+    }
+
+    private static final long conditions$OFFSET = $LAYOUT.byteOffset(groupElement("conditions"));
+
+    /**
+     * Offset for field:
+     * {@snippet lang=c :
+     * LootItemCondition *conditions
+     * }
+     */
+    public static final long conditions$offset() {
+        return conditions$OFFSET;
+    }
+
+    /**
+     * Getter for field:
+     * {@snippet lang=c :
+     * LootItemCondition *conditions
+     * }
+     */
+    public static MemorySegment conditions(MemorySegment struct) {
+        return struct.get(conditions$LAYOUT, conditions$OFFSET);
+    }
+
+    /**
+     * Setter for field:
+     * {@snippet lang=c :
+     * LootItemCondition *conditions
+     * }
+     */
+    public static void conditions(MemorySegment struct, MemorySegment fieldValue) {
+        struct.set(conditions$LAYOUT, conditions$OFFSET, fieldValue);
     }
 
     private static final OfInt min_rolls$LAYOUT = (OfInt)$LAYOUT.select(groupElement("min_rolls"));

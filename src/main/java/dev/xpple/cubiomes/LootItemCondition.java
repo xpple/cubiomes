@@ -14,31 +14,25 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
 
 /**
  * {@snippet lang=c :
- * struct LootFunction {
- *     void (*fun)(RandomSource *, ItemStack *, const void *);
+ * struct LootItemCondition {
+ *     int (*fun)(RandomSource *, const void *);
  *     const void *params;
- *     int params_int[2];
- *     int *varparams_int;
- *     int **varparams_int_arr;
- *     int varparams_int_arr_size;
+ *     float params_float[1];
  * }
  * }
  */
-public class LootFunction {
+public class LootItemCondition {
 
-    LootFunction() {
+    LootItemCondition() {
         // Should not be called directly
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
         Cubiomes.C_POINTER.withName("fun"),
         Cubiomes.C_POINTER.withName("params"),
-        MemoryLayout.sequenceLayout(2, Cubiomes.C_INT).withName("params_int"),
-        Cubiomes.C_POINTER.withName("varparams_int"),
-        Cubiomes.C_POINTER.withName("varparams_int_arr"),
-        Cubiomes.C_INT.withName("varparams_int_arr_size"),
+        MemoryLayout.sequenceLayout(1, Cubiomes.C_FLOAT).withName("params_float"),
         MemoryLayout.paddingLayout(4)
-    ).withName("LootFunction");
+    ).withName("LootItemCondition");
 
     /**
      * The layout of this struct
@@ -49,7 +43,7 @@ public class LootFunction {
 
     /**
      * {@snippet lang=c :
-     * void (*fun)(RandomSource *, ItemStack *, const void *)
+     * int (*fun)(RandomSource *, const void *)
      * }
      */
     public final static class fun {
@@ -62,11 +56,11 @@ public class LootFunction {
          * The function pointer signature, expressed as a functional interface
          */
         public interface Function {
-            void apply(MemorySegment _x0, MemorySegment _x1, MemorySegment _x2);
+            int apply(MemorySegment _x0, MemorySegment _x1);
         }
 
-        private static final FunctionDescriptor $DESC = FunctionDescriptor.ofVoid(
-            Cubiomes.C_POINTER,
+        private static final FunctionDescriptor $DESC = FunctionDescriptor.of(
+            Cubiomes.C_INT,
             Cubiomes.C_POINTER,
             Cubiomes.C_POINTER
         );
@@ -93,9 +87,9 @@ public class LootFunction {
         /**
          * Invoke the upcall stub {@code funcPtr}, with given parameters
          */
-        public static void invoke(MemorySegment funcPtr, MemorySegment _x0, MemorySegment _x1, MemorySegment _x2) {
+        public static int invoke(MemorySegment funcPtr, MemorySegment _x0, MemorySegment _x1) {
             try {
-                 DOWN$MH.invokeExact(funcPtr, _x0, _x1, _x2);
+                return (int) DOWN$MH.invokeExact(funcPtr, _x0, _x1);
             } catch (Error | RuntimeException ex) {
                 throw ex;
             } catch (Throwable ex$) {
@@ -109,7 +103,7 @@ public class LootFunction {
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * void (*fun)(RandomSource *, ItemStack *, const void *)
+     * int (*fun)(RandomSource *, const void *)
      * }
      */
     public static final AddressLayout fun$layout() {
@@ -121,7 +115,7 @@ public class LootFunction {
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * void (*fun)(RandomSource *, ItemStack *, const void *)
+     * int (*fun)(RandomSource *, const void *)
      * }
      */
     public static final long fun$offset() {
@@ -131,7 +125,7 @@ public class LootFunction {
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * void (*fun)(RandomSource *, ItemStack *, const void *)
+     * int (*fun)(RandomSource *, const void *)
      * }
      */
     public static MemorySegment fun(MemorySegment struct) {
@@ -141,7 +135,7 @@ public class LootFunction {
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * void (*fun)(RandomSource *, ItemStack *, const void *)
+     * int (*fun)(RandomSource *, const void *)
      * }
      */
     public static void fun(MemorySegment struct, MemorySegment fieldValue) {
@@ -192,213 +186,81 @@ public class LootFunction {
         struct.set(params$LAYOUT, params$OFFSET, fieldValue);
     }
 
-    private static final SequenceLayout params_int$LAYOUT = (SequenceLayout)$LAYOUT.select(groupElement("params_int"));
+    private static final SequenceLayout params_float$LAYOUT = (SequenceLayout)$LAYOUT.select(groupElement("params_float"));
 
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * int params_int[2]
+     * float params_float[1]
      * }
      */
-    public static final SequenceLayout params_int$layout() {
-        return params_int$LAYOUT;
+    public static final SequenceLayout params_float$layout() {
+        return params_float$LAYOUT;
     }
 
-    private static final long params_int$OFFSET = $LAYOUT.byteOffset(groupElement("params_int"));
+    private static final long params_float$OFFSET = $LAYOUT.byteOffset(groupElement("params_float"));
 
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * int params_int[2]
+     * float params_float[1]
      * }
      */
-    public static final long params_int$offset() {
-        return params_int$OFFSET;
+    public static final long params_float$offset() {
+        return params_float$OFFSET;
     }
 
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * int params_int[2]
+     * float params_float[1]
      * }
      */
-    public static MemorySegment params_int(MemorySegment struct) {
-        return struct.asSlice(params_int$OFFSET, params_int$LAYOUT.byteSize());
+    public static MemorySegment params_float(MemorySegment struct) {
+        return struct.asSlice(params_float$OFFSET, params_float$LAYOUT.byteSize());
     }
 
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * int params_int[2]
+     * float params_float[1]
      * }
      */
-    public static void params_int(MemorySegment struct, MemorySegment fieldValue) {
-        MemorySegment.copy(fieldValue, 0L, struct, params_int$OFFSET, params_int$LAYOUT.byteSize());
+    public static void params_float(MemorySegment struct, MemorySegment fieldValue) {
+        MemorySegment.copy(fieldValue, 0L, struct, params_float$OFFSET, params_float$LAYOUT.byteSize());
     }
 
-    private static long[] params_int$DIMS = { 2 };
+    private static long[] params_float$DIMS = { 1 };
 
     /**
      * Dimensions for array field:
      * {@snippet lang=c :
-     * int params_int[2]
+     * float params_float[1]
      * }
      */
-    public static long[] params_int$dimensions() {
-        return params_int$DIMS;
+    public static long[] params_float$dimensions() {
+        return params_float$DIMS;
     }
-    private static final VarHandle params_int$ELEM_HANDLE = params_int$LAYOUT.varHandle(sequenceElement());
+    private static final VarHandle params_float$ELEM_HANDLE = params_float$LAYOUT.varHandle(sequenceElement());
 
     /**
      * Indexed getter for field:
      * {@snippet lang=c :
-     * int params_int[2]
+     * float params_float[1]
      * }
      */
-    public static int params_int(MemorySegment struct, long index0) {
-        return (int)params_int$ELEM_HANDLE.get(struct, params_int$OFFSET, index0);
+    public static float params_float(MemorySegment struct, long index0) {
+        return (float)params_float$ELEM_HANDLE.get(struct, params_float$OFFSET, index0);
     }
 
     /**
      * Indexed setter for field:
      * {@snippet lang=c :
-     * int params_int[2]
+     * float params_float[1]
      * }
      */
-    public static void params_int(MemorySegment struct, long index0, int fieldValue) {
-        params_int$ELEM_HANDLE.set(struct, params_int$OFFSET, index0, fieldValue);
-    }
-
-    private static final AddressLayout varparams_int$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("varparams_int"));
-
-    /**
-     * Layout for field:
-     * {@snippet lang=c :
-     * int *varparams_int
-     * }
-     */
-    public static final AddressLayout varparams_int$layout() {
-        return varparams_int$LAYOUT;
-    }
-
-    private static final long varparams_int$OFFSET = $LAYOUT.byteOffset(groupElement("varparams_int"));
-
-    /**
-     * Offset for field:
-     * {@snippet lang=c :
-     * int *varparams_int
-     * }
-     */
-    public static final long varparams_int$offset() {
-        return varparams_int$OFFSET;
-    }
-
-    /**
-     * Getter for field:
-     * {@snippet lang=c :
-     * int *varparams_int
-     * }
-     */
-    public static MemorySegment varparams_int(MemorySegment struct) {
-        return struct.get(varparams_int$LAYOUT, varparams_int$OFFSET);
-    }
-
-    /**
-     * Setter for field:
-     * {@snippet lang=c :
-     * int *varparams_int
-     * }
-     */
-    public static void varparams_int(MemorySegment struct, MemorySegment fieldValue) {
-        struct.set(varparams_int$LAYOUT, varparams_int$OFFSET, fieldValue);
-    }
-
-    private static final AddressLayout varparams_int_arr$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("varparams_int_arr"));
-
-    /**
-     * Layout for field:
-     * {@snippet lang=c :
-     * int **varparams_int_arr
-     * }
-     */
-    public static final AddressLayout varparams_int_arr$layout() {
-        return varparams_int_arr$LAYOUT;
-    }
-
-    private static final long varparams_int_arr$OFFSET = $LAYOUT.byteOffset(groupElement("varparams_int_arr"));
-
-    /**
-     * Offset for field:
-     * {@snippet lang=c :
-     * int **varparams_int_arr
-     * }
-     */
-    public static final long varparams_int_arr$offset() {
-        return varparams_int_arr$OFFSET;
-    }
-
-    /**
-     * Getter for field:
-     * {@snippet lang=c :
-     * int **varparams_int_arr
-     * }
-     */
-    public static MemorySegment varparams_int_arr(MemorySegment struct) {
-        return struct.get(varparams_int_arr$LAYOUT, varparams_int_arr$OFFSET);
-    }
-
-    /**
-     * Setter for field:
-     * {@snippet lang=c :
-     * int **varparams_int_arr
-     * }
-     */
-    public static void varparams_int_arr(MemorySegment struct, MemorySegment fieldValue) {
-        struct.set(varparams_int_arr$LAYOUT, varparams_int_arr$OFFSET, fieldValue);
-    }
-
-    private static final OfInt varparams_int_arr_size$LAYOUT = (OfInt)$LAYOUT.select(groupElement("varparams_int_arr_size"));
-
-    /**
-     * Layout for field:
-     * {@snippet lang=c :
-     * int varparams_int_arr_size
-     * }
-     */
-    public static final OfInt varparams_int_arr_size$layout() {
-        return varparams_int_arr_size$LAYOUT;
-    }
-
-    private static final long varparams_int_arr_size$OFFSET = $LAYOUT.byteOffset(groupElement("varparams_int_arr_size"));
-
-    /**
-     * Offset for field:
-     * {@snippet lang=c :
-     * int varparams_int_arr_size
-     * }
-     */
-    public static final long varparams_int_arr_size$offset() {
-        return varparams_int_arr_size$OFFSET;
-    }
-
-    /**
-     * Getter for field:
-     * {@snippet lang=c :
-     * int varparams_int_arr_size
-     * }
-     */
-    public static int varparams_int_arr_size(MemorySegment struct) {
-        return struct.get(varparams_int_arr_size$LAYOUT, varparams_int_arr_size$OFFSET);
-    }
-
-    /**
-     * Setter for field:
-     * {@snippet lang=c :
-     * int varparams_int_arr_size
-     * }
-     */
-    public static void varparams_int_arr_size(MemorySegment struct, int fieldValue) {
-        struct.set(varparams_int_arr_size$LAYOUT, varparams_int_arr_size$OFFSET, fieldValue);
+    public static void params_float(MemorySegment struct, long index0, float fieldValue) {
+        params_float$ELEM_HANDLE.set(struct, params_float$OFFSET, index0, fieldValue);
     }
 
     /**

@@ -14,82 +14,31 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
 
 /**
  * {@snippet lang=c :
- * struct RandomSource {
- *     int type;
- *     union {
- *         uint64_t jr;
- *         Xoroshiro xr;
- *     };
+ * union RandomState {
+ *     uint64_t jr;
+ *     Xoroshiro xr;
  * }
  * }
  */
-public class RandomSource {
+public class RandomState {
 
-    RandomSource() {
+    RandomState() {
         // Should not be called directly
     }
 
-    private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        Cubiomes.C_INT.withName("type"),
-        MemoryLayout.paddingLayout(4),
-        MemoryLayout.unionLayout(
-            Cubiomes.C_LONG.withName("jr"),
-            Xoroshiro.layout().withName("xr")
-        ).withName("$anon$368:5")
-    ).withName("RandomSource");
+    private static final GroupLayout $LAYOUT = MemoryLayout.unionLayout(
+        Cubiomes.C_LONG.withName("jr"),
+        Xoroshiro.layout().withName("xr")
+    ).withName("RandomState");
 
     /**
-     * The layout of this struct
+     * The layout of this union
      */
     public static final GroupLayout layout() {
         return $LAYOUT;
     }
 
-    private static final OfInt type$LAYOUT = (OfInt)$LAYOUT.select(groupElement("type"));
-
-    /**
-     * Layout for field:
-     * {@snippet lang=c :
-     * int type
-     * }
-     */
-    public static final OfInt type$layout() {
-        return type$LAYOUT;
-    }
-
-    private static final long type$OFFSET = $LAYOUT.byteOffset(groupElement("type"));
-
-    /**
-     * Offset for field:
-     * {@snippet lang=c :
-     * int type
-     * }
-     */
-    public static final long type$offset() {
-        return type$OFFSET;
-    }
-
-    /**
-     * Getter for field:
-     * {@snippet lang=c :
-     * int type
-     * }
-     */
-    public static int type(MemorySegment struct) {
-        return struct.get(type$LAYOUT, type$OFFSET);
-    }
-
-    /**
-     * Setter for field:
-     * {@snippet lang=c :
-     * int type
-     * }
-     */
-    public static void type(MemorySegment struct, int fieldValue) {
-        struct.set(type$LAYOUT, type$OFFSET, fieldValue);
-    }
-
-    private static final OfLong jr$LAYOUT = (OfLong)$LAYOUT.select(groupElement("$anon$368:5"), groupElement("jr"));
+    private static final OfLong jr$LAYOUT = (OfLong)$LAYOUT.select(groupElement("jr"));
 
     /**
      * Layout for field:
@@ -101,7 +50,7 @@ public class RandomSource {
         return jr$LAYOUT;
     }
 
-    private static final long jr$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$368:5"), groupElement("jr"));
+    private static final long jr$OFFSET = $LAYOUT.byteOffset(groupElement("jr"));
 
     /**
      * Offset for field:
@@ -119,8 +68,8 @@ public class RandomSource {
      * uint64_t jr
      * }
      */
-    public static long jr(MemorySegment struct) {
-        return struct.get(jr$LAYOUT, jr$OFFSET);
+    public static long jr(MemorySegment union) {
+        return union.get(jr$LAYOUT, jr$OFFSET);
     }
 
     /**
@@ -129,11 +78,11 @@ public class RandomSource {
      * uint64_t jr
      * }
      */
-    public static void jr(MemorySegment struct, long fieldValue) {
-        struct.set(jr$LAYOUT, jr$OFFSET, fieldValue);
+    public static void jr(MemorySegment union, long fieldValue) {
+        union.set(jr$LAYOUT, jr$OFFSET, fieldValue);
     }
 
-    private static final GroupLayout xr$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("$anon$368:5"), groupElement("xr"));
+    private static final GroupLayout xr$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("xr"));
 
     /**
      * Layout for field:
@@ -145,7 +94,7 @@ public class RandomSource {
         return xr$LAYOUT;
     }
 
-    private static final long xr$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$368:5"), groupElement("xr"));
+    private static final long xr$OFFSET = $LAYOUT.byteOffset(groupElement("xr"));
 
     /**
      * Offset for field:
@@ -163,8 +112,8 @@ public class RandomSource {
      * Xoroshiro xr
      * }
      */
-    public static MemorySegment xr(MemorySegment struct) {
-        return struct.asSlice(xr$OFFSET, xr$LAYOUT.byteSize());
+    public static MemorySegment xr(MemorySegment union) {
+        return union.asSlice(xr$OFFSET, xr$LAYOUT.byteSize());
     }
 
     /**
@@ -173,8 +122,8 @@ public class RandomSource {
      * Xoroshiro xr
      * }
      */
-    public static void xr(MemorySegment struct, MemorySegment fieldValue) {
-        MemorySegment.copy(fieldValue, 0L, struct, xr$OFFSET, xr$LAYOUT.byteSize());
+    public static void xr(MemorySegment union, MemorySegment fieldValue) {
+        MemorySegment.copy(fieldValue, 0L, union, xr$OFFSET, xr$LAYOUT.byteSize());
     }
 
     /**
@@ -186,7 +135,7 @@ public class RandomSource {
     }
 
     /**
-     * The size (in bytes) of this struct
+     * The size (in bytes) of this union
      */
     public static long sizeof() { return layout().byteSize(); }
 

@@ -14,7 +14,7 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
 
 /**
  * {@snippet lang=c :
- * typedef int (*RollCountFunction)(uint64_t *, const int, const int)
+ * typedef int (*RollCountFunction)(RandomSource *, const int, const int)
  * }
  */
 public final class RollCountFunction {

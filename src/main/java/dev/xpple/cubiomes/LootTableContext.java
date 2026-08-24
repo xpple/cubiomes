@@ -26,7 +26,7 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
  *     int subtable_count;
  *     int *subtable_pool_offset;
  *     int *subtable_pool_count;
- *     uint64_t prng_state;
+ *     RandomSource prng_state;
  *     int generated_item_count;
  *     ItemStack generated_items[27];
  * }
@@ -53,7 +53,7 @@ public class LootTableContext {
         MemoryLayout.paddingLayout(4),
         Cubiomes.C_POINTER.withName("subtable_pool_offset"),
         Cubiomes.C_POINTER.withName("subtable_pool_count"),
-        Cubiomes.C_LONG.withName("prng_state"),
+        RandomSource.layout().withName("prng_state"),
         Cubiomes.C_INT.withName("generated_item_count"),
         MemoryLayout.sequenceLayout(27, ItemStack.layout()).withName("generated_items")
     ).withName("LootTableContext");
@@ -582,15 +582,15 @@ public class LootTableContext {
         struct.set(subtable_pool_count$LAYOUT, subtable_pool_count$OFFSET, fieldValue);
     }
 
-    private static final OfLong prng_state$LAYOUT = (OfLong)$LAYOUT.select(groupElement("prng_state"));
+    private static final GroupLayout prng_state$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("prng_state"));
 
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * uint64_t prng_state
+     * RandomSource prng_state
      * }
      */
-    public static final OfLong prng_state$layout() {
+    public static final GroupLayout prng_state$layout() {
         return prng_state$LAYOUT;
     }
 
@@ -599,7 +599,7 @@ public class LootTableContext {
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * uint64_t prng_state
+     * RandomSource prng_state
      * }
      */
     public static final long prng_state$offset() {
@@ -609,21 +609,21 @@ public class LootTableContext {
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * uint64_t prng_state
+     * RandomSource prng_state
      * }
      */
-    public static long prng_state(MemorySegment struct) {
-        return struct.get(prng_state$LAYOUT, prng_state$OFFSET);
+    public static MemorySegment prng_state(MemorySegment struct) {
+        return struct.asSlice(prng_state$OFFSET, prng_state$LAYOUT.byteSize());
     }
 
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * uint64_t prng_state
+     * RandomSource prng_state
      * }
      */
-    public static void prng_state(MemorySegment struct, long fieldValue) {
-        struct.set(prng_state$LAYOUT, prng_state$OFFSET, fieldValue);
+    public static void prng_state(MemorySegment struct, MemorySegment fieldValue) {
+        MemorySegment.copy(fieldValue, 0L, struct, prng_state$OFFSET, prng_state$LAYOUT.byteSize());
     }
 
     private static final OfInt generated_item_count$LAYOUT = (OfInt)$LAYOUT.select(groupElement("generated_item_count"));
