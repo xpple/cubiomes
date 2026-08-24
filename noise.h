@@ -45,8 +45,8 @@ double maintainPrecision(double x)
 }
 
 /// Perlin noise
-void perlinInit(PerlinNoise *noise, uint64_t *seed);
-void xPerlinInit(PerlinNoise *noise, Xoroshiro *xr);
+void perlinInit(PerlinNoise *restrict noise, uint64_t *restrict seed);
+void xPerlinInit(PerlinNoise *restrict noise, Xoroshiro *restrict xr);
 
 double samplePerlin(const PerlinNoise *noise, double x, double y, double z,
         double yamp, double ymax);
