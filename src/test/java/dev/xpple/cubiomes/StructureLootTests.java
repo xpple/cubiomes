@@ -45,7 +45,7 @@ public class StructureLootTests {
         // since strings are null terminated, we reinterpret to `Long.MAX_VALUE` to create space
         MemorySegment lootTable = Piece.lootTables(piece).getAtIndex(ValueLayout.ADDRESS, 0).reinterpret(Long.MAX_VALUE);
         // to get a Java string, call `getString(0)`
-        assertEquals("pillager_outpost", lootTable.getString(0));
+        assertEquals("chests/pillager_outpost", lootTable.getString(0));
         long lootSeed = Piece.lootSeeds(piece).getAtIndex(Cubiomes.C_LONG_LONG, 0);
 
         // `init_loot_table_name` expects a LootTableContext**
