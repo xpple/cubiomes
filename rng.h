@@ -1,6 +1,9 @@
 #ifndef RNG_H_
 #define RNG_H_
 
+#ifdef __STDC_FORMAT_MACROS
+    #undef __STDC_FORMAT_MACROS
+#endif
 #define __STDC_FORMAT_MACROS 1
 
 #include <stdlib.h>
@@ -26,9 +29,33 @@ typedef float       f32;
 typedef double      f64;
 
 
+#ifdef STRUCT
+    #undef STRUCT
+#endif
 #define STRUCT(S) typedef struct S S; struct S
 #define UNION(S) typedef union S S; union S
 
+#ifdef IABS
+    #undef IABS
+#endif
+#ifdef PREFETCH
+    #undef PREFETCH
+#endif
+#ifdef likely
+    #undef likely
+#endif
+#ifdef unlikely
+    #undef unlikely
+#endif
+#ifdef ATTR
+    #undef ATTR
+#endif
+#ifdef BSWAP32
+    #undef BSWAP32
+#endif
+#ifdef UNREACHABLE
+    #undef UNREACHABLE
+#endif
 #ifdef __GNUC__
 
 #define IABS(X)                 __builtin_abs(X)
@@ -57,6 +84,10 @@ static inline uint32_t BSWAP32(uint32_t x) {
 #define UNREACHABLE()           exit(1) // [[noreturn]]
 #endif
 
+#endif
+
+#if defined(__cplusplus) && !defined(restrict)
+    #define restrict
 #endif
 
 /// imitate amd64/x64 rotate instructions
@@ -150,6 +181,9 @@ static inline double nextDouble(uint64_t *seed)
  * This is a macro and not an inline function, as many compilers can make use
  * of the additional optimisation passes for the surrounding code.
  */
+#ifdef JAVA_NEXT_INT24
+    #undef JAVA_NEXT_INT24
+#endif
 #define JAVA_NEXT_INT24(S,X)                \
     do {                                    \
         uint64_t a = (1ULL << 48) - 1;      \
@@ -346,8 +380,8 @@ static inline int xNextIntJBetween(Xoroshiro *xr, const int min, const int max)
 static inline Xoroshiro xAtPos(Xoroshiro xr, int x, int y, int z)
 {
     uint64_t l = getSeedAt(x, y, z);
-
-    return (Xoroshiro) {l ^ xr.lo, xr.hi};
+    Xoroshiro xr2 = {l ^ xr.lo, xr.hi};
+    return xr2;
 }
 
 enum {

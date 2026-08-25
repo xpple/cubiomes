@@ -8,14 +8,26 @@
 #include <sys/stat.h>
 
 
+#ifdef IS_DIR_SEP
+    #undef IS_DIR_SEP
+#endif
 #if defined(_WIN32)
 
 #include <windows.h>
 typedef HANDLE thread_id_t;
 #include <direct.h>
 #define IS_DIR_SEP(C)   ((C) == '/' || (C) == '\\')
+#ifdef stat
+    #undef stat
+#endif
 #define stat            _stat
+#ifdef mkdir
+    #undef mkdir
+#endif
 #define mkdir(P,X)      _mkdir(P)
+#ifdef S_IFDIR
+    #undef S_IFDIR
+#endif
 #define S_IFDIR         _S_IFDIR
 
 #ifndef _S_ISTYPE
@@ -28,6 +40,9 @@ typedef HANDLE thread_id_t;
 
 #else
 
+#ifdef USE_PTHREAD
+    #undef USE_PTHREAD
+#endif
 #define USE_PTHREAD
 #include <pthread.h>
 typedef pthread_t       thread_id_t;
@@ -223,6 +238,9 @@ Pos getOptimalAfk(Pos p[4], int ax, int ay, int az, int *spcnt)
 }
 
 
+#ifdef MAX_PATHLEN
+    #undef MAX_PATHLEN
+#endif
 #define MAX_PATHLEN 4096
 
 STRUCT(linked_seeds_t)

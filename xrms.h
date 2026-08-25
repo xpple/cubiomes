@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+#ifdef POWS_OF_2
+    #undef POWS_OF_2
+#endif
 #define POWS_OF_2 64
 
 static const uint64_t xrms[POWS_OF_2][128][2] = {

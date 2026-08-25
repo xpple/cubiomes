@@ -5,6 +5,9 @@
 #include "rng.h"
 #include "xrms.h"
 
+#ifdef MAT_SIZE
+    #undef MAT_SIZE
+#endif
 #define MAT_SIZE sizeof(uint64_t) * 128 * 2
 
 static void calcMatPows(uint64_t m[128][2]);
