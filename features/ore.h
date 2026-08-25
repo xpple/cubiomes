@@ -87,24 +87,24 @@ static inline int providerRange(RandomSource *rnd, const int bottomOffset, const
 }
 
 // <=1.16.5
-static inline int providerDepthAverage(RandomSource *rnd, const int baseline, const int spread, const int h3) {
+static inline int providerDepthAverage(RandomSource *rnd, const int baseline, const int spread, int) {
     int a = absNextInt(rnd, spread);
     int b = absNextInt(rnd, spread);
     return a + b - spread + baseline;
 }
 
 // <=1.16.5
-static inline int providerEmeraldOre(RandomSource *rnd, int h1, int h2, int h3) {
+static inline int providerEmeraldOre(RandomSource *rnd, int, int, int) {
     return absNextInt(rnd, 28) + 4;
 }
 
 // <=1.16.5
-static inline int providerMagmaOre(RandomSource *rnd, int h1, int h2, int h3) {
+static inline int providerMagmaOre(RandomSource *rnd, int, int, int) {
     return 32 - 5 + absNextInt(rnd, 10);
 }
 
 // >=1.17
-static inline int providerUniformRange(RandomSource *rnd, const int minOffset, const int maxOffset, const int h3) {
+static inline int providerUniformRange(RandomSource *rnd, const int minOffset, const int maxOffset, int) {
     if (minOffset > maxOffset) {
         return minOffset;
     }
@@ -112,7 +112,7 @@ static inline int providerUniformRange(RandomSource *rnd, const int minOffset, c
 }
 
 // >=1.17
-static inline int providerTriangleRange(RandomSource *rnd, const int minOffset, const int maxOffset, const int h3) {
+static inline int providerTriangleRange(RandomSource *rnd, const int minOffset, const int maxOffset, int) {
     if (minOffset > maxOffset) {
         return minOffset;
     }

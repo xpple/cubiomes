@@ -8,24 +8,12 @@ docs/LayerSummary.synctex.gz
 docs/LayerSummary.toc
 *.o
 *.a
-a.out
+*.out
+
+*.so
+*.dylib
+*.dll
 
 build
 
 .idea
-
-*.dll
-
-# From toptal.com/developers/gitignore
-CMakeLists.txt.user
-CMakeCache.txt
-CMakeFiles
-CMakeScripts
-Testing
-Makefile
-cmake_install.cmake
-install_manifest.txt
-compile_commands.json
-CTestTestfile.cmake
-_deps
-CMakeUserPresets.json

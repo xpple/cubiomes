@@ -23,7 +23,7 @@ I have set up the automatic creation of Java bindings based on commits to the ma
 
 #### Cubiomes-Viewer
 
-If you want to get started without coding, there is a [graphical application](https://github.com/Cubitect/cubiomes-viewer) based on the pre-forked version of this library.
+If you want to get started without coding, there is a [graphical application](https://github.com/Cubitect/cubiomes-viewer) based on the upstream version of this library.
 
 
 #### Audience
@@ -75,23 +75,25 @@ int main()
 }
 ```
 
-You can compile this code by creating an archive of the library (libcubiomes.a) using the provided makefile:
+You can compile this code by creating a shared library (libcubiomes.[so/dylib/dll]) using the CMake build script:
 ```
 $ cd cubiomes
-$ make        # on Linux, or e.g. mingw32-make.exe if using MSYS2 on Windows
+$ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+$ cmake --build build && cp build/libcubiomes.so .
 ```
 Then you can compile your program, while linking the archive, using either of the following commands.
 ```
-$ gcc find_biome_at.c libcubiomes.a -fwrapv -lm   # static; or gcc.exe [...] on Windows
-$ gcc find_biome_at.c -L. -lcubiomes -fwrapv -lm  # dynamic; or gcc.exe [...] on Windows
+$ gcc find_biome_at.c -L. -lcubiomes -O3 -Wall -Wextra -fwrapv -lm
 ```
 Both commands assume that your source code is saved as `find_biome_at.c` in the Cubiomes working directory. If your makefile is configured to use pthreads, you may also need to add the `-lpthread` option for the compiler.
+
 The option `-fwrapv` enforces two's complement for signed integer overflow, which is otherwise undefined behavior. It is not really necessary for this example, but it is a common pitfall when dealing with code that emulates the behavior of Java.
-If the archive fails to generate, or the compilation claims the library's functions are undefined or missing, run `make clean`/`mingw32-make.exe clean` to delete the failed archive, then retry the process.
+
+If the archive fails to generate, or the compilation claims the library's functions are undefined or missing, run `cmake --build build --target clean` to delete the failed archive, then retry the process.
 
 Running the program should output:
 ```
-$ ./a.out     # or ./a.exe on Windows
+$ ./a.out
 Seed 262 has a Mushroom Fields biome at block position (0, 0).
 ```
 
@@ -283,7 +285,7 @@ int main()
 
 #### Strongholds and Spawn
 
-Strongholds, as well as worlds' spawnpoints, actually search until they find a suitable location, rather than checking a single spot like most other structures. This causes them to be particularly slow to find. Furthermore, the positions of strongholds have to be generated in a certain order, which can be done in iteratively with `initFirstStronghold()` and `nextStronghold()`. For the world spawn, the exact coordinate is found after a search for a grass or podzol block prior to 1.18, or for any topsolid nonwaterlogged block in 1.18+; this library cannot model individual blocks, so the search relies on heuristics such as biomes and climate-dependent world heights. Alternatively, we can simply use `estimateSpawn()` and terminate the search after the first biome/climate check under the assumption that grass/a topsolid nonwaterlogged block is nearby.
+Strongholds, as well as the world spawn point, actually search until they find a suitable location, rather than checking a single spot like most other structures. This causes them to be particularly slow to find. Furthermore, the positions of strongholds have to be generated in a certain order, which can be done in iteratively with `initFirstStronghold()` and `nextStronghold()`. For the world spawn, the exact coordinate is found after a search for a grass or podzol block prior to 1.18, or for any top-solid nonwaterlogged block in 1.18+. This library cannot model individual blocks, so the search relies on heuristics such as biomes and climate-dependent world heights. Alternatively, we can simply use `estimateSpawn()` and terminate the search after the first biome/climate check under the assumption that grass/a top-solid nonwaterlogged block is nearby.
 
 
 ```C

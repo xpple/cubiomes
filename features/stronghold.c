@@ -2,15 +2,9 @@
 
 #include <string.h>
 
-// WARNING: This is dangerous because a/b can be evaluated multiple times.
-// E.g. MIN(nextInt(&rnd, 5), 5) will call nextInt(&rnd, 5) twice instead of once.
-#ifdef MIN
-    #undef MIN
-#endif
+// WARNING: Be wary of multiple evaluation.
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
-#ifdef MAX
-    #undef MAX
-#endif
+// WARNING: Be wary of multiple evaluation.
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 STRUCT(StrongholdPieceEnv) {

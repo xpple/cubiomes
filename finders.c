@@ -12,20 +12,11 @@
 #include <float.h>
 #include <math.h>
 
-#ifdef PI
-    #undef PI
-#endif
 #define PI 3.14159265358979323846
 
-// WARNING: This is dangerous because a/b can be evaluated multiple times.
-// E.g. MIN(nextInt(&rnd, 5), 5) will call nextInt(&rnd, 5) twice instead of once.
-#ifdef MIN
-    #undef MIN
-#endif
+// WARNING: Be wary of multiple evaluation.
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
-#ifdef MAX
-    #undef MAX
-#endif
+// WARNING: Be wary of multiple evaluation.
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 
@@ -1155,9 +1146,9 @@ int nextStronghold(StrongholdIter *sh, const Generator *g)
     {
         return 0;
     }
-    // staircase is located at corner of chunk
-    sh->pos.x = (sh->pos.x & ~15);
-    sh->pos.z = (sh->pos.z & ~15);
+    // staircase is located at (4, 4) in chunk
+    sh->pos.x = (sh->pos.x & ~15) + 4;
+    sh->pos.z = (sh->pos.z & ~15) + 4;
 
     sh->ringidx++;
     sh->angle += 2 * PI / sh->ringmax;
@@ -1264,8 +1255,8 @@ Pos findFittestPos(const Generator *g)
     findFittest(g, &spawn, &fitness, 2048.0, 512.0);
     findFittest(g, &spawn, &fitness, 512.0, 32.0);
     // corner of chunk
-    spawn.x = (spawn.x & ~15);
-    spawn.z = (spawn.z & ~15);
+    spawn.x &= ~15;
+    spawn.z &= ~15;
     return spawn;
 }
 
@@ -1299,7 +1290,7 @@ Pos estimateSpawn(const Generator *g, uint64_t *rng)
         setSeed(&s, g->seed);
         spawn = locateBiome(g, 0, 63, 0, 256, spawn_biomes, 0, &s, &found);
         if (!found)
-            spawn.x = spawn.z = 8*(g->mc >= MC_1_9);
+            spawn.x = spawn.z = 8 * (g->mc >= MC_1_9);
         if (rng)
             *rng = s;
     }
@@ -6069,12 +6060,6 @@ L_end:
     return err;
 }
 
-#ifdef IMIN
-    #undef IMIN
-#endif
-#ifdef IMAX
-    #undef IMAX
-#endif
 #define IMIN INT_MIN
 #define IMAX INT_MAX
 static const int g_biome_para_range_18[][13] = {

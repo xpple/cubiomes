@@ -125,7 +125,7 @@ static void set_count_uniform_function(RandomSource* rand, ItemStack* is, const 
     is->count = cnt;
 }
 
-static void set_count_constant_function(RandomSource* rand, ItemStack* is, const void* params)
+static void set_count_constant_function(RandomSource*, ItemStack* is, const void* params)
 {
     const int* params_int = (const int*)params;
     is->count = params_int[0];
@@ -146,7 +146,7 @@ static void set_effect_function(RandomSource* rand, ItemStack* is, const void* p
     is->mob_effect.duration = duration;
 }
 
-static void set_potion_function(RandomSource* rand, ItemStack* is, const void* params)
+static void set_potion_function(RandomSource*, ItemStack* is, const void* params)
 {
     int* varparams_int = (int*)params;
     Potion potion = *(Potion *)varparams_int;
@@ -156,18 +156,18 @@ static void set_potion_function(RandomSource* rand, ItemStack* is, const void* p
     }
 }
 
-static void skip_n_calls_function(RandomSource* rand, ItemStack* is, const void* params)
+static void skip_n_calls_function(RandomSource* rand, ItemStack*, const void* params)
 {
     const int* params_int = (const int*)params;
     absSkipN(rand, params_int[0]);
 }
 
-static void skip_one_call_function(RandomSource* rand, ItemStack* is, const void* params)
+static void skip_one_call_function(RandomSource* rand, ItemStack*, const void*)
 {
     absSkipN(rand, 1);
 }
 
-static void no_op_function(RandomSource* rand, ItemStack* is, const void* params)
+static void no_op_function(RandomSource*, ItemStack*, const void*)
 {
     // do nothing
 }
@@ -363,7 +363,7 @@ static void enchant_with_levels_function(RandomSource* rand, ItemStack* is, cons
     }
 }
 
-static void set_enchantments_function(RandomSource* rand, ItemStack* is, const void* params) {
+static void set_enchantments_function(RandomSource*, ItemStack* is, const void* params) {
     int* params_int = (int*)params;
     const int length = params_int[0];
 
@@ -533,6 +533,7 @@ static int is_applicable(const Enchantment enchantment, const ItemType item, con
 
     case LUNGE:
         return item == SPEAR;
+    default: UNREACHABLE();
     }
 
     return 0;
@@ -718,6 +719,7 @@ static int test_effective_level(const Enchantment enchantment, const int i, cons
         if ((n < 15 + (i - 1) * 9) || (n > 65 + (i - 1) * 9))
             return 0;
         break;
+    default: UNREACHABLE();
     }
 
     return 1;

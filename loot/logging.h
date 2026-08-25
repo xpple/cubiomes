@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #ifdef LOG_ERROR
-    #undef LOG_ERROR
+#undef LOG_ERROR
 #endif
 #define LOG_ERROR(message) log_error(message, __FILE__, __LINE__)
 static inline void log_error(const char* message, const char* file, const int line) {

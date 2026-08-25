@@ -5,45 +5,18 @@
 #include <string.h>
 
 // https://c-faq.com/misc/bitsets.html
-#ifdef BITMASK
-    #undef BITMASK
-#endif
 #define BITMASK(b) (1 << ((b) % CHAR_BIT))
-#ifdef BITSLOT
-    #undef BITSLOT
-#endif
 #define BITSLOT(b) ((b) / CHAR_BIT)
-#ifdef BITSET
-    #undef BITSET
-#endif
 #define BITSET(a, b) ((a)[BITSLOT(b)] |= BITMASK(b))
-#ifdef BITCLEAR
-    #undef BITCLEAR
-#endif
 #define BITCLEAR(a, b) ((a)[BITSLOT(b)] &= ~BITMASK(b))
-#ifdef BITTEST
-    #undef BITTEST
-#endif
 #define BITTEST(a, b) ((a)[BITSLOT(b)] & BITMASK(b))
-#ifdef BITNSLOTS
-    #undef BITNSLOTS
-#endif
 #define BITNSLOTS(nb) ((nb + CHAR_BIT - 1) / CHAR_BIT)
 
-#ifdef PI
-    #undef PI
-#endif
 #define PI 3.14159265358979323846
 
-// WARNING: This is dangerous because a/b can be evaluated multiple times.
-// E.g. MIN(nextInt(&rnd, 5), 5) will call nextInt(&rnd, 5) twice instead of once.
-#ifdef MIN
-    #undef MIN
-#endif
+// WARNING: Be wary of multiple evaluation.
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
-#ifdef MAX
-    #undef MAX
-#endif
+// WARNING: Be wary of multiple evaluation.
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)

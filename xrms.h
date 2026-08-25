@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 #ifdef POWS_OF_2
-    #undef POWS_OF_2
+#undef POWS_OF_2
 #endif
 #define POWS_OF_2 64
 

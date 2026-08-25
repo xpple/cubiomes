@@ -2,7 +2,7 @@
 #define RNG_H_
 
 #ifdef __STDC_FORMAT_MACROS
-    #undef __STDC_FORMAT_MACROS
+#undef __STDC_FORMAT_MACROS
 #endif
 #define __STDC_FORMAT_MACROS 1
 
@@ -30,31 +30,34 @@ typedef double      f64;
 
 
 #ifdef STRUCT
-    #undef STRUCT
+#undef STRUCT
 #endif
 #define STRUCT(S) typedef struct S S; struct S
+#ifdef UNION
+#undef UNION
+#endif
 #define UNION(S) typedef union S S; union S
 
 #ifdef IABS
-    #undef IABS
+#undef IABS
 #endif
 #ifdef PREFETCH
-    #undef PREFETCH
+#undef PREFETCH
 #endif
 #ifdef likely
-    #undef likely
+#undef likely
 #endif
 #ifdef unlikely
-    #undef unlikely
+#undef unlikely
 #endif
 #ifdef ATTR
-    #undef ATTR
+#undef ATTR
 #endif
 #ifdef BSWAP32
-    #undef BSWAP32
+#undef BSWAP32
 #endif
 #ifdef UNREACHABLE
-    #undef UNREACHABLE
+#undef UNREACHABLE
 #endif
 #ifdef __GNUC__
 
@@ -86,9 +89,10 @@ static inline uint32_t BSWAP32(uint32_t x) {
 
 #endif
 
-#if defined(__cplusplus) && !defined(restrict)
-    #define restrict
+#ifdef restrict
+#undef restrict
 #endif
+#define restrict __restrict
 
 /// imitate amd64/x64 rotate instructions
 
@@ -177,13 +181,13 @@ static inline double nextDouble(uint64_t *seed)
     return (int64_t) x / (double) (1ULL << 53);
 }
 
+#ifdef JAVA_NEXT_INT24
+#undef JAVA_NEXT_INT24
+#endif
 /* A macro to generate the ideal assembly for X = nextInt(*S, 24)
  * This is a macro and not an inline function, as many compilers can make use
  * of the additional optimisation passes for the surrounding code.
  */
-#ifdef JAVA_NEXT_INT24
-    #undef JAVA_NEXT_INT24
-#endif
 #define JAVA_NEXT_INT24(S,X)                \
     do {                                    \
         uint64_t a = (1ULL << 48) - 1;      \
@@ -380,8 +384,7 @@ static inline int xNextIntJBetween(Xoroshiro *xr, const int min, const int max)
 static inline Xoroshiro xAtPos(Xoroshiro xr, int x, int y, int z)
 {
     uint64_t l = getSeedAt(x, y, z);
-    Xoroshiro xr2 = {l ^ xr.lo, xr.hi};
-    return xr2;
+    return (Xoroshiro) {l ^ xr.lo, xr.hi};
 }
 
 enum {
