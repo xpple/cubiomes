@@ -89,10 +89,9 @@ static inline uint32_t BSWAP32(uint32_t x) {
 
 #endif
 
-#ifdef restrict
-#undef restrict
+#ifndef __restrict
+#define __restrict
 #endif
-#define restrict __restrict
 
 /// imitate amd64/x64 rotate instructions
 
@@ -384,7 +383,8 @@ static inline int xNextIntJBetween(Xoroshiro *xr, const int min, const int max)
 static inline Xoroshiro xAtPos(Xoroshiro xr, int x, int y, int z)
 {
     uint64_t l = getSeedAt(x, y, z);
-    return (Xoroshiro) {l ^ xr.lo, xr.hi};
+    Xoroshiro xr2 = {l ^ xr.lo, xr.hi};
+    return xr2;
 }
 
 enum {

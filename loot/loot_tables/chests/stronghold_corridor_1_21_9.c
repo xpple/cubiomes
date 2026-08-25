@@ -77,7 +77,6 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__0->loot_functions[5]), 1, 3);
     create_set_count(&(loot_pool__0->loot_functions[6]), 1, 5);
     create_enchant_with_levels_tag(&(loot_pool__0->loot_functions[7]), MC_1_21_9, "minecraft:book", get_item_type("minecraft:book"), 30, 30, "#minecraft:on_random_loot", 1);
-    LootPool* loot_pool__1 = &(context.loot_pools[1]);
 }
 
 LootTableContext* init_stronghold_corridor_1_21_9() {

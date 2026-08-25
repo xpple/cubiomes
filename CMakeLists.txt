@@ -12,7 +12,7 @@ if (WIN32)
 	set(CMAKE_C_FLAGS "-D_WIN32")
 endif()
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3 -DNDEBUG")
 set(CMAKE_C_FLAGS_DEBUG "-O0 -g3 -DDEBUG")
 
@@ -206,9 +206,13 @@ set_property(TARGET objects PROPERTY POSITION_INDEPENDENT_CODE 1)
 add_library(cubiomes SHARED $<TARGET_OBJECTS:objects>)
 add_library(cubiomes_static STATIC $<TARGET_OBJECTS:objects>)
 
-if (WIN32)
-	set_target_properties(cubiomes PROPERTIES PREFIX "")
-endif()
+set_target_properties(cubiomes PROPERTIES
+	LIBRARY_OUTPUT_DIRECTORY ".."
+	RUNTIME_OUTPUT_DIRECTORY ".."
+)
+set_target_properties(cubiomes_static PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY ".."
+)
 
 install(TARGETS cubiomes cubiomes_static DESTINATION lib)
 install(FILES ${HEADERS} DESTINATION include)

@@ -148,7 +148,6 @@ static LootTableContext context = {
 };
 
 static void create_loot_functions() {
-    LootPool* loot_pool__0 = &(context.loot_pools[0]);
     LootPool* loot_pool__1 = &(context.loot_pools[1]);
     create_set_count(&(loot_pool__1->loot_functions[0]), 1, 4);
     create_set_count(&(loot_pool__1->loot_functions[1]), 1, 4);
@@ -157,7 +156,6 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__2->loot_functions[0]), 4, 8);
     create_set_count(&(loot_pool__2->loot_functions[1]), 1, 2);
     create_set_count(&(loot_pool__2->loot_functions[2]), 1, 5);
-    LootPool* loot_pool__3 = &(context.loot_pools[3]);
     LootPool* loot_pool__4 = &(context.loot_pools[4]);
     create_set_count(&(loot_pool__4->loot_functions[0]), 2, 4);
     create_set_count(&(loot_pool__4->loot_functions[1]), 2, 4);

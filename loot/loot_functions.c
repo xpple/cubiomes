@@ -125,8 +125,9 @@ static void set_count_uniform_function(RandomSource* rand, ItemStack* is, const 
     is->count = cnt;
 }
 
-static void set_count_constant_function(RandomSource*, ItemStack* is, const void* params)
+static void set_count_constant_function(RandomSource* unused_, ItemStack* is, const void* params)
 {
+    (void)(unused_); // Unused
     const int* params_int = (const int*)params;
     is->count = params_int[0];
 }
@@ -146,8 +147,9 @@ static void set_effect_function(RandomSource* rand, ItemStack* is, const void* p
     is->mob_effect.duration = duration;
 }
 
-static void set_potion_function(RandomSource*, ItemStack* is, const void* params)
+static void set_potion_function(RandomSource* unused_, ItemStack* is, const void* params)
 {
+    (void)(unused_); // Unused
     int* varparams_int = (int*)params;
     Potion potion = *(Potion *)varparams_int;
     // currently only buried treasures and abandoned camps use potions, where each potion has exactly one mob effect
@@ -156,19 +158,25 @@ static void set_potion_function(RandomSource*, ItemStack* is, const void* params
     }
 }
 
-static void skip_n_calls_function(RandomSource* rand, ItemStack*, const void* params)
+static void skip_n_calls_function(RandomSource* rand, ItemStack* unused_, const void* params)
 {
+    (void)(unused_); // Unused
     const int* params_int = (const int*)params;
     absSkipN(rand, params_int[0]);
 }
 
-static void skip_one_call_function(RandomSource* rand, ItemStack*, const void*)
+static void skip_one_call_function(RandomSource* rand, ItemStack* unused1_, const void* unused2_)
 {
+    (void)(unused1_); // Unused
+    (void)(unused2_); // Unused
     absSkipN(rand, 1);
 }
 
-static void no_op_function(RandomSource*, ItemStack*, const void*)
+static void no_op_function(RandomSource* unused1_, ItemStack* unused2_, const void* unused3_)
 {
+    (void)(unused1_); // Unused
+    (void)(unused2_); // Unused
+    (void)(unused3_); // Unused
     // do nothing
 }
 
@@ -363,7 +371,8 @@ static void enchant_with_levels_function(RandomSource* rand, ItemStack* is, cons
     }
 }
 
-static void set_enchantments_function(RandomSource*, ItemStack* is, const void* params) {
+static void set_enchantments_function(RandomSource* unused_, ItemStack* is, const void* params) {
+    (void)(unused_); // Unused
     int* params_int = (int*)params;
     const int length = params_int[0];
 

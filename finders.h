@@ -461,7 +461,8 @@ int32_t getOreVeinBlockAt(int x, int y, int z, OreVeinParameters* params);
 // Random providers
 //==============================================================================
 
-static inline int providerUniformIntBetween(uint64_t* rnd, int minInclusive, int maxInclusive, int) {
+static inline int providerUniformIntBetween(uint64_t* rnd, int minInclusive, int maxInclusive, int unused_) {
+    (void)(unused_);
     if (minInclusive > maxInclusive) {
         return minInclusive;
     }
@@ -476,7 +477,9 @@ static inline int providerBiasedToBottom(uint64_t* rnd, int minInclusive, int ma
     return nextInt(rnd, k + inner) + minInclusive;
 }
 
-static inline float providerConstantFloat(uint64_t*, float value, float) {
+static inline float providerConstantFloat(uint64_t* unused1_, float value, float unused2_) {
+    (void)(unused1_);
+    (void)(unused2_);
     return value;
 }
 
