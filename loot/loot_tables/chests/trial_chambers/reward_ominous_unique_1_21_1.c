@@ -47,7 +47,8 @@ static LootTableContext context = {
     .loot_pools = loot_pools,
 };
 
-static void create_loot_functions() {}
+static void create_loot_functions() {
+}
 
 LootTableContext* init_reward_ominous_unique_1_21_1() {
     if (!initialised) {

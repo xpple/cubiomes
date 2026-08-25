@@ -75,14 +75,14 @@ int main()
 }
 ```
 
-You can compile this code by creating a shared library (libcubiomes.[so/dylib/dll]) or an archive (libcubiomes_static.a) using the CMake build script:
-```bash
+You can compile this code by creating a shared library (`libcubiomes.so`, `libcubiomes.dylib` or `cubiomes.dll` depending on your OS) or an archive (`libcubiomes_static.a`) using the CMake build script:
+```shell
 $ cd cubiomes
 $ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-$ cmake --build build
+$ cmake --build build && cp build/libcubiomes.so .
 ```
 Then you can compile your program, while linking the archive or shared library, using either of the following commands.
-```bash
+```shell
 $ gcc find_biome_at.c -L. -lcubiomes -O3 -Wall -Wextra -fwrapv -lm # dynamic
 $ gcc find_biome_at.c libcubiomes_static.a -O3 -Wall -Wextra -fwrapv -lm # static
 ```
@@ -93,7 +93,7 @@ The option `-fwrapv` enforces two's complement for signed integer overflow, whic
 If the archive fails to generate, or the compilation claims the library's functions are undefined or missing, run `cmake --build build --target clean` to delete the failed archive, then retry the process.
 
 Running the program should output:
-```bash
+```shell
 $ ./a.out
 Seed 262 has a Mushroom Fields biome at block position (0, 0).
 ```
