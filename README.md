@@ -18,6 +18,8 @@ Below is a list of all the major additions:
 - Terrain generation (1.18+).
 - Various bug fixes.
 
+This fork does **not** support the Microsoft Visual C++ (MSVC) compiler.
+
 ## Java bindings
 I have set up the automatic creation of Java bindings based on commits to the master branch. See the [java-bindings](https://github.com/xpple/cubiomes/tree/java-bindings) branch for more information.
 
@@ -35,6 +37,7 @@ You should be familiar with the C programming language. A basic understanding of
 
 This section is meant to give you a quick starting point with small example programs if you want to use this library to find your own biome-dependent features.
 
+All terminal commands seen below are for Unix/Linux systems; Windows is similar, barring some minor adjustments.
 
 ### Biome Generator
 
@@ -79,7 +82,7 @@ You can compile this code by creating a shared library (`libcubiomes.so`, `libcu
 ```shell
 $ cd cubiomes
 $ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-$ cmake --build build && cp build/libcubiomes.so .
+$ cmake --build build
 ```
 Then you can compile your program, while linking the archive or shared library, using either of the following commands.
 ```shell
