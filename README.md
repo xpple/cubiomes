@@ -18,7 +18,7 @@ Below is a list of all the major additions:
 - Terrain generation (1.18+).
 - Various bug fixes.
 
-This fork does **not** support the Microsoft Visual C++ (MSVC) compiler.
+MSVC is **not** supported for this fork. Please use MinGW, UCRT64, Clang, or GCC.
 
 ## Java bindings
 I have set up the automatic creation of Java bindings based on commits to the master branch. See the [java-bindings](https://github.com/xpple/cubiomes/tree/java-bindings) branch for more information.
@@ -86,8 +86,8 @@ $ cmake --build build
 ```
 Then you can compile your program, while linking the archive or shared library, using either of the following commands.
 ```shell
-$ gcc find_biome_at.c -L. -lcubiomes -O3 -Wall -Wextra -fwrapv -lm # dynamic
-$ gcc find_biome_at.c libcubiomes_static.a -O3 -Wall -Wextra -fwrapv -lm # static
+$ gcc find_biome_at.c -Lbuild -Wl,-rpath,build -lcubiomes -O3 -Wall -Wextra -fwrapv -lm # dynamic
+$ gcc find_biome_at.c -Lbuild -lcubiomes_static -O3 -Wall -Wextra -fwrapv -lm # static
 ```
 Both commands assume that your source code is saved as `find_biome_at.c` in the Cubiomes working directory. If your makefile is configured to use pthreads, you may also need to add the `-lpthread` option for the compiler.
 

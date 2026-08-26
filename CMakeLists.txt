@@ -210,14 +210,6 @@ if (WIN32)
 	set_target_properties(cubiomes PROPERTIES PREFIX "")
 endif()
 
-set_target_properties(cubiomes PROPERTIES
-	LIBRARY_OUTPUT_DIRECTORY ".."
-	RUNTIME_OUTPUT_DIRECTORY ".."
-)
-set_target_properties(cubiomes_static PROPERTIES
-    ARCHIVE_OUTPUT_DIRECTORY ".."
-)
-
 install(TARGETS cubiomes cubiomes_static DESTINATION lib)
 install(FILES ${HEADERS} DESTINATION include)
 
