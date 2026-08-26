@@ -88,7 +88,6 @@ static void create_loot_functions() {
     create_enchant_with_levels(&(loot_pool__0->loot_functions[16]), MC_1_20, "minecraft:iron_helmet", get_item_type("minecraft:iron_helmet"), 20, 39, 1);
     create_enchant_with_levels(&(loot_pool__0->loot_functions[17]), MC_1_20, "minecraft:iron_pickaxe", get_item_type("minecraft:iron_pickaxe"), 20, 39, 1);
     create_enchant_with_levels(&(loot_pool__0->loot_functions[18]), MC_1_20, "minecraft:iron_shovel", get_item_type("minecraft:iron_shovel"), 20, 39, 1);
-    LootPool* loot_pool__1 = &(context.loot_pools[1]);
 }
 
 LootTableContext* init_end_city_treasure_1_20() {

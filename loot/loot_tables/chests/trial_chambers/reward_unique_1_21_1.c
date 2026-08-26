@@ -48,7 +48,6 @@ static LootTableContext context = {
 };
 
 static void create_loot_functions() {
-    LootPool* loot_pool__0 = &(context.loot_pools[0]);
 }
 
 LootTableContext* init_reward_unique_1_21_1() {

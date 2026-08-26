@@ -14,7 +14,9 @@
 
 #define PI 3.14159265358979323846
 
+// WARNING: Be wary of multiple evaluation.
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
+// WARNING: Be wary of multiple evaluation.
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 
@@ -1252,9 +1254,9 @@ Pos findFittestPos(const Generator *g)
     uint64_t fitness = calcFitness(g, 0, 0);
     findFittest(g, &spawn, &fitness, 2048.0, 512.0);
     findFittest(g, &spawn, &fitness, 512.0, 32.0);
-    // center of chunk
-    spawn.x = (spawn.x & ~15) + 8;
-    spawn.z = (spawn.z & ~15) + 8;
+    // corner of chunk
+    spawn.x &= ~15;
+    spawn.z &= ~15;
     return spawn;
 }
 
@@ -1288,7 +1290,7 @@ Pos estimateSpawn(const Generator *g, uint64_t *rng)
         setSeed(&s, g->seed);
         spawn = locateBiome(g, 0, 63, 0, 256, spawn_biomes, 0, &s, &found);
         if (!found)
-            spawn.x = spawn.z = 8;
+            spawn.x = spawn.z = 8 * (g->mc >= MC_1_9);
         if (rng)
             *rng = s;
     }

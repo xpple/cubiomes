@@ -2,7 +2,9 @@
 
 #include <string.h>
 
+// WARNING: Be wary of multiple evaluation.
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
+// WARNING: Be wary of multiple evaluation.
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 STRUCT(StrongholdPieceEnv) {
@@ -94,7 +96,7 @@ static int addStrongholdPiece(StrongholdPieceEnv *env, int typ, int x, int y, in
     case SH_PORTAL_ROOM:
         offset = stronghold_info[typ].offset; size = stronghold_info[typ].size; break;
     case SH_LIBRARY:
-        offset = (Pos3) stronghold_info[typ].offset; size = (Pos3) stronghold_info[typ].size;
+        offset = stronghold_info[typ].offset; size = stronghold_info[typ].size;
         orientBox(pos, offset, size, facing, &b0, &b1);
         if (b0.y > 10 && !hasCollision(env, b0, b1)) {
             goto L_box_end;
@@ -102,7 +104,7 @@ static int addStrongholdPiece(StrongholdPieceEnv *env, int typ, int x, int y, in
         size.y = 6;
         break;
     case SH_FILLER_CORRIDOR:
-        offset = (Pos3) stronghold_info[typ].offset; size = (Pos3) stronghold_info[typ].size;
+        offset = stronghold_info[typ].offset; size = stronghold_info[typ].size;
         orientBox(pos, offset, size, facing, &b0, &b1);
         Piece *p = hasCollision(env, b0, b1);
         if (!p) {
@@ -248,13 +250,17 @@ static void generateSmallDoorChildForward(StrongholdPieceEnv *env, Piece *piece,
     // WEST and EAST are swapped on old versions
     switch (piece->rot) {
     case 0: // facing 2
-        return extendStronghold(env, piece, piece->bb0.x + offx, piece->bb0.y + offy, piece->bb0.z - 1, 0);
+        extendStronghold(env, piece, piece->bb0.x + offx, piece->bb0.y + offy, piece->bb0.z - 1, 0);
+        return;
     case 2: // facing 0
-        return extendStronghold(env, piece, piece->bb0.x + offx, piece->bb0.y + offy, piece->bb1.z + 1, 2);
+        extendStronghold(env, piece, piece->bb0.x + offx, piece->bb0.y + offy, piece->bb1.z + 1, 2);
+        return;
     case 3: // facing 1
-        return extendStronghold(env, piece, piece->bb0.x - 1, piece->bb0.y + offy, piece->bb0.z + offx, 3);
+        extendStronghold(env, piece, piece->bb0.x - 1, piece->bb0.y + offy, piece->bb0.z + offx, 3);
+        return;
     case 1: // facing 3
-        return extendStronghold(env, piece, piece->bb1.x + 1, piece->bb0.y + offy, piece->bb0.z + offx, 1);
+        extendStronghold(env, piece, piece->bb1.x + 1, piece->bb0.y + offy, piece->bb0.z + offx, 1);
+        return;
     default: UNREACHABLE();
     }
 }
@@ -263,10 +269,12 @@ static void generateSmallDoorChildLeft(StrongholdPieceEnv *env, Piece *piece, in
     switch (piece->rot) {
     case 0:
     case 2:
-        return extendStronghold(env, piece, piece->bb0.x - 1, piece->bb0.y + offy, piece->bb0.z + offz, 3);
+        extendStronghold(env, piece, piece->bb0.x - 1, piece->bb0.y + offy, piece->bb0.z + offz, 3);
+        return;
     case 3:
     case 1:
-        return extendStronghold(env, piece, piece->bb0.x + offz, piece->bb0.y + offy, piece->bb0.z - 1, 0);
+        extendStronghold(env, piece, piece->bb0.x + offz, piece->bb0.y + offy, piece->bb0.z - 1, 0);
+        return;
     default: UNREACHABLE();
     }
 }
@@ -275,10 +283,12 @@ static void generateSmallDoorChildRight(StrongholdPieceEnv *env, Piece *piece, i
     switch (piece->rot) {
     case 0:
     case 2:
-        return extendStronghold(env, piece, piece->bb1.x + 1, piece->bb0.y + offy, piece->bb0.z + offz, 1);
+        extendStronghold(env, piece, piece->bb1.x + 1, piece->bb0.y + offy, piece->bb0.z + offz, 1);
+        return;
     case 3:
     case 1:
-        return extendStronghold(env, piece, piece->bb0.x + offz, piece->bb0.y + offy, piece->bb1.z + 1, 2);
+        extendStronghold(env, piece, piece->bb0.x + offz, piece->bb0.y + offy, piece->bb1.z + 1, 2);
+        return;
     default: UNREACHABLE();
     }
 }

@@ -46,7 +46,7 @@ static inline double indexedLerp(uint8_t idx, double a, double b, double c)
 }
 #endif
 
-void perlinInit(PerlinNoise *restrict noise, uint64_t *restrict seed)
+void perlinInit(PerlinNoise *__restrict noise, uint64_t *__restrict seed)
 {
     int i = 0;
     //memset(noise, 0, sizeof(*noise));
@@ -76,7 +76,7 @@ void perlinInit(PerlinNoise *restrict noise, uint64_t *restrict seed)
     noise->t2 = d2*d2*d2 * (d2 * (d2*6.0-15.0) + 10.0);
 }
 
-void xPerlinInit(PerlinNoise *restrict noise, Xoroshiro *restrict xr)
+void xPerlinInit(PerlinNoise *__restrict noise, Xoroshiro *__restrict xr)
 {
     int i = 0;
     //memset(noise, 0, sizeof(*noise));

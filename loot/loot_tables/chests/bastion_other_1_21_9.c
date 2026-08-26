@@ -172,8 +172,6 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__2->loot_functions[7]), 4, 6);
     create_set_count(&(loot_pool__2->loot_functions[8]), 5, 17);
     create_set_count(&(loot_pool__2->loot_functions[9]), 1, 1);
-    LootPool* loot_pool__3 = &(context.loot_pools[3]);
-    LootPool* loot_pool__4 = &(context.loot_pools[4]);
 }
 
 LootTableContext* init_bastion_other_1_21_9() {

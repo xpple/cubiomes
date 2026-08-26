@@ -73,7 +73,6 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__0->loot_functions[1]), 1, 4);
     create_set_count(&(loot_pool__0->loot_functions[2]), 1, 3);
     create_set_count(&(loot_pool__0->loot_functions[3]), 2, 3);
-    LootPool* loot_pool__1 = &(context.loot_pools[1]);
 }
 
 LootTableContext* init_igloo_chest_1_13() {

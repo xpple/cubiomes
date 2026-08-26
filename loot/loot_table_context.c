@@ -57,7 +57,6 @@ static void generate_subtable_loot(LootTableContext* context, int subtable_index
 
 static void generate_subtable_loot(LootTableContext* context, int subtable_index)
 {
-    LootPool* pool = &(context->loot_pools[context->subtable_pool_offset[subtable_index]]);
     int pool_count = context->subtable_pool_count[subtable_index];
 
     for (int i = 0; i < pool_count; i++)

@@ -497,15 +497,14 @@ def gen_c_loot_table(c_file_path: Path, context: LootTableContext) -> str:
         """)
 
     for pool_idx, loot_pool in enumerate(context.loot_pools):
-        file_content += f"    LootPool* loot_pool__{pool_idx} = &(context.loot_pools[{pool_idx}]);\n"
+        functions = [function for entry in loot_pool.entries for function in entry.functions]
+        if loot_pool.conditions or functions:
+            file_content += f"    LootPool* loot_pool__{pool_idx} = &(context.loot_pools[{pool_idx}]);\n"
         for condition_idx, condition in enumerate(loot_pool.conditions):
             file_content += f"    {condition.to_function_call(f"&(loot_pool__{pool_idx}->conditions[{condition_idx}])", context.version)};\n"
-        i = 0
-        for entry in loot_pool.entries:
-            for function in entry.functions:
-                function_str = f"&(loot_pool__{pool_idx}->loot_functions[{i}])"
-                file_content += f"    {function.to_function_call(function_str, context.version)};\n"
-                i += 1
+        for i, function in enumerate(functions):
+            function_str = f"&(loot_pool__{pool_idx}->loot_functions[{i}])"
+            file_content += f"    {function.to_function_call(function_str, context.version)};\n"
 
     file_content += f"}}\n"
 

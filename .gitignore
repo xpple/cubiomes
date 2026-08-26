@@ -8,7 +8,11 @@ docs/LayerSummary.synctex.gz
 docs/LayerSummary.toc
 *.o
 *.a
-a.out
+*.out
+
+*.so
+*.dylib
+*.dll
 
 build
 

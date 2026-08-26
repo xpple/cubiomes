@@ -14,7 +14,9 @@
 
 #define PI 3.14159265358979323846
 
+// WARNING: Be wary of multiple evaluation.
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
+// WARNING: Be wary of multiple evaluation.
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)

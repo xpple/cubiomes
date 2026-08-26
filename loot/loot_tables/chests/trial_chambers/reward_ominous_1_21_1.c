@@ -93,8 +93,6 @@ static LootTableContext context = {
 };
 
 static void create_loot_functions() {
-    LootPool* loot_pool__0 = &(context.loot_pools[0]);
-    LootPool* loot_pool__1 = &(context.loot_pools[1]);
     LootPool* loot_pool__2 = &(context.loot_pools[2]);
     create_random_chance(&(loot_pool__2->conditions[0]), 0.75f);
 }
