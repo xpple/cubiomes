@@ -35,7 +35,7 @@ public class RandomSource {
         MemoryLayout.unionLayout(
             Cubiomes.C_LONG.withName("jr"),
             Xoroshiro.layout().withName("xr")
-        ).withName("$anon$368:5")
+        ).withName("$anon$405:5")
     ).withName("RandomSource");
 
     /**
@@ -89,7 +89,7 @@ public class RandomSource {
         struct.set(type$LAYOUT, type$OFFSET, fieldValue);
     }
 
-    private static final OfLong jr$LAYOUT = (OfLong)$LAYOUT.select(groupElement("$anon$368:5"), groupElement("jr"));
+    private static final OfLong jr$LAYOUT = (OfLong)$LAYOUT.select(groupElement("$anon$405:5"), groupElement("jr"));
 
     /**
      * Layout for field:
@@ -101,7 +101,7 @@ public class RandomSource {
         return jr$LAYOUT;
     }
 
-    private static final long jr$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$368:5"), groupElement("jr"));
+    private static final long jr$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$405:5"), groupElement("jr"));
 
     /**
      * Offset for field:
@@ -133,7 +133,7 @@ public class RandomSource {
         struct.set(jr$LAYOUT, jr$OFFSET, fieldValue);
     }
 
-    private static final GroupLayout xr$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("$anon$368:5"), groupElement("xr"));
+    private static final GroupLayout xr$LAYOUT = (GroupLayout)$LAYOUT.select(groupElement("$anon$405:5"), groupElement("xr"));
 
     /**
      * Layout for field:
@@ -145,7 +145,7 @@ public class RandomSource {
         return xr$LAYOUT;
     }
 
-    private static final long xr$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$368:5"), groupElement("xr"));
+    private static final long xr$OFFSET = $LAYOUT.byteOffset(groupElement("$anon$405:5"), groupElement("xr"));
 
     /**
      * Offset for field:
