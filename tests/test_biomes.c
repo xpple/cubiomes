@@ -43,5 +43,7 @@ int main() {
     ret += test_biomes_1_16_5();
     ret += test_biomes_1_18_2();
 
+    ASSERT_TRUE(ret, 0);
+
     return ret;
 }
