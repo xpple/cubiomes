@@ -11,7 +11,7 @@ function(add_cubiomes_test name source)
     if (WIN32)
         set_property(TEST ${name} PROPERTY
             ENVIRONMENT_MODIFICATION
-            PATH=path_list_append:$<TARGET_RUNTIME_DLL_DIRS:cubiomes>
+            PATH=path_list_prepend:$<TARGET_FILE_DIR:cubiomes>
         )
     endif()
 endfunction()
