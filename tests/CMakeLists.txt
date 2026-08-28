@@ -6,6 +6,13 @@ function(add_cubiomes_test name source)
         m
     )
 
+    if (WIN32)
+        set_property(TEST ${name} PROPERTY
+            ENVIRONMENT_MODIFICATION
+            PATH=path_list_append:$<TARGET_RUNTIME_DLL_DIRS:cubiomes>
+        )
+    endif()
+
     add_test(NAME ${name} COMMAND ${name})
 endfunction()
 
