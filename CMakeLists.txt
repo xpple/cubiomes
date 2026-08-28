@@ -219,3 +219,6 @@ if (EXPORT_HEADERS)
 	string(JOIN "\n" HEADER_LIST ${HEADERS})
 	file(WRITE "${CMAKE_BINARY_DIR}/headers.txt" "${HEADER_LIST}\n")
 endif()
+
+enable_testing()
+add_subdirectory(tests)
