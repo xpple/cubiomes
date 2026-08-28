@@ -26,9 +26,9 @@ static int test_end_city_pieces_1_21_11() {
             break;
         }
     }
+    free(pieces);
 
     ASSERT_TRUE(ret, hasShip);
-
     return ret;
 }
 
@@ -67,6 +67,8 @@ static int test_igloo_pieces_1_21_11() {
             break;
         }
     }
+    free(pieces);
+
     ASSERT_TRUE(ret, hasBasement);
     return ret;
 }
