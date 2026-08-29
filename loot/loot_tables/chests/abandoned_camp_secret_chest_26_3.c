@@ -9,8 +9,8 @@
 
 static int initialised = 0;
 
-static char* item_names[20] = {"minecraft:diamond", "minecraft:potion", "minecraft:potion", "minecraft:potion", "minecraft:potion", "minecraft:map", "minecraft:copper_ingot", "minecraft:gold_ingot", "minecraft:iron_ingot", "minecraft:iron_axe", "minecraft:iron_boots", "minecraft:iron_leggings", "minecraft:iron_spear", "minecraft:buried_ancient_city_map", "minecraft:trial_explorer_map", "minecraft:buried_mineshaft_map", "minecraft:desert_pyramid_map", "minecraft:jungle_explorer_map", "minecraft:warm_ocean_ruins_map", "minecraft:woodland_explorer_map"};
-static int global_item_ids[20] = {ITEM_DIAMOND, ITEM_POTION, ITEM_POTION, ITEM_POTION, ITEM_POTION, ITEM_MAP, ITEM_COPPER_INGOT, ITEM_GOLD_INGOT, ITEM_IRON_INGOT, ITEM_IRON_AXE, ITEM_IRON_BOOTS, ITEM_IRON_LEGGINGS, ITEM_IRON_SPEAR, ITEM_BURIED_ANCIENT_CITY_MAP, ITEM_TRIAL_EXPLORER_MAP, ITEM_BURIED_MINESHAFT_MAP, ITEM_DESERT_PYRAMID_MAP, ITEM_JUNGLE_EXPLORER_MAP, ITEM_WARM_OCEAN_RUINS_MAP, ITEM_WOODLAND_EXPLORER_MAP};
+static char* item_names[20] = {"minecraft:diamond", "minecraft:potion", "minecraft:potion", "minecraft:potion", "minecraft:potion", "minecraft:map", "minecraft:copper_ingot", "minecraft:gold_ingot", "minecraft:iron_ingot", "minecraft:iron_axe", "minecraft:iron_boots", "minecraft:iron_leggings", "minecraft:iron_spear", "minecraft:buried_ancient_city_map", "minecraft:buried_trial_chambers_map", "minecraft:buried_mineshaft_map", "minecraft:desert_pyramid_map", "minecraft:jungle_pyramid_map", "minecraft:warm_ocean_ruins_map", "minecraft:woodland_mansion_map"};
+static int global_item_ids[20] = {ITEM_DIAMOND, ITEM_POTION, ITEM_POTION, ITEM_POTION, ITEM_POTION, ITEM_MAP, ITEM_COPPER_INGOT, ITEM_GOLD_INGOT, ITEM_IRON_INGOT, ITEM_IRON_AXE, ITEM_IRON_BOOTS, ITEM_IRON_LEGGINGS, ITEM_IRON_SPEAR, ITEM_BURIED_ANCIENT_CITY_MAP, ITEM_BURIED_TRIAL_CHAMBERS_MAP, ITEM_BURIED_MINESHAFT_MAP, ITEM_DESERT_PYRAMID_MAP, ITEM_JUNGLE_PYRAMID_MAP, ITEM_WARM_OCEAN_RUINS_MAP, ITEM_WOODLAND_MANSION_MAP};
 
 static LootItemCondition conditions__0[0];
 static int precomputed_loot__0[5] = {0, 1, 2, 3, 4};

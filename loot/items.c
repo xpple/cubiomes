@@ -23,6 +23,7 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:bundle") == 0) return ITEM_BUNDLE;
     if (strcmp(name, "minecraft:buried_ancient_city_map") == 0) return ITEM_BURIED_ANCIENT_CITY_MAP;
     if (strcmp(name, "minecraft:buried_mineshaft_map") == 0) return ITEM_BURIED_MINESHAFT_MAP;
+    if (strcmp(name, "minecraft:buried_trial_chambers_map") == 0) return ITEM_BURIED_TRIAL_CHAMBERS_MAP;
     if (strcmp(name, "minecraft:carrot") == 0) return ITEM_CARROT;
     if (strcmp(name, "minecraft:chain") == 0) return ITEM_CHAIN;
     if (strcmp(name, "minecraft:iron_chain") == 0) return ITEM_IRON_CHAIN;
@@ -115,7 +116,7 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:iron_shovel") == 0) return ITEM_IRON_SHOVEL;
     if (strcmp(name, "minecraft:iron_spear") == 0) return ITEM_IRON_SPEAR;
     if (strcmp(name, "minecraft:iron_sword") == 0) return ITEM_IRON_SWORD;
-    if (strcmp(name, "minecraft:jungle_explorer_map") == 0) return ITEM_JUNGLE_EXPLORER_MAP;
+    if (strcmp(name, "minecraft:jungle_pyramid_map") == 0) return ITEM_JUNGLE_PYRAMID_MAP;
     if (strcmp(name, "minecraft:lapis_lazuli") == 0) return ITEM_LAPIS_LAZULI;
     if (strcmp(name, "minecraft:lead") == 0) return ITEM_LEAD;
     if (strcmp(name, "minecraft:leather") == 0) return ITEM_LEATHER;
@@ -164,7 +165,6 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:suspicious_stew") == 0) return ITEM_SUSPICIOUS_STEW;
     if (strcmp(name, "minecraft:tipped_arrow") == 0) return ITEM_TIPPED_ARROW;
     if (strcmp(name, "minecraft:tnt") == 0) return ITEM_TNT;
-    if (strcmp(name, "minecraft:trial_explorer_map") == 0) return ITEM_TRIAL_EXPLORER_MAP;
     if (strcmp(name, "minecraft:trident") == 0) return ITEM_TRIDENT;
     if (strcmp(name, "minecraft:tripwire_hook") == 0) return ITEM_TRIPWIRE_HOOK;
     if (strcmp(name, "minecraft:warm_ocean_ruins_map") == 0) return ITEM_WARM_OCEAN_RUINS_MAP;
@@ -174,7 +174,7 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:wild_armor_trim_smithing_template") == 0) return ITEM_WILD_ARMOR_TRIM_SMITHING_TEMPLATE;
     if (strcmp(name, "minecraft:wind_charge") == 0) return ITEM_WIND_CHARGE;
     if (strcmp(name, "minecraft:wooden_axe") == 0) return ITEM_WOODEN_AXE;
-    if (strcmp(name, "minecraft:woodland_explorer_map") == 0) return ITEM_WOODLAND_EXPLORER_MAP;
+    if (strcmp(name, "minecraft:woodland_mansion_map") == 0) return ITEM_WOODLAND_MANSION_MAP;
     fprintf(stderr, "ERR item_name2global_id: unknown item %s\n", name);
     return ITEM_UNKNOWN;
 }
@@ -202,6 +202,7 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_BUNDLE: return "minecraft:bundle";
     case ITEM_BURIED_ANCIENT_CITY_MAP: return "minecraft:buried_ancient_city_map";
     case ITEM_BURIED_MINESHAFT_MAP: return "minecraft:buried_mineshaft_map";
+    case ITEM_BURIED_TRIAL_CHAMBERS_MAP: return "minecraft:buried_trial_chambers_map";
     case ITEM_CARROT: return "minecraft:carrot";
     case ITEM_CHAIN: return "minecraft:chain";
     case ITEM_CLOCK: return "minecraft:clock";
@@ -292,7 +293,7 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_IRON_SHOVEL: return "minecraft:iron_shovel";
     case ITEM_IRON_SPEAR: return "minecraft:iron_spear";
     case ITEM_IRON_SWORD: return "minecraft:iron_sword";
-    case ITEM_JUNGLE_EXPLORER_MAP: return "minecraft:jungle_explorer_map";
+    case ITEM_JUNGLE_PYRAMID_MAP: return "minecraft:jungle_pyramid_map";
     case ITEM_LAPIS_LAZULI: return "minecraft:lapis_lazuli";
     case ITEM_LEAD: return "minecraft:lead";
     case ITEM_LEATHER: return "minecraft:leather";
@@ -341,7 +342,6 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_SUSPICIOUS_STEW: return "minecraft:suspicious_stew";
     case ITEM_TIPPED_ARROW: return "minecraft:tipped_arrow";
     case ITEM_TNT: return "minecraft:tnt";
-    case ITEM_TRIAL_EXPLORER_MAP: return "minecraft:trial_explorer_map";
     case ITEM_TRIDENT: return "minecraft:trident";
     case ITEM_TRIPWIRE_HOOK: return "minecraft:tripwire_hook";
     case ITEM_WARM_OCEAN_RUINS_MAP: return "minecraft:warm_ocean_ruins_map";
@@ -351,7 +351,7 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_WILD_ARMOR_TRIM_SMITHING_TEMPLATE: return "minecraft:wild_armor_trim_smithing_template";
     case ITEM_WIND_CHARGE: return "minecraft:wind_charge";
     case ITEM_WOODEN_AXE: return "minecraft:wooden_axe";
-    case ITEM_WOODLAND_EXPLORER_MAP: return "minecraft:woodland_explorer_map";
+    case ITEM_WOODLAND_MANSION_MAP: return "minecraft:woodland_mansion_map";
     default:
         fprintf(stderr, "ERR global_id2item_name: unknown item type: %d\n", global_id);
         return NULL;
