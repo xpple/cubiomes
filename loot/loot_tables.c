@@ -5,127 +5,159 @@
 #include "loot_table_context.h"
 #include "../biomes.h"
 
-#include "loot_tables/abandoned_camp_barrel_26_3.h"
-#include "loot_tables/abandoned_camp_common_chest_26_3.h"
-#include "loot_tables/abandoned_camp_secret_chest_26_3.h"
-#include "loot_tables/bastion_bridge_1_16_1.h"
-#include "loot_tables/bastion_bridge_1_16_5.h"
-#include "loot_tables/bastion_bridge_1_20.h"
-#include "loot_tables/bastion_other_1_16_1.h"
-#include "loot_tables/bastion_other_1_16_5.h"
-#include "loot_tables/bastion_other_1_20.h"
-#include "loot_tables/bastion_other_1_21_1.h"
-#include "loot_tables/bastion_other_1_21_9.h"
-#include "loot_tables/buried_treasure_1_13.h"
-#include "loot_tables/buried_treasure_1_18.h"
-#include "loot_tables/buried_treasure_1_21_11.h"
-#include "loot_tables/desert_pyramid_1_13.h"
-#include "loot_tables/desert_pyramid_1_20.h"
-#include "loot_tables/desert_pyramid_1_21_6.h"
-#include "loot_tables/desert_pyramid_1_21_9.h"
-#include "loot_tables/desert_pyramid_1_21_11.h"
-#include "loot_tables/end_city_treasure_1_13.h"
-#include "loot_tables/end_city_treasure_1_20.h"
-#include "loot_tables/end_city_treasure_1_21_9.h"
-#include "loot_tables/end_city_treasure_1_21_11.h"
-#include "loot_tables/igloo_chest_1_13.h"
-#include "loot_tables/jungle_temple_1_13.h"
-#include "loot_tables/jungle_temple_1_14.h"
-#include "loot_tables/jungle_temple_1_20.h"
-#include "loot_tables/jungle_temple_1_21_6.h"
-#include "loot_tables/jungle_temple_1_21_9.h"
-#include "loot_tables/jungle_temple_1_21_11.h"
-#include "loot_tables/jungle_temple_dispenser_1_13.h"
-#include "loot_tables/nether_bridge_1_13.h"
-#include "loot_tables/nether_bridge_1_20.h"
-#include "loot_tables/nether_bridge_1_21_9.h"
-#include "loot_tables/pillager_outpost_1_14.h"
-#include "loot_tables/pillager_outpost_1_19_2.h"
-#include "loot_tables/pillager_outpost_1_20.h"
-#include "loot_tables/pillager_outpost_1_21_11.h"
-#include "loot_tables/ruined_portal_1_16_1.h"
-#include "loot_tables/ruined_portal_1_21_5.h"
-#include "loot_tables/shipwreck_map_1_13.h"
-#include "loot_tables/shipwreck_map_1_18.h"
-#include "loot_tables/shipwreck_map_1_20.h"
-#include "loot_tables/shipwreck_map_1_21_11.h"
-#include "loot_tables/shipwreck_supply_1_13.h"
-#include "loot_tables/shipwreck_supply_1_14.h"
-#include "loot_tables/shipwreck_supply_1_17.h"
-#include "loot_tables/shipwreck_supply_1_20.h"
-#include "loot_tables/shipwreck_supply_1_21_11.h"
-#include "loot_tables/shipwreck_treasure_1_13.h"
-#include "loot_tables/shipwreck_treasure_1_20.h"
-#include "loot_tables/shipwreck_treasure_1_21_11.h"
-#include "loot_tables/stronghold_corridor_1_13.h"
-#include "loot_tables/stronghold_corridor_1_18.h"
-#include "loot_tables/stronghold_corridor_1_20.h"
-#include "loot_tables/stronghold_corridor_1_21_6.h"
-#include "loot_tables/stronghold_corridor_1_21_9.h"
-#include "loot_tables/stronghold_crossing_1_13.h"
-#include "loot_tables/stronghold_library_1_13.h"
-#include "loot_tables/stronghold_library_1_20.h"
+#include "loot_tables/barrels/abandoned_camp_barrel_26_3.h"
+#include "loot_tables/chests/abandoned_camp_common_chest_26_3.h"
+#include "loot_tables/chests/abandoned_camp_secret_chest_26_3.h"
+#include "loot_tables/chests/bastion_bridge_1_16_1.h"
+#include "loot_tables/chests/bastion_bridge_1_16_5.h"
+#include "loot_tables/chests/bastion_bridge_1_20.h"
+#include "loot_tables/chests/bastion_other_1_16_1.h"
+#include "loot_tables/chests/bastion_other_1_16_5.h"
+#include "loot_tables/chests/bastion_other_1_20.h"
+#include "loot_tables/chests/bastion_other_1_21_1.h"
+#include "loot_tables/chests/bastion_other_1_21_9.h"
+#include "loot_tables/chests/buried_treasure_1_13.h"
+#include "loot_tables/chests/buried_treasure_1_18.h"
+#include "loot_tables/chests/buried_treasure_1_21_11.h"
+#include "loot_tables/chests/desert_pyramid_1_13.h"
+#include "loot_tables/chests/desert_pyramid_1_20.h"
+#include "loot_tables/chests/desert_pyramid_1_21_6.h"
+#include "loot_tables/chests/desert_pyramid_1_21_9.h"
+#include "loot_tables/chests/desert_pyramid_1_21_11.h"
+#include "loot_tables/chests/end_city_treasure_1_13.h"
+#include "loot_tables/chests/end_city_treasure_1_20.h"
+#include "loot_tables/chests/end_city_treasure_1_21_9.h"
+#include "loot_tables/chests/end_city_treasure_1_21_11.h"
+#include "loot_tables/chests/igloo_chest_1_13.h"
+#include "loot_tables/chests/jungle_temple_1_13.h"
+#include "loot_tables/chests/jungle_temple_1_14.h"
+#include "loot_tables/chests/jungle_temple_1_20.h"
+#include "loot_tables/chests/jungle_temple_1_21_6.h"
+#include "loot_tables/chests/jungle_temple_1_21_9.h"
+#include "loot_tables/chests/jungle_temple_1_21_11.h"
+#include "loot_tables/chests/jungle_temple_dispenser_1_13.h"
+#include "loot_tables/chests/nether_bridge_1_13.h"
+#include "loot_tables/chests/nether_bridge_1_20.h"
+#include "loot_tables/chests/nether_bridge_1_21_9.h"
+#include "loot_tables/chests/pillager_outpost_1_14.h"
+#include "loot_tables/chests/pillager_outpost_1_19_2.h"
+#include "loot_tables/chests/pillager_outpost_1_20.h"
+#include "loot_tables/chests/pillager_outpost_1_21_11.h"
+#include "loot_tables/chests/ruined_portal_1_16_1.h"
+#include "loot_tables/chests/ruined_portal_1_21_5.h"
+#include "loot_tables/chests/shipwreck_map_1_13.h"
+#include "loot_tables/chests/shipwreck_map_1_18.h"
+#include "loot_tables/chests/shipwreck_map_1_20.h"
+#include "loot_tables/chests/shipwreck_map_1_21_11.h"
+#include "loot_tables/chests/shipwreck_supply_1_13.h"
+#include "loot_tables/chests/shipwreck_supply_1_14.h"
+#include "loot_tables/chests/shipwreck_supply_1_17.h"
+#include "loot_tables/chests/shipwreck_supply_1_20.h"
+#include "loot_tables/chests/shipwreck_supply_1_21_11.h"
+#include "loot_tables/chests/shipwreck_treasure_1_13.h"
+#include "loot_tables/chests/shipwreck_treasure_1_20.h"
+#include "loot_tables/chests/shipwreck_treasure_1_21_11.h"
+#include "loot_tables/chests/stronghold_corridor_1_13.h"
+#include "loot_tables/chests/stronghold_corridor_1_18.h"
+#include "loot_tables/chests/stronghold_corridor_1_20.h"
+#include "loot_tables/chests/stronghold_corridor_1_21_6.h"
+#include "loot_tables/chests/stronghold_corridor_1_21_9.h"
+#include "loot_tables/chests/stronghold_crossing_1_13.h"
+#include "loot_tables/chests/stronghold_library_1_13.h"
+#include "loot_tables/chests/stronghold_library_1_20.h"
+#include "loot_tables/chests/trial_chambers/reward_1_21_1.h"
+#include "loot_tables/chests/trial_chambers/reward_common_1_21_1.h"
+#include "loot_tables/chests/trial_chambers/reward_ominous_1_21_1.h"
+#include "loot_tables/chests/trial_chambers/reward_ominous_common_1_21_1.h"
+#include "loot_tables/chests/trial_chambers/reward_ominous_rare_1_21_1.h"
+#include "loot_tables/chests/trial_chambers/reward_ominous_unique_1_21_1.h"
+#include "loot_tables/chests/trial_chambers/reward_rare_1_21_1.h"
+#include "loot_tables/chests/trial_chambers/reward_unique_1_21_1.h"
 
 int init_loot_table_name(LootTableContext** context, const char* loot_table, int version) {
-    if (strcmp(loot_table, "abandoned_camp_barrel") == 0) {
+    if (strcmp(loot_table, "barrels/abandoned_camp_barrel") == 0) {
         return init_abandoned_camp_barrel(context, version);
     }
-    if (strcmp(loot_table, "abandoned_camp_common_chest") == 0) {
+    if (strcmp(loot_table, "chests/abandoned_camp_common_chest") == 0) {
         return init_abandoned_camp_common_chest(context, version);
     }
-    if (strcmp(loot_table, "abandoned_camp_secret_chest") == 0) {
+    if (strcmp(loot_table, "chests/abandoned_camp_secret_chest") == 0) {
         return init_abandoned_camp_secret_chest(context, version);
     }
-    if (strcmp(loot_table, "bastion_bridge") == 0) {
+    if (strcmp(loot_table, "chests/bastion_bridge") == 0) {
         return init_bastion_bridge(context, version);
     }
-    if (strcmp(loot_table, "bastion_other") == 0) {
+    if (strcmp(loot_table, "chests/bastion_other") == 0) {
         return init_bastion_other(context, version);
     }
-    if (strcmp(loot_table, "buried_treasure") == 0) {
+    if (strcmp(loot_table, "chests/buried_treasure") == 0) {
         return init_buried_treasure(context, version);
     }
-    if (strcmp(loot_table, "desert_pyramid") == 0) {
+    if (strcmp(loot_table, "chests/desert_pyramid") == 0) {
         return init_desert_pyramid(context, version);
     }
-    if (strcmp(loot_table, "end_city_treasure") == 0) {
+    if (strcmp(loot_table, "chests/end_city_treasure") == 0) {
         return init_end_city_treasure(context, version);
     }
-    if (strcmp(loot_table, "igloo_chest") == 0) {
+    if (strcmp(loot_table, "chests/igloo_chest") == 0) {
         return init_igloo_chest(context, version);
     }
-    if (strcmp(loot_table, "jungle_temple") == 0) {
+    if (strcmp(loot_table, "chests/jungle_temple") == 0) {
         return init_jungle_temple(context, version);
     }
-    if (strcmp(loot_table, "jungle_temple_dispenser") == 0) {
+    if (strcmp(loot_table, "chests/jungle_temple_dispenser") == 0) {
         return init_jungle_temple_dispenser(context, version);
     }
-    if (strcmp(loot_table, "nether_bridge") == 0) {
+    if (strcmp(loot_table, "chests/nether_bridge") == 0) {
         return init_nether_bridge(context, version);
     }
-    if (strcmp(loot_table, "pillager_outpost") == 0) {
+    if (strcmp(loot_table, "chests/pillager_outpost") == 0) {
         return init_pillager_outpost(context, version);
     }
-    if (strcmp(loot_table, "ruined_portal") == 0) {
+    if (strcmp(loot_table, "chests/ruined_portal") == 0) {
         return init_ruined_portal(context, version);
     }
-    if (strcmp(loot_table, "shipwreck_map") == 0) {
+    if (strcmp(loot_table, "chests/shipwreck_map") == 0) {
         return init_shipwreck_map(context, version);
     }
-    if (strcmp(loot_table, "shipwreck_supply") == 0) {
+    if (strcmp(loot_table, "chests/shipwreck_supply") == 0) {
         return init_shipwreck_supply(context, version);
     }
-    if (strcmp(loot_table, "shipwreck_treasure") == 0) {
+    if (strcmp(loot_table, "chests/shipwreck_treasure") == 0) {
         return init_shipwreck_treasure(context, version);
     }
-    if (strcmp(loot_table, "stronghold_corridor") == 0) {
+    if (strcmp(loot_table, "chests/stronghold_corridor") == 0) {
         return init_stronghold_corridor(context, version);
     }
-    if (strcmp(loot_table, "stronghold_crossing") == 0) {
+    if (strcmp(loot_table, "chests/stronghold_crossing") == 0) {
         return init_stronghold_crossing(context, version);
     }
-    if (strcmp(loot_table, "stronghold_library") == 0) {
+    if (strcmp(loot_table, "chests/stronghold_library") == 0) {
         return init_stronghold_library(context, version);
+    }
+    if (strcmp(loot_table, "chests/trial_chambers/reward") == 0) {
+        return init_reward(context, version);
+    }
+    if (strcmp(loot_table, "chests/trial_chambers/reward_common") == 0) {
+        return init_reward_common(context, version);
+    }
+    if (strcmp(loot_table, "chests/trial_chambers/reward_ominous") == 0) {
+        return init_reward_ominous(context, version);
+    }
+    if (strcmp(loot_table, "chests/trial_chambers/reward_ominous_common") == 0) {
+        return init_reward_ominous_common(context, version);
+    }
+    if (strcmp(loot_table, "chests/trial_chambers/reward_ominous_rare") == 0) {
+        return init_reward_ominous_rare(context, version);
+    }
+    if (strcmp(loot_table, "chests/trial_chambers/reward_ominous_unique") == 0) {
+        return init_reward_ominous_unique(context, version);
+    }
+    if (strcmp(loot_table, "chests/trial_chambers/reward_rare") == 0) {
+        return init_reward_rare(context, version);
+    }
+    if (strcmp(loot_table, "chests/trial_chambers/reward_unique") == 0) {
+        return init_reward_unique(context, version);
     }
     fprintf(stderr, "ERR init_loot_table_name: unsupported loot_table %s\n", loot_table);
     *context = NULL;
@@ -270,4 +302,44 @@ int init_stronghold_library(LootTableContext** context, int version) {
     if (version < MC_1_20) *context = init_stronghold_library_1_13();
     else *context = init_stronghold_library_1_20();
     return version > MC_1_12;
+}
+
+int init_reward(LootTableContext** context, int version) {
+    *context = init_reward_1_21_1();
+    return version > MC_1_20;
+}
+
+int init_reward_common(LootTableContext** context, int version) {
+    *context = init_reward_common_1_21_1();
+    return version > MC_1_20;
+}
+
+int init_reward_ominous(LootTableContext** context, int version) {
+    *context = init_reward_ominous_1_21_1();
+    return version > MC_1_20;
+}
+
+int init_reward_ominous_common(LootTableContext** context, int version) {
+    *context = init_reward_ominous_common_1_21_1();
+    return version > MC_1_20;
+}
+
+int init_reward_ominous_rare(LootTableContext** context, int version) {
+    *context = init_reward_ominous_rare_1_21_1();
+    return version > MC_1_20;
+}
+
+int init_reward_ominous_unique(LootTableContext** context, int version) {
+    *context = init_reward_ominous_unique_1_21_1();
+    return version > MC_1_20;
+}
+
+int init_reward_rare(LootTableContext** context, int version) {
+    *context = init_reward_rare_1_21_1();
+    return version > MC_1_20;
+}
+
+int init_reward_unique(LootTableContext** context, int version) {
+    *context = init_reward_unique_1_21_1();
+    return version > MC_1_20;
 }

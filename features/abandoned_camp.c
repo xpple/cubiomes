@@ -28,35 +28,35 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 1:
         case 3:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 2:
             tent->chestCount = 3;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
-            tent->lootTables[2] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[2] = "barrels/abandoned_camp_barrel";
             break;
         case 4:
         case 10:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         case 5:
         case 8:
         case 9:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 6:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
-            tent->lootTables[1] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
+            tent->lootTables[1] = "chests/abandoned_camp_common_chest";
             break;
         case 7:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
-            tent->lootTables[1] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         default: UNREACHABLE();
         }
@@ -69,19 +69,19 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 5:
         case 9:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 3:
         case 6:
         case 7:
         case 8:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 10:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         default: UNREACHABLE();
         }
@@ -95,27 +95,27 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 7:
         case 8:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 3:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 6:
             tent->chestCount = 3;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
-            tent->lootTables[1] = "abandoned_camp_common_chest";
-            tent->lootTables[2] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
+            tent->lootTables[1] = "chests/abandoned_camp_common_chest";
+            tent->lootTables[2] = "chests/abandoned_camp_common_chest";
             break;
         case 9:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
-            tent->lootTables[1] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
+            tent->lootTables[1] = "chests/abandoned_camp_common_chest";
             break;
         case 10:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         default: UNREACHABLE();
         }
@@ -125,31 +125,31 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 1:
         case 3:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 2:
             tent->chestCount = 3;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
-            tent->lootTables[2] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[2] = "barrels/abandoned_camp_barrel";
             break;
         case 4:
         case 10:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         case 5:
         case 7:
         case 8:
         case 9:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 6:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "chests/abandoned_camp_common_chest";
             break;
         default: UNREACHABLE();
         }
@@ -158,7 +158,7 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         switch (sv->start) {
         case 1:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 2:
         case 3:
@@ -168,13 +168,13 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 8:
         case 9:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 7:
         case 10:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         default: UNREACHABLE();
         }
@@ -186,25 +186,25 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 3:
         case 10:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 4:
             tent->chestCount = 3;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
-            tent->lootTables[2] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[2] = "barrels/abandoned_camp_barrel";
             break;
         case 5:
         case 6:
         case 8:
         case 9:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 7:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         default: UNREACHABLE();
         }
@@ -216,26 +216,26 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 7:
         case 10:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 2:
             tent->chestCount = 4;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
-            tent->lootTables[2] = "abandoned_camp_barrel";
-            tent->lootTables[3] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[2] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[3] = "barrels/abandoned_camp_barrel";
             break;
         case 4:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         case 5:
         case 6:
         case 8:
         case 9:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         default: UNREACHABLE();
         }
@@ -248,7 +248,7 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 4:
         case 5:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 6:
         case 7:
@@ -256,7 +256,7 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 9:
         case 10:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         default: UNREACHABLE();
         }
@@ -266,13 +266,13 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 1:
         case 3:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 2:
         case 4:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         case 5:
         case 6:
@@ -280,12 +280,12 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 9:
         case 10:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 7:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
-            tent->lootTables[1] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         default: UNREACHABLE();
         }
@@ -297,24 +297,24 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 3:
         case 9:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 4:
         case 10:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         case 5:
         case 6:
         case 8:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 7:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
-            tent->lootTables[1] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         default: UNREACHABLE();
         }
@@ -327,19 +327,19 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 8:
         case 9:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 2:
         case 3:
         case 7:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 4:
         case 10:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         default: UNREACHABLE();
         }
@@ -352,7 +352,7 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 4:
         case 5:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 6:
         case 7:
@@ -360,7 +360,7 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 9:
         case 10:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         default: UNREACHABLE();
         }
@@ -371,13 +371,13 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 4:
         case 10:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 2:
             tent->chestCount = 3;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
-            tent->lootTables[2] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[2] = "barrels/abandoned_camp_barrel";
             break;
         case 3:
         case 5:
@@ -386,7 +386,7 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 8:
         case 9:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         default: UNREACHABLE();
         }
@@ -396,35 +396,35 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 1:
         case 3:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 2:
         case 4:
         case 10:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         case 5:
         case 8:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 6:
             tent->chestCount = 3;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
-            tent->lootTables[1] = "abandoned_camp_common_chest";
-            tent->lootTables[2] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
+            tent->lootTables[1] = "chests/abandoned_camp_common_chest";
+            tent->lootTables[2] = "chests/abandoned_camp_common_chest";
             break;
         case 7:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
-            tent->lootTables[1] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         case 9:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
-            tent->lootTables[1] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
+            tent->lootTables[1] = "chests/abandoned_camp_common_chest";
             break;
         default: UNREACHABLE();
         }
@@ -437,19 +437,19 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 4:
         case 5:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 6:
         case 8:
         case 9:
         case 10:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 7:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
-            tent->lootTables[1] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         default: UNREACHABLE();
         }
@@ -462,19 +462,19 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 6:
         case 7:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 2:
         case 4:
         case 8:
         case 9:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 10:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         default: UNREACHABLE();
         }
@@ -487,19 +487,19 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 7:
         case 9:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 2:
         case 10:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         case 3:
         case 5:
         case 8:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         default: UNREACHABLE();
         }
@@ -508,33 +508,33 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         switch (sv->start) {
         case 1:
             tent->chestCount = 4;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
-            tent->lootTables[2] = "abandoned_camp_barrel";
-            tent->lootTables[3] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[2] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[3] = "barrels/abandoned_camp_barrel";
             break;
         case 2:
         case 3:
         case 5:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 4:
         case 10:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_barrel";
-            tent->lootTables[1] = "abandoned_camp_barrel";
+            tent->lootTables[0] = "barrels/abandoned_camp_barrel";
+            tent->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         case 6:
         case 7:
         case 8:
             tent->chestCount = 1;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 9:
             tent->chestCount = 2;
-            tent->lootTables[0] = "abandoned_camp_common_chest";
-            tent->lootTables[1] = "abandoned_camp_common_chest";
+            tent->lootTables[0] = "chests/abandoned_camp_common_chest";
+            tent->lootTables[1] = "chests/abandoned_camp_common_chest";
             break;
         default: UNREACHABLE();
         }
@@ -552,11 +552,11 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
     default: UNREACHABLE();
     }
 
-    CREATE_RANDOM_SOURCE(rnd, 0);
+    RandomSource rnd = {.type = XOROSHIRO_J};
     uint64_t populationSeed = getPopulationSeed(mc, seed, middlePosX & ~15, middlePosZ & ~15);
-    rnd.setSeed(rnd.state, populationSeed + ssconf.generationStep * 10000 + ssconf.decoratorIndex);
+    absSetSeed(&rnd, populationSeed + ssconf.generationStep * 10000 + ssconf.decoratorIndex);
     for (int i = 0; i < tent->chestCount; ++i) {
-        tent->lootSeeds[i] = rnd.nextLong(rnd.state);
+        tent->lootSeeds[i] = absNextLong(&rnd);
         tent->chestPoses[i] = (Pos) {middlePosX, middlePosZ};
     }
 
@@ -581,82 +581,82 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 1:
             camp->name = "abandoned_camp/camp/default/campsite_default_chest_1";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 2:
             camp->name = "abandoned_camp/camp/default/campsite_default_chest_2";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 3:
             camp->name = "abandoned_camp/camp/default/campsite_default_chest_3";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 4:
             camp->name = "abandoned_camp/camp/default/campsite_default_chest_4";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 5:
             camp->name = "abandoned_camp/camp/default/campsite_default_chest_5";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 6:
             camp->name = "abandoned_camp/camp/default/campsite_default_chest_6";
             camp->chestCount = 2;
-            camp->lootTables[0] = "abandoned_camp_secret_chest";
-            camp->lootTables[1] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+            camp->lootTables[1] = "chests/abandoned_camp_common_chest";
             break;
         case 7:
             camp->name = "abandoned_camp/camp/default/campsite_default_chest_7";
             camp->chestCount = 2;
-            camp->lootTables[0] = "abandoned_camp_secret_chest";
-            camp->lootTables[1] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+            camp->lootTables[1] = "chests/abandoned_camp_common_chest";
             break;
         case 8:
             camp->name = "abandoned_camp/camp/default/campsite_default_chest_8";
             camp->chestCount = 2;
-            camp->lootTables[0] = "abandoned_camp_secret_chest";
-            camp->lootTables[1] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+            camp->lootTables[1] = "chests/abandoned_camp_common_chest";
             break;
         case 9:
             camp->name = "abandoned_camp/camp/default/campsite_default_chest_9";
             camp->chestCount = 2;
-            camp->lootTables[0] = "abandoned_camp_secret_chest";
-            camp->lootTables[1] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+            camp->lootTables[1] = "chests/abandoned_camp_common_chest";
             break;
         case 10:
             camp->name = "abandoned_camp/camp/default/campsite_default_chest_10";
             camp->chestCount = 2;
-            camp->lootTables[0] = "abandoned_camp_secret_chest";
-            camp->lootTables[1] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+            camp->lootTables[1] = "chests/abandoned_camp_common_chest";
             break;
         case 11:
             camp->name = "abandoned_camp/camp/default/campsite_default_chest_11";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 12:
             camp->name = "abandoned_camp/camp/default/campsite_default_chest_12";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 13:
             camp->name = "abandoned_camp/camp/default/campsite_default_chest_13";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 14:
             camp->name = "abandoned_camp/camp/default/campsite_default_chest_14";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 15:
             camp->name = "abandoned_camp/camp/default/campsite_default_chest_15";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         default: UNREACHABLE();
         }
@@ -665,82 +665,82 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 1:
             camp->name = "abandoned_camp/camp/default/campsite_default_barrel_1";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 2:
             camp->name = "abandoned_camp/camp/default/campsite_default_barrel_2";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 3:
             camp->name = "abandoned_camp/camp/default/campsite_default_barrel_3";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 4:
             camp->name = "abandoned_camp/camp/default/campsite_default_barrel_4";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 5:
             camp->name = "abandoned_camp/camp/default/campsite_default_barrel_5";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 6:
             camp->name = "abandoned_camp/camp/default/campsite_default_barrel_6";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 7:
             camp->name = "abandoned_camp/camp/default/campsite_default_barrel_7";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 8:
             camp->name = "abandoned_camp/camp/default/campsite_default_barrel_8";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 9:
             camp->name = "abandoned_camp/camp/default/campsite_default_barrel_9";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 10:
             camp->name = "abandoned_camp/camp/default/campsite_default_barrel_10";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 11:
             camp->name = "abandoned_camp/camp/default/campsite_default_barrel_11";
             camp->chestCount = 2;
-            camp->lootTables[0] = "abandoned_camp_secret_chest";
-            camp->lootTables[1] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+            camp->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         case 12:
             camp->name = "abandoned_camp/camp/default/campsite_default_barrel_12";
             camp->chestCount = 2;
-            camp->lootTables[0] = "abandoned_camp_secret_chest";
-            camp->lootTables[1] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+            camp->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         case 13:
             camp->name = "abandoned_camp/camp/default/campsite_default_barrel_13";
             camp->chestCount = 2;
-            camp->lootTables[0] = "abandoned_camp_secret_chest";
-            camp->lootTables[1] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+            camp->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         case 14:
             camp->name = "abandoned_camp/camp/default/campsite_default_barrel_14";
             camp->chestCount = 2;
-            camp->lootTables[0] = "abandoned_camp_secret_chest";
-            camp->lootTables[1] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+            camp->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         case 15:
             camp->name = "abandoned_camp/camp/default/campsite_default_barrel_15";
             camp->chestCount = 2;
-            camp->lootTables[0] = "abandoned_camp_secret_chest";
-            camp->lootTables[1] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+            camp->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         default: UNREACHABLE();
         }
@@ -750,84 +750,84 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
         case 1:
             camp->name = "abandoned_camp/camp/default/campsite_default_special_1";
             camp->chestCount = 2;
-            camp->lootTables[0] = "abandoned_camp_secret_chest";
-            camp->lootTables[1] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+            camp->lootTables[1] = "chests/abandoned_camp_common_chest";
             break;
         case 2:
             camp->name = "abandoned_camp/camp/default/campsite_default_special_2";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 3:
             camp->name = "abandoned_camp/camp/default/campsite_default_special_3";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 4:
             camp->name = "abandoned_camp/camp/default/campsite_default_special_4";
             camp->chestCount = 2;
-            camp->lootTables[0] = "abandoned_camp_secret_chest";
-            camp->lootTables[1] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+            camp->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         case 5:
             camp->name = "abandoned_camp/camp/default/campsite_default_special_5";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 6:
             camp->name = "abandoned_camp/camp/default/campsite_default_special_6";
             camp->chestCount = 2;
-            camp->lootTables[0] = "abandoned_camp_secret_chest";
-            camp->lootTables[1] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+            camp->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         case 7:
             camp->name = "abandoned_camp/camp/default/campsite_default_special_7";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 8:
             camp->name = "abandoned_camp/camp/default/campsite_default_special_8";
             camp->chestCount = 2;
-            camp->lootTables[0] = "abandoned_camp_secret_chest";
-            camp->lootTables[1] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+            camp->lootTables[1] = "barrels/abandoned_camp_barrel";
             break;
         case 9:
             camp->name = "abandoned_camp/camp/default/campsite_default_special_9";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 10:
             camp->name = "abandoned_camp/camp/default/campsite_default_special_10";
             camp->chestCount = 2;
-            camp->lootTables[0] = "abandoned_camp_common_chest";
-            camp->lootTables[1] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_common_chest";
+            camp->lootTables[1] = "chests/abandoned_camp_common_chest";
             break;
         case 11:
             camp->name = "abandoned_camp/camp/default/campsite_default_special_11";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_common_chest";
             break;
         case 12:
             camp->name = "abandoned_camp/camp/default/campsite_default_special_12";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 13:
             camp->name = "abandoned_camp/camp/default/campsite_default_special_13";
             camp->chestCount = 2;
-            camp->lootTables[0] = "abandoned_camp_secret_chest";
-            camp->lootTables[1] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+            camp->lootTables[1] = "chests/abandoned_camp_common_chest";
             break;
         case 14:
             camp->name = "abandoned_camp/camp/default/campsite_default_special_14";
             camp->chestCount = 1;
-            camp->lootTables[0] = "abandoned_camp_barrel";
+            camp->lootTables[0] = "barrels/abandoned_camp_barrel";
             break;
         case 15:
             camp->name = "abandoned_camp/camp/default/campsite_default_special_15";
             camp->chestCount = 2;
-            camp->lootTables[0] = "abandoned_camp_barrel";
-            camp->lootTables[1] = "abandoned_camp_common_chest";
+            camp->lootTables[0] = "barrels/abandoned_camp_barrel";
+            camp->lootTables[1] = "chests/abandoned_camp_common_chest";
             break;
         default: UNREACHABLE();
         }
@@ -839,23 +839,23 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             case 1:
                 camp->name = "abandoned_camp/camp/bamboo_jungle/campsite_bamboo_jungle_1";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 2:
                 camp->name = "abandoned_camp/camp/bamboo_jungle/campsite_bamboo_jungle_2";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "barrels/abandoned_camp_barrel";
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/bamboo_jungle/campsite_bamboo_jungle_3";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "chests/abandoned_camp_common_chest";
                 break;
             case 4:
                 camp->name = "abandoned_camp/camp/bamboo_jungle/campsite_bamboo_jungle_4";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "barrels/abandoned_camp_barrel";
                 break;
             default: UNREACHABLE();
             }
@@ -865,24 +865,24 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             case 1:
                 camp->name = "abandoned_camp/camp/birch_forest/campsite_birch_forest_1";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 2:
                 camp->name = "abandoned_camp/camp/birch_forest/campsite_birch_forest_2";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/birch_forest/campsite_birch_forest_3";
                 camp->chestCount = 3;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
-                camp->lootTables[1] = "abandoned_camp_barrel";
-                camp->lootTables[2] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
+                camp->lootTables[1] = "barrels/abandoned_camp_barrel";
+                camp->lootTables[2] = "barrels/abandoned_camp_barrel";
                 break;
             case 4:
                 camp->name = "abandoned_camp/camp/birch_forest/campsite_birch_forest_4";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             default: UNREACHABLE();
             }
@@ -892,26 +892,26 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             case 1:
                 camp->name = "abandoned_camp/camp/cherry_grove/campsite_cherry_grove_1";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 2:
                 camp->name = "abandoned_camp/camp/cherry_grove/campsite_cherry_grove_2";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "barrels/abandoned_camp_barrel";
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/cherry_grove/campsite_cherry_grove_3";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "chests/abandoned_camp_common_chest";
                 break;
             case 4:
                 camp->name = "abandoned_camp/camp/cherry_grove/campsite_cherry_grove_4";
                 camp->chestCount = 4;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_barrel";
-                camp->lootTables[2] = "abandoned_camp_barrel";
-                camp->lootTables[3] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "barrels/abandoned_camp_barrel";
+                camp->lootTables[2] = "barrels/abandoned_camp_barrel";
+                camp->lootTables[3] = "barrels/abandoned_camp_barrel";
                 break;
             default: UNREACHABLE();
             }
@@ -921,24 +921,24 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             case 1:
                 camp->name = "abandoned_camp/camp/dappled_forest/campsite_dappled_forest_1";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 2:
                 camp->name = "abandoned_camp/camp/dappled_forest/campsite_dappled_forest_2";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "barrels/abandoned_camp_barrel";
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/dappled_forest/campsite_dappled_forest_3";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "barrels/abandoned_camp_barrel";
                 break;
             case 4:
                 camp->name = "abandoned_camp/camp/dappled_forest/campsite_dappled_forest_4";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "chests/abandoned_camp_common_chest";
                 break;
             default: UNREACHABLE();
             }
@@ -948,25 +948,25 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             case 1:
                 camp->name = "abandoned_camp/camp/flower_forest/campsite_flower_forest_1";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 2:
                 camp->name = "abandoned_camp/camp/flower_forest/campsite_flower_forest_2";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "chests/abandoned_camp_common_chest";
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/flower_forest/campsite_flower_forest_3";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_barrel";
-                camp->lootTables[1] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "barrels/abandoned_camp_barrel";
+                camp->lootTables[1] = "chests/abandoned_camp_common_chest";
                 break;
             case 4:
                 camp->name = "abandoned_camp/camp/flower_forest/campsite_flower_forest_4";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "barrels/abandoned_camp_barrel";
                 break;
             default: UNREACHABLE();
             }
@@ -976,24 +976,24 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             case 1:
                 camp->name = "abandoned_camp/camp/forest/campsite_forest_1";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "barrels/abandoned_camp_barrel";
                 break;
             case 2:
                 camp->name = "abandoned_camp/camp/forest/campsite_forest_2";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/forest/campsite_forest_3";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "chests/abandoned_camp_common_chest";
                 break;
             case 4:
                 camp->name = "abandoned_camp/camp/forest/campsite_forest_4";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "chests/abandoned_camp_common_chest";
                 break;
             default: UNREACHABLE();
             }
@@ -1003,24 +1003,24 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             case 1:
                 camp->name = "abandoned_camp/camp/meadow/campsite_meadow_1";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 2:
                 camp->name = "abandoned_camp/camp/meadow/campsite_meadow_2";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/meadow/campsite_meadow_3";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "barrels/abandoned_camp_barrel";
                 break;
             case 4:
                 camp->name = "abandoned_camp/camp/meadow/campsite_meadow_4";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "barrels/abandoned_camp_barrel";
                 break;
             default: UNREACHABLE();
             }
@@ -1030,25 +1030,25 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             case 1:
                 camp->name = "abandoned_camp/camp/old_growth_birch_forest/campsite_old_growth_birch_forest_1";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 2:
                 camp->name = "abandoned_camp/camp/old_growth_birch_forest/campsite_old_growth_birch_forest_2";
                 camp->chestCount = 3;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_barrel";
-                camp->lootTables[2] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "barrels/abandoned_camp_barrel";
+                camp->lootTables[2] = "barrels/abandoned_camp_barrel";
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/old_growth_birch_forest/campsite_old_growth_birch_forest_3";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 4:
                 camp->name = "abandoned_camp/camp/old_growth_birch_forest/campsite_old_growth_birch_forest_4";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "chests/abandoned_camp_common_chest";
                 break;
             default: UNREACHABLE();
             }
@@ -1058,24 +1058,24 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             case 1:
                 camp->name = "abandoned_camp/camp/old_growth_pine_taiga/campsite_old_growth_pine_taiga_1";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "barrels/abandoned_camp_barrel";
                 break;
             case 2:
                 camp->name = "abandoned_camp/camp/old_growth_pine_taiga/campsite_old_growth_pine_taiga_2";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "chests/abandoned_camp_common_chest";
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/old_growth_pine_taiga/campsite_old_growth_pine_taiga_3";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 4:
                 camp->name = "abandoned_camp/camp/old_growth_pine_taiga/campsite_old_growth_pine_taiga_4";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "chests/abandoned_camp_common_chest";
                 break;
             default: UNREACHABLE();
             }
@@ -1085,23 +1085,23 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             case 1:
                 camp->name = "abandoned_camp/camp/old_growth_spruce_taiga/campsite_old_growth_spruce_taiga_1";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "barrels/abandoned_camp_barrel";
                 break;
             case 2:
                 camp->name = "abandoned_camp/camp/old_growth_spruce_taiga/campsite_old_growth_spruce_taiga_2";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "barrels/abandoned_camp_barrel";
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/old_growth_spruce_taiga/campsite_old_growth_spruce_taiga_3";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 4:
                 camp->name = "abandoned_camp/camp/old_growth_spruce_taiga/campsite_old_growth_spruce_taiga_4";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "barrels/abandoned_camp_barrel";
                 break;
             default: UNREACHABLE();
             }
@@ -1111,24 +1111,24 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             case 1:
                 camp->name = "abandoned_camp/camp/pale_garden/campsite_pale_garden_1";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "barrels/abandoned_camp_barrel";
                 break;
             case 2:
                 camp->name = "abandoned_camp/camp/pale_garden/campsite_pale_garden_2";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "chests/abandoned_camp_common_chest";
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/pale_garden/campsite_pale_garden_3";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 4:
                 camp->name = "abandoned_camp/camp/pale_garden/campsite_pale_garden_4";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "chests/abandoned_camp_common_chest";
                 break;
             default: UNREACHABLE();
             }
@@ -1138,24 +1138,24 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             case 1:
                 camp->name = "abandoned_camp/camp/savanna/campsite_savanna_1";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "barrels/abandoned_camp_barrel";
                 break;
             case 2:
                 camp->name = "abandoned_camp/camp/savanna/campsite_savanna_2";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "barrels/abandoned_camp_barrel";
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/savanna/campsite_savanna_3";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 4:
                 camp->name = "abandoned_camp/camp/savanna/campsite_savanna_4";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "barrels/abandoned_camp_barrel";
                 break;
             default: UNREACHABLE();
             }
@@ -1165,23 +1165,23 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             case 1:
                 camp->name = "abandoned_camp/camp/snowy_taiga/campsite_snowy_taiga_1";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "chests/abandoned_camp_common_chest";
                 break;
             case 2:
                 camp->name = "abandoned_camp/camp/snowy_taiga/campsite_snowy_taiga_2";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/snowy_taiga/campsite_snowy_taiga_3";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "barrels/abandoned_camp_barrel";
                 break;
             case 4:
                 camp->name = "abandoned_camp/camp/snowy_taiga/campsite_snowy_taiga_4";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "barrels/abandoned_camp_barrel";
                 break;
             default: UNREACHABLE();
             }
@@ -1191,27 +1191,27 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             case 1:
                 camp->name = "abandoned_camp/camp/sparse_jungle/campsite_sparse_jungle_1";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 2:
                 camp->name = "abandoned_camp/camp/sparse_jungle/campsite_sparse_jungle_2";
                 camp->chestCount = 3;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_barrel";
-                camp->lootTables[2] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "barrels/abandoned_camp_barrel";
+                camp->lootTables[2] = "barrels/abandoned_camp_barrel";
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/sparse_jungle/campsite_sparse_jungle_3";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 4:
                 camp->name = "abandoned_camp/camp/sparse_jungle/campsite_sparse_jungle_4";
                 camp->chestCount = 4;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_barrel";
-                camp->lootTables[2] = "abandoned_camp_barrel";
-                camp->lootTables[3] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "barrels/abandoned_camp_barrel";
+                camp->lootTables[2] = "barrels/abandoned_camp_barrel";
+                camp->lootTables[3] = "barrels/abandoned_camp_barrel";
                 break;
             default: UNREACHABLE();
             }
@@ -1221,25 +1221,25 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             case 1:
                 camp->name = "abandoned_camp/camp/swamp/campsite_swamp_1";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 2:
                 camp->name = "abandoned_camp/camp/swamp/campsite_swamp_2";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "barrels/abandoned_camp_barrel";
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/swamp/campsite_swamp_3";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
-                camp->lootTables[1] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
+                camp->lootTables[1] = "barrels/abandoned_camp_barrel";
                 break;
             case 4:
                 camp->name = "abandoned_camp/camp/swamp/campsite_swamp_4";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "barrels/abandoned_camp_barrel";
                 break;
             default: UNREACHABLE();
             }
@@ -1249,23 +1249,23 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             case 1:
                 camp->name = "abandoned_camp/camp/taiga/campsite_taiga_1";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 2:
                 camp->name = "abandoned_camp/camp/taiga/campsite_taiga_2";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "barrels/abandoned_camp_barrel";
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/taiga/campsite_taiga_3";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "barrels/abandoned_camp_barrel";
                 break;
             case 4:
                 camp->name = "abandoned_camp/camp/taiga/campsite_taiga_4";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "chests/abandoned_camp_common_chest";
                 break;
             default: UNREACHABLE();
             }
@@ -1275,24 +1275,24 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             case 1:
                 camp->name = "abandoned_camp/camp/windswept_forest/campsite_windswept_forest_1";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "barrels/abandoned_camp_barrel";
                 break;
             case 2:
                 camp->name = "abandoned_camp/camp/windswept_forest/campsite_windswept_forest_2";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/windswept_forest/campsite_windswept_forest_3";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "barrels/abandoned_camp_barrel";
                 break;
             case 4:
                 camp->name = "abandoned_camp/camp/windswept_forest/campsite_windswept_forest_4";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "chests/abandoned_camp_common_chest";
                 break;
             default: UNREACHABLE();
             }
@@ -1302,25 +1302,25 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             case 1:
                 camp->name = "abandoned_camp/camp/wooded_badlands/campsite_wooded_badlands_1";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_barrel";
-                camp->lootTables[1] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "barrels/abandoned_camp_barrel";
+                camp->lootTables[1] = "barrels/abandoned_camp_barrel";
                 break;
             case 2:
                 camp->name = "abandoned_camp/camp/wooded_badlands/campsite_wooded_badlands_2";
                 camp->chestCount = 1;
-                camp->lootTables[0] = "abandoned_camp_common_chest";
+                camp->lootTables[0] = "chests/abandoned_camp_common_chest";
                 break;
             case 3:
                 camp->name = "abandoned_camp/camp/wooded_badlands/campsite_wooded_badlands_3";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "barrels/abandoned_camp_barrel";
                 break;
             case 4:
                 camp->name = "abandoned_camp/camp/wooded_badlands/campsite_wooded_badlands_4";
                 camp->chestCount = 2;
-                camp->lootTables[0] = "abandoned_camp_secret_chest";
-                camp->lootTables[1] = "abandoned_camp_barrel";
+                camp->lootTables[0] = "chests/abandoned_camp_secret_chest";
+                camp->lootTables[1] = "barrels/abandoned_camp_barrel";
                 break;
             default: UNREACHABLE();
             }
@@ -1341,9 +1341,9 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
     }
 
     populationSeed = getPopulationSeed(mc, seed, campPosX & ~15, campPosZ & ~15);
-    rnd.setSeed(rnd.state, populationSeed + ssconf.generationStep * 10000 + ssconf.decoratorIndex);
+    absSetSeed(&rnd, populationSeed + ssconf.generationStep * 10000 + ssconf.decoratorIndex);
     for (int i = 0; i < camp->chestCount; ++i) {
-        camp->lootSeeds[i] = rnd.nextLong(rnd.state);
+        camp->lootSeeds[i] = absNextLong(&rnd);
         camp->chestPoses[i] = (Pos) {campPosX, campPosZ};
     }
 

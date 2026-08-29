@@ -14,7 +14,9 @@
 
 #define PI 3.14159265358979323846
 
+// WARNING: Be wary of multiple evaluation.
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
+// WARNING: Be wary of multiple evaluation.
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf)
@@ -562,16 +564,16 @@ int getBiomeForOreGen(const Generator *g, int chunkX, int chunkZ, int y)
 Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig config, int chunkX, int chunkZ)
 {
     uint64_t populationSeed = getPopulationSeed(g->mc, g->seed, chunkX << 4, chunkZ << 4);
-    CREATE_RANDOM_SOURCE(rnd, g->mc <= MC_1_17);
+    RandomSource rnd = {.type = g->mc <= MC_1_17 ? JAVA_RANDOM : XOROSHIRO_J};
     // set decorator seed
-    rnd.setSeed(rnd.state, populationSeed + config.index + 10000 * config.step);
+    absSetSeed(&rnd, populationSeed + config.index + 10000 * config.step);
 
     int oreType = config.oreType;
     int repeatCount;
     // rareOrePlacement check
     if (oreType == LargeDiamondOre || oreType == UpperAndesiteOre ||
         oreType == UpperDioriteOre || oreType == UpperGraniteOre) {
-        repeatCount = rnd.nextFloat(rnd.state) < 1.0F / config.repeatCount;
+        repeatCount = absNextFloat(&rnd) < 1.0F / config.repeatCount;
     } else {
         repeatCount = config.repeatCount;
     }
@@ -582,57 +584,57 @@ Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig conf
     createPos3List(&pos3s, MAX(8, approxSize));
 
     for (int i = 0; i < repeatCount; i++) {
-        Pos3 basePos = generateBaseOrePosition(g->mc, config, chunkX, chunkZ, rnd);
+        Pos3 basePos = generateBaseOrePosition(g->mc, config, chunkX, chunkZ, &rnd);
         int biome = getBiomeAt(g, 1, basePos.x, basePos.y, basePos.z);
         if (isViableOreBiome(g->mc, oreType, biome)) {
-            generateOrePositions(g, sn, config, basePos, rnd, &pos3s);
+            generateOrePositions(g, sn, config, basePos, &rnd, &pos3s);
         }
     }
     return pos3s;
 }
 
-Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource rnd)
+Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource *rnd)
 {
     if ((mc <= MC_1_17 && config.oreType == EmeraldOre) || (mc <= MC_NEWEST && config.oreType == LowerGoldOre)) {
         return (Pos3) {chunkX << 4, 0, chunkZ << 4};
     }
     if (mc <= MC_1_14) {
-        int blockX = (chunkX << 4) + rnd.nextInt(rnd.state, 16);
+        int blockX = (chunkX << 4) + absNextInt(rnd, 16);
         int blockY = config.heightProvider(rnd, config.h1, config.h2, config.h3);
-        int blockZ = (chunkZ << 4) + rnd.nextInt(rnd.state, 16);
+        int blockZ = (chunkZ << 4) + absNextInt(rnd, 16);
         return (Pos3) {blockX, blockY, blockZ};
     } else {
-        int blockX = (chunkX << 4) + rnd.nextInt(rnd.state, 16);
-        int blockZ = (chunkZ << 4) + rnd.nextInt(rnd.state, 16);
+        int blockX = (chunkX << 4) + absNextInt(rnd, 16);
+        int blockZ = (chunkZ << 4) + absNextInt(rnd, 16);
         int blockY = config.heightProvider(rnd, config.h1, config.h2, config.h3);
         return (Pos3) {blockX, blockY, blockZ};
     }
 }
 
-void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource rnd, Pos3List* pos3s)
+void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource *rnd, Pos3List* pos3s)
 {
     int mc = g->mc;
     if ((mc <= MC_1_17 && config.oreType == EmeraldOre) || (mc <= MC_NEWEST && config.oreType == LowerGoldOre)) {
         int count;
         if (config.oreType == EmeraldOre) {
             if (mc <= MC_1_16) {
-                count = 3 + rnd.nextInt(rnd.state, 6);
+                count = 3 + absNextInt(rnd, 6);
             } else {
                 // was 6, 24 in 1.17, changed to 3, 8 in 1.17.1
-                count = rnd.nextIntBetween(rnd.state, 3, 8);
+                count = absNextIntBetween(rnd, 3, 8);
             }
         } else {
-            count = rnd.nextIntBetween(rnd.state, 0, 1);
+            count = absNextIntBetween(rnd, 0, 1);
         }
         for (int i = 0; i < count; i++) {
             if (mc <= MC_1_14) {
-                int x = pos.x + rnd.nextInt(rnd.state, 16);
+                int x = pos.x + absNextInt(rnd, 16);
                 int y = config.heightProvider(rnd, config.h1, config.h2, config.h3);
-                int z = pos.z + rnd.nextInt(rnd.state, 16);
+                int z = pos.z + absNextInt(rnd, 16);
                 appendPos3List(pos3s, (Pos3) {x, y, z});
             } else {
-                int x = pos.x + rnd.nextInt(rnd.state, 16);
-                int z = pos.z + rnd.nextInt(rnd.state, 16);
+                int x = pos.x + absNextInt(rnd, 16);
+                int z = pos.z + absNextInt(rnd, 16);
                 int y = config.heightProvider(rnd, config.h1, config.h2, config.h3);
                 appendPos3List(pos3s, (Pos3) {x, y, z});
             }
@@ -642,18 +644,18 @@ void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig 
 
     // scatter
     if (config.oreType == LargeDebrisOre || config.oreType == SmallDebrisOre) {
-        int count = rnd.nextInt(rnd.state, config.size + 1);
+        int count = absNextInt(rnd, config.size + 1);
         for (int i = 0; i < count; ++i) {
             int size = MIN(i, 7);
             float a, b;
-            a = rnd.nextFloat(rnd.state);
-            b = rnd.nextFloat(rnd.state);
+            a = absNextFloat(rnd);
+            b = absNextFloat(rnd);
             int x = roundf((a - b) * (float)size);
-            a = rnd.nextFloat(rnd.state);
-            b = rnd.nextFloat(rnd.state);
+            a = absNextFloat(rnd);
+            b = absNextFloat(rnd);
             int y = roundf((a - b) * (float)size);
-            a = rnd.nextFloat(rnd.state);
-            b = rnd.nextFloat(rnd.state);
+            a = absNextFloat(rnd);
+            b = absNextFloat(rnd);
             int z = roundf((a - b) * (float)size);
             Pos3 startPos = (Pos3) {pos.x + x, pos.y + y, pos.z + z};
 
@@ -668,15 +670,15 @@ void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig 
     }
 
     // regular
-    float angle = rnd.nextFloat(rnd.state) * (float)PI;
+    float angle = absNextFloat(rnd) * (float)PI;
     float size = (float)config.size / 8.0F;
     int amortizedSize = ceil(((float)config.size / 16.0F * 2.0F + 1.0F) / 2.0F);
     double offsetXPos = (double)pos.x + sin(angle) * (double)size;
     double offsetXNeg = (double)pos.x - sin(angle) * (double)size;
     double offsetZPos = (double)pos.z + cos(angle) * (double)size;
     double offsetZNeg = (double)pos.z - cos(angle) * (double)size;
-    double offsetYPos = pos.y + rnd.nextInt(rnd.state, 3) - 2;
-    double offsetYNeg = pos.y + rnd.nextInt(rnd.state, 3) - 2;
+    double offsetYPos = pos.y + absNextInt(rnd, 3) - 2;
+    double offsetYNeg = pos.y + absNextInt(rnd, 3) - 2;
     int startX = pos.x - ceil(size) - amortizedSize;
     int startY = pos.y - 2 - amortizedSize;
     int startZ = pos.z - ceil(size) - amortizedSize;
@@ -695,7 +697,7 @@ void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig 
     }
 }
 
-void generateVeinPart(int mc, OreConfig config, RandomSource rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List* pos3s)
+void generateVeinPart(int mc, OreConfig config, RandomSource *rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List* pos3s)
 {
     const int minBuildHeight = mc <= MC_1_17 ? 0 : -64;
     const int maxBuildHeight = mc <= MC_1_17 ? 256 : 320;
@@ -710,7 +712,7 @@ void generateVeinPart(int mc, OreConfig config, RandomSource rnd, double offsetX
         double x = lerp(percent, offsetXPos, offsetXNeg);
         double y = lerp(percent, offsetYPos, offsetYNeg);
         double z = lerp(percent, offsetZPos, offsetZNeg);
-        double length = rnd.nextDouble(rnd.state) * (double)size / 16.0;
+        double length = absNextDouble(rnd) * (double)size / 16.0;
         double offset = ((sin((float)PI * percent) + 1.0F) * length + 1.0) / 2.0;
         store[i * 4] = x;
         store[i * 4 + 1] = y;
@@ -777,7 +779,7 @@ void generateVeinPart(int mc, OreConfig config, RandomSource rnd, double offsetX
                         if (chance <= 0.0F) {
                             skipAirCheck = 1;
                         } else {
-                            skipAirCheck = chance >= 1.0F ? 0 : rnd.nextFloat(rnd.state) >= chance;
+                            skipAirCheck = chance >= 1.0F ? 0 : absNextFloat(rnd) >= chance;
                         }
                         if (skipAirCheck) {
                             appendPos3List(pos3s, pos);

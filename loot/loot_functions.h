@@ -249,12 +249,22 @@ struct ItemStack {
 
 // ----------------------------------------------------------------------------------------
 
-typedef int (*RollCountFunction)(uint64_t*, const int, const int);
+STRUCT(LootItemCondition) {
+    // condition function
+    int (*fun)(RandomSource* rand, const void* params);
+    // pointer to the param array used by the function
+    const void* params;
+    // predefined params
+    float params_float[1];
+};
 
-typedef struct LootFunction LootFunction;
-struct LootFunction {
+void create_random_chance(LootItemCondition* lic, float chance);
+
+typedef int (*RollCountFunction)(RandomSource*, const int, const int);
+
+STRUCT(LootFunction) {
     // actual function pointer
-    void (*fun)(uint64_t* rand, ItemStack* is, const void* params);
+    void (*fun)(RandomSource* rand, ItemStack* is, const void* params);
     // pointer to the param array used by the function
     const void* params;
 
@@ -268,15 +278,16 @@ struct LootFunction {
 // ----------------------------------------------------------------------------------------
 // Roll count choice functions
 
-static inline int roll_count_constant(uint64_t* rand, const int min, const int max)
+static inline int roll_count_constant(RandomSource*, const int min, int unused_)
 {
+    (void)(unused_); // Unused
     return min;
 }
 
-static inline int roll_count_uniform(uint64_t* rand, const int min, const int max)
+static inline int roll_count_uniform(RandomSource* rand, const int min, const int max)
 {
     const int bound = max - min + 1;
-    return nextInt(rand, bound) + min;
+    return absNextInt(rand, bound) + min;
 }
 
 // ----------------------------------------------------------------------------------------
@@ -294,6 +305,7 @@ void create_enchant_randomly(LootFunction* lf, const int version, const ItemType
 void create_enchant_randomly_tag(LootFunction* lf, const int version, const ItemType item, const char* tag, const int allowTreasure);
 void create_enchant_with_levels(LootFunction* lf, const int version, const char* item_name, const ItemType item_type, const int min_level, const int max_level, const int isTreasure);
 void create_enchant_with_levels_tag(LootFunction* lf, const int version, const char* item_name, const ItemType item_type, const int min_level, const int max_level, const char* tag, const int allowTreasure);
+void create_set_enchantments(LootFunction* lf, const Enchantment* enchantments, const int* levels, const int list_length);
 const char* get_enchantment_name(const Enchantment enchantment);
 
 // test TODO remove

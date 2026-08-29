@@ -1,6 +1,6 @@
 # cubiomes
 
-Cubiomes is a standalone library, written in C, that mimics the biome and feature generation of Minecraft Java Edition.
+Cubiomes is a standalone library, written in C, that mimics the biome and feature generation of *Minecraft: Java Edition*.
 It is intended as a powerful tool to devise very fast, custom seed-finding applications and large-scale map viewers with minimal memory usage.
 
 ## Relationship to upstream
@@ -20,12 +20,14 @@ Below is a list of all the major additions:
 - Terrain generation (1.18+).
 - Various bug fixes.
 
+MSVC is **not** supported for this fork. Please use MinGW, UCRT64, Clang, or GCC.
+
 ## Java bindings
 I have set up the automatic creation of Java bindings based on commits to the master branch. See the [java-bindings](https://github.com/xpple/cubiomes/tree/java-bindings) branch for more information.
 
 #### Cubiomes-Viewer
 
-If you want to get started without coding, there is now also a [graphical application](https://github.com/Cubitect/cubiomes-viewer) based on this library.
+If you want to get started without coding, there is a [graphical application](https://github.com/Cubitect/cubiomes-viewer) based on the upstream version of this library.
 
 
 #### Audience
@@ -37,6 +39,7 @@ You should be familiar with the C programming language. A basic understanding of
 
 This section is meant to give you a quick starting point with small example programs if you want to use this library to find your own biome-dependent features.
 
+All terminal commands seen below are for Unix/Linux systems; Windows is similar, barring some minor adjustments.
 
 ### Biome Generator
 
@@ -77,20 +80,25 @@ int main()
 }
 ```
 
-You can compile this code either by directly adding a target to the makefile via
-```
+You can compile this code by creating a shared library (`libcubiomes.so`, `libcubiomes.dylib` or `cubiomes.dll` depending on your OS) or an archive (`libcubiomes_static.a`) using the CMake build script:
+```shell
 $ cd cubiomes
-$ make
+$ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+$ cmake --build build
 ```
-...or you can compile and link to a cubiomes archive using either of the following commands.
+Then you can compile your program, while linking the archive or shared library, using either of the following commands.
+```shell
+$ gcc find_biome_at.c -Lbuild -Wl,-rpath,build -lcubiomes -O3 -Wall -Wextra -fwrapv -lm # dynamic
+$ gcc find_biome_at.c -Lbuild -lcubiomes_static -O3 -Wall -Wextra -fwrapv -lm # static
 ```
-$ gcc find_biome_at.c libcubiomes.a -fwrapv -lm   # static
-$ gcc find_biome_at.c -L. -lcubiomes -fwrapv -lm  # dynamic
-```
-Both commands assume that your source code is saved as `find_biome_at.c` in the cubiomes working directory. If your makefile is configured to use pthreads, you may also need to add the `-lpthread` option for the compiler.
+Both commands assume that your source code is saved as `find_biome_at.c` in the Cubiomes working directory. If your makefile is configured to use pthreads, you may also need to add the `-lpthread` option for the compiler.
+
 The option `-fwrapv` enforces two's complement for signed integer overflow, which is otherwise undefined behavior. It is not really necessary for this example, but it is a common pitfall when dealing with code that emulates the behavior of Java.
+
+If the archive fails to generate, or the compilation claims the library's functions are undefined or missing, run `cmake --build build --target clean` to delete the failed archive, then retry the process.
+
 Running the program should output:
-```
+```shell
 $ ./a.out
 Seed 262 has a Mushroom Fields biome at block position (0, 0).
 ```
@@ -283,7 +291,7 @@ int main()
 
 #### Strongholds and Spawn
 
-Strongholds, as well as the world spawn point, actually search until they find a suitable location, rather than checking a single spot like most other structures. This causes them to be particularly performance expensive to find. Furthermore, the positions of strongholds have to be generated in a certain order, which can be done in iteratively with `initFirstStronghold()` and `nextStronghold()`. For the world spawn, the generation starts with a search for a suitable biome near the origin and will continue until a grass or podzol block is found. There is no reliable way to check actual blocks, so the search relies on a statistic, matching grass presence to biomes. Alternatively, we can simply use `estimateSpawn()` and terminate the search after the first biome check under the assumption that grass is nearby.
+Strongholds, as well as the world spawn point, actually search until they find a suitable location, rather than checking a single spot like most other structures. This causes them to be particularly slow to find. Furthermore, the positions of strongholds have to be generated in a certain order, which can be done in iteratively with `initFirstStronghold()` and `nextStronghold()`. For the world spawn, the exact coordinate is found after a search for a grass or podzol block prior to 1.18, or for any top-solid nonwaterlogged block in 1.18+. This library cannot model individual blocks, so the search relies on heuristics such as biomes and climate-dependent world heights. Alternatively, we can simply use `estimateSpawn()` and terminate the search after the first biome/climate check under the assumption that grass/a top-solid nonwaterlogged block is nearby.
 
 
 ```C

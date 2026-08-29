@@ -19,6 +19,10 @@ typedef enum GenerationMode GenerationMode;
 
 typedef struct LootPool LootPool;
 struct LootPool {
+    // conditions
+    int condition_count;
+    LootItemCondition* conditions;
+
     // roll count choice function
     int min_rolls;
     int max_rolls;
@@ -58,7 +62,7 @@ struct LootTableContext {
     int* subtable_pool_count;  // subtable index to how many pools it has
 
     // holding data related with generating the loot table within the context is a debatable idea
-    uint64_t prng_state;
+    RandomSource prng_state;
     int generated_item_count;
     ItemStack generated_items[27];
 
@@ -79,8 +83,9 @@ struct LootTableOutput {
 // ---------------------------------------------------------
 // loot generation functions
 
+void set_loot_prng_type(LootTableContext* context, int type);
 void set_loot_seed(LootTableContext* context, uint64_t seed);
-void set_internal_loot_seed(LootTableContext* context, uint64_t internal_seed);
+void set_internal_loot_seed(LootTableContext* context, RandomState internal_seed);
 
 int get_item_id(LootTableContext* context, const char* item_name);
 int get_global_item_id(LootTableContext* context, int item_id);

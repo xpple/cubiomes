@@ -14,7 +14,9 @@
 
 #define PI 3.14159265358979323846
 
+// WARNING: Be wary of multiple evaluation.
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
+// WARNING: Be wary of multiple evaluation.
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 int getCanyonCarverConfig(int canyonCarverType, int mc, CanyonCarverConfig* cconf) {
@@ -171,7 +173,9 @@ static inline int shouldSkipCanyonCarve(double relativeX, double relativeY, doub
     return (relativeX * relativeX + relativeZ * relativeZ) * ((float*) widthFactors)[i - 1] + relativeY * relativeY / 6.0 >= 1.0;
 }
 
-static inline int shouldSkipCaveCarve(double relativeX, double relativeY, double relativeZ, int y, int worldMinY, /* double* */ void* minRelativeY) {
+static inline int shouldSkipCaveCarve(double relativeX, double relativeY, double relativeZ, int unused1_, int unused2_, /* double* */ void* minRelativeY) {
+    (void)(unused1_); // Unused
+    (void)(unused2_); // Unused
     return relativeY <= *(double*) minRelativeY ? 1 : relativeX * relativeX + relativeY * relativeY + relativeZ * relativeZ >= 1.0;
 }
 

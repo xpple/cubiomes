@@ -2,7 +2,9 @@
 
 #include <string.h>
 
+// WARNING: Be wary of multiple evaluation.
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
+// WARNING: Be wary of multiple evaluation.
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 STRUCT(StrongholdPieceEnv) {
@@ -94,7 +96,7 @@ static int addStrongholdPiece(StrongholdPieceEnv *env, int typ, int x, int y, in
     case SH_PORTAL_ROOM:
         offset = stronghold_info[typ].offset; size = stronghold_info[typ].size; break;
     case SH_LIBRARY:
-        offset = (Pos3) stronghold_info[typ].offset; size = (Pos3) stronghold_info[typ].size;
+        offset = stronghold_info[typ].offset; size = stronghold_info[typ].size;
         orientBox(pos, offset, size, facing, &b0, &b1);
         if (b0.y > 10 && !hasCollision(env, b0, b1)) {
             goto L_box_end;
@@ -102,7 +104,7 @@ static int addStrongholdPiece(StrongholdPieceEnv *env, int typ, int x, int y, in
         size.y = 6;
         break;
     case SH_FILLER_CORRIDOR:
-        offset = (Pos3) stronghold_info[typ].offset; size = (Pos3) stronghold_info[typ].size;
+        offset = stronghold_info[typ].offset; size = stronghold_info[typ].size;
         orientBox(pos, offset, size, facing, &b0, &b1);
         Piece *p = hasCollision(env, b0, b1);
         if (!p) {
@@ -248,13 +250,17 @@ static void generateSmallDoorChildForward(StrongholdPieceEnv *env, Piece *piece,
     // WEST and EAST are swapped on old versions
     switch (piece->rot) {
     case 0: // facing 2
-        return extendStronghold(env, piece, piece->bb0.x + offx, piece->bb0.y + offy, piece->bb0.z - 1, 0);
+        extendStronghold(env, piece, piece->bb0.x + offx, piece->bb0.y + offy, piece->bb0.z - 1, 0);
+        return;
     case 2: // facing 0
-        return extendStronghold(env, piece, piece->bb0.x + offx, piece->bb0.y + offy, piece->bb1.z + 1, 2);
+        extendStronghold(env, piece, piece->bb0.x + offx, piece->bb0.y + offy, piece->bb1.z + 1, 2);
+        return;
     case 3: // facing 1
-        return extendStronghold(env, piece, piece->bb0.x - 1, piece->bb0.y + offy, piece->bb0.z + offx, 3);
+        extendStronghold(env, piece, piece->bb0.x - 1, piece->bb0.y + offy, piece->bb0.z + offx, 3);
+        return;
     case 1: // facing 3
-        return extendStronghold(env, piece, piece->bb1.x + 1, piece->bb0.y + offy, piece->bb0.z + offx, 1);
+        extendStronghold(env, piece, piece->bb1.x + 1, piece->bb0.y + offy, piece->bb0.z + offx, 1);
+        return;
     default: UNREACHABLE();
     }
 }
@@ -263,10 +269,12 @@ static void generateSmallDoorChildLeft(StrongholdPieceEnv *env, Piece *piece, in
     switch (piece->rot) {
     case 0:
     case 2:
-        return extendStronghold(env, piece, piece->bb0.x - 1, piece->bb0.y + offy, piece->bb0.z + offz, 3);
+        extendStronghold(env, piece, piece->bb0.x - 1, piece->bb0.y + offy, piece->bb0.z + offz, 3);
+        return;
     case 3:
     case 1:
-        return extendStronghold(env, piece, piece->bb0.x + offz, piece->bb0.y + offy, piece->bb0.z - 1, 0);
+        extendStronghold(env, piece, piece->bb0.x + offz, piece->bb0.y + offy, piece->bb0.z - 1, 0);
+        return;
     default: UNREACHABLE();
     }
 }
@@ -275,10 +283,12 @@ static void generateSmallDoorChildRight(StrongholdPieceEnv *env, Piece *piece, i
     switch (piece->rot) {
     case 0:
     case 2:
-        return extendStronghold(env, piece, piece->bb1.x + 1, piece->bb0.y + offy, piece->bb0.z + offz, 1);
+        extendStronghold(env, piece, piece->bb1.x + 1, piece->bb0.y + offy, piece->bb0.z + offz, 1);
+        return;
     case 3:
     case 1:
-        return extendStronghold(env, piece, piece->bb0.x + offz, piece->bb0.y + offy, piece->bb1.z + 1, 2);
+        extendStronghold(env, piece, piece->bb0.x + offz, piece->bb0.y + offy, piece->bb1.z + 1, 2);
+        return;
     default: UNREACHABLE();
     }
 }
@@ -481,7 +491,7 @@ static inline void rotPos(Pos3 bb0, Pos3 bb1, int *x, int *z, int rot) {
     *x = posX, *z = posZ;
 }
 
-static void generateBox(Piece *p, int cx, int cz, int x0, int y0, int z0, int x1, int y1, int z1, int skipAir, RandomSource rnd) {
+static void generateBox(Piece *p, int cx, int cz, int x0, int y0, int z0, int x1, int y1, int z1, int skipAir, RandomSource *rnd) {
     if (!skipAir) {
         int w = x1 - x0 + 1;
         int d = z1 - z0 + 1;
@@ -490,7 +500,7 @@ static void generateBox(Piece *p, int cx, int cz, int x0, int y0, int z0, int x1
         if (!(w == 1 || d == 1 || h == 1)) {
             skips -= (w - 2) * (d - 2) * (h - 2);
         }
-        rnd.skipN(rnd.state, skips);
+        absSkipN(rnd, skips);
         return;
     }
 
@@ -501,7 +511,7 @@ static void generateBox(Piece *p, int cx, int cz, int x0, int y0, int z0, int x1
                 rotPos(p->bb0, p->bb1, &tx, &tz, p->rot);
                 if (tx >= cx && tx < cx + 16 && tz >= cz && tz < cz + 16) {
                     if (y == y0 || y == y1 || x == x0 || x == x1 || z == z0 || z == z1) {
-                        rnd.nextFloat(rnd.state);
+                        absNextFloat(rnd);
                     }
                 }
             }
@@ -510,8 +520,8 @@ static void generateBox(Piece *p, int cx, int cz, int x0, int y0, int z0, int x1
 }
 
 ATTR(always_inline)
-static inline void generateMaybeBox(int x0, int y0, int z0, int x1, int y1, int z1, RandomSource rnd) {
-    rnd.skipN(rnd.state, (y1-y0+1) * (x1-x0+1) * (z1-z0+1));
+static inline void generateMaybeBox(int x0, int y0, int z0, int x1, int y1, int z1, RandomSource *rnd) {
+    absSkipN(rnd, (y1-y0+1) * (x1-x0+1) * (z1-z0+1));
 }
 
 static const Pos eye_positions[] = {
@@ -554,9 +564,9 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
     // slow code ahead
     for (int cx = cMinX; cx <= cMaxX; cx += 16) {
         for (int cz = cMinZ; cz <= cMaxZ; cz += 16) {
-            CREATE_RANDOM_SOURCE(rnd, legacy);
+            RandomSource rnd = {.type = legacy ? JAVA_RANDOM : XOROSHIRO_J};
             uint64_t populationSeed = getPopulationSeed(mc, seed, cx, cz);
-            rnd.setSeed(rnd.state, populationSeed + ssconf.generationStep * 10000 + ssconf.decoratorIndex);
+            absSetSeed(&rnd, populationSeed + ssconf.generationStep * 10000 + ssconf.decoratorIndex);
             for (int i = 0; i < count; ++i) {
                 Piece *p = &list[i];
                 if (!(p->bb1.x >= cx && p->bb0.x <= cx + 15 &&
@@ -565,16 +575,16 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                 }
                 switch (p->type) {
                 case SH_STRAIGHT:
-                    generateBox(p, cx, cz, 0, 0, 0, 4, 4, 6, 1, rnd);
-                    rnd.nextFloat(rnd.state);
-                    rnd.nextFloat(rnd.state);
-                    rnd.nextFloat(rnd.state);
-                    rnd.nextFloat(rnd.state);
+                    generateBox(p, cx, cz, 0, 0, 0, 4, 4, 6, 1, &rnd);
+                    absNextFloat(&rnd);
+                    absNextFloat(&rnd);
+                    absNextFloat(&rnd);
+                    absNextFloat(&rnd);
                     p->chestCount = 0;
                     break;
                 case SH_PRISON_HALL:
-                    generateBox(p, cx, cz, 0, 0, 0, 8, 4, 10, 1, rnd);
-                    rnd.skipN(rnd.state, 12);
+                    generateBox(p, cx, cz, 0, 0, 0, 8, 4, 10, 1, &rnd);
+                    absSkipN(&rnd, 12);
                     // generateBox(p, cx, cz, 4, 1, 1, 4, 3, 1, 0, rnd);
                     // generateBox(p, cx, cz, 4, 1, 3, 4, 3, 3, 0, rnd);
                     // generateBox(p, cx, cz, 4, 1, 7, 4, 3, 7, 0, rnd);
@@ -583,11 +593,11 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                     break;
                 case SH_LEFT_TURN:
                 case SH_RIGHT_TURN:
-                    generateBox(p, cx, cz, 0, 0, 0, 4, 4, 4, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 4, 4, 4, 1, &rnd);
                     p->chestCount = 0;
                     break;
                 case SH_ROOM_CROSSING: {
-                    generateBox(p, cx, cz, 0, 0, 0, 10, 6, 10, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 10, 6, 10, 1, &rnd);
                     if (!p->additionalData) {
                         p->chestCount = 0;
                         break;
@@ -598,22 +608,22 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                     if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
                         p->chestCount = 1;
                         p->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
-                        p->lootTables[0] = "stronghold_crossing";
-                        p->lootSeeds[0] = rnd.nextLong(rnd.state);
+                        p->lootTables[0] = "chests/stronghold_crossing";
+                        p->lootSeeds[0] = absNextLong(&rnd);
                     }
                     break;
                 }
                 case SH_STRAIGHT_STAIRS_DOWN:
-                    generateBox(p, cx, cz, 0, 0, 0, 4, 10, 7, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 4, 10, 7, 1, &rnd);
                     p->chestCount = 0;
                     break;
                 case SH_STAIRS_DOWN:
-                    generateBox(p, cx, cz, 0, 0, 0, 4, 10, 4, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 4, 10, 4, 1, &rnd);
                     p->chestCount = 0;
                     break;
                 case SH_FIVE_CROSSING:
-                    generateBox(p, cx, cz, 0, 0, 0, 9, 8, 10, 1, rnd);
-                    rnd.skipN(rnd.state, 109);
+                    generateBox(p, cx, cz, 0, 0, 0, 9, 8, 10, 1, &rnd);
+                    absSkipN(&rnd, 109);
                     // generateBox(p, cx, cz, 1, 2, 1, 8, 2, 6, 0, rnd);
                     // generateBox(p, cx, cz, 4, 1, 5, 4, 4, 9, 0, rnd);
                     // generateBox(p, cx, cz, 8, 1, 5, 8, 4, 9, 0, rnd);
@@ -623,14 +633,14 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                     p->chestCount = 0;
                     break;
                 case SH_CHEST_CORRIDOR: {
-                    generateBox(p, cx, cz, 0, 0, 0, 4, 4, 6, 1, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 4, 4, 6, 1, &rnd);
                     int chestPosX = 3, chestPosZ = 3;
                     rotPos(p->bb0, p->bb1, &chestPosX, &chestPosZ, p->rot);
                     if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
                         p->chestCount = 1;
                         p->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
-                        p->lootTables[0] = "stronghold_corridor";
-                        p->lootSeeds[0] = rnd.nextLong(rnd.state);
+                        p->lootTables[0] = "chests/stronghold_corridor";
+                        p->lootSeeds[0] = absNextLong(&rnd);
                     }
                     break;
                 }
@@ -645,29 +655,29 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                         p->chestCount = 1;
                     }
 
-                    generateBox(p, cx, cz, 0, 0, 0, 13, currentHeight - 1, 14, 1, rnd);
-                    generateMaybeBox(2, 1, 1, 11, 4, 13, rnd);
+                    generateBox(p, cx, cz, 0, 0, 0, 13, currentHeight - 1, 14, 1, &rnd);
+                    generateMaybeBox(2, 1, 1, 11, 4, 13, &rnd);
                     int chestPosX = 3, chestPosZ = 5;
                     rotPos(p->bb0, p->bb1, &chestPosX, &chestPosZ, p->rot);
                     if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
                         p->chestPoses[0] = (Pos) {chestPosX, chestPosZ};
-                        p->lootTables[0] = "stronghold_library";
-                        p->lootSeeds[0] = rnd.nextLong(rnd.state);
+                        p->lootTables[0] = "chests/stronghold_library";
+                        p->lootSeeds[0] = absNextLong(&rnd);
                     }
                     if (isTall) {
                         chestPosX = 12, chestPosZ = 1;
                         rotPos(p->bb0, p->bb1, &chestPosX, &chestPosZ, p->rot);
                         if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
                             p->chestPoses[1] = (Pos) {chestPosX, chestPosZ};
-                            p->lootTables[1] = "stronghold_library";
-                            p->lootSeeds[1] = rnd.nextLong(rnd.state);
+                            p->lootTables[1] = "chests/stronghold_library";
+                            p->lootSeeds[1] = absNextLong(&rnd);
                         }
                     }
                     break;
                 }
                 case SH_PORTAL_ROOM:
                     // the famous 760 skips
-                    rnd.skipN(rnd.state, 760);
+                    absSkipN(&rnd, 760);
                     // generateBox(p, cx, cz, 0, 0, 0, 10, 7, 15, 0, rnd);
                     // generateBox(p, cx, cz, 1, 6, 1, 1, 6, 14, 0, rnd);
                     // generateBox(p, cx, cz, 9, 6, 1, 9, 6, 14, 0, rnd);
@@ -681,7 +691,7 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                     // generateBox(p, cx, cz, 4, 3, 7, 6, 3, 7, 0, rnd);
 
                     for (int j = 0; j < 12; j++) {
-                        if (rnd.nextFloat(rnd.state) > 0.9F) {
+                        if (absNextFloat(&rnd) > 0.9F) {
                             Pos relPos = eye_positions[j];
                             int eyePosX = relPos.x, eyePosZ = relPos.z;
                             rotPos(p->bb0, p->bb1, &eyePosX, &eyePosZ, p->rot);

@@ -22,12 +22,14 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build --config Release
+          cmake --build build
+          ctest --test-dir build/tests --extra-verbose
       - name: Compile shared library (macos-latest)
         if: matrix.os == 'macos-latest'
         run: |
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
-          cmake --build build --config Release
+          cmake --build build
+          ctest --test-dir build/tests --extra-verbose
       - name: Set up MSYS2 (windows-latest)
         if: matrix.os == 'windows-latest'
         uses: msys2/setup-msys2@v2
@@ -43,7 +45,8 @@ jobs:
         shell: msys2 {0}
         run: |
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build --config Release
+          cmake --build build
+          ctest --test-dir build/tests --extra-verbose
 
       - name: Capture shared library (ubuntu-latest)
         if: matrix.os == 'ubuntu-latest'
