@@ -440,6 +440,176 @@ int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z) {
     return lowerBound;
 }
 
+static double sampleDepthNoise(const OctaveNoise *on, int x, int z, int mc) {
+    double noise = sampleOctaveAmp(on, x * 200, 10.0, z * 200, 1.0, 0.0, 1);
+
+    if (mc < MC_1_16_1) {
+        if (mc >= MC_1_15) {
+            noise *= 65535.0;
+        }
+        noise /= 8000.0;
+    }
+
+    noise = noise < 0.0 ? -noise * 0.3 : noise;
+
+    if (mc >= MC_1_16_1) {
+        noise = noise * 3.0 * 65535.0 / 8000.0 - 2.0;
+        if (noise < 0.0) {
+            return 17.0 * noise / 28.0 / 64.0;
+        }
+        return fmin(noise, 1.0) * 17.0 / 40.0 / 64.0;
+    }
+
+    noise = noise * 3.0 - 2.0;
+
+    if (mc <= MC_1_13_2) {
+        if (noise < 0.0) {
+            noise = noise / 2.0;
+            if (noise < -1.0) {
+                noise = -1.0;
+            }
+            noise = noise / 1.4 / 2.0;
+        } else {
+            if (noise > 1.0) {
+                noise = 1.0;
+            }
+            noise = noise / 8.0;
+        }
+        return noise;
+    }
+
+    if (noise < 0.0) {
+        return noise / 28.0;
+    }
+    return fmin(noise, 1.0) / 40.0;
+}
+
+static inline void getWeightedDepthAndScale(Generator *g, OctaveNoise *on, int cellX, int cellZ, double *depth, double *scale) {
+    static const float BIOME_KERNEL[25] = {
+        3.302044127f, 4.104975761f, 4.545454545f, 4.104975761f, 3.302044127f,
+        4.104975761f, 6.194967155f, 8.333333333f, 6.194967155f, 4.104975761f,
+        4.545454545f, 8.333333333f, 50.00000000f, 8.333333333f, 4.545454545f,
+        4.104975761f, 6.194967155f, 8.333333333f, 6.194967155f, 4.104975761f,
+        3.302044127f, 4.104975761f, 4.545454545f, 4.104975761f, 3.302044127f,
+    };
+
+    Range r = {4, cellX - 2, cellZ - 2, 5, 5, 0, 1};
+    int *cache = allocCache(g, r);
+    genBiomes(g, cache, r);
+
+    double depthAtCenter, scaleAtCenter;
+    int biomeAtCenter = cache[2 * r.sx + 2];
+    getBiomeDepthAndScale(biomeAtCenter, &depthAtCenter, &scaleAtCenter, NULL);
+
+    double weightedScale = 0.0;
+    double weightedDepth = 0.0;
+    double totalWeight = 0.0;
+
+    for (int rz = 0; rz < 5; ++rz) {
+        for (int rx = 0; rx < 5; ++rx) {
+            int biomeId = cache[rz * r.sx + rx];
+            double biomeDepth, biomeScale;
+            getBiomeDepthAndScale(biomeId, &biomeDepth, &biomeScale, NULL);
+
+            double weight = BIOME_KERNEL[rx + rz * 5] / (biomeDepth + 2.0);
+            if (biomeDepth > depthAtCenter) {
+                weight *= 0.5;
+            }
+
+            weightedScale += biomeScale * weight;
+            weightedDepth += biomeDepth * weight;
+            totalWeight += weight;
+        }
+    }
+    free(cache);
+
+    weightedScale /= totalWeight;
+    weightedDepth /= totalWeight;
+    weightedScale = weightedScale * 0.9 + 0.1;
+    weightedDepth = (weightedDepth * 4.0 - 1.0) / 8.0;
+
+    if (g->mc >= MC_1_16_1) {
+        *depth = weightedDepth * 17.0 / 64.0;
+        *scale = 96.0 / weightedScale;
+    } else {
+        double noise = sampleDepthNoise(on, cellX, cellZ, g->mc);
+        *depth = weightedDepth + noise;
+        if (g->mc <= MC_1_13_2) {
+            *depth = weightedDepth + noise * 0.2;
+        }
+        *scale = weightedScale;
+    }
+}
+
+static inline double computeNoiseFalloff(double depth, double scale, int y) {
+    double fallOff = ((double)y - (8.5 + depth * 8.5 / 8.0 * 4.0)) * 12.0 * 128.0 / 256.0 / scale;
+    if (fallOff < 0.0) {
+        fallOff *= 4.0;
+    }
+    return fallOff;
+}
+
+void sampleOWNoiseColumnOld(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[]) {
+    const int worldHeight = 256;
+    const int cellHeight = 2 << 2;
+    const int noiseSizeY = floordiv(worldHeight, cellHeight);
+
+    const double densityFactor = 1.0;
+    const double densityOffset = -0.46875;
+
+    const double maxNoiseY = (double)noiseSizeY - 4.0;
+    const double minNoiseY = 0;
+
+    const int topSlideTarget = -10;
+    const int topSlideSize = 3;
+    const int topSlideOffset = 0;
+
+    const int bottomSlideTarget = -30;
+    const int bottomSlideSize = 0;
+    const int bottomSlideOffset = 0;
+
+    double depth, scale;
+    getWeightedDepthAndScale(&params->g, &params->sn.octdepth, cellX, cellZ, &depth, &scale);
+
+    double randomOffset = sampleDepthNoise(&params->sn.octdepth, cellX, cellZ, params->g.mc);
+
+    for (int y = colYMin; y <= colYMax; ++y) {
+        double noise = sampleSurfaceNoise(&params->sn, cellX, y, cellZ);
+
+        if (params->g.mc >= MC_1_16_1) {
+            double fallOff = 1.0 - (double)y * 2.0 / (double)noiseSizeY + randomOffset;
+            fallOff = fallOff * densityFactor + densityOffset;
+            fallOff = (fallOff + depth) * scale;
+            noise = fallOff > 0.0 ? noise + fallOff * 4.0 : noise + fallOff;
+
+            if (topSlideSize > 0.0) {
+                double t = ((double)(noiseSizeY - y) - topSlideOffset) / topSlideSize;
+                noise = clampedLerp(t, topSlideTarget, noise);
+            }
+
+            if (bottomSlideSize > 0.0) {
+                double t = ((double)y - bottomSlideOffset) / bottomSlideSize;
+                noise = clampedLerp(t, bottomSlideTarget, noise);
+            }
+        } else {
+            noise -= computeNoiseFalloff(depth, scale, y);
+
+            double sizeY = maxNoiseY;
+            double minY = minNoiseY;
+
+            if ((double)y > sizeY) {
+                double t = (y - sizeY - topSlideOffset) / topSlideSize;
+                noise = clampedLerp(t, noise, topSlideTarget);
+            } else if((double)y < minY) {
+                double t = (minY - (double)y) / (minY - 1.0);
+                noise = clampedLerp(t, noise, bottomSlideTarget);
+            }
+        }
+
+        column[y - colYMin] = noise;
+    }
+}
+
 void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[]) {
     switch (params->g.dim) {
     case DIM_NETHER:
@@ -449,6 +619,10 @@ void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, int colYMin, 
         sampleNoiseColumnEnd(column, &params->sn, &params->g.en, cellX, cellZ, colYMin, colYMax);
         return;
     default: break;
+    }
+    if (params->g.mc <= MC_1_17_1) {
+        sampleOWNoiseColumnOld(params, cellX, cellZ, colYMin, colYMax, column);
+        return;
     }
 
     const int minY = -64;
