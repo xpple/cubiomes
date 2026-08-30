@@ -485,6 +485,7 @@ static double sampleDepthNoise(const OctaveNoise *on, int x, int z, int mc) {
 }
 
 static inline void getWeightedDepthAndScale(Generator *g, OctaveNoise *on, int cellX, int cellZ, double *depth, double *scale) {
+    // 10 / (sqrt(i**2 + j**2) + 0.2)
     static const float BIOME_KERNEL[25] = {
         3.302044127f, 4.104975761f, 4.545454545f, 4.104975761f, 3.302044127f,
         4.104975761f, 6.194967155f, 8.333333333f, 6.194967155f, 4.104975761f,
