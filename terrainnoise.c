@@ -494,7 +494,7 @@ int generateColumn(uint8_t blocks[], const double *ds00, const double *ds01, con
             double noise;
             // using a function pointer is significantly slower due to inlining problems
             switch (interpFunc) {
-            case INTERP_PRE_1_18: noise = lerp3(percentY, percentX, percentZ, noise000, noise100, noise010, noise110, noise001, noise101, noise011, noise111); break;
+            case INTERP_PRE_1_18: noise = lerp3(percentY, percentX, percentZ, noise000, noise010, noise100, noise110, noise001, noise011, noise101, noise111); break;
             case INTERP_1_18: noise = lerp3(percentX, percentY, percentZ, noise000, noise100, noise010, noise110, noise001, noise101, noise011, noise111); break;
             default: UNREACHABLE();
             }
