@@ -454,8 +454,15 @@ static void init_entry(const cJSON* entry_data, LootPool* pool, const int entry_
     {
         int functions = 0;
         cJSON* functions_field = cJSON_GetObjectItem(entry_data, "functions");
+        if (functions_field == NULL) {
+            functions_field = cJSON_GetObjectItem(entry_data, "modifier");
+        }
         if (functions_field != NULL) {
-            functions = cJSON_GetArraySize(functions_field);
+            if (cJSON_IsObject(functions_field)) {
+                functions = 1;
+            } else {
+                functions = cJSON_GetArraySize(functions_field);
+            }
         }
 
         // initialize loot function fields
@@ -479,8 +486,18 @@ static void init_entry(const cJSON* entry_data, LootPool* pool, const int entry_
 static void init_entry_functions(const cJSON* entry_data, LootPool* pool, const int entry_id, LootTableContext* ctx)
 {
     cJSON* functions_field = cJSON_GetObjectItem(entry_data, "functions");
+    if (functions_field == NULL) {
+        functions_field = cJSON_GetObjectItem(entry_data, "modifier");
+    }
     if (functions_field == NULL)
         return;
+
+    cJSON *wrapper = NULL;
+    if (cJSON_IsObject(functions_field)) {
+        wrapper = cJSON_CreateArray();
+        cJSON_AddItemReferenceToArray(wrapper, functions_field);
+        functions_field = wrapper;
+    }
 
     const int entry_item = pool->entry_to_item[entry_id];
     const char* entry_item_name = entry_item == -1 ? NULL : ctx->item_names[entry_item];
@@ -496,6 +513,9 @@ static void init_entry_functions(const cJSON* entry_data, LootPool* pool, const 
 
         cJSON* function_data = cJSON_GetArrayItem(functions_field, i);
         char* function_name = cJSON_GetStringValue(cJSON_GetObjectItem(function_data, "function"));
+        if (function_name == NULL) {
+            function_name = cJSON_GetStringValue(cJSON_GetObjectItem(function_data, "type"));
+        }
 
         if (strcmp(function_name, "minecraft:set_count") == 0) {
             parse_set_count(loot_function, function_data);
@@ -521,6 +541,9 @@ static void init_entry_functions(const cJSON* entry_data, LootPool* pool, const 
         else {
             create_no_op(loot_function);
         }
+    }
+    if (wrapper) {
+        cJSON_Delete(wrapper);
     }
 }
 
