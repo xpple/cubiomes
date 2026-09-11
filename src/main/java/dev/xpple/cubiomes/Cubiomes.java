@@ -17,6 +17,312 @@ public class Cubiomes extends Cubiomes_1 {
     Cubiomes() {
         // Should not be called directly
     }
+    private static final int EFFECT_MINING_FATIGUE = (int)3L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_MINING_FATIGUE = 3
+     * }
+     */
+    public static int EFFECT_MINING_FATIGUE() {
+        return EFFECT_MINING_FATIGUE;
+    }
+    private static final int EFFECT_STRENGTH = (int)4L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_STRENGTH = 4
+     * }
+     */
+    public static int EFFECT_STRENGTH() {
+        return EFFECT_STRENGTH;
+    }
+    private static final int EFFECT_INSTANT_HEALTH = (int)5L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_INSTANT_HEALTH = 5
+     * }
+     */
+    public static int EFFECT_INSTANT_HEALTH() {
+        return EFFECT_INSTANT_HEALTH;
+    }
+    private static final int EFFECT_INSTANT_DAMAGE = (int)6L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_INSTANT_DAMAGE = 6
+     * }
+     */
+    public static int EFFECT_INSTANT_DAMAGE() {
+        return EFFECT_INSTANT_DAMAGE;
+    }
+    private static final int EFFECT_JUMP_BOOST = (int)7L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_JUMP_BOOST = 7
+     * }
+     */
+    public static int EFFECT_JUMP_BOOST() {
+        return EFFECT_JUMP_BOOST;
+    }
+    private static final int EFFECT_NAUSEA = (int)8L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_NAUSEA = 8
+     * }
+     */
+    public static int EFFECT_NAUSEA() {
+        return EFFECT_NAUSEA;
+    }
+    private static final int EFFECT_REGENERATION = (int)9L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_REGENERATION = 9
+     * }
+     */
+    public static int EFFECT_REGENERATION() {
+        return EFFECT_REGENERATION;
+    }
+    private static final int EFFECT_RESISTANCE = (int)10L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_RESISTANCE = 10
+     * }
+     */
+    public static int EFFECT_RESISTANCE() {
+        return EFFECT_RESISTANCE;
+    }
+    private static final int EFFECT_FIRE_RESISTANCE = (int)11L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_FIRE_RESISTANCE = 11
+     * }
+     */
+    public static int EFFECT_FIRE_RESISTANCE() {
+        return EFFECT_FIRE_RESISTANCE;
+    }
+    private static final int EFFECT_WATER_BREATHING = (int)12L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_WATER_BREATHING = 12
+     * }
+     */
+    public static int EFFECT_WATER_BREATHING() {
+        return EFFECT_WATER_BREATHING;
+    }
+    private static final int EFFECT_INVISIBILITY = (int)13L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_INVISIBILITY = 13
+     * }
+     */
+    public static int EFFECT_INVISIBILITY() {
+        return EFFECT_INVISIBILITY;
+    }
+    private static final int EFFECT_BLINDNESS = (int)14L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_BLINDNESS = 14
+     * }
+     */
+    public static int EFFECT_BLINDNESS() {
+        return EFFECT_BLINDNESS;
+    }
+    private static final int EFFECT_NIGHT_VISION = (int)15L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_NIGHT_VISION = 15
+     * }
+     */
+    public static int EFFECT_NIGHT_VISION() {
+        return EFFECT_NIGHT_VISION;
+    }
+    private static final int EFFECT_HUNGER = (int)16L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_HUNGER = 16
+     * }
+     */
+    public static int EFFECT_HUNGER() {
+        return EFFECT_HUNGER;
+    }
+    private static final int EFFECT_WEAKNESS = (int)17L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_WEAKNESS = 17
+     * }
+     */
+    public static int EFFECT_WEAKNESS() {
+        return EFFECT_WEAKNESS;
+    }
+    private static final int EFFECT_POISON = (int)18L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_POISON = 18
+     * }
+     */
+    public static int EFFECT_POISON() {
+        return EFFECT_POISON;
+    }
+    private static final int EFFECT_WITHER = (int)19L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_WITHER = 19
+     * }
+     */
+    public static int EFFECT_WITHER() {
+        return EFFECT_WITHER;
+    }
+    private static final int EFFECT_HEALTH_BOOST = (int)20L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_HEALTH_BOOST = 20
+     * }
+     */
+    public static int EFFECT_HEALTH_BOOST() {
+        return EFFECT_HEALTH_BOOST;
+    }
+    private static final int EFFECT_ABSORPTION = (int)21L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_ABSORPTION = 21
+     * }
+     */
+    public static int EFFECT_ABSORPTION() {
+        return EFFECT_ABSORPTION;
+    }
+    private static final int EFFECT_SATURATION = (int)22L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_SATURATION = 22
+     * }
+     */
+    public static int EFFECT_SATURATION() {
+        return EFFECT_SATURATION;
+    }
+    private static final int EFFECT_GLOWING = (int)23L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_GLOWING = 23
+     * }
+     */
+    public static int EFFECT_GLOWING() {
+        return EFFECT_GLOWING;
+    }
+    private static final int EFFECT_LEVITATION = (int)24L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_LEVITATION = 24
+     * }
+     */
+    public static int EFFECT_LEVITATION() {
+        return EFFECT_LEVITATION;
+    }
+    private static final int EFFECT_LUCK = (int)25L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_LUCK = 25
+     * }
+     */
+    public static int EFFECT_LUCK() {
+        return EFFECT_LUCK;
+    }
+    private static final int EFFECT_UNLUCK = (int)26L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_UNLUCK = 26
+     * }
+     */
+    public static int EFFECT_UNLUCK() {
+        return EFFECT_UNLUCK;
+    }
+    private static final int EFFECT_SLOW_FALLING = (int)27L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_SLOW_FALLING = 27
+     * }
+     */
+    public static int EFFECT_SLOW_FALLING() {
+        return EFFECT_SLOW_FALLING;
+    }
+    private static final int EFFECT_CONDUIT_POWER = (int)28L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_CONDUIT_POWER = 28
+     * }
+     */
+    public static int EFFECT_CONDUIT_POWER() {
+        return EFFECT_CONDUIT_POWER;
+    }
+    private static final int EFFECT_DOLPHINS_GRACE = (int)29L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_DOLPHINS_GRACE = 29
+     * }
+     */
+    public static int EFFECT_DOLPHINS_GRACE() {
+        return EFFECT_DOLPHINS_GRACE;
+    }
+    private static final int EFFECT_BAD_OMEN = (int)30L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_BAD_OMEN = 30
+     * }
+     */
+    public static int EFFECT_BAD_OMEN() {
+        return EFFECT_BAD_OMEN;
+    }
+    private static final int EFFECT_HERO_OF_THE_VILLAGE = (int)31L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_HERO_OF_THE_VILLAGE = 31
+     * }
+     */
+    public static int EFFECT_HERO_OF_THE_VILLAGE() {
+        return EFFECT_HERO_OF_THE_VILLAGE;
+    }
+    private static final int EFFECT_DARKNESS = (int)32L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_DARKNESS = 32
+     * }
+     */
+    public static int EFFECT_DARKNESS() {
+        return EFFECT_DARKNESS;
+    }
+    private static final int EFFECT_TRIAL_OMEN = (int)33L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_TRIAL_OMEN = 33
+     * }
+     */
+    public static int EFFECT_TRIAL_OMEN() {
+        return EFFECT_TRIAL_OMEN;
+    }
+    private static final int EFFECT_RAID_OMEN = (int)34L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_RAID_OMEN = 34
+     * }
+     */
+    public static int EFFECT_RAID_OMEN() {
+        return EFFECT_RAID_OMEN;
+    }
+    private static final int EFFECT_WIND_CHARGED = (int)35L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_WIND_CHARGED = 35
+     * }
+     */
+    public static int EFFECT_WIND_CHARGED() {
+        return EFFECT_WIND_CHARGED;
+    }
+    private static final int EFFECT_WEAVING = (int)36L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_WEAVING = 36
+     * }
+     */
+    public static int EFFECT_WEAVING() {
+        return EFFECT_WEAVING;
+    }
     private static final int EFFECT_OOZING = (int)37L;
     /**
      * {@snippet lang=c :
@@ -2194,6 +2500,189 @@ public class Cubiomes extends Cubiomes_1 {
                 traceDowncall("init_loot_table_name", context, loot_table, version);
             }
             return (int)mh$.invokeExact(context, loot_table, version);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class init_abandoned_camp_barrel {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("init_abandoned_camp_barrel");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int init_abandoned_camp_barrel(LootTableContext **context, int version)
+     * }
+     */
+    public static FunctionDescriptor init_abandoned_camp_barrel$descriptor() {
+        return init_abandoned_camp_barrel.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int init_abandoned_camp_barrel(LootTableContext **context, int version)
+     * }
+     */
+    public static MethodHandle init_abandoned_camp_barrel$handle() {
+        return init_abandoned_camp_barrel.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int init_abandoned_camp_barrel(LootTableContext **context, int version)
+     * }
+     */
+    public static MemorySegment init_abandoned_camp_barrel$address() {
+        return init_abandoned_camp_barrel.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int init_abandoned_camp_barrel(LootTableContext **context, int version)
+     * }
+     */
+    public static int init_abandoned_camp_barrel(MemorySegment context, int version) {
+        var mh$ = init_abandoned_camp_barrel.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("init_abandoned_camp_barrel", context, version);
+            }
+            return (int)mh$.invokeExact(context, version);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class init_abandoned_camp_common_chest {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("init_abandoned_camp_common_chest");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int init_abandoned_camp_common_chest(LootTableContext **context, int version)
+     * }
+     */
+    public static FunctionDescriptor init_abandoned_camp_common_chest$descriptor() {
+        return init_abandoned_camp_common_chest.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int init_abandoned_camp_common_chest(LootTableContext **context, int version)
+     * }
+     */
+    public static MethodHandle init_abandoned_camp_common_chest$handle() {
+        return init_abandoned_camp_common_chest.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int init_abandoned_camp_common_chest(LootTableContext **context, int version)
+     * }
+     */
+    public static MemorySegment init_abandoned_camp_common_chest$address() {
+        return init_abandoned_camp_common_chest.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int init_abandoned_camp_common_chest(LootTableContext **context, int version)
+     * }
+     */
+    public static int init_abandoned_camp_common_chest(MemorySegment context, int version) {
+        var mh$ = init_abandoned_camp_common_chest.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("init_abandoned_camp_common_chest", context, version);
+            }
+            return (int)mh$.invokeExact(context, version);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class init_abandoned_camp_secret_chest {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("init_abandoned_camp_secret_chest");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int init_abandoned_camp_secret_chest(LootTableContext **context, int version)
+     * }
+     */
+    public static FunctionDescriptor init_abandoned_camp_secret_chest$descriptor() {
+        return init_abandoned_camp_secret_chest.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int init_abandoned_camp_secret_chest(LootTableContext **context, int version)
+     * }
+     */
+    public static MethodHandle init_abandoned_camp_secret_chest$handle() {
+        return init_abandoned_camp_secret_chest.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int init_abandoned_camp_secret_chest(LootTableContext **context, int version)
+     * }
+     */
+    public static MemorySegment init_abandoned_camp_secret_chest$address() {
+        return init_abandoned_camp_secret_chest.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int init_abandoned_camp_secret_chest(LootTableContext **context, int version)
+     * }
+     */
+    public static int init_abandoned_camp_secret_chest(MemorySegment context, int version) {
+        var mh$ = init_abandoned_camp_secret_chest.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("init_abandoned_camp_secret_chest", context, version);
+            }
+            return (int)mh$.invokeExact(context, version);
         } catch (Error | RuntimeException ex) {
            throw ex;
         } catch (Throwable ex$) {
@@ -4454,6 +4943,216 @@ public class Cubiomes extends Cubiomes_1 {
            throw ex;
         } catch (Throwable ex$) {
            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    /**
+     * Variadic invoker class for:
+     * {@snippet lang=c :
+     * LootTableContext *init_abandoned_camp_barrel_26_3()
+     * }
+     */
+    public static class init_abandoned_camp_barrel_26_3 {
+        private static final FunctionDescriptor BASE_DESC = FunctionDescriptor.of(
+                Cubiomes.C_POINTER        );
+        private static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("init_abandoned_camp_barrel_26_3");
+
+        private final MethodHandle handle;
+        private final FunctionDescriptor descriptor;
+        private final MethodHandle spreader;
+
+        private init_abandoned_camp_barrel_26_3(MethodHandle handle, FunctionDescriptor descriptor, MethodHandle spreader) {
+            this.handle = handle;
+            this.descriptor = descriptor;
+            this.spreader = spreader;
+        }
+
+        /**
+         * Variadic invoker factory for:
+         * {@snippet lang=c :
+         * LootTableContext *init_abandoned_camp_barrel_26_3()
+         * }
+         */
+        public static init_abandoned_camp_barrel_26_3 makeInvoker(MemoryLayout... layouts) {
+            FunctionDescriptor desc$ = BASE_DESC.appendArgumentLayouts(layouts);
+            Linker.Option fva$ = Linker.Option.firstVariadicArg(BASE_DESC.argumentLayouts().size());
+            var mh$ = Linker.nativeLinker().downcallHandle(ADDR, desc$, fva$);
+            var spreader$ = mh$.asSpreader(Object[].class, layouts.length);
+            return new init_abandoned_camp_barrel_26_3(mh$, desc$, spreader$);
+        }
+
+        /**
+         * {@return the address}
+         */
+        public static MemorySegment address() {
+            return ADDR;
+        }
+
+        /**
+         * {@return the specialized method handle}
+         */
+        public MethodHandle handle() {
+            return handle;
+        }
+
+        /**
+         * {@return the specialized descriptor}
+         */
+        public FunctionDescriptor descriptor() {
+            return descriptor;
+        }
+
+        public MemorySegment apply(Object... x0) {
+            try {
+                if (TRACE_DOWNCALLS) {
+                    traceDowncall("init_abandoned_camp_barrel_26_3", x0);
+                }
+                return (MemorySegment) spreader.invokeExact(x0);
+            } catch(IllegalArgumentException | ClassCastException ex$)  {
+                throw ex$; // rethrow IAE from passing wrong number/type of args
+            } catch (Throwable ex$) {
+               throw new AssertionError("should not reach here", ex$);
+            }
+        }
+    }
+
+    /**
+     * Variadic invoker class for:
+     * {@snippet lang=c :
+     * LootTableContext *init_abandoned_camp_common_chest_26_3()
+     * }
+     */
+    public static class init_abandoned_camp_common_chest_26_3 {
+        private static final FunctionDescriptor BASE_DESC = FunctionDescriptor.of(
+                Cubiomes.C_POINTER        );
+        private static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("init_abandoned_camp_common_chest_26_3");
+
+        private final MethodHandle handle;
+        private final FunctionDescriptor descriptor;
+        private final MethodHandle spreader;
+
+        private init_abandoned_camp_common_chest_26_3(MethodHandle handle, FunctionDescriptor descriptor, MethodHandle spreader) {
+            this.handle = handle;
+            this.descriptor = descriptor;
+            this.spreader = spreader;
+        }
+
+        /**
+         * Variadic invoker factory for:
+         * {@snippet lang=c :
+         * LootTableContext *init_abandoned_camp_common_chest_26_3()
+         * }
+         */
+        public static init_abandoned_camp_common_chest_26_3 makeInvoker(MemoryLayout... layouts) {
+            FunctionDescriptor desc$ = BASE_DESC.appendArgumentLayouts(layouts);
+            Linker.Option fva$ = Linker.Option.firstVariadicArg(BASE_DESC.argumentLayouts().size());
+            var mh$ = Linker.nativeLinker().downcallHandle(ADDR, desc$, fva$);
+            var spreader$ = mh$.asSpreader(Object[].class, layouts.length);
+            return new init_abandoned_camp_common_chest_26_3(mh$, desc$, spreader$);
+        }
+
+        /**
+         * {@return the address}
+         */
+        public static MemorySegment address() {
+            return ADDR;
+        }
+
+        /**
+         * {@return the specialized method handle}
+         */
+        public MethodHandle handle() {
+            return handle;
+        }
+
+        /**
+         * {@return the specialized descriptor}
+         */
+        public FunctionDescriptor descriptor() {
+            return descriptor;
+        }
+
+        public MemorySegment apply(Object... x0) {
+            try {
+                if (TRACE_DOWNCALLS) {
+                    traceDowncall("init_abandoned_camp_common_chest_26_3", x0);
+                }
+                return (MemorySegment) spreader.invokeExact(x0);
+            } catch(IllegalArgumentException | ClassCastException ex$)  {
+                throw ex$; // rethrow IAE from passing wrong number/type of args
+            } catch (Throwable ex$) {
+               throw new AssertionError("should not reach here", ex$);
+            }
+        }
+    }
+
+    /**
+     * Variadic invoker class for:
+     * {@snippet lang=c :
+     * LootTableContext *init_abandoned_camp_secret_chest_26_3()
+     * }
+     */
+    public static class init_abandoned_camp_secret_chest_26_3 {
+        private static final FunctionDescriptor BASE_DESC = FunctionDescriptor.of(
+                Cubiomes.C_POINTER        );
+        private static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("init_abandoned_camp_secret_chest_26_3");
+
+        private final MethodHandle handle;
+        private final FunctionDescriptor descriptor;
+        private final MethodHandle spreader;
+
+        private init_abandoned_camp_secret_chest_26_3(MethodHandle handle, FunctionDescriptor descriptor, MethodHandle spreader) {
+            this.handle = handle;
+            this.descriptor = descriptor;
+            this.spreader = spreader;
+        }
+
+        /**
+         * Variadic invoker factory for:
+         * {@snippet lang=c :
+         * LootTableContext *init_abandoned_camp_secret_chest_26_3()
+         * }
+         */
+        public static init_abandoned_camp_secret_chest_26_3 makeInvoker(MemoryLayout... layouts) {
+            FunctionDescriptor desc$ = BASE_DESC.appendArgumentLayouts(layouts);
+            Linker.Option fva$ = Linker.Option.firstVariadicArg(BASE_DESC.argumentLayouts().size());
+            var mh$ = Linker.nativeLinker().downcallHandle(ADDR, desc$, fva$);
+            var spreader$ = mh$.asSpreader(Object[].class, layouts.length);
+            return new init_abandoned_camp_secret_chest_26_3(mh$, desc$, spreader$);
+        }
+
+        /**
+         * {@return the address}
+         */
+        public static MemorySegment address() {
+            return ADDR;
+        }
+
+        /**
+         * {@return the specialized method handle}
+         */
+        public MethodHandle handle() {
+            return handle;
+        }
+
+        /**
+         * {@return the specialized descriptor}
+         */
+        public FunctionDescriptor descriptor() {
+            return descriptor;
+        }
+
+        public MemorySegment apply(Object... x0) {
+            try {
+                if (TRACE_DOWNCALLS) {
+                    traceDowncall("init_abandoned_camp_secret_chest_26_3", x0);
+                }
+                return (MemorySegment) spreader.invokeExact(x0);
+            } catch(IllegalArgumentException | ClassCastException ex$)  {
+                throw ex$; // rethrow IAE from passing wrong number/type of args
+            } catch (Throwable ex$) {
+               throw new AssertionError("should not reach here", ex$);
+            }
         }
     }
 
