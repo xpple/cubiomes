@@ -144,6 +144,8 @@ bdic['cherry_grove']                    = 185
 bdic['pale_garden']                     = 186
 #    // 26.2
 bdic['sulfur_caves']                    = 187
+#    // 26.3
+bdic['dappled_forest']                  = 188
 
 
 with open(in_file) as f:

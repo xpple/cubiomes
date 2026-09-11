@@ -37,11 +37,24 @@ static int test_biomes_1_18_2() {
     return ret;
 }
 
+static int test_biomes_26_3() {
+    int ret = 0;
+
+    Generator g;
+    setupGenerator(&g, MC_26_3, 0);
+    applySeed(&g, DIM_OVERWORLD, -3829811542736183482ULL);
+    int biome = getBiomeAt(&g, 1, 68148, 77, 80990);
+    ASSERT_EQ(ret, biome, dappled_forest);
+
+    return ret;
+}
+
 int main() {
     int ret = 0;
 
     ret += test_biomes_1_16_5();
     ret += test_biomes_1_18_2();
+    ret += test_biomes_26_3();
 
     return ret;
 }

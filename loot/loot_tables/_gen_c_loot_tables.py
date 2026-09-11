@@ -251,7 +251,7 @@ def parse_loot_table(version: str, json_pools) -> LootTableContext:
             conditions.append(parse_item_condition(condition_json))
 
         pool_loot_functions: list[LootFunction] = []
-        for json_pool_function_entry in json_pool.get("functions", []):
+        for json_pool_function_entry in json_pool.get("functions", json_pool.get("modifier", [])):
             pool_loot_function = parse_loot_function(json_pool_function_entry, None)
             pool_loot_functions.append(pool_loot_function)
 
@@ -277,7 +277,10 @@ def parse_loot_table(version: str, json_pools) -> LootTableContext:
             entry_weight = json_entry.get("weight", 1)
 
             loot_functions: list[LootFunction] = []
-            for json_function_entry in json_entry.get("functions", []):
+            json_functions = json_entry.get("functions", json_entry.get("modifier", []))
+            if isinstance(json_functions, dict):
+                json_functions = [json_functions]
+            for json_function_entry in json_functions:
                 loot_function = parse_loot_function(json_function_entry, entry_name)
                 loot_functions.append(loot_function)
             loot_functions.extend(pool_loot_functions)
@@ -317,7 +320,7 @@ def parse_pool_rolls(json_rolls) -> tuple[int, int, str]:
 
 
 def parse_loot_function(json_function_entry, entry_name: str | None) -> LootFunction:
-    json_function = json_function_entry["function"]
+    json_function = json_function_entry.get("function", json_function_entry.get("type"))
     if json_function.startswith('minecraft:'):
         json_function = json_function[len('minecraft:'):]
 
@@ -349,6 +352,8 @@ def parse_loot_function(json_function_entry, entry_name: str | None) -> LootFunc
         return SkipCallsFunction(1)
     if json_function == 'set_instrument':
         return SkipCallsFunction(1)
+    if json_function == 'exploration_map':
+        return NoOpFunction()
     if json_function == 'enchant_randomly':
         assert entry_name is not None
         enchantments = json_function_entry.get("enchantments", json_function_entry.get("options", None))
@@ -372,10 +377,7 @@ def parse_loot_function(json_function_entry, entry_name: str | None) -> LootFunc
         enchantments = json_function_entry.get("enchantments", [])
         enchantments = [(enchantment, int(level)) for (enchantment, level) in enchantments.items()]
         return SetEnchantmentsFunction(enchantments)
-    if json_function == 'exploration_map':
-        warn(f"Ignored loot function '{json_function}'")
-        return NoOpFunction()
-    if json_function == 'set_name':
+    if json_function in {'set_name', 'exploration_map', 'filtered'}:
         warn(f"Ignored loot function '{json_function}'")
         return NoOpFunction()
 
