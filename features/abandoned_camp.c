@@ -744,7 +744,6 @@ int getAbandonedCampPieces(Piece *list, StructureSaltConfig ssconf, StructureVar
             break;
         default: UNREACHABLE();
         }
-        camp->chestCount = 1;
     } else if (campIdx <= 45) {
         switch (campIdx - 30) {
         case 1:
