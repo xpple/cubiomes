@@ -17,7 +17,7 @@ Below is a list of all the major additions:
 - Structure loot support (1.13+). At the time of writing, the following structures are supported: Bastions (limited), Buried Treasures, Desert Pyramids, End Cities, Igloos, Jungle Temples, Nether Fortresses, Pillager Outposts, Ruined Portals (OW/NE), Shipwrecks, Strongholds and Abandoned Camps.
 - Fast Xoroshiro128++ state advancement.
 - Canyon/cave carvers (1.13+).
-- Terrain generation (1.18+).
+- Terrain generation (1.14+).
 - Various bug fixes.
 
 MSVC is **not** supported for this fork. Please use MinGW, UCRT64, Clang, or GCC.

@@ -254,7 +254,24 @@ double sampleNetherFinalDensity(BlendedNoise* base3dNoise, int x, int y, int z);
 int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z);
 
 /**
- * Sample the terrain noise column at the given cell coordinates.
+ * Sample the terrain noise column at the given cell coordinates. This function is for <1.18 overworld.
+ *
+ * The terrain generates at 1:4 XZ scale, so cell = block >> 2. The vertical scale is 1:8.
+ *
+ * See sampleNoiseColumn for more information.
+ *
+ * @param params the terrain noise parameters
+ * @param cellX the cell X-coordinate
+ * @param cellZ the cell Z-coordinate
+ * @param colYMin the minimum Y column (nonnegative)
+ * @param colYMax the maximum Y column (nonnegative)
+ * @param column the Y column
+ */
+void sampleOWNoiseColumnOld(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[]);
+
+/**
+ * Sample the terrain noise column at the given cell coordinates. This function works for all
+ * (supported) versions and dimensions.
  *
  * For the overworld and nether, the terrain generates at 1:4 XZ scale, so cell = block >> 2.
  * The vertical scale is 1:8.
