@@ -7,6 +7,7 @@
 #include "tables/btree21wd.h"
 #include "tables/btree215.h"
 #include "tables/btree262.h"
+#include "tables/btree263.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -1242,7 +1243,7 @@ int sampleBiomeNoiseBeta(const BiomeNoiseBeta *bnb, int64_t *np, double *nv,
 
 int getOldBetaBiome(float t, float h)
 {
-    static const uint8_t biome_table_beta_1_7[64*64] = 
+    static const uint8_t biome_table_beta_1_7[64*64] =
     {
         5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
         6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,1,1,1,1,
@@ -1478,10 +1479,16 @@ int climateToBiome(int mc, const uint64_t np[6], uint64_t *dat)
         btree262_steps, &btree262_param[0][0], btree262_nodes, btree262_order,
         sizeof(btree262_nodes) / sizeof(uint64_t)
     };
+    static const BiomeTree btree263 = {
+        btree263_steps, &btree263_param[0][0], btree263_nodes, btree263_order,
+        sizeof(btree263_nodes) / sizeof(uint64_t)
+    };
 
     const BiomeTree *bt;
     int idx;
-    if (mc >= MC_26_2)
+    if (mc >= MC_26_3)
+        bt = &btree263;
+    else if (mc >= MC_26_2)
         bt = &btree262;
     else if (mc >= MC_1_21_5)
         bt = &btree215;
