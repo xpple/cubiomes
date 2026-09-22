@@ -179,7 +179,7 @@ void initTerrainNoise(TerrainNoise *params, uint64_t ws, int dim) {
         initSurfaceNoise(&params->sn, dim, ws);
     }
 
-    if (dim == DIM_OVERWORLD) {
+    if (params->g.mc >= MC_1_18 && dim == DIM_OVERWORLD) {
         Xoroshiro wsx;
         xSetSeed(&wsx, ws);
         const uint64_t lo = xNextLong(&wsx);
@@ -440,13 +440,14 @@ int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z) {
     return lowerBound;
 }
 
-static double sampleDepthNoise(const OctaveNoise *on, int x, int z, int mc) {
+static inline double sampleDepthNoise(const OctaveNoise *on, int x, int z, int mc) {
     double noise = sampleOctaveAmp(on, x * 200, 10.0, z * 200, 1.0, 0.0, 1);
 
+    // pre-1.16 terrain expects depth noise at the unnormalised 16-octave scale
+    // (2^16 - 1 = 65535), then scales it by 1/8000. Since `octaveInit` normalises
+    // the amplitudes to sum to 1, restore the vanilla scale first
     if (mc < MC_1_16_1) {
-        if (mc >= MC_1_15) {
-            noise *= 65535.0;
-        }
+        noise *= 65535.0;
         noise /= 8000.0;
     }
 
@@ -485,13 +486,13 @@ static double sampleDepthNoise(const OctaveNoise *on, int x, int z, int mc) {
 }
 
 static inline void getWeightedDepthAndScale(Generator *g, OctaveNoise *on, int cellX, int cellZ, double *depth, double *scale) {
-    // 10 / (sqrt(i**2 + j**2) + 0.2)
+    // 10 / sqrt(i**2 + j**2 + 0.2)
     static const float BIOME_KERNEL[25] = {
-        3.302044127f, 4.104975761f, 4.545454545f, 4.104975761f, 3.302044127f,
-        4.104975761f, 6.194967155f, 8.333333333f, 6.194967155f, 4.104975761f,
-        4.545454545f, 8.333333333f, 50.00000000f, 8.333333333f, 4.545454545f,
-        4.104975761f, 6.194967155f, 8.333333333f, 6.194967155f, 4.104975761f,
-        3.302044127f, 4.104975761f, 4.545454545f, 4.104975761f, 3.302044127f,
+        3.492151499f, 4.385290146f, 4.879500389f, 4.385290146f, 3.492151499f,
+        4.385290146f, 6.741998196f, 9.128708839f, 6.741998196f, 4.385290146f,
+        4.879500389f, 9.128708839f, 22.36067963f, 9.128708839f, 4.879500389f,
+        4.385290146f, 6.741998196f, 9.128708839f, 6.741998196f, 4.385290146f,
+        3.492151499f, 4.385290146f, 4.879500389f, 4.385290146f, 3.492151499f,
     };
 
     Range r = {4, cellX - 2, cellZ - 2, 5, 5, 0, 1};
@@ -558,7 +559,7 @@ void sampleOWNoiseColumnOld(TerrainNoise *params, int cellX, int cellZ, int colY
     const double densityFactor = 1.0;
     const double densityOffset = -0.46875;
 
-    const double maxNoiseY = (double)noiseSizeY - 4.0;
+    const double maxNoiseY = (double)(noiseSizeY + 1) - 4.0;
     const double minNoiseY = 0;
 
     const int topSlideTarget = -10;
