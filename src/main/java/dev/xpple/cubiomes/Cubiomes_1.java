@@ -11282,6 +11282,70 @@ class Cubiomes_1 extends Cubiomes$shared {
         }
     }
 
+    private static class sampleOWNoiseColumnOld {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("sampleOWNoiseColumnOld");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void sampleOWNoiseColumnOld(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * }
+     */
+    public static FunctionDescriptor sampleOWNoiseColumnOld$descriptor() {
+        return sampleOWNoiseColumnOld.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void sampleOWNoiseColumnOld(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * }
+     */
+    public static MethodHandle sampleOWNoiseColumnOld$handle() {
+        return sampleOWNoiseColumnOld.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void sampleOWNoiseColumnOld(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * }
+     */
+    public static MemorySegment sampleOWNoiseColumnOld$address() {
+        return sampleOWNoiseColumnOld.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void sampleOWNoiseColumnOld(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * }
+     */
+    public static void sampleOWNoiseColumnOld(MemorySegment params, int cellX, int cellZ, int colYMin, int colYMax, MemorySegment column) {
+        var mh$ = sampleOWNoiseColumnOld.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("sampleOWNoiseColumnOld", params, cellX, cellZ, colYMin, colYMax, column);
+            }
+            mh$.invokeExact(params, cellX, cellZ, colYMin, colYMax, column);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
     private static class sampleNoiseColumn {
         public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
             Cubiomes.C_POINTER,
@@ -20954,15 +21018,6 @@ class Cubiomes_1 extends Cubiomes$shared {
      */
     public static int EFFECT_SLOWNESS() {
         return EFFECT_SLOWNESS;
-    }
-    private static final int EFFECT_HASTE = (int)2L;
-    /**
-     * {@snippet lang=c :
-     * enum MobEffectType.EFFECT_HASTE = 2
-     * }
-     */
-    public static int EFFECT_HASTE() {
-        return EFFECT_HASTE;
     }
 }
 
