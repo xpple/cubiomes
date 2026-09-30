@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.15)
 project(cubiomes)
 
+include(CheckCCompilerFlag)
+
 if (MSVC)
 	message(FATAL_ERROR "MSVC is not supported for this project. Please use MinGW, UCRT64, Clang, or GCC.")
 endif()
@@ -207,8 +209,11 @@ set(SOURCES
 add_library(objects OBJECT ${SOURCES})
 target_compile_options(objects PRIVATE
 	-fno-semantic-interposition
-	-mpopcnt
 )
+check_c_compiler_flag("-mpopcnt" HAS_MPOPCNT)
+if (HAS_MPOPCNT)
+	target_compile_options(objects PRIVATE -mpopcnt)
+endif()
 set_property(TARGET objects PROPERTY POSITION_INDEPENDENT_CODE 1)
 
 add_library(cubiomes SHARED $<TARGET_OBJECTS:objects>)
