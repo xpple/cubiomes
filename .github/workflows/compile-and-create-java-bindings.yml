@@ -26,6 +26,7 @@ jobs:
           cmake --build build-x86
           cmake -S . -B build-arm -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_RELEASE_POSTFIX=_arm
           cmake --build build-arm
+          cp build-x86/libcubiomes_x86.so build-arm/libcubiomes_arm.so .
           # only run tests for x86 because that is what the runner supports
           ctest --test-dir build-x86/tests --extra-verbose
       - name: Compile shared library (macos-latest)
@@ -53,6 +54,7 @@ jobs:
           cmake --build build-x86
           cmake -S . -B build-arm -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=/opt/bin/aarch64-w64-mingw32-gcc.exe -DCMAKE_RELEASE_POSTFIX=_arm
           cmake --build build-arm
+          cp build-x86/cubiomes_x86.dll build-arm/cubiomes_arm.dll .
           # only run tests for x86 because that is what the runner supports
           ctest --test-dir build-x86/tests --extra-verbose
 
@@ -62,8 +64,8 @@ jobs:
         with:
           name: libcubiomes.so
           path: |
-            build-x86/libcubiomes_x86.so
-            build-arm/libcubiomes_arm.so
+            libcubiomes_x86.so
+            libcubiomes_arm.so
       - name: Capture shared library (macos-latest)
         if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v7
@@ -76,8 +78,8 @@ jobs:
         with:
           name: cubiomes.dll
           path: |
-            build-x86/cubiomes_x86.dll
-            build-arm/cubiomes_arm.dll
+            cubiomes_x86.dll
+            cubiomes_arm.dll
   create-java-bindings:
     if: github.repository == 'xpple/cubiomes' && github.event_name == 'push'
     name: Create Java bindings
