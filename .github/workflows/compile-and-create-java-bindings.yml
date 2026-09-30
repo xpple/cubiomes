@@ -51,7 +51,7 @@ jobs:
         run: |
           cmake -S . -B build-x86 -DCMAKE_BUILD_TYPE=Release -DCMAKE_RELEASE_POSTFIX=_x86
           cmake --build build-x86
-          cmake -S . -B build-arm -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=/opt/bin/aarch64-w64-mingw32-gcc -DCMAKE_RELEASE_POSTFIX=_arm
+          cmake -S . -B build-arm -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=/opt/bin/aarch64-w64-mingw32-gcc.exe -DCMAKE_RELEASE_POSTFIX=_arm
           cmake --build build-arm
           # only run tests for x86 because that is what the runner supports
           ctest --test-dir build-x86/tests --extra-verbose
