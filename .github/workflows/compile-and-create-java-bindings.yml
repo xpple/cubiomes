@@ -21,9 +21,13 @@ jobs:
       - name: Compile shared library (ubuntu-latest)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build
-          ctest --test-dir build/tests --extra-verbose
+          sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu
+          cmake -S . -B build-x86 -DCMAKE_BUILD_TYPE=Release -DCMAKE_RELEASE_POSTFIX=_x86
+          cmake --build build-x86
+          cmake -S . -B build-arm -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_RELEASE_POSTFIX=_arm
+          cmake --build build-arm
+          # only run tests for x86 because that is what the runner supports
+          ctest --test-dir build-x86/tests --extra-verbose
       - name: Compile shared library (macos-latest)
         if: matrix.os == 'macos-latest'
         run: |
@@ -40,20 +44,26 @@ jobs:
             mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-cmake
             mingw-w64-x86_64-ninja
+            mingw-w64-cross-mingwarm64-gcc
       - name: Compile shared library (windows-latest)
         if: matrix.os == 'windows-latest'
         shell: msys2 {0}
         run: |
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build
-          ctest --test-dir build/tests --extra-verbose
+          cmake -S . -B build-x86 -DCMAKE_BUILD_TYPE=Release -DCMAKE_RELEASE_POSTFIX=_x86
+          cmake --build build-x86
+          cmake -S . -B build-arm -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=/opt/bin/aarch64-w64-mingw32-gcc -DCMAKE_RELEASE_POSTFIX=_arm
+          cmake --build build-arm
+          # only run tests for x86 because that is what the runner supports
+          ctest --test-dir build-x86/tests --extra-verbose
 
       - name: Capture shared library (ubuntu-latest)
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
           name: libcubiomes.so
-          path: build/libcubiomes.so
+          path: |
+            build-x86/libcubiomes_x86.so
+            build-arm/libcubiomes_arm.so
       - name: Capture shared library (macos-latest)
         if: matrix.os == 'macos-latest'
         uses: actions/upload-artifact@v4
@@ -65,7 +75,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: cubiomes.dll
-          path: build/cubiomes.dll
+          path: |
+            build-x86/cubiomes_x86.dll
+            build-arm/cubiomes_arm.dll
   create-java-bindings:
     if: github.repository == 'xpple/cubiomes' && github.event_name == 'push'
     name: Create Java bindings
