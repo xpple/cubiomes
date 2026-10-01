@@ -29,9 +29,9 @@ bin/
 *.DS_Store
 
 # cubiomes
-src/main/resources/cubiomes.dll
-src/main/resources/libcubiomes.dylib
-src/main/resources/libcubiomes.so
+src/main/resources/cubiomes*.dll
+src/main/resources/libcubiomes*.dylib
+src/main/resources/libcubiomes*.so
 
 dump_includes.txt
 dump_includes_filtered.txt
