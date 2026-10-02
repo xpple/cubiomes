@@ -7,6 +7,20 @@ if (MSVC)
 	message(FATAL_ERROR "MSVC is not supported for this project. Please use MinGW, UCRT64, Clang, or GCC.")
 endif()
 
+option(INFER_POSTFIX "Infer release postfix if not specified" OFF)
+
+if (INFER_POSTFIX AND NOT DEFINED CMAKE_RELEASE_POSTFIX AND NOT APPLE)
+	string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" ARCH)
+
+	if (ARCH MATCHES "^(x86_64|amd64)$")
+		set(CMAKE_RELEASE_POSTFIX "_x86")
+	elseif (ARCH MATCHES "^(aarch64|arm64)$")
+		set(CMAKE_RELEASE_POSTFIX "_arm")
+	else()
+		message(FATAL_ERROR "Unsupported architecture: ${CMAKE_SYSTEM_PROCESSOR}")
+	endif()
+endif()
+
 if (NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE Release)
 endif()
