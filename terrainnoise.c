@@ -542,22 +542,22 @@ void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, in
             const int minZ = cellZ << 2;
 
             int idx;
-            double* ds00 = ds[idx = (relCellX + 0) * chunkCellsW + (relCellZ + 0)];
+            double* ds00 = ds[idx = (relCellX + 0) * chunkCellsH + (relCellZ + 0)];
             if (!BITTEST(bitSet, idx)) {
                 sampleNoiseColumn(params, cellX, cellZ, ds00);
                 BITSET(bitSet, idx);
             }
-            double* ds01 = ds[idx = (relCellX + 0) * chunkCellsW + (relCellZ + 1)];
+            double* ds01 = ds[idx = (relCellX + 0) * chunkCellsH + (relCellZ + 1)];
             if (!BITTEST(bitSet, idx)) {
                 sampleNoiseColumn(params, cellX, cellZ + 1, ds01);
                 BITSET(bitSet, idx);
             }
-            double* ds10 = ds[idx = (relCellX + 1) * chunkCellsW + (relCellZ + 0)];
+            double* ds10 = ds[idx = (relCellX + 1) * chunkCellsH + (relCellZ + 0)];
             if (!BITTEST(bitSet, idx)) {
                 sampleNoiseColumn(params, cellX + 1, cellZ, ds10);
                 BITSET(bitSet, idx);
             }
-            double* ds11 = ds[idx = (relCellX + 1) * chunkCellsW + (relCellZ + 1)];
+            double* ds11 = ds[idx = (relCellX + 1) * chunkCellsH + (relCellZ + 1)];
             if (!BITTEST(bitSet, idx)) {
                 sampleNoiseColumn(params, cellX + 1, cellZ + 1, ds11);
                 BITSET(bitSet, idx);
@@ -600,7 +600,7 @@ void sampleNetherNoiseColumn(TerrainNoise *params, int cellX, int cellZ, double 
     }
 }
 
-int generateNetherColumn(int x, int z, int blocks[128], const double ds00[16 + 1], const double ds01[16 + 1], const double ds10[16 + 1], const double ds11[16 + 1], int flag) {
+int generateNetherColumn(int x, int z, int blocks[128], const double ds00[16 + 1], const double ds01[16 + 1], const double ds10[16 + 1], const double ds11[16 + 1]) {
     const int cellHeight = 2 << 2;
     const int minY = 0;
     const int heightScaled = floordiv(128, cellHeight);
@@ -630,16 +630,12 @@ int generateNetherColumn(int x, int z, int blocks[128], const double ds00[16 + 1
 
             int block = noise > 0.0;
             blocks[y] = block;
-
-            if (flag && block) {
-                return y + 1;
-            }
         }
     }
     return minY;
 }
 
-void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128], int* ys, int flag) {
+void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, int (*blocks)[128]) {
     const int cellWidth = 1 << 2;
 
     const int blockH = chunkH << 4;
@@ -663,22 +659,22 @@ void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chun
             const int minZ = cellZ << 2;
 
             int idx;
-            double* ds00 = ds[idx = (relCellX + 0) * chunkCellsW + (relCellZ + 0)];
+            double* ds00 = ds[idx = (relCellX + 0) * chunkCellsH + (relCellZ + 0)];
             if (!BITTEST(bitSet, idx)) {
                 sampleNetherNoiseColumn(params, cellX, cellZ, ds00);
                 BITSET(bitSet, idx);
             }
-            double* ds01 = ds[idx = (relCellX + 0) * chunkCellsW + (relCellZ + 1)];
+            double* ds01 = ds[idx = (relCellX + 0) * chunkCellsH + (relCellZ + 1)];
             if (!BITTEST(bitSet, idx)) {
                 sampleNetherNoiseColumn(params, cellX, cellZ + 1, ds01);
                 BITSET(bitSet, idx);
             }
-            double* ds10 = ds[idx = (relCellX + 1) * chunkCellsW + (relCellZ + 0)];
+            double* ds10 = ds[idx = (relCellX + 1) * chunkCellsH + (relCellZ + 0)];
             if (!BITTEST(bitSet, idx)) {
                 sampleNetherNoiseColumn(params, cellX + 1, cellZ, ds10);
                 BITSET(bitSet, idx);
             }
-            double* ds11 = ds[idx = (relCellX + 1) * chunkCellsW + (relCellZ + 1)];
+            double* ds11 = ds[idx = (relCellX + 1) * chunkCellsH + (relCellZ + 1)];
             if (!BITTEST(bitSet, idx)) {
                 sampleNetherNoiseColumn(params, cellX + 1, cellZ + 1, ds11);
                 BITSET(bitSet, idx);
@@ -689,10 +685,7 @@ void generateNetherRegion(TerrainNoise *params, int chunkX, int chunkZ, int chun
                 for (int relZ = 0; relZ < cellWidth; ++relZ) {
                     const int z = minZ + relZ;
                     idx = (relBlockX + relX) * blockH + (relBlockZ + relZ);
-                    int y = generateNetherColumn(x, z, blocks[idx], ds00, ds01, ds10, ds11, flag);
-                    if (ys) {
-                        ys[idx] = y;
-                    }
+                    generateNetherColumn(x, z, blocks[idx], ds00, ds01, ds10, ds11);
                 }
             }
         }

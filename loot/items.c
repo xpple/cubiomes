@@ -15,6 +15,7 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:bone_block") == 0) return ITEM_BONE_BLOCK;
     if (strcmp(name, "minecraft:book") == 0) return ITEM_BOOK;
     if (strcmp(name, "minecraft:bread") == 0) return ITEM_BREAD;
+    if (strcmp(name, "minecraft:bucket") == 0) return ITEM_BUCKET;
     if (strcmp(name, "minecraft:carrot") == 0) return ITEM_CARROT;
     if (strcmp(name, "minecraft:chain") == 0) return ITEM_CHAIN;
     if (strcmp(name, "minecraft:clock") == 0) return ITEM_CLOCK;
@@ -95,9 +96,13 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:lodestone") == 0) return ITEM_LODESTONE;
     if (strcmp(name, "minecraft:magma_cream") == 0) return ITEM_MAGMA_CREAM;
     if (strcmp(name, "minecraft:map") == 0) return ITEM_MAP;
+    if (strcmp(name, "minecraft:melon_seeds") == 0) return ITEM_MELON_SEEDS;
     if (strcmp(name, "minecraft:moss_block") == 0) return ITEM_MOSS_BLOCK;
+    if (strcmp(name, "minecraft:music_disc_13") == 0) return ITEM_MUSIC_DISC_13;
+    if (strcmp(name, "minecraft:music_disc_cat") == 0) return ITEM_MUSIC_DISC_CAT;
     if (strcmp(name, "minecraft:music_disc_otherside") == 0) return ITEM_MUSIC_DISC_OTHERSIDE;
     if (strcmp(name, "minecraft:music_disc_pigstep") == 0) return ITEM_MUSIC_DISC_PIGSTEP;
+    if (strcmp(name, "minecraft:name_tag") == 0) return ITEM_NAME_TAG;
     if (strcmp(name, "minecraft:netherite_scrap") == 0) return ITEM_NETHERITE_SCRAP;
     if (strcmp(name, "minecraft:netherite_upgrade_smithing_template") == 0) return ITEM_NETHERITE_UPGRADE_SMITHING_TEMPLATE;
     if (strcmp(name, "minecraft:nether_wart") == 0) return ITEM_NETHER_WART;
@@ -108,6 +113,7 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:potion") == 0) return ITEM_POTION;
     if (strcmp(name, "minecraft:potato") == 0) return ITEM_POTATO;
     if (strcmp(name, "minecraft:prismarine_crystals") == 0) return ITEM_PRISMARINE_CRYSTALS;
+    if (strcmp(name, "minecraft:pumpkin_seeds") == 0) return ITEM_PUMPKIN_SEEDS;
     if (strcmp(name, "minecraft:pumpkin") == 0) return ITEM_PUMPKIN;
     if (strcmp(name, "minecraft:redstone") == 0) return ITEM_REDSTONE;
     if (strcmp(name, "minecraft:rib_armor_trim_smithing_template") == 0) return ITEM_RIB_ARMOR_TRIM_SMITHING_TEMPLATE;
@@ -145,6 +151,7 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_BONE_BLOCK: return "minecraft:bone_block";
     case ITEM_BOOK: return "minecraft:book";
     case ITEM_BREAD: return "minecraft:bread";
+    case ITEM_BUCKET: return "minecraft:bucket";
     case ITEM_CARROT: return "minecraft:carrot";
     case ITEM_CHAIN: return "minecraft:chain";
     case ITEM_CLOCK: return "minecraft:clock";
@@ -224,9 +231,13 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_LODESTONE: return "minecraft:lodestone";
     case ITEM_MAGMA_CREAM: return "minecraft:magma_cream";
     case ITEM_MAP: return "minecraft:map";
+    case ITEM_MELON_SEEDS: return "minecraft:melon_seeds";
     case ITEM_MOSS_BLOCK: return "minecraft:moss_block";
+    case ITEM_MUSIC_DISC_13: return "minecraft:music_disc_13";
+    case ITEM_MUSIC_DISC_CAT: return "minecraft:music_disc_cat";
     case ITEM_MUSIC_DISC_OTHERSIDE: return "minecraft:music_disc_otherside";
     case ITEM_MUSIC_DISC_PIGSTEP: return "minecraft:music_disc_pigstep";
+    case ITEM_NAME_TAG: return "minecraft:name_tag";
     case ITEM_NETHERITE_SCRAP: return "minecraft:netherite_scrap";
     case ITEM_NETHERITE_UPGRADE_SMITHING_TEMPLATE: return "minecraft:netherite_upgrade_smithing_template";
     case ITEM_NETHER_WART: return "minecraft:nether_wart";
@@ -237,6 +248,7 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_POTION: return "minecraft:potion";
     case ITEM_POTATO: return "minecraft:potato";
     case ITEM_PRISMARINE_CRYSTALS: return "minecraft:prismarine_crystals";
+    case ITEM_PUMPKIN_SEEDS: return "minecraft:pumpkin_seeds";
     case ITEM_PUMPKIN: return "minecraft:pumpkin";
     case ITEM_REDSTONE: return "minecraft:redstone";
     case ITEM_RIB_ARMOR_TRIM_SMITHING_TEMPLATE: return "minecraft:rib_armor_trim_smithing_template";

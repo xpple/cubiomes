@@ -755,7 +755,29 @@ void carveCanyon(uint64_t seed, int mc, int chunkX, int chunkZ, CanyonCarverConf
  */
 void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, CaveCarverConfig ccc, int caveCarverType, int biomes[17][17], Pos3List* poses);
 
-void applyAllCarvers(Generator *g, int chunkX, int chunkZ, Pos3List* poses);
+/**
+ * Find all carved positions in the given chunk.
+ * Positions are separated into air and water (poses and waterPoses respectively)
+ * @param g the generator (must be initialized)
+ * @param chunkX the chunk X-coordinate
+ * @param chunkZ the chunk Z-coordinate
+ * @param poses Pos3List of all carved air blocks
+ * @param waterPoses Pos3List of all carved water blocks
+ */
+void applyAllCarvers(Generator *g, const SurfaceNoise *sn, int chunkX, int chunkZ, Pos3List* poses, Pos3List* waterPoses);
+
+/**
+ * Simulates lake features in the given chunk: its own water/lava lakes plus spill from the NW/W/N neighbor chunks
+ * Blocks are appended to lakeAir/lakeWater/lakeLava (world coordinates)
+ * @param order Used primarily for interal mineshaft code. Use {-1, -1, -1, 0} otherwise
+ * @param carvedAir Optional (pass NULL). airPoses from applyAllCarvers for NW/W/N/target chunks. 
+ * @param carvedWater same but waterPoses from applyAllCarvers. Also optional (pass NULL)
+ * @param details Optional (pass NULL). Block overaly for already decorated chunks
+ * @param lakeAir Pos3List of all lake air blocks
+ * @param lakeWater Pos3List of all lake water blocks
+ * @param lakeLava Pos3List of all lake lava blocks
+ */
+void applyAllLakes(Generator *g, const SurfaceNoise *sn, int mc, uint64_t seed, int chunkX, int chunkZ, const int order[4], Pos3List *carvedAir[3][3], Pos3List *carvedWater[3][3], const uint8_t *details[3][3], Pos3List *lakeAir, Pos3List *lakeWater, Pos3List *lakeLava);
 
 //==============================================================================
 // Random providers

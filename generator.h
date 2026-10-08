@@ -127,7 +127,7 @@ Layer *setupLayer(Layer *l, mapfunc_t *map, int mc,
  */
 int genArea(const Layer *layer, int *out, int areaX, int areaZ, int areaWidth, int areaHeight);
 
-/**
+/*
  * Map an approximation of the Overworld surface height.
  * The horizontal scaling is 1:4. If non-null, the ids are filled with the
  * biomes of the area. The height (written to y[w*h]) is in blocks.
@@ -137,6 +137,21 @@ int genArea(const Layer *layer, int *out, int areaX, int areaZ, int areaWidth, i
 int mapApproxHeight(float *y, int *ids, const Generator *g,
     const SurfaceNoise *sn, int x, int z, int w, int h);
 
+/*
+ * Tests if overworld block is below 0 density (water will spawn there)
+ * It is per-block and only supported for 1.9-1.17 (returns 0 for other versions)
+ * Takes initialized generator and surface noise. XYZ are block coordinates
+ */
+int isNaturalWater(const Generator *g, const SurfaceNoise *sn, int x, int y, int z);
+
+/*
+ * Cached cell-density profile (cells qy 0..19) for one noise-cell corner at
+ * quart coordinates (cx,cz): biome-kernel depth/scale weighting + depth noise
+ * + surface noise, i.e. the per-corner part of isNaturalWater. Values are
+ * identical to inline computation; the cache is transparent.
+ */
+void surfaceCornerDens(const Generator *g, const SurfaceNoise *sn, int cx, int cz,
+                       double out[20]);
 
 #ifdef __cplusplus
 }

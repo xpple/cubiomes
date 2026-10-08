@@ -9,6 +9,22 @@ docs/LayerSummary.toc
 *.o
 *.a
 a.out
+*.cmake
+*.so
+Makefile
+*.check_cache
+*.marks
+*.log
+TargetDirectories.txt
+*.bin
+*.make
+*.internal
+link.txt
+CMakeCCompilerId.c
+CmakeCXXCompilerId.cpp
+*.includecache
+CMakeCache.txt
+Makefile2
 
 build
 
