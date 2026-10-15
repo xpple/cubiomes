@@ -471,7 +471,7 @@ int mapEndBiome(const EndNoise *en, int *out, int x, int z, int w, int h)
             {
                 hx = 2*hx + 1;
                 hz = 2*hz + 1;
-                if (en->mc > MC_1_13)
+                if (en->mc > MC_1_13 && en->mc < MC_26_3)
                 {   // add outer end rings
                     rsq = hx * hx + hz * hz;
                     if ((int)rsq < 0)
@@ -585,7 +585,7 @@ void sampleNoiseColumnEnd(double column[],
     };
 
     int y;
-    if (en->mc > MC_1_13)
+    if (en->mc > MC_1_13 && en->mc < MC_26_3)
     {   // add outer end rings
         uint64_t rsq = (uint64_t) x * x + (uint64_t) z * z;
         if ((int)rsq < 0)
@@ -810,7 +810,7 @@ int genEndScaled(const EndNoise *en, int *out, Range r, int mc, uint64_t sha)
                     out[j*r.sx+i] = the_end;
                     continue;
                 }
-                else if (mc > MC_1_13 && (int)(rsq) < 0)
+                else if (mc > MC_1_13 && mc < MC_26_3 && (int)(rsq) < 0)
                 {
                     out[j*r.sx+i] = end_barrens;
                     continue;
