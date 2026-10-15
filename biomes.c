@@ -62,7 +62,6 @@ int biomeExists(int mc, int id)
         case warm_ocean:
         case lukewarm_ocean:
         case cold_ocean:
-        case deep_warm_ocean:
         case deep_lukewarm_ocean:
         case deep_cold_ocean:
         case deep_frozen_ocean:
