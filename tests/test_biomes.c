@@ -49,12 +49,36 @@ static int test_biomes_26_3() {
     return ret;
 }
 
+static int test_end_rings() {
+    // MC-159283
+    int ret = 0;
+
+    uint64_t seed = 856461443495910397ULL;
+    int x = -371136, z = -64;
+
+    Generator g;
+    setupGenerator(&g, MC_26_2, 0);
+    applySeed(&g, DIM_END, seed);
+    ASSERT_EQ(ret, getBiomeAt(&g, 16, x >> 4, 0, z >> 4), end_barrens);
+    ASSERT_EQ(ret, getBiomeAt(&g, 64, x >> 6, 0, z >> 6), end_barrens);
+    ASSERT_EQ(ret, getEndSurfaceHeight(MC_26_2, seed, x, z), 0);
+
+    setupGenerator(&g, MC_26_3, 0);
+    applySeed(&g, DIM_END, seed);
+    ASSERT_EQ(ret, getBiomeAt(&g, 16, x >> 4, 0, z >> 4), end_highlands);
+    ASSERT_EQ(ret, getBiomeAt(&g, 64, x >> 6, 0, z >> 6), end_highlands);
+    ASSERT_EQ(ret, getEndSurfaceHeight(MC_26_3, seed, x, z), 57);
+
+    return ret;
+}
+
 int main() {
     int ret = 0;
 
     ret += test_biomes_1_16_5();
     ret += test_biomes_1_18_2();
     ret += test_biomes_26_3();
+    ret += test_end_rings();
 
     return ret;
 }
