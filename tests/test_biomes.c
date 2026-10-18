@@ -72,6 +72,20 @@ static int test_end_rings() {
     return ret;
 }
 
+static int test_dimension_switching() {
+    int ret = 0;
+
+    Generator g;
+    setupGenerator(&g, MC_1_9, 0);
+
+    applySeed(&g, DIM_END, 12345);
+    ASSERT_EQ(ret, getBiomeAt(&g, 1, 133413, 0, -105937), small_end_islands);
+    applySeed(&g, DIM_OVERWORLD, 12345);
+    ASSERT_EQ(ret, getBiomeAt(&g, 1, 133413, 0, -105937), forest);
+
+    return ret;
+}
+
 int main() {
     int ret = 0;
 
@@ -79,6 +93,7 @@ int main() {
     ret += test_biomes_1_18_2();
     ret += test_biomes_26_3();
     ret += test_end_rings();
+    ret += test_dimension_switching();
 
     return ret;
 }
