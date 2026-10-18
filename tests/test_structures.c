@@ -33,10 +33,35 @@ static int test_structures_1_16_5() {
     return ret;
 }
 
+static int test_end_city_height_versions() {
+    int ret = 0;
+    uint64_t seed = 6983438112510666596ULL;
+    int versions[] = {MC_1_9, MC_1_10, MC_1_11, MC_1_12, MC_1_13, MC_1_14, MC_1_18, MC_1_19, MC_26_3};
+    int numVersions = sizeof(versions) / sizeof(*versions);
+    SurfaceNoise sn;
+    initSurfaceNoise(&sn, DIM_END, seed);
+
+    for (int i = 0; i < numVersions; i++) {
+        Generator g;
+        setupGenerator(&g, versions[i], 0);
+        applySeed(&g, DIM_END, seed);
+        Pos pos;
+        ASSERT_NONZERO(ret, getStructurePos(End_City, g.mc, seed, -40, -17, &pos));
+        ASSERT_EQ(ret, pos.x, -12768);
+        ASSERT_EQ(ret, pos.z, -5424);
+        ASSERT_NONZERO(ret, isViableStructurePos(End_City, &g, pos.x, pos.z, 0));
+        int expectedHeight = g.mc <= MC_1_12 ? 60 : 0;
+        ASSERT_EQ(ret, isViableEndCityTerrain(&g, &sn, pos.x, pos.z), expectedHeight);
+        ASSERT_EQ(ret, isViableEndCityTerrain(&g, &sn, -12760, -5416), expectedHeight);
+    }
+    return ret;
+}
+
 int main() {
     int ret = 0;
 
     ret += test_structures_1_16_5();
+    ret += test_end_city_height_versions();
 
     return ret;
 }
