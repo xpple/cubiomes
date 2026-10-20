@@ -6255,7 +6255,7 @@ static const int g_biome_para_range_263_diff[][13] = {
 {-1,0,0,0,0,0,0,0,0,0,0,0,0}};
 
 static const int g_biome_para_range_264s3_diff[][13] = {
-{ice_caves               ,  IMIN, -8000, IMIN, 7000, -IMIN,-1900,  IMIN, IMAX,  2000, 9000,  5000, IMAX},
+{ice_caves               ,  IMIN, -8000, IMIN, 7000,  IMIN,-1900,  IMIN, IMAX,  2000, 9000,  5000, IMAX},
 {-1,0,0,0,0,0,0,0,0,0,0,0,0}};
 
 /**
