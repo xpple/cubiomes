@@ -12583,6 +12583,68 @@ class Cubiomes_1 extends Cubiomes$shared {
         }
     }
 
+    private static class isSlimeChunk {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_INT,
+            Cubiomes.C_LONG,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("isSlimeChunk");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int isSlimeChunk(uint64_t seed, int chunkX, int chunkZ)
+     * }
+     */
+    public static FunctionDescriptor isSlimeChunk$descriptor() {
+        return isSlimeChunk.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int isSlimeChunk(uint64_t seed, int chunkX, int chunkZ)
+     * }
+     */
+    public static MethodHandle isSlimeChunk$handle() {
+        return isSlimeChunk.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int isSlimeChunk(uint64_t seed, int chunkX, int chunkZ)
+     * }
+     */
+    public static MemorySegment isSlimeChunk$address() {
+        return isSlimeChunk.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int isSlimeChunk(uint64_t seed, int chunkX, int chunkZ)
+     * }
+     */
+    public static int isSlimeChunk(long seed, int chunkX, int chunkZ) {
+        var mh$ = isSlimeChunk.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("isSlimeChunk", seed, chunkX, chunkZ);
+            }
+            return (int)mh$.invokeExact(seed, chunkX, chunkZ);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
     private static class getEndIslands {
         public static final FunctionDescriptor DESC = FunctionDescriptor.of(
             Cubiomes.C_INT,
@@ -21009,15 +21071,6 @@ class Cubiomes_1 extends Cubiomes$shared {
      */
     public static int EFFECT_SPEED() {
         return EFFECT_SPEED;
-    }
-    private static final int EFFECT_SLOWNESS = (int)1L;
-    /**
-     * {@snippet lang=c :
-     * enum MobEffectType.EFFECT_SLOWNESS = 1
-     * }
-     */
-    public static int EFFECT_SLOWNESS() {
-        return EFFECT_SLOWNESS;
     }
 }
 

@@ -17,6 +17,15 @@ public class Cubiomes extends Cubiomes_1 {
     Cubiomes() {
         // Should not be called directly
     }
+    private static final int EFFECT_SLOWNESS = (int)1L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_SLOWNESS = 1
+     * }
+     */
+    public static int EFFECT_SLOWNESS() {
+        return EFFECT_SLOWNESS;
+    }
     private static final int EFFECT_HASTE = (int)2L;
     /**
      * {@snippet lang=c :
