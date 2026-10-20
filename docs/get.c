@@ -14,7 +14,7 @@ int main(){
 	int weirl=INT_MAX,weirh=INT_MIN;
 	for(int i=0;i<sizeof(btree264s3_nodes)/sizeof(uint64_t);i++){
 		uint64_t x=btree264s3_nodes[i];
-		if((x>>48)==0xFFBB){
+		if((x>>48)==0xFFBD){
 			templ=min(templ,btree264s3_param[x&0xFF][0]);
 			temph=max(temph,btree264s3_param[x&0xFF][1]);
 			humil=min(humil,btree264s3_param[(x>>8)&0xFF][0]);
