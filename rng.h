@@ -328,6 +328,12 @@ static inline void calcVecMul(const uint64_t m[128][2], Xoroshiro* xr) {
 
 static inline void xSkipN(Xoroshiro *xr, uint64_t count)
 {
+    if (count < 100ULL * __builtin_popcountll(count)) {
+        while (count-- > 0) {
+            xNextLong(xr);
+        }
+        return;
+    }
     int pow = 0;
     while (count > 0) {
         if (count & 1) {
