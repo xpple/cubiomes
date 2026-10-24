@@ -6262,7 +6262,11 @@ static const int g_biome_para_range_262_diff[][13] = {
 {-1,0,0,0,0,0,0,0,0,0,0,0,0}};
 
 static const int g_biome_para_range_263_diff[][13] = {
-{dappled_forest          ,  -4500, -1500,  IMIN, -3500,  -1900, IMAX,  IMIN, IMAX,  IMIN, IMAX,  IMIN, IMAX},
+{dappled_forest          , -4500, -1500, IMIN,-3500, -1900, IMAX,  IMIN, IMAX,  IMIN, IMAX,  IMIN, IMAX},
+{-1,0,0,0,0,0,0,0,0,0,0,0,0}};
+
+static const int g_biome_para_range_264s3_diff[][13] = {
+{ice_caves               ,  IMIN, -8000, IMIN, 7000,  IMIN,-1900,  IMIN, IMAX,  2000, 9000,  5000, IMAX},
 {-1,0,0,0,0,0,0,0,0,0,0,0,0}};
 
 /**
@@ -6302,6 +6306,14 @@ const int *getBiomeParaLimits(int mc, int id)
     if (mc <= MC_1_17)
         return NULL;
     int i;
+    if (mc > MC_26_3)
+    {
+		for (i = 0; g_biome_para_range_264s3_diff[i][0] != -1; i++)
+        {
+            if (g_biome_para_range_264s3_diff[i][0] == id)
+                return &g_biome_para_range_264s3_diff[i][1];
+        }
+	}
     if (mc > MC_26_2)
     {
         for (i = 0; g_biome_para_range_263_diff[i][0] != -1; i++)
