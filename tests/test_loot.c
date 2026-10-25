@@ -23,6 +23,7 @@ static int test_village_loot_1_8_9() {
 
     VillageItemStack items[27];
     getVillageBlacksmithInventory(pieces, count, seed, items);
+    free(pieces);
 
     static const uint32_t indexMask = (1u << 2) | (1u << 5) | (1u << 14);
     static const VillageItemStack chestData[] = {

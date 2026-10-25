@@ -46,7 +46,7 @@
 #define ASSERT_POSITIVE(ret, X)                        \
     do {                                               \
         __typeof__(X) _x = (X);                        \
-        if ((X) <= 0) {                                \
+        if (_x <= 0) {                                 \
             ASSERTION_FAILED;                          \
             printf("Expected positive value, got \""); \
             printf(PRINTF_FMT(_x), _x);                \

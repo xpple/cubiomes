@@ -118,6 +118,7 @@ static int test_village_pieces() {
                 break;
             }
         }
+        free(pieces);
         ASSERT_TRUE(ret, hasBlacksmith);
         ASSERT_EQ(ret, blacksmithPos.x, test_data[i].blacksmith.x);
         ASSERT_EQ(ret, blacksmithPos.z, test_data[i].blacksmith.z);
