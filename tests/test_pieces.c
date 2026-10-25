@@ -74,52 +74,61 @@ static int test_igloo_pieces_1_21_11() {
     return ret;
 }
 
-static int test_village_pieces_1_12_2() {
+static int test_village_pieces() {
+    static const struct { uint64_t seed; int mc; Pos pos; Pos blacksmith; } test_data[] = {
+        {5152093107252808288ULL,  MC_1_0,    {192,  592}, {198,  616}},
+        {-3047109732010383884ULL, MC_1_4_7,  {880, 1168}, {867, 1174}},
+        {6983438112510666596ULL,  MC_1_12_2, {624,  832}, {633,  834}},
+    };
+    int testCount = sizeof(test_data) / sizeof(*test_data);
+
     int ret = 0;
-    uint64_t seed = 6983438112510666596ULL;
-    int mc = MC_1_12_2;
 
-    int x = 624, z = 832;
+    for (int i = 0; i < testCount; i++) {
+        uint64_t seed = test_data[i].seed;
+        int mc = test_data[i].mc;
 
-    StructureConfig sconf;
-    ASSERT_NONZERO(ret, getStructureConfig(Village, mc, &sconf));
-    Pos pos;
-    ASSERT_NONZERO(ret, getStructurePos(Village, mc, seed, floordiv(x >> 4, sconf.regionSize), floordiv(z >> 4, sconf.regionSize), &pos));
-    ASSERT_EQ(ret, pos.x, x);
-    ASSERT_EQ(ret, pos.z, z);
+        int x = test_data[i].pos.x, z = test_data[i].pos.z;
 
-    Generator g;
-    setupGenerator(&g, mc, 0);
-    applySeed(&g, DIM_OVERWORLD, seed);
+        StructureConfig sconf;
+        ASSERT_NONZERO(ret, getStructureConfig(Village, mc, &sconf));
+        Pos pos;
+        ASSERT_NONZERO(ret, getStructurePos(Village, mc, seed, floordiv(x >> 4, sconf.regionSize), floordiv(z >> 4, sconf.regionSize), &pos));
+        ASSERT_EQ(ret, pos.x, x);
+        ASSERT_EQ(ret, pos.z, z);
 
-    ASSERT_NONZERO(ret, isViableStructurePos(Village, &g, x, z, plains));
+        Generator g;
+        setupGenerator(&g, mc, 0);
+        applySeed(&g, DIM_OVERWORLD, seed);
 
-    Piece *pieces = malloc((VILLAGE_PIECES_MAX + 1) * sizeof(Piece));
-    int count = getVillagePieces(pieces, &g, x >> 4, z >> 4);
+        ASSERT_NONZERO(ret, isViableStructurePos(Village, &g, x, z, 0));
 
-    int hasBlacksmith = 0;
-    Pos blacksmithPos = {};
-    for (int i = 0; i < count; ++i) {
-        Piece *piece = &pieces[i];
-        // blacksmith
-        if (piece->type == VILLAGE_HOUSE_2) {
-            hasBlacksmith = 1;
-            blacksmithPos.x = piece->pos.x;
-            blacksmithPos.z = piece->pos.z;
-            break;
+        Piece *pieces = malloc((VILLAGE_PIECES_MAX + 1) * sizeof(Piece));
+        int count = getVillagePieces(pieces, &g, x >> 4, z >> 4);
+
+        int hasBlacksmith = 0;
+        Pos blacksmithPos = {};
+        for (int j = 0; j < count; ++j) {
+            Piece *piece = &pieces[j];
+            // blacksmith
+            if (piece->type == VILLAGE_HOUSE_2) {
+                hasBlacksmith = 1;
+                blacksmithPos.x = piece->pos.x;
+                blacksmithPos.z = piece->pos.z;
+                break;
+            }
         }
+        ASSERT_TRUE(ret, hasBlacksmith);
+        ASSERT_EQ(ret, blacksmithPos.x, test_data[i].blacksmith.x);
+        ASSERT_EQ(ret, blacksmithPos.z, test_data[i].blacksmith.z);
     }
-    ASSERT_TRUE(ret, hasBlacksmith);
-    ASSERT_EQ(ret, blacksmithPos.x, 633);
-    ASSERT_EQ(ret, blacksmithPos.z, 834);
-
     return ret;
 }
 
 int main() {
     int ret = 0;
 
-    ret += test_village_pieces_1_12_2();
+    ret += test_village_pieces();
     ret += test_end_city_pieces_1_21_11();
     ret += test_igloo_pieces_1_21_11();
 
