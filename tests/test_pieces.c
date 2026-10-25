@@ -1,6 +1,7 @@
 #include "testing.h"
 #include "../finders.h"
 #include "../features/end_city.h"
+#include "../features/village.h"
 
 static int test_end_city_pieces_1_21_11() {
     int ret = 0;
@@ -73,9 +74,52 @@ static int test_igloo_pieces_1_21_11() {
     return ret;
 }
 
+static int test_village_pieces_1_12_2() {
+    int ret = 0;
+    uint64_t seed = 6983438112510666596ULL;
+    int mc = MC_1_12_2;
+
+    int x = 624, z = 832;
+
+    StructureConfig sconf;
+    ASSERT_NONZERO(ret, getStructureConfig(Village, mc, &sconf));
+    Pos pos;
+    ASSERT_NONZERO(ret, getStructurePos(Village, mc, seed, floordiv(x >> 4, sconf.regionSize), floordiv(z >> 4, sconf.regionSize), &pos));
+    ASSERT_EQ(ret, pos.x, x);
+    ASSERT_EQ(ret, pos.z, z);
+
+    Generator g;
+    setupGenerator(&g, mc, 0);
+    applySeed(&g, DIM_OVERWORLD, seed);
+
+    ASSERT_NONZERO(ret, isViableStructurePos(Village, &g, x, z, plains));
+
+    Piece *pieces = malloc((VILLAGE_PIECES_MAX + 1) * sizeof(Piece));
+    int count = getVillagePieces(pieces, &g, x >> 4, z >> 4);
+
+    int hasBlacksmith = 0;
+    Pos blacksmithPos = {};
+    for (int i = 0; i < count; ++i) {
+        Piece *piece = &pieces[i];
+        // blacksmith
+        if (piece->type == VILLAGE_HOUSE_2) {
+            hasBlacksmith = 1;
+            blacksmithPos.x = piece->pos.x;
+            blacksmithPos.z = piece->pos.z;
+            break;
+        }
+    }
+    ASSERT_TRUE(ret, hasBlacksmith);
+    ASSERT_EQ(ret, blacksmithPos.x, 633);
+    ASSERT_EQ(ret, blacksmithPos.z, 834);
+
+    return ret;
+}
+
 int main() {
     int ret = 0;
 
+    ret += test_village_pieces_1_12_2();
     ret += test_end_city_pieces_1_21_11();
     ret += test_igloo_pieces_1_21_11();
 

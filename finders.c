@@ -3633,10 +3633,11 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
     return 1;
 }
 
-uint64_t getHouseList(int *out, uint64_t seed, int chunkX, int chunkZ)
+uint64_t getHouseList(int *out, int mc, uint64_t seed, int chunkX, int chunkZ)
 {
     uint64_t rng = chunkGenerateRnd(seed, chunkX, chunkZ);
-    skipNextN(&rng, 1);
+    // MapGenStructure.recursiveGenerate discards nextInt call before 1.13
+    if (mc <= MC_1_12_2) skipNextN(&rng, 1);
 
     out[HouseSmall] = nextInt(&rng, 4 - 2 + 1) + 2;
     out[Church]     = nextInt(&rng, 1 - 0 + 1) + 0;

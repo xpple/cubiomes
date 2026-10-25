@@ -640,8 +640,8 @@ Pos getLinkedGatewayPos(const EndNoise *en, const SurfaceNoise *sn,
     uint64_t seed, Pos src);
 
 
-/* Find the number of each type of house that generate in a village
- * (mc < MC_1_14)
+/* Find the initial placement limits for each village house type. These are
+ * upper bounds, not the number of houses actually placed. Valid for <1.14.
  * @housesOut       : output number of houses for each entry in the house type
  *                    enum (i.e this should be an array of length HOUSE_NUM)
  * @seed            : world seed
@@ -654,7 +654,7 @@ enum
     HouseSmall, Church, Library, WoodHut, Butcher, FarmLarge, FarmSmall,
     Blacksmith, HouseLarge, HOUSE_NUM
 };
-uint64_t getHouseList(int *houses, uint64_t seed, int chunkX, int chunkZ);
+uint64_t getHouseList(int *houses, int mc, uint64_t seed, int chunkX, int chunkZ);
 
 
 

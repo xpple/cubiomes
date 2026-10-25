@@ -50,6 +50,7 @@ set(HEADERS
 	features/fortress.h
 	features/ore.h
 	features/stronghold.h
+	features/village.h
 	loot/items.h
 	loot/logging.h
 	loot/loot_functions.h
@@ -144,6 +145,7 @@ set(SOURCES
 	features/fortress.c
 	features/ore.c
 	features/stronghold.c
+	features/village.c
 	loot/items.c
 	loot/loot_functions.c
 	loot/loot_tables.c
