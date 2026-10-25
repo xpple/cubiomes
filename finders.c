@@ -6262,7 +6262,7 @@ static const int g_biome_para_range_262_diff[][13] = {
 {-1,0,0,0,0,0,0,0,0,0,0,0,0}};
 
 static const int g_biome_para_range_263_diff[][13] = {
-{dappled_forest          ,  -4500, -1500,  IMIN, -3500,  -1900, IMAX,  IMIN, IMAX,  IMIN, IMAX,  IMIN, IMAX},
+{dappled_forest          ,  -4500,-1500, IMIN,-3500, -1900, IMAX,  IMIN, IMAX,  IMIN, IMAX,  -500, IMAX},
 {-1,0,0,0,0,0,0,0,0,0,0,0,0}};
 
 /**
