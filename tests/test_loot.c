@@ -122,21 +122,21 @@ static int test_mineshaft_loot_26_3() {
 
     Piece *pieces = malloc(200 * sizeof(Piece));
     int count = getMineshaftLoot(pieces, 200, saltConfig, mc, seed, x >> 4, z >> 4);
-    ASSERT_NONZERO(ret, count);
+    ASSERT_EQ(ret, count, 150);
 
     const int lootIndices[] = {3, 32, 36, 92, 102, 126, 129, 140, 148, -1};
-    uint64_t indexMask[3] = {0};
+    uint64_t indexMask[(150 >> 6) + 1] = {0};
     for (int i = 0; lootIndices[i] != -1; i++) indexMask[lootIndices[i] >> 6] |= (1ULL << (lootIndices[i] & 63));
-    const uint64_t lootSeedData[] = {
-        -4041050700429928222ULL,
-        -6582812262988681321ULL,
-        -6021927060282425232ULL,
-        -3843451099099621343ULL,
-        7194228460717663736ULL,
-        8746672172609158251ULL,
-        -639644489539700087ULL,
-        -8781631419607476400ULL,
-        4897799277421823215ULL,
+    const struct { Pos pos; uint64_t ls; } lootData[] = {
+        {{120, -20}, -4041050700429928222ULL},
+        {{104, -17}, -6582812262988681321ULL},
+        {{89,    0}, -6021927060282425232ULL},
+        {{128, -46}, -3843451099099621343ULL},
+        {{156, -65}, 7194228460717663736ULL},
+        {{160, -28}, 8746672172609158251ULL},
+        {{155, -20}, -639644489539700087ULL}, // bug, does not actually generate
+        {{154, -17}, -8781631419607476400ULL}, // bug, does not actually generate
+        {{189, -18}, 4897799277421823215ULL},
     };
 
     int offset = 0;
@@ -149,7 +149,9 @@ static int test_mineshaft_loot_26_3() {
 
         int idx = offset++;
         ASSERT_EQ(ret, piece.chestCount, 1);
-        ASSERT_EQ(ret, piece.lootSeeds[0], lootSeedData[idx]);
+        ASSERT_EQ(ret, piece.chestPoses[0].x, lootData[idx].pos.x);
+        ASSERT_EQ(ret, piece.chestPoses[0].z, lootData[idx].pos.z);
+        ASSERT_EQ(ret, piece.lootSeeds[0], lootData[idx].ls);
         ASSERT_STR_EQ(ret, piece.lootTables[0], "chests/abandoned_mineshaft");
     }
     free(pieces);
