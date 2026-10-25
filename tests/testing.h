@@ -43,6 +43,18 @@
         }                                                 \
     } while (0)
 
+#define ASSERT_POSITIVE(ret, X)                        \
+    do {                                               \
+        __typeof__(X) _x = (X);                        \
+        if (_x <= 0) {                                 \
+            ASSERTION_FAILED;                          \
+            printf("Expected positive value, got \""); \
+            printf(PRINTF_FMT(_x), _x);                \
+            printf("\"\n");                            \
+            (ret)++;                                   \
+        }                                              \
+    } while (0)
+
 #define ASSERT_EQ(ret, ACTUAL, EXPECTED)            \
     do {                                            \
         __typeof__(ACTUAL) actual = (ACTUAL);       \

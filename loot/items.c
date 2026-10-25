@@ -6,6 +6,7 @@
 
 int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:abandoned_camp_map") == 0) return ITEM_ABANDONED_CAMP_MAP;
+    if (strcmp(name, "minecraft:air") == 0) return ITEM_AIR;
     if (strcmp(name, "minecraft:ancient_debris") == 0) return ITEM_ANCIENT_DEBRIS;
     if (strcmp(name, "minecraft:apple") == 0) return ITEM_APPLE;
     if (strcmp(name, "minecraft:arrow") == 0) return ITEM_ARROW;
@@ -136,6 +137,8 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:netherite_scrap") == 0) return ITEM_NETHERITE_SCRAP;
     if (strcmp(name, "minecraft:netherite_upgrade_smithing_template") == 0) return ITEM_NETHERITE_UPGRADE_SMITHING_TEMPLATE;
     if (strcmp(name, "minecraft:nether_wart") == 0) return ITEM_NETHER_WART;
+    if (strcmp(name, "minecraft:oak_sapling") == 0) return ITEM_OAK_SAPLING;
+    if (strcmp(name, "minecraft:sapling") == 0) return ITEM_OAK_SAPLING;
     if (strcmp(name, "minecraft:obsidian") == 0) return ITEM_OBSIDIAN;
     if (strcmp(name, "minecraft:ominous_bottle") == 0) return ITEM_OMINOUS_BOTTLE;
     if (strcmp(name, "minecraft:paper") == 0) return ITEM_PAPER;
@@ -180,11 +183,13 @@ int item_name2global_id(const char* name) {
 }
 
 const char* global_id2item_name(int global_id, int mc) {
+    if (mc < MC_1_13 && global_id == ITEM_OAK_SAPLING) return "minecraft:sapling";
     if (mc >= MC_1_21_9) {
         if (global_id == ITEM_IRON_CHAIN) return "minecraft:iron_chain";
     }
     switch (global_id) {
     case ITEM_ABANDONED_CAMP_MAP: return "minecraft:abandoned_camp_map";
+    case ITEM_AIR: return "minecraft:air";
     case ITEM_ANCIENT_DEBRIS: return "minecraft:ancient_debris";
     case ITEM_APPLE: return "minecraft:apple";
     case ITEM_ARROW: return "minecraft:arrow";
@@ -313,6 +318,7 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_NETHERITE_SCRAP: return "minecraft:netherite_scrap";
     case ITEM_NETHERITE_UPGRADE_SMITHING_TEMPLATE: return "minecraft:netherite_upgrade_smithing_template";
     case ITEM_NETHER_WART: return "minecraft:nether_wart";
+    case ITEM_OAK_SAPLING: return "minecraft:oak_sapling";
     case ITEM_OBSIDIAN: return "minecraft:obsidian";
     case ITEM_OMINOUS_BOTTLE: return "minecraft:ominous_bottle";
     case ITEM_PAPER: return "minecraft:paper";

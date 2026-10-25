@@ -1,8 +1,51 @@
 #include "testing.h"
 #include "../finders.h"
+#include "../features/village.h"
 #include "../loot/items.h"
 #include "../loot/loot_tables.h"
 #include "../loot/mc_loot.h"
+
+static int test_village_loot_1_8_9() {
+    int ret = 0;
+
+    uint64_t seed = 2774189717356022016ULL;
+    int mc = MC_1_8_9;
+
+    Generator g;
+    setupGenerator(&g, mc, 0);
+    applySeed(&g, DIM_OVERWORLD, seed);
+
+    int x = 112, z = -464;
+
+    Piece *pieces = malloc((VILLAGE_PIECES_MAX + 1) * sizeof(Piece));
+    int count = getVillagePieces(pieces, &g, x >> 4, z >> 4);
+    ASSERT_POSITIVE(ret, count);
+
+    VillageItemStack items[27];
+    getVillageBlacksmithInventory(pieces, count, seed, items);
+    free(pieces);
+
+    static const uint32_t indexMask = (1u << 2) | (1u << 5) | (1u << 14);
+    static const VillageItemStack chestData[] = {
+        {ITEM_IRON_CHESTPLATE, 1},
+        {ITEM_IRON_SWORD, 1},
+        {ITEM_IRON_INGOT, 5},
+    };
+
+    int offset = 0;
+    for (int i = 0; i < 27; ++i) {
+        VillageItemStack item = items[i];
+        if (!((1u << i) & indexMask)) {
+            ASSERT_EQ(ret, item.type, ITEM_AIR);
+            ASSERT_EQ(ret, item.count, 0);
+            continue;
+        }
+        int idx = offset++;
+        ASSERT_EQ(ret, item.type, chestData[idx].type);
+        ASSERT_EQ(ret, item.count, chestData[idx].count);
+    }
+    return ret;
+}
 
 static int test_outpost_loot_1_21_11() {
     int ret = 0;
@@ -152,6 +195,7 @@ static int test_abandoned_camp_loot_26_3() {
 int main() {
     int ret = 0;
 
+    ret += test_village_loot_1_8_9();
     ret += test_outpost_loot_1_21_11();
     ret += test_jungle_pyramid_loot_26_2();
     ret += test_abandoned_camp_loot_26_3();
