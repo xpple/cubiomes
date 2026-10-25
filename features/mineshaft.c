@@ -430,7 +430,7 @@ int getMineshaftLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, uin
                                 if likely(p->chestCount < 4) {
                                     int chest = p->chestCount++;
                                     p->chestPoses[chest] = (Pos){chestPosX, chestPosZ};
-                                    p->lootTables[chest] = "abandoned_mineshaft";
+                                    p->lootTables[chest] = "chests/abandoned_mineshaft";
                                     p->lootSeeds[chest] = lootSeed;
                                 }
                             }
@@ -445,7 +445,7 @@ int getMineshaftLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, uin
                                 if likely(p->chestCount < 4) {
                                     int chest = p->chestCount++;
                                     p->chestPoses[chest] = (Pos){chestPosX, chestPosZ};
-                                    p->lootTables[chest] = "abandoned_mineshaft";
+                                    p->lootTables[chest] = "chests/abandoned_mineshaft";
                                     p->lootSeeds[chest] = lootSeed;
                                 }
                             }
