@@ -298,8 +298,9 @@ static inline int xNextInt(Xoroshiro *xr, uint32_t n)
     return r >> 32;
 }
 
-static inline int xNextBoolean(Xoroshiro *xr) {
-    return xNextLong(xr) & 1ULL;
+static inline int xNextBoolean(Xoroshiro *xr)
+{
+    return xNextLong(xr) >> (64-1);
 }
 
 static inline double xNextDouble(Xoroshiro *xr)
@@ -383,11 +384,6 @@ static inline int xNextIntJ(Xoroshiro *xr, uint32_t n)
     return val;
 }
 
-static inline int xNextBooleanJ(Xoroshiro *xr)
-{
-    return (int) (xNextLongJ(xr) >> (64 - 1));
-}
-
 static inline double xNextDoubleJ(Xoroshiro *xr)
 {
     uint64_t a = xNextLong(xr);
@@ -468,7 +464,7 @@ static inline int absNextBoolean(RandomSource *rnd) {
     switch (rnd->type) {
     case JAVA_RANDOM: return nextBoolean(&rnd->jr);
     case XOROSHIRO: return xNextBoolean(&rnd->xr);
-    case XOROSHIRO_J: return xNextBooleanJ(&rnd->xr);
+    case XOROSHIRO_J: return xNextBoolean(&rnd->xr);
     default: UNREACHABLE();
     }
 }

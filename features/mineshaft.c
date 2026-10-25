@@ -29,7 +29,7 @@ static inline Piece* hasCollision(MineshaftPieceEnv *env, Pos3 b0, Pos3 b1) {
 static void extendMineshaftPiece(MineshaftPieceEnv *env, Piece *piece);
 
 static void extendMineshaft(MineshaftPieceEnv *env, int x, int y, int z, int facing, int depth) {
-    if (depth > 8) {
+    if (*env->n >= env->nmax || depth > 8) {
         return;
     }
 
@@ -109,8 +109,8 @@ static void extendMineshaft(MineshaftPieceEnv *env, int x, int y, int z, int fac
                 p->next = NULL;
 
                 int hasRails = nextInt(env->rng, 3) == 0;
-                p->additionalData |= hasRails << 0;
-                p->additionalData |= (!hasRails && nextInt(env->rng, 23) == 0) << 1; // spiderCorridor
+                int spiderCorridor = !hasRails && nextInt(env->rng, 23) == 0;
+                p->additionalData = hasRails | (spiderCorridor << 1);
 
                 extendMineshaftPiece(env, p);
                 return;
@@ -426,10 +426,13 @@ int getMineshaftLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, uin
                             rotPos(p->bb0, p->bb1, &chestPosX, &chestPosZ, p->rot);
                             if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
                                 absNextBoolean(&rnd);
-                                p->chestPoses[p->chestCount] = (Pos) {chestPosX, chestPosZ};
-                                p->lootTables[p->chestCount] = "abandoned_mineshaft";
-                                p->lootSeeds[p->chestCount] = absNextLong(&rnd);
-                                p->chestCount++;
+                                uint64_t lootSeed = absNextLong(&rnd);
+                                if likely(p->chestCount < 4) {
+                                    int chest = p->chestCount++;
+                                    p->chestPoses[chest] = (Pos){chestPosX, chestPosZ};
+                                    p->lootTables[chest] = "abandoned_mineshaft";
+                                    p->lootSeeds[chest] = lootSeed;
+                                }
                             }
                         }
 
@@ -438,10 +441,13 @@ int getMineshaftLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, uin
                             rotPos(p->bb0, p->bb1, &chestPosX, &chestPosZ, p->rot);
                             if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
                                 absNextBoolean(&rnd);
-                                p->chestPoses[p->chestCount] = (Pos) {chestPosX, chestPosZ};
-                                p->lootTables[p->chestCount] = "abandoned_mineshaft";
-                                p->lootSeeds[p->chestCount] = absNextLong(&rnd);
-                                p->chestCount++;
+                                uint64_t lootSeed = absNextLong(&rnd);
+                                if likely(p->chestCount < 4) {
+                                    int chest = p->chestCount++;
+                                    p->chestPoses[chest] = (Pos){chestPosX, chestPosZ};
+                                    p->lootTables[chest] = "abandoned_mineshaft";
+                                    p->lootSeeds[chest] = lootSeed;
+                                }
                             }
                         }
 
