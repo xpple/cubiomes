@@ -1,6 +1,8 @@
 #include "util.h"
 #include "biomes.h"
 #include "finders.h"
+#include "carver.h"
+#include "features/ore.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -78,21 +80,25 @@ const char* mc2str(int mc)
     case MC_1_21_3:  return "1.21.3"; break;
     case MC_1_21_4:  return "1.21.4"; break;
     case MC_1_21_5:  return "1.21.5"; break;
+    case MC_1_21_6:  return "1.21.6"; break;
     case MC_1_21_9:  return "1.21.9"; break;
     case MC_1_21_11: return "1.21.11"; break;
-    case MC_26_1: return "26.1"; break;
-    case MC_26_2: return "26.2"; break;
+    case MC_26_1:    return "26.1"; break;
+    case MC_26_2:    return "26.2"; break;
+    case MC_26_3:    return "26.3"; break;
     default:         return "?";
     }
 }
 
 int str2mc(const char *s)
 {
+    if (!strcmp(s, "26.3"))     return MC_26_3;
     if (!strcmp(s, "26.2"))     return MC_26_2;
     if (!strcmp(s, "26.1"))     return MC_26_1;
     if (!strcmp(s, "1.21"))     return MC_1_21;
     if (!strcmp(s, "1.21.11"))  return MC_1_21_11;
     if (!strcmp(s, "1.21.9"))   return MC_1_21_9;
+    if (!strcmp(s, "1.21.6"))   return MC_1_21_6;
     if (!strcmp(s, "1.21.5"))   return MC_1_21_5;
     if (!strcmp(s, "1.21.4"))   return MC_1_21_4;
     if (!strcmp(s, "1.21 WD"))  return MC_1_21_4;
@@ -285,6 +291,8 @@ const char *biome2str(int mc, int id)
     case pale_garden: return "pale_garden";
     // 26.2 (Chaos Cubed Drop)
     case sulfur_caves: return "sulfur_caves";
+    // 26.3
+    case dappled_forest: return "dappled_forest";
     }
     return NULL;
 }
@@ -312,9 +320,11 @@ const char* struct2str(int stype)
     case Ancient_City:      return "ancient_city";
     case Trail_Ruins:       return "trail_ruins";
     case Trial_Chambers:    return "trial_chambers";
+    case Abandoned_Camp:    return "abandoned_camp";
     case Stronghold:        return "stronghold";
     case Fortress:          return "fortress";
     case Bastion:           return "bastion_remnant";
+    case Nether_Fossil:     return "nether_fossil";
     case End_City:          return "end_city";
     case End_Gateway:       return "end_gateway";
     default:                return NULL;
@@ -338,6 +348,7 @@ const char* block2str(int btype) {
     case GOLD_ORE:            return "gold_ore";
     case GRANITE:             return "granite";
     case GRAVEL:              return "gravel";
+    case INFESTED_STONE:      return "infested_stone";
     case IRON_ORE:            return "iron_ore";
     case LAPIS_ORE:           return "lapis_ore";
     case MAGMA_BLOCK:         return "magma_block";
@@ -376,6 +387,7 @@ const char* ore2str(int otype)
     case GoldOre:            return "ore_gold";
     case GraniteOre:         return "ore_granite";
     case GravelOre:          return "ore_gravel";
+    case InfestedOre:        return "ore_infested";
     case IronOre:            return "ore_iron";
     case LapisOre:           return "ore_lapis";
     case LargeCopperOre:     return "ore_copper_large";
@@ -445,7 +457,7 @@ void initBiomeColors(unsigned char colors[256][3])
     // improve contrast for the new world generation.
 
     memset(colors, 0, 256*3);
-    
+
     //               biome                             hex color     AMIDST
     setColor(colors, ocean,                            0x000070);
     setColor(colors, plains,                           0x8db360);
@@ -542,6 +554,7 @@ void initBiomeColors(unsigned char colors[256][3])
     setColor(colors, cherry_grove,                     0xff91c8); // -
     setColor(colors, pale_garden,                      0x696d95); // -
     setColor(colors, sulfur_caves,                     0xc8d232); // -
+    setColor(colors, dappled_forest,                   0xeb9234); // -
 }
 
 void initBiomeTypeColors(unsigned char colors[256][3])

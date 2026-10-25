@@ -47,6 +47,16 @@ const MobEffect* get_mob_effect_from_name(const char* mob_effect)
     return NULL;
 }
 
+const Potion* get_potion_from_name(const char* potion)
+{
+    for (int i = 0; i < POTION_NUM; ++i)
+    {
+        if (strcmp(potion, POTIONS[i].potion_name) == 0) return &POTIONS[i];
+    }
+    fprintf(stderr, "ERR get_potion_from_name: Unknown potion %s\n", potion);
+    return NULL;
+}
+
 Enchantment get_enchantment_from_name(const char* ench)
 {
     // I'm sorry.
@@ -164,6 +174,11 @@ static void parse_set_effect(LootFunction* loot_function, const cJSON* function_
     }
 
     create_set_effect(loot_function, effectCount, mobEffects);
+}
+
+static void parse_set_potion(LootFunction* loot_function, const cJSON* function_data) {
+    char *id = cJSON_GetStringValue(cJSON_GetObjectItem(function_data, "id"));
+    create_set_potion(loot_function, get_potion_from_name(id));
 }
 
 static void parse_enchant_randomly(LootTableContext* ctx, LootFunction* loot_function, const cJSON* function_data, const char* item_name)
@@ -356,6 +371,22 @@ static void init_rolls(const cJSON* pool_data, LootPool* pool)
     }
 }
 
+static void init_conditions(const cJSON* conditions, LootPool* pool) {
+    cJSON* condition = NULL;
+    int idx = 0;
+    cJSON_ArrayForEach(condition, conditions) {
+        char *condition_string = cJSON_GetObjectItem(condition, "condition")->valuestring;
+        if (strcmp(condition_string, "minecraft:random_chance") != 0) {
+            LOG_ERROR("unsupported loot item condition");
+            fprintf(stderr, "condition_string: %s\n", condition_string);
+            return;
+        }
+        float chance = (float) cJSON_GetObjectItem(condition, "chance")->valuedouble;
+        create_random_chance(&pool->conditions[idx], chance);
+        idx++;
+    }
+}
+
 static void map_entry_to_item(const cJSON* entry_data, LootTableContext* ctx, int* item_id)
 {
     cJSON* name = cJSON_GetObjectItem(entry_data, "name");
@@ -423,8 +454,15 @@ static void init_entry(const cJSON* entry_data, LootPool* pool, const int entry_
     {
         int functions = 0;
         cJSON* functions_field = cJSON_GetObjectItem(entry_data, "functions");
+        if (functions_field == NULL) {
+            functions_field = cJSON_GetObjectItem(entry_data, "modifier");
+        }
         if (functions_field != NULL) {
-            functions = cJSON_GetArraySize(functions_field);
+            if (cJSON_IsObject(functions_field)) {
+                functions = 1;
+            } else {
+                functions = cJSON_GetArraySize(functions_field);
+            }
         }
 
         // initialize loot function fields
@@ -448,8 +486,18 @@ static void init_entry(const cJSON* entry_data, LootPool* pool, const int entry_
 static void init_entry_functions(const cJSON* entry_data, LootPool* pool, const int entry_id, LootTableContext* ctx)
 {
     cJSON* functions_field = cJSON_GetObjectItem(entry_data, "functions");
+    if (functions_field == NULL) {
+        functions_field = cJSON_GetObjectItem(entry_data, "modifier");
+    }
     if (functions_field == NULL)
         return;
+
+    cJSON *wrapper = NULL;
+    if (cJSON_IsObject(functions_field)) {
+        wrapper = cJSON_CreateArray();
+        cJSON_AddItemReferenceToArray(wrapper, functions_field);
+        functions_field = wrapper;
+    }
 
     const int entry_item = pool->entry_to_item[entry_id];
     const char* entry_item_name = entry_item == -1 ? NULL : ctx->item_names[entry_item];
@@ -465,6 +513,9 @@ static void init_entry_functions(const cJSON* entry_data, LootPool* pool, const 
 
         cJSON* function_data = cJSON_GetArrayItem(functions_field, i);
         char* function_name = cJSON_GetStringValue(cJSON_GetObjectItem(function_data, "function"));
+        if (function_name == NULL) {
+            function_name = cJSON_GetStringValue(cJSON_GetObjectItem(function_data, "type"));
+        }
 
         if (strcmp(function_name, "minecraft:set_count") == 0) {
             parse_set_count(loot_function, function_data);
@@ -481,12 +532,18 @@ static void init_entry_functions(const cJSON* entry_data, LootPool* pool, const 
         else if (strcmp(function_name, "minecraft:set_stew_effect") == 0) {
             parse_set_effect(loot_function, function_data);
         }
+        else if (strcmp(function_name, "minecraft:set_potion") == 0) {
+            parse_set_potion(loot_function, function_data);
+        }
         else if (strcmp(function_name, "minecraft:set_ominous_bottle_amplifier") == 0) {
             create_skip_calls(loot_function, 1);
         }
         else {
             create_no_op(loot_function);
         }
+    }
+    if (wrapper) {
+        cJSON_Delete(wrapper);
     }
 }
 
@@ -511,6 +568,15 @@ static int init_loot_pool(const cJSON* pool_data, const int pool_id, LootTableCo
     LootPool* pool = &(ctx->loot_pools[pool_id]);
     pool->total_weight = 0;
     init_rolls(pool_data, pool);
+
+    cJSON* conditions = cJSON_GetObjectItem(pool_data, "conditions");
+    if (conditions == NULL) {
+        pool->condition_count = 0;
+    } else {
+        pool->condition_count = cJSON_GetArraySize(conditions);
+        pool->conditions = malloc(pool->condition_count * sizeof(LootItemCondition));
+        init_conditions(conditions, pool);
+    }
 
     // count entries
     cJSON* entries = cJSON_GetObjectItem(pool_data, "entries");
@@ -673,7 +739,7 @@ int init_loot_table_file(FILE* loot_table_file, LootTableContext* context, const
 
 // -------------------------------------------------------------------------------------
 
-static int merge_item_lists(LootTableContext* ctx, LootTableContext* sub_ctx)
+int merge_item_lists(LootTableContext* ctx, const LootTableContext* sub_ctx, int is_ctx_static)
 {
     int total_unique_items = ctx->item_count;
     for (int i = 0; i < sub_ctx->item_count; i++)
@@ -731,11 +797,13 @@ static int merge_item_lists(LootTableContext* ctx, LootTableContext* sub_ctx)
         }
     }
 
+    if (!is_ctx_static) {
+        for (int i = 0; i < ctx->item_count; i++)
+            free(ctx->item_names[i]);
+        free(ctx->item_names);
+        free(ctx->global_item_ids);
+    }
     // replace the old item names in the original context
-    for (int i = 0; i < ctx->item_count; i++)
-        free(ctx->item_names[i]);
-    free(ctx->item_names);
-    free(ctx->global_item_ids);
     ctx->item_names = new_item_names;
     ctx->global_item_ids = new_global_item_ids;
     ctx->item_count = total_unique_items;
@@ -743,17 +811,23 @@ static int merge_item_lists(LootTableContext* ctx, LootTableContext* sub_ctx)
     return 0;
 }
 
-static int merge_loot_pools(LootTableContext* ctx, LootTableContext* sub_ctx)
+int merge_loot_pools(LootTableContext* ctx, const LootTableContext* sub_ctx, int is_ctx_static, int is_sub_ctx_static)
 {
     // allocate extra memory for the new loot pools
-    int total_pools = ctx->pool_count;
+    int own_pools = ctx->pool_count;
     for (int i = 0; i < ctx->subtable_count; i++)
-        total_pools += ctx->subtable_pool_count[i];
-    total_pools += sub_ctx->pool_count;
+        own_pools += ctx->subtable_pool_count[i];
+    int total_pools = own_pools + sub_ctx->pool_count;
 
-    ctx->loot_pools = (LootPool*)realloc(ctx->loot_pools, total_pools * sizeof(LootPool));
-    if (ctx->loot_pools == NULL)
-        return -1; // failed to allocate memory
+    if (is_ctx_static) {
+        LootPool* new_loot_pools = (LootPool*)malloc(total_pools * sizeof(LootPool));
+        memcpy(new_loot_pools, ctx->loot_pools, own_pools * sizeof(LootPool));
+        ctx->loot_pools = new_loot_pools;
+    } else {
+        ctx->loot_pools = (LootPool*)realloc(ctx->loot_pools, total_pools * sizeof(LootPool));
+        if (ctx->loot_pools == NULL)
+            return -1; // failed to allocate memory
+    }
 
     // copy the loot pools from the subtable context, updating the item IDs
     for (int i = 0; i < sub_ctx->pool_count; i++)
@@ -792,8 +866,10 @@ static int merge_loot_pools(LootTableContext* ctx, LootTableContext* sub_ctx)
         }
     }
 
-    // free the subtable loot pool array - its contents were copied to the parent context
-    free(sub_ctx->loot_pools);
+    if (!is_sub_ctx_static) {
+        // free the subtable loot pool array - its contents were copied to the parent context
+        free(sub_ctx->loot_pools);
+    }
 
     return 0;
 }
@@ -835,7 +911,7 @@ int resolve_subtable(LootTableContext* context, const char* subtable_name, const
     int subtable_index = first_unresolved;
 
     // merge item name lists
-    if (merge_item_lists(context, &subtable_context) != 0)
+    if (merge_item_lists(context, &subtable_context, 0) != 0)
     {
         free_loot_table(&subtable_context);
         LOG_ERROR("Failed to merge item lists");
@@ -843,7 +919,7 @@ int resolve_subtable(LootTableContext* context, const char* subtable_name, const
     }
 
     // merge loot pools (most complex step)
-    if (merge_loot_pools(context, &subtable_context) != 0)
+    if (merge_loot_pools(context, &subtable_context, 0, 0) != 0)
     {
         free_loot_table(&subtable_context);
         LOG_ERROR("Failed to merge loot pools");

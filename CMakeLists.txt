@@ -1,8 +1,24 @@
 cmake_minimum_required(VERSION 3.15)
 project(cubiomes)
 
+include(CheckCCompilerFlag)
+
 if (MSVC)
 	message(FATAL_ERROR "MSVC is not supported for this project. Please use MinGW, UCRT64, Clang, or GCC.")
+endif()
+
+option(INFER_POSTFIX "Infer release postfix if not specified" OFF)
+
+if (INFER_POSTFIX AND NOT DEFINED CMAKE_RELEASE_POSTFIX AND NOT APPLE)
+	string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" ARCH)
+
+	if (ARCH MATCHES "^(x86_64|amd64)$")
+		set(CMAKE_RELEASE_POSTFIX "_x86")
+	elseif (ARCH MATCHES "^(aarch64|arm64)$")
+		set(CMAKE_RELEASE_POSTFIX "_arm")
+	else()
+		message(FATAL_ERROR "Unsupported architecture: ${CMAKE_SYSTEM_PROCESSOR}")
+	endif()
 endif()
 
 if (NOT CMAKE_BUILD_TYPE)
@@ -18,6 +34,7 @@ set(CMAKE_C_FLAGS_DEBUG "-O0 -g3 -DDEBUG")
 
 set(HEADERS
 	finders.h
+	carver.h
 	generator.h
 	layers.h
 	biomenoise.h
@@ -28,9 +45,13 @@ set(HEADERS
 	util.h
 	quadbase.h
 	xrms.h
+    features/abandoned_camp.h
+	features/end_city.h
+	features/fortress.h
+    features/mineshaft.h
+	features/ore.h
 	features/piece.h
 	features/stronghold.h
-	features/mineshaft.h
 	loot/items.h
 	loot/logging.h
 	loot/loot_functions.h
@@ -38,67 +59,79 @@ set(HEADERS
 	loot/loot_table_context.h
 	loot/loot_table_parser.h
 	loot/mc_loot.h
-	loot/loot_tables/bastion_bridge_1_16_1.h
-	loot/loot_tables/bastion_bridge_1_16_5.h
-	loot/loot_tables/bastion_bridge_1_20.h
-	loot/loot_tables/bastion_other_1_16_1.h
-	loot/loot_tables/bastion_other_1_16_5.h
-	loot/loot_tables/bastion_other_1_20.h
-	loot/loot_tables/bastion_other_1_21_1.h
-	loot/loot_tables/bastion_other_1_21_9.h
-	loot/loot_tables/buried_treasure_1_13.h
-	loot/loot_tables/buried_treasure_1_18.h
-	loot/loot_tables/buried_treasure_1_21_11.h
-	loot/loot_tables/desert_pyramid_1_13.h
-	loot/loot_tables/desert_pyramid_1_20.h
-	loot/loot_tables/desert_pyramid_1_21_6.h
-	loot/loot_tables/desert_pyramid_1_21_9.h
-	loot/loot_tables/desert_pyramid_1_21_11.h
-	loot/loot_tables/end_city_treasure_1_13.h
-	loot/loot_tables/end_city_treasure_1_20.h
-	loot/loot_tables/end_city_treasure_1_21_9.h
-	loot/loot_tables/end_city_treasure_1_21_11.h
-	loot/loot_tables/igloo_chest_1_13.h
-	loot/loot_tables/jungle_temple_1_13.h
-	loot/loot_tables/jungle_temple_1_14.h
-	loot/loot_tables/jungle_temple_1_20.h
-	loot/loot_tables/jungle_temple_1_21_6.h
-	loot/loot_tables/jungle_temple_1_21_9.h
-	loot/loot_tables/jungle_temple_1_21_11.h
-	loot/loot_tables/jungle_temple_dispenser_1_13.h
-	loot/loot_tables/nether_bridge_1_13.h
-	loot/loot_tables/nether_bridge_1_20.h
-	loot/loot_tables/nether_bridge_1_21_9.h
-	loot/loot_tables/pillager_outpost_1_14.h
-	loot/loot_tables/pillager_outpost_1_19_2.h
-	loot/loot_tables/pillager_outpost_1_20.h
-	loot/loot_tables/pillager_outpost_1_21_11.h
-	loot/loot_tables/ruined_portal_1_16_1.h
-	loot/loot_tables/ruined_portal_1_21_5.h
-	loot/loot_tables/shipwreck_map_1_13.h
-	loot/loot_tables/shipwreck_map_1_18.h
-	loot/loot_tables/shipwreck_map_1_20.h
-	loot/loot_tables/shipwreck_map_1_21_11.h
-	loot/loot_tables/shipwreck_supply_1_13.h
-	loot/loot_tables/shipwreck_supply_1_14.h
-	loot/loot_tables/shipwreck_supply_1_17.h
-	loot/loot_tables/shipwreck_supply_1_20.h
-	loot/loot_tables/shipwreck_supply_1_21_11.h
-	loot/loot_tables/shipwreck_treasure_1_13.h
-	loot/loot_tables/shipwreck_treasure_1_20.h
-	loot/loot_tables/shipwreck_treasure_1_21_11.h
-	loot/loot_tables/stronghold_corridor_1_13.h
-	loot/loot_tables/stronghold_corridor_1_18.h
-	loot/loot_tables/stronghold_corridor_1_20.h
-	loot/loot_tables/stronghold_corridor_1_21_6.h
-	loot/loot_tables/stronghold_corridor_1_21_9.h
-	loot/loot_tables/stronghold_crossing_1_13.h
-	loot/loot_tables/stronghold_library_1_13.h
-	loot/loot_tables/stronghold_library_1_20.h
+	loot/loot_tables/barrels/abandoned_camp_barrel_26_3.h
+	loot/loot_tables/chests/abandoned_camp_common_chest_26_3.h
+	loot/loot_tables/chests/abandoned_camp_secret_chest_26_3.h
+	loot/loot_tables/chests/bastion_bridge_1_16_1.h
+	loot/loot_tables/chests/bastion_bridge_1_16_5.h
+	loot/loot_tables/chests/bastion_bridge_1_20.h
+	loot/loot_tables/chests/bastion_other_1_16_1.h
+	loot/loot_tables/chests/bastion_other_1_16_5.h
+	loot/loot_tables/chests/bastion_other_1_20.h
+	loot/loot_tables/chests/bastion_other_1_21_1.h
+	loot/loot_tables/chests/bastion_other_1_21_9.h
+	loot/loot_tables/chests/buried_treasure_1_13.h
+	loot/loot_tables/chests/buried_treasure_1_18.h
+	loot/loot_tables/chests/buried_treasure_1_21_11.h
+	loot/loot_tables/chests/desert_pyramid_1_13.h
+	loot/loot_tables/chests/desert_pyramid_1_20.h
+	loot/loot_tables/chests/desert_pyramid_1_21_6.h
+	loot/loot_tables/chests/desert_pyramid_1_21_9.h
+	loot/loot_tables/chests/desert_pyramid_1_21_11.h
+	loot/loot_tables/chests/end_city_treasure_1_13.h
+	loot/loot_tables/chests/end_city_treasure_1_20.h
+	loot/loot_tables/chests/end_city_treasure_1_21_9.h
+	loot/loot_tables/chests/end_city_treasure_1_21_11.h
+	loot/loot_tables/chests/igloo_chest_1_13.h
+	loot/loot_tables/chests/jungle_temple_1_13.h
+	loot/loot_tables/chests/jungle_temple_1_14.h
+	loot/loot_tables/chests/jungle_temple_1_20.h
+	loot/loot_tables/chests/jungle_temple_1_21_6.h
+	loot/loot_tables/chests/jungle_temple_1_21_9.h
+	loot/loot_tables/chests/jungle_temple_1_21_11.h
+	loot/loot_tables/chests/jungle_temple_dispenser_1_13.h
+	loot/loot_tables/chests/nether_bridge_1_13.h
+	loot/loot_tables/chests/nether_bridge_1_20.h
+	loot/loot_tables/chests/nether_bridge_1_21_9.h
+	loot/loot_tables/chests/pillager_outpost_1_14.h
+	loot/loot_tables/chests/pillager_outpost_1_19_2.h
+	loot/loot_tables/chests/pillager_outpost_1_20.h
+	loot/loot_tables/chests/pillager_outpost_1_21_11.h
+	loot/loot_tables/chests/ruined_portal_1_16_1.h
+	loot/loot_tables/chests/ruined_portal_1_21_5.h
+	loot/loot_tables/chests/shipwreck_map_1_13.h
+	loot/loot_tables/chests/shipwreck_map_1_18.h
+	loot/loot_tables/chests/shipwreck_map_1_20.h
+	loot/loot_tables/chests/shipwreck_map_1_21_11.h
+	loot/loot_tables/chests/shipwreck_supply_1_13.h
+	loot/loot_tables/chests/shipwreck_supply_1_14.h
+	loot/loot_tables/chests/shipwreck_supply_1_17.h
+	loot/loot_tables/chests/shipwreck_supply_1_20.h
+	loot/loot_tables/chests/shipwreck_supply_1_21_11.h
+	loot/loot_tables/chests/shipwreck_treasure_1_13.h
+	loot/loot_tables/chests/shipwreck_treasure_1_20.h
+	loot/loot_tables/chests/shipwreck_treasure_1_21_11.h
+	loot/loot_tables/chests/stronghold_corridor_1_13.h
+	loot/loot_tables/chests/stronghold_corridor_1_18.h
+	loot/loot_tables/chests/stronghold_corridor_1_20.h
+	loot/loot_tables/chests/stronghold_corridor_1_21_6.h
+	loot/loot_tables/chests/stronghold_corridor_1_21_9.h
+	loot/loot_tables/chests/stronghold_crossing_1_13.h
+	loot/loot_tables/chests/stronghold_library_1_13.h
+	loot/loot_tables/chests/stronghold_library_1_20.h
+	loot/loot_tables/chests/trial_chambers/reward_1_21_1.h
+	loot/loot_tables/chests/trial_chambers/reward_common_1_21_1.h
+    loot/loot_tables/chests/trial_chambers/reward_ominous_1_21_1.h
+    loot/loot_tables/chests/trial_chambers/reward_ominous_common_1_21_1.h
+    loot/loot_tables/chests/trial_chambers/reward_ominous_rare_1_21_1.h
+    loot/loot_tables/chests/trial_chambers/reward_ominous_unique_1_21_1.h
+	loot/loot_tables/chests/trial_chambers/reward_rare_1_21_1.h
+	loot/loot_tables/chests/trial_chambers/reward_unique_1_21_1.h
 	loot/cjson/cJSON.h
 )
 set(SOURCES
 	finders.c
+	carver.c
 	generator.c
 	layers.c
 	biomenoise.c
@@ -108,74 +141,96 @@ set(SOURCES
 	util.c
 	quadbase.c
 	xradv.c
+	features/abandoned_camp.c
+	features/end_city.c
+	features/fortress.c
+    features/mineshaft.c
+	features/ore.c
 	features/stronghold.c
-	features/mineshaft.c
 	loot/items.c
 	loot/loot_functions.c
 	loot/loot_tables.c
 	loot/loot_table_context.c
 	loot/loot_table_parser.c
-	loot/loot_tables/bastion_bridge_1_16_1.c
-	loot/loot_tables/bastion_bridge_1_16_5.c
-	loot/loot_tables/bastion_bridge_1_20.c
-	loot/loot_tables/bastion_other_1_16_1.c
-	loot/loot_tables/bastion_other_1_16_5.c
-	loot/loot_tables/bastion_other_1_20.c
-	loot/loot_tables/bastion_other_1_21_1.c
-	loot/loot_tables/bastion_other_1_21_9.c
-	loot/loot_tables/buried_treasure_1_13.c
-	loot/loot_tables/buried_treasure_1_18.c
-	loot/loot_tables/buried_treasure_1_21_11.c
-	loot/loot_tables/desert_pyramid_1_13.c
-	loot/loot_tables/desert_pyramid_1_20.c
-	loot/loot_tables/desert_pyramid_1_21_6.c
-	loot/loot_tables/desert_pyramid_1_21_9.c
-	loot/loot_tables/desert_pyramid_1_21_11.c
-	loot/loot_tables/end_city_treasure_1_13.c
-	loot/loot_tables/end_city_treasure_1_20.c
-	loot/loot_tables/end_city_treasure_1_21_9.c
-	loot/loot_tables/end_city_treasure_1_21_11.c
-	loot/loot_tables/igloo_chest_1_13.c
-	loot/loot_tables/jungle_temple_1_13.c
-	loot/loot_tables/jungle_temple_1_14.c
-	loot/loot_tables/jungle_temple_1_20.c
-	loot/loot_tables/jungle_temple_1_21_6.c
-	loot/loot_tables/jungle_temple_1_21_9.c
-	loot/loot_tables/jungle_temple_1_21_11.c
-	loot/loot_tables/jungle_temple_dispenser_1_13.c
-	loot/loot_tables/nether_bridge_1_13.c
-	loot/loot_tables/nether_bridge_1_20.c
-	loot/loot_tables/nether_bridge_1_21_9.c
-	loot/loot_tables/pillager_outpost_1_14.c
-	loot/loot_tables/pillager_outpost_1_19_2.c
-	loot/loot_tables/pillager_outpost_1_20.c
-	loot/loot_tables/pillager_outpost_1_21_11.c
-	loot/loot_tables/ruined_portal_1_16_1.c
-	loot/loot_tables/ruined_portal_1_21_5.c
-	loot/loot_tables/shipwreck_map_1_13.c
-	loot/loot_tables/shipwreck_map_1_18.c
-	loot/loot_tables/shipwreck_map_1_20.c
-	loot/loot_tables/shipwreck_map_1_21_11.c
-	loot/loot_tables/shipwreck_supply_1_13.c
-	loot/loot_tables/shipwreck_supply_1_14.c
-	loot/loot_tables/shipwreck_supply_1_17.c
-	loot/loot_tables/shipwreck_supply_1_20.c
-	loot/loot_tables/shipwreck_supply_1_21_11.c
-	loot/loot_tables/shipwreck_treasure_1_13.c
-	loot/loot_tables/shipwreck_treasure_1_20.c
-	loot/loot_tables/shipwreck_treasure_1_21_11.c
-	loot/loot_tables/stronghold_corridor_1_13.c
-	loot/loot_tables/stronghold_corridor_1_18.c
-	loot/loot_tables/stronghold_corridor_1_20.c
-	loot/loot_tables/stronghold_corridor_1_21_6.c
-	loot/loot_tables/stronghold_corridor_1_21_9.c
-	loot/loot_tables/stronghold_crossing_1_13.c
-	loot/loot_tables/stronghold_library_1_13.c
-	loot/loot_tables/stronghold_library_1_20.c
+	loot/loot_tables/barrels/abandoned_camp_barrel_26_3.c
+	loot/loot_tables/chests/abandoned_camp_common_chest_26_3.c
+	loot/loot_tables/chests/abandoned_camp_secret_chest_26_3.c
+	loot/loot_tables/chests/bastion_bridge_1_16_1.c
+	loot/loot_tables/chests/bastion_bridge_1_16_5.c
+	loot/loot_tables/chests/bastion_bridge_1_20.c
+	loot/loot_tables/chests/bastion_other_1_16_1.c
+	loot/loot_tables/chests/bastion_other_1_16_5.c
+	loot/loot_tables/chests/bastion_other_1_20.c
+	loot/loot_tables/chests/bastion_other_1_21_1.c
+	loot/loot_tables/chests/bastion_other_1_21_9.c
+	loot/loot_tables/chests/buried_treasure_1_13.c
+	loot/loot_tables/chests/buried_treasure_1_18.c
+	loot/loot_tables/chests/buried_treasure_1_21_11.c
+	loot/loot_tables/chests/desert_pyramid_1_13.c
+	loot/loot_tables/chests/desert_pyramid_1_20.c
+	loot/loot_tables/chests/desert_pyramid_1_21_6.c
+	loot/loot_tables/chests/desert_pyramid_1_21_9.c
+	loot/loot_tables/chests/desert_pyramid_1_21_11.c
+	loot/loot_tables/chests/end_city_treasure_1_13.c
+	loot/loot_tables/chests/end_city_treasure_1_20.c
+	loot/loot_tables/chests/end_city_treasure_1_21_9.c
+	loot/loot_tables/chests/end_city_treasure_1_21_11.c
+	loot/loot_tables/chests/igloo_chest_1_13.c
+	loot/loot_tables/chests/jungle_temple_1_13.c
+	loot/loot_tables/chests/jungle_temple_1_14.c
+	loot/loot_tables/chests/jungle_temple_1_20.c
+	loot/loot_tables/chests/jungle_temple_1_21_6.c
+	loot/loot_tables/chests/jungle_temple_1_21_9.c
+	loot/loot_tables/chests/jungle_temple_1_21_11.c
+	loot/loot_tables/chests/jungle_temple_dispenser_1_13.c
+	loot/loot_tables/chests/nether_bridge_1_13.c
+	loot/loot_tables/chests/nether_bridge_1_20.c
+	loot/loot_tables/chests/nether_bridge_1_21_9.c
+	loot/loot_tables/chests/pillager_outpost_1_14.c
+	loot/loot_tables/chests/pillager_outpost_1_19_2.c
+	loot/loot_tables/chests/pillager_outpost_1_20.c
+	loot/loot_tables/chests/pillager_outpost_1_21_11.c
+	loot/loot_tables/chests/ruined_portal_1_16_1.c
+	loot/loot_tables/chests/ruined_portal_1_21_5.c
+	loot/loot_tables/chests/shipwreck_map_1_13.c
+	loot/loot_tables/chests/shipwreck_map_1_18.c
+	loot/loot_tables/chests/shipwreck_map_1_20.c
+	loot/loot_tables/chests/shipwreck_map_1_21_11.c
+	loot/loot_tables/chests/shipwreck_supply_1_13.c
+	loot/loot_tables/chests/shipwreck_supply_1_14.c
+	loot/loot_tables/chests/shipwreck_supply_1_17.c
+	loot/loot_tables/chests/shipwreck_supply_1_20.c
+	loot/loot_tables/chests/shipwreck_supply_1_21_11.c
+	loot/loot_tables/chests/shipwreck_treasure_1_13.c
+	loot/loot_tables/chests/shipwreck_treasure_1_20.c
+	loot/loot_tables/chests/shipwreck_treasure_1_21_11.c
+	loot/loot_tables/chests/stronghold_corridor_1_13.c
+	loot/loot_tables/chests/stronghold_corridor_1_18.c
+	loot/loot_tables/chests/stronghold_corridor_1_20.c
+	loot/loot_tables/chests/stronghold_corridor_1_21_6.c
+	loot/loot_tables/chests/stronghold_corridor_1_21_9.c
+	loot/loot_tables/chests/stronghold_crossing_1_13.c
+	loot/loot_tables/chests/stronghold_library_1_13.c
+	loot/loot_tables/chests/stronghold_library_1_20.c
+	loot/loot_tables/chests/trial_chambers/reward_1_21_1.c
+	loot/loot_tables/chests/trial_chambers/reward_common_1_21_1.c
+    loot/loot_tables/chests/trial_chambers/reward_ominous_1_21_1.c
+    loot/loot_tables/chests/trial_chambers/reward_ominous_common_1_21_1.c
+    loot/loot_tables/chests/trial_chambers/reward_ominous_rare_1_21_1.c
+    loot/loot_tables/chests/trial_chambers/reward_ominous_unique_1_21_1.c
+	loot/loot_tables/chests/trial_chambers/reward_rare_1_21_1.c
+	loot/loot_tables/chests/trial_chambers/reward_unique_1_21_1.c
 	loot/cjson/cJSON.c
 )
 
 add_library(objects OBJECT ${SOURCES})
+target_compile_options(objects PRIVATE
+	-fno-semantic-interposition
+)
+check_c_compiler_flag("-mpopcnt" HAS_MPOPCNT)
+if (HAS_MPOPCNT)
+	target_compile_options(objects PRIVATE -mpopcnt)
+endif()
 set_property(TARGET objects PROPERTY POSITION_INDEPENDENT_CODE 1)
 
 add_library(cubiomes SHARED $<TARGET_OBJECTS:objects>)
@@ -187,3 +242,13 @@ endif()
 
 install(TARGETS cubiomes cubiomes_static DESTINATION lib)
 install(FILES ${HEADERS} DESTINATION include)
+
+option(EXPORT_HEADERS "Export project headers" OFF)
+
+if (EXPORT_HEADERS)
+	string(JOIN "\n" HEADER_LIST ${HEADERS})
+	file(WRITE "${CMAKE_BINARY_DIR}/headers.txt" "${HEADER_LIST}\n")
+endif()
+
+enable_testing()
+add_subdirectory(tests)

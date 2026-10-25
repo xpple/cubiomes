@@ -344,19 +344,19 @@ static int isSupportingBox(Piece *p, int cx, int cz, int x0, int x1, int z0) {
     return 1;
 }
 
-static void placeSupport(Piece *p, int cx, int cz, int x0, int z, int x1, RandomSource rnd) {
+static void placeSupport(Piece *p, int cx, int cz, int x0, int z, int x1, RandomSource *rnd) {
     if (isSupportingBox(p, cx, cz, x0, x1, z)) {
-        if (rnd.nextInt(rnd.state, 4) != 0) {
+        if (absNextInt(rnd, 4) != 0) {
             maybeGenerateBlock(rnd);
             maybeGenerateBlock(rnd);
         }
     }
 }
 
-static void maybePlaceCobWeb(Piece *p, int cx, int cz, RandomSource rnd, int x, int z) {
+static void maybePlaceCobWeb(Piece *p, int cx, int cz, RandomSource *rnd, int x, int z) {
     rotPos(p->bb0, p->bb1, &x, &z, p->rot);
     if (x >= cx && x < cx + 16 && z >= cz && z < cz + 16) {
-        rnd.nextFloat(rnd.state);
+        absNextFloat(rnd);
     }
 }
 
@@ -385,9 +385,9 @@ int getMineshaftLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, uin
     // slow code ahead
     for (int cx = cMinX; cx <= cMaxX; cx += 16) {
         for (int cz = cMinZ; cz <= cMaxZ; cz += 16) {
-            CREATE_RANDOM_SOURCE(rnd, legacy);
+            RandomSource rnd = {.type = legacy ? JAVA_RANDOM : XOROSHIRO_J};
             uint64_t populationSeed = getPopulationSeed(mc, seed, cx, cz);
-            rnd.setSeed(rnd.state, populationSeed + ssconf.generationStep * 10000 + ssconf.decoratorIndex);
+            absSetSeed(&rnd, populationSeed + ssconf.generationStep * 10000 + ssconf.decoratorIndex);
             for (int i = 0; i < count; ++i) {
                 Piece *p = &list[i];
                 if (!(p->bb1.x >= cx && p->bb0.x <= cx + 15 &&
@@ -404,43 +404,43 @@ int getMineshaftLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, uin
                         numSections = (p->bb1.x - p->bb0.x + 1) / 5;
                     }
                     int length = numSections * 5 - 1;
-                    generateMaybeBox(0, 2, 0, 2, 2, length, rnd);
+                    generateMaybeBox(0, 2, 0, 2, 2, length, &rnd);
                     if ((p->additionalData >> 1) & 1) {
-                        generateMaybeBox(0, 0, 0, 2, 1, length, rnd);
+                        generateMaybeBox(0, 0, 0, 2, 1, length, &rnd);
                     }
 
                     for (int section = 0; section < numSections; section++) {
                         int z = 2 + section * 5;
-                        placeSupport(p, cx, cz, 0, z, 2, rnd);
-                        maybePlaceCobWeb(p, cx, cz, rnd, 0, z - 1);
-                        maybePlaceCobWeb(p, cx, cz, rnd, 2, z - 1);
-                        maybePlaceCobWeb(p, cx, cz, rnd, 0, z + 1);
-                        maybePlaceCobWeb(p, cx, cz, rnd, 2, z + 1);
-                        maybePlaceCobWeb(p, cx, cz, rnd, 0, z - 2);
-                        maybePlaceCobWeb(p, cx, cz, rnd, 2, z - 2);
-                        maybePlaceCobWeb(p, cx, cz, rnd, 0, z + 2);
-                        maybePlaceCobWeb(p, cx, cz, rnd, 2, z + 2);
+                        placeSupport(p, cx, cz, 0, z, 2, &rnd);
+                        maybePlaceCobWeb(p, cx, cz, &rnd, 0, z - 1);
+                        maybePlaceCobWeb(p, cx, cz, &rnd, 2, z - 1);
+                        maybePlaceCobWeb(p, cx, cz, &rnd, 0, z + 1);
+                        maybePlaceCobWeb(p, cx, cz, &rnd, 2, z + 1);
+                        maybePlaceCobWeb(p, cx, cz, &rnd, 0, z - 2);
+                        maybePlaceCobWeb(p, cx, cz, &rnd, 2, z - 2);
+                        maybePlaceCobWeb(p, cx, cz, &rnd, 0, z + 2);
+                        maybePlaceCobWeb(p, cx, cz, &rnd, 2, z + 2);
 
-                        if (rnd.nextInt(rnd.state, 100) == 0) {
+                        if (absNextInt(&rnd, 100) == 0) {
                             int chestPosX = 2, chestPosZ = z - 1;
                             rotPos(p->bb0, p->bb1, &chestPosX, &chestPosZ, p->rot);
                             if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
-                                rnd.nextBoolean(rnd.state);
+                                absNextBoolean(&rnd);
                                 p->chestPoses[p->chestCount] = (Pos) {chestPosX, chestPosZ};
                                 p->lootTables[p->chestCount] = "abandoned_mineshaft";
-                                p->lootSeeds[p->chestCount] = rnd.nextLong(rnd.state);
+                                p->lootSeeds[p->chestCount] = absNextLong(&rnd);
                                 p->chestCount++;
                             }
                         }
 
-                        if (rnd.nextInt(rnd.state, 100) == 0) {
+                        if (absNextInt(&rnd, 100) == 0) {
                             int chestPosX = 0, chestPosZ = z + 1;
                             rotPos(p->bb0, p->bb1, &chestPosX, &chestPosZ, p->rot);
                             if (chestPosX >= cx && chestPosX < cx + 16 && chestPosZ >= cz && chestPosZ < cz + 16) {
-                                rnd.nextBoolean(rnd.state);
+                                absNextBoolean(&rnd);
                                 p->chestPoses[p->chestCount] = (Pos) {chestPosX, chestPosZ};
                                 p->lootTables[p->chestCount] = "abandoned_mineshaft";
-                                p->lootSeeds[p->chestCount] = rnd.nextLong(rnd.state);
+                                p->lootSeeds[p->chestCount] = absNextLong(&rnd);
                                 p->chestCount++;
                             }
                         }
@@ -449,7 +449,7 @@ int getMineshaftLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, uin
                         // spiderCorridor is 0b_X_, hasPlacedSpider is 0bX__
                         if (((p->additionalData >> 1) & 0b11) == 0b01) {
                             int newX = 1;
-                            int newZ = z - 1 + rnd.nextInt(rnd.state, 3);
+                            int newZ = z - 1 + absNextInt(&rnd, 3);
                             rotPos(p->bb0, p->bb1, &newX, &newZ, p->rot);
                             if (newX >= cx && newX < cx + 16 && newZ >= cz && newZ < cz + 16) {
                                 p->additionalData |= 1 << 2;
@@ -464,7 +464,7 @@ int getMineshaftLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, uin
                             int tx = 1, tz = zx;
                             rotPos(p->bb0, p->bb1, &tx, &tz, p->rot);
                             if (tx >= cx && tx < cx + 16 && tz >= cz && tz < cz + 16) {
-                                maybeGenerateBlock(rnd);
+                                maybeGenerateBlock(&rnd);
                             }
                         }
                     }

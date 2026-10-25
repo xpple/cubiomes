@@ -2,15 +2,18 @@
 #include "loot_table_context.h"
 #include <string.h>
 
+void set_loot_prng_type(LootTableContext* context, int type)
+{
+    context->prng_state.type = type;
+}
 
 void set_loot_seed(LootTableContext* context, uint64_t seed)
 {
-    context->prng_state = (seed ^ 0x5deece66dULL) & 0xffffffffffffULL;
+    absSetSeed(&context->prng_state, seed);
 }
 
-void set_internal_loot_seed(LootTableContext* context, uint64_t internal_seed)
-{
-    context->prng_state = internal_seed;
+void set_internal_loot_seed(LootTableContext* context, RandomState internal_seed) {
+    absSetSeedInternal(&context->prng_state, internal_seed);
 }
 
 int get_item_id(LootTableContext* context, const char* item_name)
@@ -54,7 +57,6 @@ static void generate_subtable_loot(LootTableContext* context, int subtable_index
 
 static void generate_subtable_loot(LootTableContext* context, int subtable_index)
 {
-    LootPool* pool = &(context->loot_pools[context->subtable_pool_offset[subtable_index]]);
     int pool_count = context->subtable_pool_count[subtable_index];
 
     for (int i = 0; i < pool_count; i++)
@@ -68,6 +70,14 @@ static void generate_loot_pool(LootTableContext* context, int pool_index)
 {
     const LootPool* pool = &(context->loot_pools[pool_index]);
 
+    const int condition_count = pool->condition_count;
+    for (int i = 0; i < condition_count; i++) {
+        const LootItemCondition* condition = &pool->conditions[i];
+        if (!condition->fun(&context->prng_state, condition->params)) {
+            return;
+        }
+    }
+
     // each loot pool first chooses the number of rolls
     RollCountFunction roll_choice = pool->roll_count_function;
     const int rolls = roll_choice(&(context->prng_state), pool->min_rolls, pool->max_rolls);
@@ -75,7 +85,7 @@ static void generate_loot_pool(LootTableContext* context, int pool_index)
     for (int r = 0; r < rolls; r++)
     {
         // roll a weighted random entry
-        int w = pool->entry_count > 1 ? nextInt(&context->prng_state, pool->total_weight) : 0;
+        int w = pool->entry_count > 1 ? absNextInt(&context->prng_state, pool->total_weight) : 0;
         int entry = pool->precomputed_loot[w];
         int item = pool->entry_to_item[entry];
         if (item == -1)

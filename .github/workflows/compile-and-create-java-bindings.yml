@@ -16,18 +16,25 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Compile shared library (ubuntu-latest)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build --config Release
+          sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu
+          cmake -S . -B build-x86 -DCMAKE_BUILD_TYPE=Release -DCMAKE_RELEASE_POSTFIX=_x86
+          cmake --build build-x86
+          cmake -S . -B build-arm -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_RELEASE_POSTFIX=_arm
+          cmake --build build-arm
+          cp build-x86/libcubiomes_x86.so build-arm/libcubiomes_arm.so .
+          # only run tests for x86 because that is what the runner supports
+          ctest --test-dir build-x86/tests --extra-verbose
       - name: Compile shared library (macos-latest)
         if: matrix.os == 'macos-latest'
         run: |
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
-          cmake --build build --config Release
+          cmake --build build
+          ctest --test-dir build/tests --extra-verbose
       - name: Set up MSYS2 (windows-latest)
         if: matrix.os == 'windows-latest'
         uses: msys2/setup-msys2@v2
@@ -38,31 +45,41 @@ jobs:
             mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-cmake
             mingw-w64-x86_64-ninja
+            mingw-w64-cross-mingwarm64-gcc
       - name: Compile shared library (windows-latest)
         if: matrix.os == 'windows-latest'
         shell: msys2 {0}
         run: |
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build --config Release
+          cmake -S . -B build-x86 -DCMAKE_BUILD_TYPE=Release -DCMAKE_RELEASE_POSTFIX=_x86
+          cmake --build build-x86
+          cmake -S . -B build-arm -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=/opt/bin/aarch64-w64-mingw32-gcc.exe -DCMAKE_RELEASE_POSTFIX=_arm
+          cmake --build build-arm
+          cp build-x86/cubiomes_x86.dll build-arm/cubiomes_arm.dll .
+          # only run tests for x86 because that is what the runner supports
+          ctest --test-dir build-x86/tests --extra-verbose
 
       - name: Capture shared library (ubuntu-latest)
         if: matrix.os == 'ubuntu-latest'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: libcubiomes.so
-          path: build/libcubiomes.so
+          path: |
+            libcubiomes_x86.so
+            libcubiomes_arm.so
       - name: Capture shared library (macos-latest)
         if: matrix.os == 'macos-latest'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: libcubiomes.dylib
           path: build/libcubiomes.dylib
       - name: Capture shared library (windows-latest)
         if: matrix.os == 'windows-latest'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: cubiomes.dll
-          path: build/cubiomes.dll
+          path: |
+            cubiomes_x86.dll
+            cubiomes_arm.dll
   create-java-bindings:
     if: github.repository == 'xpple/cubiomes' && github.event_name == 'push'
     name: Create Java bindings
@@ -75,26 +92,22 @@ jobs:
       LLVM_HOME: /usr/lib/llvm-13
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: java-bindings
           submodules: 'true'
       - name: Capture shared library
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           merge-multiple: true
           path: src/main/resources/
       - name: Update master submodule
         working-directory: src/main/c/cubiomes
         run: git checkout $GITHUB_SHA
-      - name: Update includes.txt
-        run: |
-          git fetch origin $GITHUB_SHA
-          git restore --source $GITHUB_SHA --worktree --staged includes.txt
       - name: Validate gradle wrapper
         uses: gradle/actions/wrapper-validation@v4
       - name: Setup JDK 23
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           java-version: 23
           distribution: 'temurin'
@@ -110,7 +123,16 @@ jobs:
       - name: Compile jextract
         working-directory: jextract
         run: ./gradlew --stacktrace -Pjdk_home=$JAVA_HOME -Pllvm_home=$LLVM_HOME clean verify
-      - name: Create Java bindings and build
+      - name: Export headers
+        working-directory: src/main/c/cubiomes
+        run: cmake -S . -B build -DEXPORT_HEADERS=ON
+      - name: Create Java bindings
+        run: |
+          ./gradlew clean --stacktrace
+          ./jextract/build/jextract/bin/jextract --include-dir src/main/c/cubiomes --header-class-name Cubiomes --dump-includes dump_includes.txt @src/main/c/cubiomes/build/headers.txt
+          grep "/cubiomes/src/main/c/cubiomes/" dump_includes.txt | grep -v "/cubiomes/src/main/c/cubiomes/loot/cjson/" > dump_includes_filtered.txt
+          ./jextract/build/jextract/bin/jextract --include-dir src/main/c/cubiomes --include-dir src/main/c/cubiomes --output src/main/java --use-system-load-library --target-package dev.xpple.cubiomes --header-class-name Cubiomes @dump_includes_filtered.txt @src/main/c/cubiomes/build/headers.txt
+      - name: Build
         env:
           ORG_GRADLE_PROJECT_signingKeyId: ${{ vars.ORG_GRADLE_PROJECT_SIGNINGKEYID }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGKEY }}

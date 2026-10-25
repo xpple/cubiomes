@@ -7,6 +7,7 @@
 #include "tables/btree21wd.h"
 #include "tables/btree215.h"
 #include "tables/btree262.h"
+#include "tables/btree263.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -470,7 +471,7 @@ int mapEndBiome(const EndNoise *en, int *out, int x, int z, int w, int h)
             {
                 hx = 2*hx + 1;
                 hz = 2*hz + 1;
-                if (en->mc > MC_1_13)
+                if (en->mc > MC_1_13 && en->mc < MC_26_3)
                 {   // add outer end rings
                     rsq = hx * hx + hz * hz;
                     if ((int)rsq < 0)
@@ -584,7 +585,7 @@ void sampleNoiseColumnEnd(double column[],
     };
 
     int y;
-    if (en->mc > MC_1_13)
+    if (en->mc > MC_1_13 && en->mc < MC_26_3)
     {   // add outer end rings
         uint64_t rsq = (uint64_t) x * x + (uint64_t) z * z;
         if ((int)rsq < 0)
@@ -809,7 +810,7 @@ int genEndScaled(const EndNoise *en, int *out, Range r, int mc, uint64_t sha)
                     out[j*r.sx+i] = the_end;
                     continue;
                 }
-                else if (mc > MC_1_13 && (int)(rsq) < 0)
+                else if (mc > MC_1_13 && mc < MC_26_3 && (int)(rsq) < 0)
                 {
                     out[j*r.sx+i] = end_barrens;
                     continue;
@@ -1242,7 +1243,7 @@ int sampleBiomeNoiseBeta(const BiomeNoiseBeta *bnb, int64_t *np, double *nv,
 
 int getOldBetaBiome(float t, float h)
 {
-    static const uint8_t biome_table_beta_1_7[64*64] = 
+    static const uint8_t biome_table_beta_1_7[64*64] =
     {
         5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
         6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,1,1,1,1,
@@ -1478,10 +1479,16 @@ int climateToBiome(int mc, const uint64_t np[6], uint64_t *dat)
         btree262_steps, &btree262_param[0][0], btree262_nodes, btree262_order,
         sizeof(btree262_nodes) / sizeof(uint64_t)
     };
+    static const BiomeTree btree263 = {
+        btree263_steps, &btree263_param[0][0], btree263_nodes, btree263_order,
+        sizeof(btree263_nodes) / sizeof(uint64_t)
+    };
 
     const BiomeTree *bt;
     int idx;
-    if (mc >= MC_26_2)
+    if (mc >= MC_26_3)
+        bt = &btree263;
+    else if (mc >= MC_26_2)
         bt = &btree262;
     else if (mc >= MC_1_21_5)
         bt = &btree215;
@@ -2000,7 +2007,7 @@ Range getVoronoiSrcRange(Range r)
     return s;
 }
 
-int initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
+void initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
 {
     static const int jhash_terrain = 0x62d03a68; // minecraft:terrain
     static const uint64_t md5_terrain[2] = {0x1ee555222ef96f14, 0xe2bedfdbebe43d33}; // minecraft:terrain
@@ -2027,10 +2034,7 @@ int initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
         bn->yFactor = 160.0;
         bn->smearScaleMultiplier = 4.0;
         break;
-    default:
-        fprintf(stderr, "ERR initBlendedNoise: invalid dimension %d\n", dim);
-        memset(bn, 0, sizeof(BlendedNoise));
-        return 0;
+    default: UNREACHABLE();
     }
     bn->xzMultiplier = 684.412 * bn->xzScale;
     bn->yMultiplier = 684.412 * bn->yScale;
@@ -2038,7 +2042,7 @@ int initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
     bn->factoredSmearedYScale = bn->smearedYScale / bn->yFactor;
 
     switch (dim) {
-    case DIM_OVERWORLD:
+    case DIM_OVERWORLD: {
         Xoroshiro wsx;
         xSetSeed(&wsx, ws);
         const uint64_t lo = xNextLong(&wsx);
@@ -2049,14 +2053,16 @@ int initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
         xOctaveLegacyInit(&bn->octmax, &xr, bn->oct+16, -15, 16);
         xOctaveLegacyInit(&bn->octmain, &xr, bn->oct+32, -7, 8);
         break;
-    case DIM_NETHER:
+    }
+    case DIM_NETHER: {
         uint64_t wsj;
         setSeed(&wsj, ws);
         octaveInit(&bn->octmin, &wsj, bn->oct+0, -15, 16);
         octaveInit(&bn->octmax, &wsj, bn->oct+16, -15, 16);
         octaveInit(&bn->octmain, &wsj, bn->oct+32, -7, 8);
         break;
-    case DIM_END:
+    }
+    case DIM_END: {
         uint64_t wsr;
         setSeed(&wsr, ws);
         const uint64_t nl = nextLong(&wsr);
@@ -2067,10 +2073,9 @@ int initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
         octaveInit(&bn->octmax, &rnd, bn->oct+16, -15, 16);
         octaveInit(&bn->octmain, &rnd, bn->oct+32, -7, 8);
         break;
+    }
     default: UNREACHABLE();
     }
-
-    return 1;
 }
 
 double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z)

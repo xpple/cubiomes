@@ -19,7 +19,7 @@ static inline void rotPos(Pos3 bb0, Pos3 bb1, int *x, int *z, int rot) {
     *x = posX, *z = posZ;
 }
 
-static void generateBox(Piece *p, int cx, int cz, int x0, int y0, int z0, int x1, int y1, int z1, int skipAir, RandomSource rnd) {
+static void generateBox(Piece *p, int cx, int cz, int x0, int y0, int z0, int x1, int y1, int z1, int skipAir, RandomSource *rnd) {
     if (!skipAir) {
         int w = x1 - x0 + 1;
         int d = z1 - z0 + 1;
@@ -28,7 +28,7 @@ static void generateBox(Piece *p, int cx, int cz, int x0, int y0, int z0, int x1
         if (!(w == 1 || d == 1 || h == 1)) {
             skips -= (w - 2) * (d - 2) * (h - 2);
         }
-        rnd.skipN(rnd.state, skips);
+        absSkipN(rnd, skips);
         return;
     }
 
@@ -39,7 +39,7 @@ static void generateBox(Piece *p, int cx, int cz, int x0, int y0, int z0, int x1
                 rotPos(p->bb0, p->bb1, &tx, &tz, p->rot);
                 if (tx >= cx && tx < cx + 16 && tz >= cz && tz < cz + 16) {
                     if (y == y0 || y == y1 || x == x0 || x == x1 || z == z0 || z == z1) {
-                        rnd.nextFloat(rnd.state);
+                        absNextFloat(rnd);
                     }
                 }
             }
@@ -48,13 +48,13 @@ static void generateBox(Piece *p, int cx, int cz, int x0, int y0, int z0, int x1
 }
 
 ATTR(always_inline)
-static inline void generateMaybeBox(int x0, int y0, int z0, int x1, int y1, int z1, RandomSource rnd) {
-    rnd.skipN(rnd.state, (y1-y0+1) * (x1-x0+1) * (z1-z0+1));
+static inline void generateMaybeBox(int x0, int y0, int z0, int x1, int y1, int z1, RandomSource *rnd) {
+    absSkipN(rnd, (y1-y0+1) * (x1-x0+1) * (z1-z0+1));
 }
 
 ATTR(always_inline)
-static inline void maybeGenerateBlock(RandomSource rnd) {
-    rnd.nextFloat(rnd.state);
+static inline void maybeGenerateBlock(RandomSource *rnd) {
+    absNextFloat(rnd);
 }
 
 #ifdef __cplusplus

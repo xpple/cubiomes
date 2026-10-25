@@ -8,99 +8,181 @@
 #include <stdio.h>
 
 const struct MobEffect MOB_EFFECTS[EFFECT_NUM] = {
-    [EFFECT_SPEED] = {EFFECT_SPEED, "minecraft:speed", 0},
-    [EFFECT_SLOWNESS] = {EFFECT_SLOWNESS, "minecraft:slowness", 0},
-    [EFFECT_HASTE] = {EFFECT_HASTE, "minecraft:haste", 0},
-    [EFFECT_MINING_FATIGUE] = {EFFECT_MINING_FATIGUE, "minecraft:mining_fatigue", 0},
-    [EFFECT_STRENGTH] = {EFFECT_STRENGTH, "minecraft:strength", 0},
-    [EFFECT_INSTANT_HEALTH] = {EFFECT_INSTANT_HEALTH, "minecraft:instant_health", 1},
-    [EFFECT_INSTANT_DAMAGE] = {EFFECT_INSTANT_DAMAGE, "minecraft:instant_damage", 1},
-    [EFFECT_JUMP_BOOST] = {EFFECT_JUMP_BOOST, "minecraft:jump_boost", 0},
-    [EFFECT_NAUSEA] = {EFFECT_NAUSEA, "minecraft:nausea", 0},
-    [EFFECT_REGENERATION] = {EFFECT_REGENERATION, "minecraft:regeneration", 0},
-    [EFFECT_RESISTANCE] = {EFFECT_RESISTANCE, "minecraft:resistance", 0},
-    [EFFECT_FIRE_RESISTANCE] = {EFFECT_FIRE_RESISTANCE, "minecraft:fire_resistance", 0},
-    [EFFECT_WATER_BREATHING] = {EFFECT_WATER_BREATHING, "minecraft:water_breathing", 0},
-    [EFFECT_INVISIBILITY] = {EFFECT_INVISIBILITY, "minecraft:invisibility", 0},
-    [EFFECT_BLINDNESS] = {EFFECT_BLINDNESS, "minecraft:blindness", 0},
-    [EFFECT_NIGHT_VISION] = {EFFECT_NIGHT_VISION, "minecraft:night_vision", 0},
-    [EFFECT_HUNGER] = {EFFECT_HUNGER, "minecraft:hunger", 0},
-    [EFFECT_WEAKNESS] = {EFFECT_WEAKNESS, "minecraft:weakness", 0},
-    [EFFECT_POISON] = {EFFECT_POISON, "minecraft:poison", 0},
-    [EFFECT_WITHER] = {EFFECT_WITHER, "minecraft:wither", 0},
-    [EFFECT_HEALTH_BOOST] = {EFFECT_HEALTH_BOOST, "minecraft:health_boost", 0},
-    [EFFECT_ABSORPTION] = {EFFECT_ABSORPTION, "minecraft:absorption", 0},
-    [EFFECT_SATURATION] = {EFFECT_SATURATION, "minecraft:saturation", 1},
-    [EFFECT_GLOWING] = {EFFECT_GLOWING, "minecraft:glowing", 0},
-    [EFFECT_LEVITATION] = {EFFECT_LEVITATION, "minecraft:levitation", 0},
-    [EFFECT_LUCK] = {EFFECT_LUCK, "minecraft:luck", 0},
-    [EFFECT_UNLUCK] = {EFFECT_UNLUCK, "minecraft:unluck", 0},
-    [EFFECT_SLOW_FALLING] = {EFFECT_SLOW_FALLING, "minecraft:slow_falling", 0},
-    [EFFECT_CONDUIT_POWER] = {EFFECT_CONDUIT_POWER, "minecraft:conduit_power", 0},
-    [EFFECT_DOLPHINS_GRACE] = {EFFECT_DOLPHINS_GRACE, "minecraft:dolphins_grace", 0},
-    [EFFECT_BAD_OMEN] = {EFFECT_BAD_OMEN, "minecraft:bad_omen", 0},
-    [EFFECT_HERO_OF_THE_VILLAGE] = {EFFECT_HERO_OF_THE_VILLAGE, "minecraft:hero_of_the_village", 0},
-    [EFFECT_DARKNESS] = {EFFECT_DARKNESS, "minecraft:darkness", 0},
-    [EFFECT_TRIAL_OMEN] = {EFFECT_TRIAL_OMEN, "minecraft:trial_omen", 0},
-    [EFFECT_RAID_OMEN] = {EFFECT_RAID_OMEN, "minecraft:raid_omen", 0},
-    [EFFECT_WIND_CHARGED] = {EFFECT_WIND_CHARGED, "minecraft:wind_charged", 0},
-    [EFFECT_WEAVING] = {EFFECT_WEAVING, "minecraft:weaving", 0},
-    [EFFECT_OOZING] = {EFFECT_OOZING, "minecraft:oozing", 0},
-    [EFFECT_INFESTED] = {EFFECT_INFESTED, "minecraft:infested", 0},
-    [EFFECT_BREATH_OF_THE_NAUTILUS] = {EFFECT_BREATH_OF_THE_NAUTILUS, "minecraft:breath_of_the_nautilus", 0},
+    [EFFECT_SPEED] = {"minecraft:speed", EFFECT_SPEED, 0},
+    [EFFECT_SLOWNESS] = {"minecraft:slowness", EFFECT_SLOWNESS, 0},
+    [EFFECT_HASTE] = {"minecraft:haste", EFFECT_HASTE, 0},
+    [EFFECT_MINING_FATIGUE] = {"minecraft:mining_fatigue", EFFECT_MINING_FATIGUE, 0},
+    [EFFECT_STRENGTH] = {"minecraft:strength", EFFECT_STRENGTH, 0},
+    [EFFECT_INSTANT_HEALTH] = {"minecraft:instant_health", EFFECT_INSTANT_HEALTH, 1},
+    [EFFECT_INSTANT_DAMAGE] = {"minecraft:instant_damage", EFFECT_INSTANT_DAMAGE, 1},
+    [EFFECT_JUMP_BOOST] = {"minecraft:jump_boost", EFFECT_JUMP_BOOST, 0},
+    [EFFECT_NAUSEA] = {"minecraft:nausea", EFFECT_NAUSEA, 0},
+    [EFFECT_REGENERATION] = {"minecraft:regeneration", EFFECT_REGENERATION, 0},
+    [EFFECT_RESISTANCE] = {"minecraft:resistance", EFFECT_RESISTANCE, 0},
+    [EFFECT_FIRE_RESISTANCE] = {"minecraft:fire_resistance", EFFECT_FIRE_RESISTANCE, 0},
+    [EFFECT_WATER_BREATHING] = {"minecraft:water_breathing", EFFECT_WATER_BREATHING, 0},
+    [EFFECT_INVISIBILITY] = {"minecraft:invisibility", EFFECT_INVISIBILITY, 0},
+    [EFFECT_BLINDNESS] = {"minecraft:blindness", EFFECT_BLINDNESS, 0},
+    [EFFECT_NIGHT_VISION] = {"minecraft:night_vision", EFFECT_NIGHT_VISION, 0},
+    [EFFECT_HUNGER] = {"minecraft:hunger", EFFECT_HUNGER, 0},
+    [EFFECT_WEAKNESS] = {"minecraft:weakness", EFFECT_WEAKNESS, 0},
+    [EFFECT_POISON] = {"minecraft:poison", EFFECT_POISON, 0},
+    [EFFECT_WITHER] = {"minecraft:wither", EFFECT_WITHER, 0},
+    [EFFECT_HEALTH_BOOST] = {"minecraft:health_boost", EFFECT_HEALTH_BOOST, 0},
+    [EFFECT_ABSORPTION] = {"minecraft:absorption", EFFECT_ABSORPTION, 0},
+    [EFFECT_SATURATION] = {"minecraft:saturation", EFFECT_SATURATION, 1},
+    [EFFECT_GLOWING] = {"minecraft:glowing", EFFECT_GLOWING, 0},
+    [EFFECT_LEVITATION] = {"minecraft:levitation", EFFECT_LEVITATION, 0},
+    [EFFECT_LUCK] = {"minecraft:luck", EFFECT_LUCK, 0},
+    [EFFECT_UNLUCK] = {"minecraft:unluck", EFFECT_UNLUCK, 0},
+    [EFFECT_SLOW_FALLING] = {"minecraft:slow_falling", EFFECT_SLOW_FALLING, 0},
+    [EFFECT_CONDUIT_POWER] = {"minecraft:conduit_power", EFFECT_CONDUIT_POWER, 0},
+    [EFFECT_DOLPHINS_GRACE] = {"minecraft:dolphins_grace", EFFECT_DOLPHINS_GRACE, 0},
+    [EFFECT_BAD_OMEN] = {"minecraft:bad_omen", EFFECT_BAD_OMEN, 0},
+    [EFFECT_HERO_OF_THE_VILLAGE] = {"minecraft:hero_of_the_village", EFFECT_HERO_OF_THE_VILLAGE, 0},
+    [EFFECT_DARKNESS] = {"minecraft:darkness", EFFECT_DARKNESS, 0},
+    [EFFECT_TRIAL_OMEN] = {"minecraft:trial_omen", EFFECT_TRIAL_OMEN, 0},
+    [EFFECT_RAID_OMEN] = {"minecraft:raid_omen", EFFECT_RAID_OMEN, 0},
+    [EFFECT_WIND_CHARGED] = {"minecraft:wind_charged", EFFECT_WIND_CHARGED, 0},
+    [EFFECT_WEAVING] = {"minecraft:weaving", EFFECT_WEAVING, 0},
+    [EFFECT_OOZING] = {"minecraft:oozing", EFFECT_OOZING, 0},
+    [EFFECT_INFESTED] = {"minecraft:infested", EFFECT_INFESTED, 0},
+    [EFFECT_BREATH_OF_THE_NAUTILUS] = {"minecraft:breath_of_the_nautilus", EFFECT_BREATH_OF_THE_NAUTILUS, 0},
 };
+
+const struct Potion POTIONS[POTION_NUM] = {
+    [POTION_WATER] = {"minecraft:water", POTION_WATER, 0, {}},
+    [POTION_MUNDANE] = {"minecraft:mundane", POTION_MUNDANE, 0, {}},
+    [POTION_THICK] = {"minecraft:thick", POTION_THICK, 0, {}},
+    [POTION_AWKWARD] = {"minecraft:awkward", POTION_AWKWARD, 0, {}},
+    [POTION_NIGHT_VISION] = {"minecraft:night_vision", POTION_NIGHT_VISION, 1, {{EFFECT_NIGHT_VISION, 3600}}},
+    [POTION_LONG_NIGHT_VISION] = {"minecraft:long_night_vision", POTION_LONG_NIGHT_VISION, 1, {{EFFECT_NIGHT_VISION, 9600}}},
+    [POTION_INVISIBILITY] = {"minecraft:invisibility", POTION_INVISIBILITY, 1, {{EFFECT_INVISIBILITY, 3600}}},
+    [POTION_LONG_INVISIBILITY] = {"minecraft:long_invisibility", POTION_LONG_INVISIBILITY, 1, {{EFFECT_INVISIBILITY, 9600}}},
+    [POTION_LEAPING] = {"minecraft:leaping", POTION_LEAPING, 1, {{EFFECT_JUMP_BOOST, 3600}}},
+    [POTION_LONG_LEAPING] = {"minecraft:long_leaping", POTION_LONG_LEAPING, 1, {{EFFECT_JUMP_BOOST, 9600}}},
+    [POTION_STRONG_LEAPING] = {"minecraft:strong_leaping", POTION_STRONG_LEAPING, 1, {{EFFECT_JUMP_BOOST, 1800}}},
+    [POTION_FIRE_RESISTANCE] = {"minecraft:fire_resistance", POTION_FIRE_RESISTANCE, 1, {{EFFECT_FIRE_RESISTANCE, 3600}}},
+    [POTION_LONG_FIRE_RESISTANCE] = {"minecraft:long_fire_resistance", POTION_LONG_FIRE_RESISTANCE, 1, {{EFFECT_FIRE_RESISTANCE, 9600}}},
+    [POTION_SWIFTNESS] = {"minecraft:swiftness", POTION_SWIFTNESS, 1, {{EFFECT_SPEED, 3600}}},
+    [POTION_LONG_SWIFTNESS] = {"minecraft:long_swiftness", POTION_LONG_SWIFTNESS, 1, {{EFFECT_SPEED, 9600}}},
+    [POTION_STRONG_SWIFTNESS] = {"minecraft:strong_swiftness", POTION_STRONG_SWIFTNESS, 1, {{EFFECT_SPEED, 1800}}},
+    [POTION_SLOWNESS] = {"minecraft:slowness", POTION_SLOWNESS, 1, {{EFFECT_SLOWNESS, 1800}}},
+    [POTION_LONG_SLOWNESS] = {"minecraft:long_slowness", POTION_LONG_SLOWNESS, 1, {{EFFECT_SLOWNESS, 4800}}},
+    [POTION_STRONG_SLOWNESS] = {"minecraft:strong_slowness", POTION_STRONG_SLOWNESS, 1, {{EFFECT_SLOWNESS, 400}}},
+    [POTION_TURTLE_MASTER] = {"minecraft:turtle_master", POTION_TURTLE_MASTER, 2, {{EFFECT_SLOWNESS, 400}, {EFFECT_RESISTANCE, 400}}},
+    [POTION_LONG_TURTLE_MASTER] = {"minecraft:long_turtle_master", POTION_LONG_TURTLE_MASTER, 2, {{EFFECT_SLOWNESS, 800}, {EFFECT_RESISTANCE, 800}}},
+    [POTION_STRONG_TURTLE_MASTER] = {"minecraft:strong_turtle_master", POTION_STRONG_TURTLE_MASTER, 2, {{EFFECT_SLOWNESS, 400}, {EFFECT_RESISTANCE, 400}}},
+    [POTION_WATER_BREATHING] = {"minecraft:water_breathing", POTION_WATER_BREATHING, 1, {{EFFECT_WATER_BREATHING, 3600}}},
+    [POTION_LONG_WATER_BREATHING] = {"minecraft:long_water_breathing", POTION_LONG_WATER_BREATHING, 1, {{EFFECT_WATER_BREATHING, 9600}}},
+    [POTION_HEALING] = {"minecraft:healing", POTION_HEALING, 1, {{EFFECT_INSTANT_HEALTH, 1}}},
+    [POTION_STRONG_HEALING] = {"minecraft:strong_healing", POTION_STRONG_HEALING, 1, {{EFFECT_INSTANT_HEALTH, 1}}},
+    [POTION_HARMING] = {"minecraft:harming", POTION_HARMING, 1, {{EFFECT_INSTANT_DAMAGE, 1}}},
+    [POTION_STRONG_HARMING] = {"minecraft:strong_harming", POTION_STRONG_HARMING, 1, {{EFFECT_INSTANT_DAMAGE, 1}}},
+    [POTION_POISON] = {"minecraft:poison", POTION_POISON, 1, {{EFFECT_POISON, 900}}},
+    [POTION_LONG_POISON] = {"minecraft:long_poison", POTION_LONG_POISON, 1, {{EFFECT_POISON, 1800}}},
+    [POTION_STRONG_POISON] = {"minecraft:strong_poison", POTION_STRONG_POISON, 1, {{EFFECT_POISON, 432}}},
+    [POTION_REGENERATION] = {"minecraft:regeneration", POTION_REGENERATION, 1, {{EFFECT_REGENERATION, 900}}},
+    [POTION_LONG_REGENERATION] = {"minecraft:long_regeneration", POTION_LONG_REGENERATION, 1, {{EFFECT_REGENERATION, 1800}}},
+    [POTION_STRONG_REGENERATION] = {"minecraft:strong_regeneration", POTION_STRONG_REGENERATION, 1, {{EFFECT_REGENERATION, 450}}},
+    [POTION_STRENGTH] = {"minecraft:strength", POTION_STRENGTH, 1, {{EFFECT_STRENGTH, 3600}}},
+    [POTION_LONG_STRENGTH] = {"minecraft:long_strength", POTION_LONG_STRENGTH, 1, {{EFFECT_STRENGTH, 9600}}},
+    [POTION_STRONG_STRENGTH] = {"minecraft:strong_strength", POTION_STRONG_STRENGTH, 1, {{EFFECT_STRENGTH, 1800}}},
+    [POTION_WEAKNESS] = {"minecraft:weakness", POTION_WEAKNESS, 1, {{EFFECT_WEAKNESS, 1800}}},
+    [POTION_LONG_WEAKNESS] = {"minecraft:long_weakness", POTION_LONG_WEAKNESS, 1, {{EFFECT_WEAKNESS, 4800}}},
+    [POTION_LUCK] = {"minecraft:luck", POTION_LUCK, 1, {{EFFECT_LUCK, 6000}}},
+    [POTION_SLOW_FALLING] = {"minecraft:slow_falling", POTION_SLOW_FALLING, 1, {{EFFECT_SLOW_FALLING, 1800}}},
+    [POTION_LONG_SLOW_FALLING] = {"minecraft:long_slow_falling", POTION_LONG_SLOW_FALLING, 1, {{EFFECT_SLOW_FALLING, 4800}}},
+    [POTION_WIND_CHARGED] = {"minecraft:wind_charged", POTION_WIND_CHARGED, 1, {{EFFECT_WIND_CHARGED, 3600}}},
+    [POTION_WEAVING] = {"minecraft:weaving", POTION_WEAVING, 1, {{EFFECT_WEAVING, 3600}}},
+    [POTION_OOZING] = {"minecraft:oozing", POTION_OOZING, 1, {{EFFECT_OOZING, 3600}}},
+    [POTION_INFESTED] = {"minecraft:infested", POTION_INFESTED, 1, {{EFFECT_INFESTED, 3600}}},
+};
+
+// ----------------------------------------------------------------------------------------
+// loot conditions
+
+static int random_chance_condition(RandomSource* rand, const void* params) {
+    float *params_float = (float*)params;
+    float probability = params_float[0];
+    return absNextFloat(rand) < probability;
+}
+
+void create_random_chance(LootItemCondition* lic, float chance) {
+    lic->fun = random_chance_condition;
+    lic->params = lic->params_float;
+    lic->params_float[0] = chance;
+}
 
 // ----------------------------------------------------------------------------------------
 // the actual loot functions
 
-static void set_count_uniform_function(uint64_t* rand, ItemStack* is, const void* params)
+static void set_count_uniform_function(RandomSource* rand, ItemStack* is, const void* params)
 {
     const int* params_int = (const int*)params;
     const int bound = params_int[1] - params_int[0] + 1;
-    const int cnt = nextInt(rand, bound) + params_int[0];
+    const int cnt = absNextInt(rand, bound) + params_int[0];
     is->count = cnt;
 }
 
-static void set_count_constant_function(uint64_t* rand, ItemStack* is, const void* params)
+static void set_count_constant_function(RandomSource* unused_, ItemStack* is, const void* params)
 {
+    (void)(unused_); // Unused
     const int* params_int = (const int*)params;
     is->count = params_int[0];
 }
 
-static void set_effect_function(uint64_t* rand, ItemStack* is, const void* params)
+static void set_effect_function(RandomSource* rand, ItemStack* is, const void* params)
 {
     int* varparams_int = (int*)params;
     int count = varparams_int[0];
-    int effectOffset = nextInt(rand, count);
+    int effectOffset = absNextInt(rand, count);
     MobEffectEntry* varparams_mob_effect = (MobEffectEntry *)(varparams_int + 1);
     MobEffectEntry effect_entry = varparams_mob_effect[effectOffset];
     is->mob_effect.effect = effect_entry.mob_effect->effect;
-    int duration = nextIntBetween(rand, effect_entry.min, effect_entry.max);
+    int duration = absNextIntBetween(rand, effect_entry.min, effect_entry.max);
     if (!effect_entry.mob_effect->is_instantaneous) {
         duration *= 20;
     }
     is->mob_effect.duration = duration;
 }
 
-static void skip_n_calls_function(uint64_t* rand, ItemStack* is, const void* params)
+static void set_potion_function(RandomSource* unused_, ItemStack* is, const void* params)
 {
+    (void)(unused_); // Unused
+    int* varparams_int = (int*)params;
+    Potion potion = *(Potion *)varparams_int;
+    // currently only buried treasures and abandoned camps use potions, where each potion has exactly one mob effect
+    if (potion.mob_effect_count == 1) {
+        is->mob_effect = potion.mob_effects[0];
+    }
+}
+
+static void skip_n_calls_function(RandomSource* rand, ItemStack* unused_, const void* params)
+{
+    (void)(unused_); // Unused
     const int* params_int = (const int*)params;
-    skipNextN(rand, params_int[0]);
+    absSkipN(rand, params_int[0]);
 }
 
-static void skip_one_call_function(uint64_t* rand, ItemStack* is, const void* params)
+static void skip_one_call_function(RandomSource* rand, ItemStack* unused1_, const void* unused2_)
 {
-    skipNextN(rand, 1);
+    (void)(unused1_); // Unused
+    (void)(unused2_); // Unused
+    absSkipN(rand, 1);
 }
 
-static void no_op_function(uint64_t* rand, ItemStack* is, const void* params)
+static void no_op_function(RandomSource* unused1_, ItemStack* unused2_, const void* unused3_)
 {
+    (void)(unused1_); // Unused
+    (void)(unused2_); // Unused
+    (void)(unused3_); // Unused
     // do nothing
 }
 
 // enchantments
 
-static void set_enchantment_random_level_function(uint64_t* rand, ItemStack* is, const void* params)
+static void set_enchantment_random_level_function(RandomSource* rand, ItemStack* is, const void* params)
 {
     const int* params_int = (const int*)params;
     // params[0] - enchantment id
@@ -109,12 +191,12 @@ static void set_enchantment_random_level_function(uint64_t* rand, ItemStack* is,
     is->enchantment_count = 1;
     is->enchantments[0].enchantment = params_int[0];
 
-    nextInt(rand, 1); // choose a "random" enchantment, nextInt(1) call
+    absNextInt(rand, 1); // choose a "random" enchantment, nextInt(1) call
     const int bound = params_int[1];
-    is->enchantments[0].level = nextInt(rand, bound) + 1;
+    is->enchantments[0].level = absNextInt(rand, bound) + 1;
 }
 
-static void enchant_randomly_function(uint64_t* rand, ItemStack* is, const void* params)
+static void enchant_randomly_function(RandomSource* rand, ItemStack* is, const void* params)
 {
     const int* varparams_int = (const int*)params;
     // params[0] - number of enchantments
@@ -125,12 +207,12 @@ static void enchant_randomly_function(uint64_t* rand, ItemStack* is, const void*
 
     is->enchantment_count = 1;
 
-    int enchantmentID = nextInt(rand, numEnchants);
+    int enchantmentID = absNextInt(rand, numEnchants);
     is->enchantments[0].enchantment = varparams_int[2 * enchantmentID + 1];
 
     int maxLevel = varparams_int[2 * enchantmentID + 2];
     if (maxLevel > 1)
-        is->enchantments[0].level = nextInt(rand, maxLevel) + 1;
+        is->enchantments[0].level = absNextInt(rand, maxLevel) + 1;
     else
         is->enchantments[0].level = 1;
 }
@@ -143,10 +225,10 @@ static inline int java_round_positive(float f)
     return (int)floor(f + 0.5F);
 }
 
-static inline int choose_enchantment(uint64_t* rand, int enchantmentVec[], const int vecSize, const int totalWeight)
+static inline int choose_enchantment(RandomSource* rand, int enchantmentVec[], const int vecSize, const int totalWeight)
 {
     const int vecCapacity = vecSize * 3;
-    int w = nextInt(rand, totalWeight);
+    int w = absNextInt(rand, totalWeight);
     for (int i = 2; i < vecCapacity; i += 3)
     {
         w -= enchantmentVec[i];
@@ -233,7 +315,7 @@ static inline void remove_incompatible_enchantments(int enchantmentIndex, int en
     *vecSize -= (moveBack / 3); // shrink the vector
 }
 
-static void enchant_with_levels_function(uint64_t* rand, ItemStack* is, const void* params)
+static void enchant_with_levels_function(RandomSource* rand, ItemStack* is, const void* params)
 {
     const int** varparams_int_arr = (const int**)params;
     // params[0][0] - item enchantability
@@ -253,11 +335,11 @@ static void enchant_with_levels_function(uint64_t* rand, ItemStack* is, const vo
     // calculate effective level
     int level = minLevel;
     if (minLevel != maxLevel)
-        level += nextInt(rand, maxLevel - minLevel + 1);
+        level += absNextInt(rand, maxLevel - minLevel + 1);
 
     const int delta = enchantability / 4 + 1;
-    level += 1 + nextInt(rand, delta) + nextInt(rand, delta);
-    const float amplifier = (nextFloat(rand) + nextFloat(rand) - 1.0F) * 0.15F;
+    level += 1 + absNextInt(rand, delta) + absNextInt(rand, delta);
+    const float amplifier = (absNextFloat(rand) + absNextFloat(rand) - 1.0F) * 0.15F;
     level = java_round_positive((float)level + (float)level * amplifier);
 
     // copy the available enchantment results to a local array
@@ -275,7 +357,7 @@ static void enchant_with_levels_function(uint64_t* rand, ItemStack* is, const vo
     is->enchantments[0].level = enchantmentVec[index + 1];
     is->enchantment_count++;
 
-    while (nextInt(rand, 50) <= level)
+    while (absNextInt(rand, 50) <= level)
     {
         remove_incompatible_enchantments(index, enchantmentVec, &vecSize, &totalWeight);
         if (vecSize == 0) break;
@@ -286,6 +368,21 @@ static void enchant_with_levels_function(uint64_t* rand, ItemStack* is, const vo
         is->enchantment_count++;
 
         level /= 2;
+    }
+}
+
+static void set_enchantments_function(RandomSource* unused_, ItemStack* is, const void* params) {
+    (void)(unused_); // Unused
+    int* params_int = (int*)params;
+    const int length = params_int[0];
+
+    for (int i = 0; i < length; i++)
+    {
+        Enchantment enchantment = params_int[1 + 2 * i];
+        int level = params_int[1 + 2 * i + 1];
+        EnchantInstance* instance = &is->enchantments[is->enchantment_count++];
+        instance->enchantment = enchantment;
+        instance->level = level;
     }
 }
 
@@ -325,6 +422,15 @@ void create_set_effect(LootFunction* lf, const int count, const MobEffectEntry m
     lf->varparams_int[0] = count;
     memcpy(lf->varparams_int + 1, mobEffects, count * sizeof(MobEffectEntry));
     lf->fun = set_effect_function;
+}
+
+void create_set_potion(LootFunction* lf, const Potion *potion)
+{
+    init_function(lf);
+    lf->varparams_int = (int*)malloc(sizeof(Potion));
+    lf->params = lf->varparams_int;
+    memcpy(lf->varparams_int, potion, sizeof(Potion));
+    lf->fun = set_potion_function;
 }
 
 void create_set_damage(LootFunction* lf)
@@ -436,6 +542,7 @@ static int is_applicable(const Enchantment enchantment, const ItemType item, con
 
     case LUNGE:
         return item == SPEAR;
+    default: UNREACHABLE();
     }
 
     return 0;
@@ -621,6 +728,7 @@ static int test_effective_level(const Enchantment enchantment, const int i, cons
         if ((n < 15 + (i - 1) * 9) || (n > 65 + (i - 1) * 9))
             return 0;
         break;
+    default: UNREACHABLE();
     }
 
     return 1;
@@ -799,7 +907,7 @@ static int is_tag_match(const char* tag, const char* name)
     return strcmp(tag[0] == '#' ? tag + 1 : tag, name) == 0;
 }
 
-static int get_non_treasure_1_21(Enchantment out[], const int cap, const ItemType item, const int version)
+static int get_non_treasure_1_21(Enchantment out[], const int cap, const ItemType item, const int version, const int use_overrides)
 {
     // Members of vanilla tag '#minecraft:non_treasure' (1.21.x), in tag file order.
     static const Enchantment non_treasure_pre_1_21_11[] = {
@@ -887,7 +995,7 @@ static int get_non_treasure_1_21(Enchantment out[], const int cap, const ItemTyp
     for (size_t i = 0; i < non_treasure_len; i++)
     {
         const Enchantment ench = non_treasure[i];
-        if (!is_applicable(ench, item, 1))
+        if (!is_applicable(ench, item, use_overrides))
             continue;
         if (n < cap)
             out[n] = ench;
@@ -896,7 +1004,7 @@ static int get_non_treasure_1_21(Enchantment out[], const int cap, const ItemTyp
     return n <= cap ? n : cap;
 }
 
-static int get_on_random_loot_1_21(Enchantment out[], const int cap, const ItemType item, const int version)
+static int get_on_random_loot_1_21(Enchantment out[], const int cap, const ItemType item, const int version, const int use_overrides)
 {
     // From vanilla tag expansion (1.21.x client jar):
     //   on_random_loot = #non_treasure + binding_curse + vanishing_curse + frost_walker + mending
@@ -907,11 +1015,11 @@ static int get_on_random_loot_1_21(Enchantment out[], const int cap, const ItemT
         MENDING,
     };
 
-    int n = get_non_treasure_1_21(out, cap, item, version);
+    int n = get_non_treasure_1_21(out, cap, item, version, use_overrides);
     for (size_t i = 0; i < sizeof(tail) / sizeof(tail[0]); i++)
     {
         const Enchantment ench = tail[i];
-        if (!is_applicable(ench, item, 1))
+        if (!is_applicable(ench, item, use_overrides))
             continue;
         if (n < cap)
             out[n] = ench;
@@ -1022,12 +1130,12 @@ void create_enchant_randomly_tag(LootFunction* lf, const int version, const Item
     if (is_tag_match(tag, "minecraft:on_random_loot"))
     {
         (void)allowTreasure;
-        n = get_on_random_loot_1_21(list, (int)(sizeof(list) / sizeof(list[0])), item, version);
+        n = get_on_random_loot_1_21(list, (int)(sizeof(list) / sizeof(list[0])), item, version, 1);
     }
     else if (is_tag_match(tag, "minecraft:non_treasure") || is_tag_match(tag, "minecraft:in_enchanting_table"))
     {
         (void)allowTreasure;
-        n = get_non_treasure_1_21(list, (int)(sizeof(list) / sizeof(list[0])), item, version);
+        n = get_non_treasure_1_21(list, (int)(sizeof(list) / sizeof(list[0])), item, version, 1);
     }
 
     if (n <= 0)
@@ -1103,11 +1211,11 @@ void create_enchant_with_levels_tag(LootFunction* lf, const int version, const c
 
     if (is_tag_match(tag, "minecraft:on_random_loot"))
     {
-        num_applicable = get_on_random_loot_1_21((Enchantment*)applicable, 64, item_type, version);
+        num_applicable = get_on_random_loot_1_21((Enchantment*)applicable, 64, item_type, version, 0);
     }
     else if (is_tag_match(tag, "minecraft:non_treasure") || is_tag_match(tag, "minecraft:in_enchanting_table"))
     {
-        num_applicable = get_non_treasure_1_21((Enchantment*)applicable, 64, item_type, version);
+        num_applicable = get_non_treasure_1_21((Enchantment*)applicable, 64, item_type, version, 0);
     }
     else
     {
@@ -1136,6 +1244,22 @@ void create_enchant_with_levels_tag(LootFunction* lf, const int version, const c
     }
 
     lf->fun = enchant_with_levels_function;
+}
+
+void create_set_enchantments(LootFunction* lf, const Enchantment* enchantments, const int* levels, const int list_length)
+{
+    init_function(lf);
+    lf->varparams_int = (int*)malloc((2 * list_length + 1) * sizeof(int));
+    lf->params = lf->varparams_int;
+    lf->varparams_int[0] = list_length;
+
+    for (int i = 0; i < list_length; i++)
+    {
+        lf->varparams_int[1 + 2 * i] = enchantments[i];
+        lf->varparams_int[1 + 2 * i + 1] = levels[i];
+    }
+
+    lf->fun = set_enchantments_function;
 }
 
 // ----------------------------------------------------------------------------------------
@@ -1220,7 +1344,7 @@ void test_enchant_vec()
         memcpy(enchantmentVec, vec + 2, sizeof(int) * vecSize * 3);
 
         int numEnchants = 0;
-        uint64_t rand = 0;
+        RandomSource rand = {.type = JAVA_RANDOM, .jr = 0};
 
         while (vecSize > 0)
         {

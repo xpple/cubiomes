@@ -484,11 +484,6 @@ void findStructures(int structureType, int mc, int dim, uint64_t seed,
     }
 }
 
-int getStructureConfig_override(int stype, int mc, StructureConfig *sconf)
-{
-    return getStructureConfig(stype, mc, sconf);
-}
-
 
 
 int main()

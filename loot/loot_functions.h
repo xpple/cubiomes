@@ -147,14 +147,64 @@ enum MobEffectType {
     EFFECT_NUM
 };
 
+enum PotionType {
+    POTION_WATER,
+    POTION_MUNDANE,
+    POTION_THICK,
+    POTION_AWKWARD,
+    POTION_NIGHT_VISION,
+    POTION_LONG_NIGHT_VISION,
+    POTION_INVISIBILITY,
+    POTION_LONG_INVISIBILITY,
+    POTION_LEAPING,
+    POTION_LONG_LEAPING,
+    POTION_STRONG_LEAPING,
+    POTION_FIRE_RESISTANCE,
+    POTION_LONG_FIRE_RESISTANCE,
+    POTION_SWIFTNESS,
+    POTION_LONG_SWIFTNESS,
+    POTION_STRONG_SWIFTNESS,
+    POTION_SLOWNESS,
+    POTION_LONG_SLOWNESS,
+    POTION_STRONG_SLOWNESS,
+    POTION_TURTLE_MASTER,
+    POTION_LONG_TURTLE_MASTER,
+    POTION_STRONG_TURTLE_MASTER,
+    POTION_WATER_BREATHING,
+    POTION_LONG_WATER_BREATHING,
+    POTION_HEALING,
+    POTION_STRONG_HEALING,
+    POTION_HARMING,
+    POTION_STRONG_HARMING,
+    POTION_POISON,
+    POTION_LONG_POISON,
+    POTION_STRONG_POISON,
+    POTION_REGENERATION,
+    POTION_LONG_REGENERATION,
+    POTION_STRONG_REGENERATION,
+    POTION_STRENGTH,
+    POTION_LONG_STRENGTH,
+    POTION_STRONG_STRENGTH,
+    POTION_WEAKNESS,
+    POTION_LONG_WEAKNESS,
+    POTION_LUCK,
+    POTION_SLOW_FALLING,
+    POTION_LONG_SLOW_FALLING,
+    POTION_WIND_CHARGED,
+    POTION_WEAVING,
+    POTION_OOZING,
+    POTION_INFESTED,
+    POTION_NUM,
+};
+
 typedef enum ItemType ItemType;
 typedef enum Enchantment Enchantment;
 
 // ----------------------------------------------------------------------------------------
 
 STRUCT(MobEffect) {
-    const int effect;
     const char* effect_name;
+    const int effect;
     const int is_instantaneous;
 };
 
@@ -170,6 +220,15 @@ STRUCT(MobEffectInstance) {
     int effect;
     int duration;
 };
+
+STRUCT(Potion) {
+    const char *potion_name;
+    const int potion;
+    const int mob_effect_count;
+    const MobEffectInstance mob_effects[2]; // 2 is the max currently
+};
+
+extern const struct Potion POTIONS[POTION_NUM];
 
 typedef struct EnchantInstance EnchantInstance;
 struct EnchantInstance {
@@ -190,12 +249,22 @@ struct ItemStack {
 
 // ----------------------------------------------------------------------------------------
 
-typedef int (*RollCountFunction)(uint64_t*, const int, const int);
+STRUCT(LootItemCondition) {
+    // condition function
+    int (*fun)(RandomSource* rand, const void* params);
+    // pointer to the param array used by the function
+    const void* params;
+    // predefined params
+    float params_float[1];
+};
 
-typedef struct LootFunction LootFunction;
-struct LootFunction {
+void create_random_chance(LootItemCondition* lic, float chance);
+
+typedef int (*RollCountFunction)(RandomSource*, const int, const int);
+
+STRUCT(LootFunction) {
     // actual function pointer
-    void (*fun)(uint64_t* rand, ItemStack* is, const void* params);
+    void (*fun)(RandomSource* rand, ItemStack* is, const void* params);
     // pointer to the param array used by the function
     const void* params;
 
@@ -209,15 +278,16 @@ struct LootFunction {
 // ----------------------------------------------------------------------------------------
 // Roll count choice functions
 
-static inline int roll_count_constant(uint64_t* rand, const int min, const int max)
+static inline int roll_count_constant(RandomSource*, const int min, int unused_)
 {
+    (void)(unused_); // Unused
     return min;
 }
 
-static inline int roll_count_uniform(uint64_t* rand, const int min, const int max)
+static inline int roll_count_uniform(RandomSource* rand, const int min, const int max)
 {
     const int bound = max - min + 1;
-    return nextInt(rand, bound) + min;
+    return absNextInt(rand, bound) + min;
 }
 
 // ----------------------------------------------------------------------------------------
@@ -225,6 +295,7 @@ static inline int roll_count_uniform(uint64_t* rand, const int min, const int ma
 
 void create_set_count(LootFunction* lf, const int min, const int max);
 void create_set_effect(LootFunction* lf, const int count, const MobEffectEntry mobEffects[]);
+void create_set_potion(LootFunction* lf, const Potion *potion);
 void create_set_damage(LootFunction* lf);
 void create_skip_calls(LootFunction* lf, const int skip_count);
 void create_no_op(LootFunction* lf);
@@ -234,6 +305,7 @@ void create_enchant_randomly(LootFunction* lf, const int version, const ItemType
 void create_enchant_randomly_tag(LootFunction* lf, const int version, const ItemType item, const char* tag, const int allowTreasure);
 void create_enchant_with_levels(LootFunction* lf, const int version, const char* item_name, const ItemType item_type, const int min_level, const int max_level, const int isTreasure);
 void create_enchant_with_levels_tag(LootFunction* lf, const int version, const char* item_name, const ItemType item_type, const int min_level, const int max_level, const char* tag, const int allowTreasure);
+void create_set_enchantments(LootFunction* lf, const Enchantment* enchantments, const int* levels, const int list_length);
 const char* get_enchantment_name(const Enchantment enchantment);
 
 // test TODO remove

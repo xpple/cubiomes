@@ -1,6 +1,9 @@
 #ifndef RNG_H_
 #define RNG_H_
 
+#ifdef __STDC_FORMAT_MACROS
+#undef __STDC_FORMAT_MACROS
+#endif
 #define __STDC_FORMAT_MACROS 1
 
 #include <stdlib.h>
@@ -26,9 +29,37 @@ typedef float       f32;
 typedef double      f64;
 
 
+#ifdef STRUCT
+#undef STRUCT
+#endif
 #define STRUCT(S) typedef struct S S; struct S
+#ifdef UNION
+#undef UNION
+#endif
+#define UNION(S) typedef union S S; union S
 
-#if __GNUC__
+#ifdef IABS
+#undef IABS
+#endif
+#ifdef PREFETCH
+#undef PREFETCH
+#endif
+#ifdef likely
+#undef likely
+#endif
+#ifdef unlikely
+#undef unlikely
+#endif
+#ifdef ATTR
+#undef ATTR
+#endif
+#ifdef BSWAP32
+#undef BSWAP32
+#endif
+#ifdef UNREACHABLE
+#undef UNREACHABLE
+#endif
+#ifdef __GNUC__
 
 #define IABS(X)                 __builtin_abs(X)
 #define PREFETCH(PTR,RW,LOC)    __builtin_prefetch(PTR,RW,LOC)
@@ -50,7 +81,7 @@ static inline uint32_t BSWAP32(uint32_t x) {
         ((x & 0x00ff0000) >>  8) | ((x & 0xff000000) >> 24);
     return x;
 }
-#if _MSC_VER
+#ifdef _MSC_VER
 #define UNREACHABLE()           __assume(0)
 #else
 #define UNREACHABLE()           exit(1) // [[noreturn]]
@@ -58,16 +89,9 @@ static inline uint32_t BSWAP32(uint32_t x) {
 
 #endif
 
-// Use with care
-#define CREATE_RANDOM_SOURCE(name, legacy) \
-    RandomSource name;                     \
-    uint64_t _r;                           \
-    Xoroshiro _xr;                         \
-    if (legacy) {                          \
-        name = createJavaRandom(&_r);      \
-    } else {                               \
-        name = createXoroshiro(&_xr);      \
-    }
+#ifndef __restrict
+#define __restrict
+#endif
 
 /// imitate amd64/x64 rotate instructions
 
@@ -97,6 +121,12 @@ static inline ATTR(const, always_inline)
 int32_t floormod(int32_t a, int32_t b) {
     int32_t r = a % b;
     return r + ((a ^ b) < 0 && !!r) * b;
+}
+
+static inline uint64_t getSeedAt(int x, int y, int z) {
+    int64_t l = (int64_t)(x * 3129871) ^ (int64_t)z * 116129781L ^ (int64_t)y;
+    l = l * l * 42317861L + l * 11L;
+    return (uint64_t) (l >> 16);
 }
 
 ///=============================================================================
@@ -155,6 +185,9 @@ static inline double nextDouble(uint64_t *seed)
     return (int64_t) x / (double) (1ULL << 53);
 }
 
+#ifdef JAVA_NEXT_INT24
+#undef JAVA_NEXT_INT24
+#endif
 /* A macro to generate the ideal assembly for X = nextInt(*S, 24)
  * This is a macro and not an inline function, as many compilers can make use
  * of the additional optimisation passes for the surrounding code.
@@ -204,6 +237,13 @@ static inline int nextIntBetween(uint64_t *seed, const int min, const int max)
 
 static inline float nextFloatBetween(uint64_t *seed, const float minInclusive, const float maxExclusive) {
     return nextFloat(seed) * (maxExclusive - minInclusive) + minInclusive;
+}
+
+static inline uint64_t jAtPos(uint64_t seed, int x, int y, int z)
+{
+    uint64_t rnd = getSeedAt(x, y, z) ^ seed;
+    setSeed(&rnd, rnd);
+    return rnd;
 }
 
 
@@ -258,6 +298,10 @@ static inline int xNextInt(Xoroshiro *xr, uint32_t n)
     return r >> 32;
 }
 
+static inline int xNextBoolean(Xoroshiro *xr) {
+    return xNextLong(xr) & 1ULL;
+}
+
 static inline double xNextDouble(Xoroshiro *xr)
 {
     return (xNextLong(xr) >> (64-53)) * 1.1102230246251565E-16;
@@ -270,28 +314,35 @@ static inline float xNextFloat(Xoroshiro *xr)
 
 static inline void calcVecMul(const uint64_t m[128][2], Xoroshiro* xr) {
     // see xradv.c for details
-    uint64_t v[2] = {xr->hi, xr->lo};
-    uint64_t rv[2] = {0};
+    uint64_t hi = 0, lo = 0;
 
+    #pragma GCC unroll 64
     for (int r = 0; r < 64; ++r) {
-        int bit = (__builtin_popcountll(m[r][0] & v[0]) & 1) ^ (__builtin_popcountll(m[r][1] & v[1]) & 1);
+        const int bit = __builtin_popcountll((m[r][0] & xr->hi) ^ (m[r][1] & xr->lo)) & 1;
         if (bit) {
-            rv[0] |= 1ULL << (64 - r - 1);
+            hi |= 1ULL << (64 - r - 1);
         }
     }
+    #pragma GCC unroll 64
     for (int r = 0; r < 64; ++r) {
-        const int bit = (__builtin_popcountll(m[r + 64][0] & v[0]) & 1) ^ (__builtin_popcountll(m[r + 64][1] & v[1]) & 1);
+        const int bit = __builtin_popcountll((m[r + 64][0] & xr->hi) ^ (m[r + 64][1] & xr->lo)) & 1;
         if (bit) {
-            rv[1] |= 1ULL << (64 - r - 1);
+            lo |= 1ULL << (64 - r - 1);
         }
     }
 
-    xr->hi = rv[0];
-    xr->lo = rv[1];
+    xr->hi = hi;
+    xr->lo = lo;
 }
 
 static inline void xSkipN(Xoroshiro *xr, uint64_t count)
 {
+    if (count < 100ULL * __builtin_popcountll(count)) {
+        while (count-- > 0) {
+            xNextLong(xr);
+        }
+        return;
+    }
     int pow = 0;
     while (count > 0) {
         if (count & 1) {
@@ -300,6 +351,11 @@ static inline void xSkipN(Xoroshiro *xr, uint64_t count)
         count >>= 1;
         ++pow;
     }
+}
+
+static inline int xNextIntBetween(Xoroshiro *xr, const int min, const int max)
+{
+    return xNextInt(xr, max - min + 1) + min;
 }
 
 static inline uint64_t xNextLongJ(Xoroshiro *xr)
@@ -344,57 +400,113 @@ static inline int xNextIntJBetween(Xoroshiro *xr, const int min, const int max)
     return xNextIntJ(xr, max - min + 1) + min;
 }
 
-static inline Xoroshiro xAtPos(Xoroshiro *xr, int x, int y, int z)
+static inline Xoroshiro xAtPos(Xoroshiro xr, int x, int y, int z)
 {
-    int64_t l = (int64_t)(x * 3129871) ^ (int64_t)z * 116129781L ^ (int64_t)y;
-    l = l * l * 42317861L + l * 11L;
-    l >>= 16;
-
-    return (Xoroshiro) {(uint64_t)l ^ xr->lo, xr->hi};
+    uint64_t l = getSeedAt(x, y, z);
+    Xoroshiro xr2 = {l ^ xr.lo, xr.hi};
+    return xr2;
 }
 
-// expand as necessary
-STRUCT(RandomSource)
-{
-    void *state;
-    void (*setSeed)(void *state, uint64_t seed);
-    uint64_t (*nextLong)(void *state);
-    int (*nextInt)(void *state, int n);
-    int (*nextBoolean)(void *state);
-    float (*nextFloat)(void *state);
-    double (*nextDouble)(void *state);
-    int (*nextIntBetween)(void *state, int min, int max);
-    void (*skipN)(void *state, uint64_t n);
+enum {
+    JAVA_RANDOM,
+    XOROSHIRO,
+    XOROSHIRO_J,
 };
 
-static inline RandomSource createJavaRandom(uint64_t *seed)
+UNION(RandomState)
 {
-    return (RandomSource) {
-        .state = seed,
-        .setSeed = (void (*)(void *, uint64_t)) setSeed,
-        .nextLong = (uint64_t (*)(void *)) nextLong,
-        .nextInt = (int (*)(void *, int)) nextInt,
-        .nextBoolean = (int (*)(void *)) nextBoolean,
-        .nextFloat = (float (*)(void *)) nextFloat,
-        .nextDouble = (double (*)(void *)) nextDouble,
-        .nextIntBetween = (int (*)(void *, int, int)) nextIntBetween,
-        .skipN = (void (*)(void *, uint64_t)) skipNextN,
+    uint64_t jr;
+    Xoroshiro xr;
+};
+
+STRUCT(RandomSource)
+{
+    int type;
+    union {
+        uint64_t jr;
+        Xoroshiro xr;
     };
+};
+
+static inline void absSetSeed(RandomSource *rnd, uint64_t seed) {
+    switch (rnd->type) {
+        case JAVA_RANDOM: setSeed(&rnd->jr, seed); return;
+        case XOROSHIRO: xSetSeed(&rnd->xr, seed); return;
+        case XOROSHIRO_J: xSetSeed(&rnd->xr, seed); return;
+        default: UNREACHABLE();
+    }
 }
 
-static inline RandomSource createXoroshiro(Xoroshiro *xr)
-{
-    return (RandomSource) {
-        .state = xr,
-        .setSeed = (void (*)(void *, uint64_t)) xSetSeed,
-        .nextLong = (uint64_t (*)(void *)) xNextLongJ,
-        .nextInt = (int (*)(void *, int)) xNextIntJ,
-        .nextBoolean = (int (*)(void *)) xNextBooleanJ,
-        .nextFloat = (float (*)(void *)) xNextFloat,
-        .nextDouble = (double (*)(void *)) xNextDoubleJ,
-        .nextIntBetween = (int (*)(void *, int, int)) xNextIntJBetween,
-        .skipN = (void (*)(void *, uint64_t)) xSkipN,
-    };
+static inline void absSetSeedInternal(RandomSource *rnd, RandomState seed) {
+    switch (rnd->type) {
+    case JAVA_RANDOM: rnd->jr = seed.jr; return;
+    case XOROSHIRO: rnd->xr = seed.xr; return;
+    case XOROSHIRO_J: rnd->xr = seed.xr; return;
+    default: UNREACHABLE();
+    }
+}
+
+static inline uint64_t absNextLong(RandomSource *rnd) {
+    switch (rnd->type) {
+        case JAVA_RANDOM: return nextLong(&rnd->jr);
+        case XOROSHIRO: return xNextLong(&rnd->xr);
+        case XOROSHIRO_J: return xNextLongJ(&rnd->xr);
+        default: UNREACHABLE();
+    }
+}
+
+static inline int absNextInt(RandomSource *rnd, int n) {
+    switch (rnd->type) {
+        case JAVA_RANDOM: return nextInt(&rnd->jr, n);
+        case XOROSHIRO: return xNextInt(&rnd->xr, n);
+        case XOROSHIRO_J: return xNextIntJ(&rnd->xr, n);
+        default: UNREACHABLE();
+    }
+}
+
+static inline int absNextBoolean(RandomSource *rnd) {
+    switch (rnd->type) {
+    case JAVA_RANDOM: return nextBoolean(&rnd->jr);
+    case XOROSHIRO: return xNextBoolean(&rnd->xr);
+    case XOROSHIRO_J: return xNextBooleanJ(&rnd->xr);
+    default: UNREACHABLE();
+    }
+}
+
+static inline float absNextFloat(RandomSource *rnd) {
+    switch (rnd->type) {
+        case JAVA_RANDOM: return nextFloat(&rnd->jr);
+        case XOROSHIRO: return xNextFloat(&rnd->xr);
+        case XOROSHIRO_J: return xNextFloat(&rnd->xr);
+        default: UNREACHABLE();
+    }
+}
+
+static inline double absNextDouble(RandomSource *rnd) {
+    switch (rnd->type) {
+        case JAVA_RANDOM: return nextDouble(&rnd->jr);
+        case XOROSHIRO: return xNextDouble(&rnd->xr);
+        case XOROSHIRO_J: return xNextDoubleJ(&rnd->xr);
+        default: UNREACHABLE();
+    }
+}
+
+static inline int absNextIntBetween(RandomSource *rnd, int min, int max) {
+    switch (rnd->type) {
+        case JAVA_RANDOM: return nextIntBetween(&rnd->jr, min, max);
+        case XOROSHIRO: return xNextIntBetween(&rnd->xr, min, max);
+        case XOROSHIRO_J: return xNextIntJBetween(&rnd->xr, min, max);
+        default: UNREACHABLE();
+    }
+}
+
+static inline void absSkipN(RandomSource *rnd, uint64_t n) {
+    switch (rnd->type) {
+        case JAVA_RANDOM: skipNextN(&rnd->jr, n); return;
+        case XOROSHIRO: xSkipN(&rnd->xr, n); return;
+        case XOROSHIRO_J: xSkipN(&rnd->xr, n); return;
+        default: UNREACHABLE();
+    }
 }
 
 //==============================================================================
