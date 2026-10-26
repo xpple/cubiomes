@@ -4,6 +4,7 @@
 #include "features/abandoned_camp.h"
 #include "features/end_city.h"
 #include "features/fortress.h"
+#include "features/mineshaft.h"
 #include "features/stronghold.h"
 
 #include <stdio.h>
@@ -3617,6 +3618,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         return count;
     }
     case Stronghold: return getStrongholdLoot(list, n, ssconf, mc, seed, posX >> 4, posZ >> 4);
+    case Mineshaft: return getMineshaftLoot(list, n, ssconf, mc, seed, posX >> 4, posZ >> 4);
     case Abandoned_Camp: return getAbandonedCampPieces(list, ssconf, sv, mc, seed, posX >> 4, posZ >> 4);
     // structures that have one piece and one chest
     case Treasure: {

@@ -62,6 +62,10 @@ set(HEADERS
 	loot/loot_tables/barrels/abandoned_camp_barrel_26_3.h
 	loot/loot_tables/chests/abandoned_camp_common_chest_26_3.h
 	loot/loot_tables/chests/abandoned_camp_secret_chest_26_3.h
+	loot/loot_tables/chests/abandoned_mineshaft_1_13.h
+	loot/loot_tables/chests/abandoned_mineshaft_1_17.h
+	loot/loot_tables/chests/abandoned_mineshaft_1_21_1.h
+	loot/loot_tables/chests/abandoned_mineshaft_26_2.h
 	loot/loot_tables/chests/bastion_bridge_1_16_1.h
 	loot/loot_tables/chests/bastion_bridge_1_16_5.h
 	loot/loot_tables/chests/bastion_bridge_1_20.h
@@ -155,6 +159,10 @@ set(SOURCES
 	loot/loot_tables/barrels/abandoned_camp_barrel_26_3.c
 	loot/loot_tables/chests/abandoned_camp_common_chest_26_3.c
 	loot/loot_tables/chests/abandoned_camp_secret_chest_26_3.c
+	loot/loot_tables/chests/abandoned_mineshaft_1_13.c
+	loot/loot_tables/chests/abandoned_mineshaft_1_17.c
+	loot/loot_tables/chests/abandoned_mineshaft_1_21_1.c
+	loot/loot_tables/chests/abandoned_mineshaft_26_2.c
 	loot/loot_tables/chests/bastion_bridge_1_16_1.c
 	loot/loot_tables/chests/bastion_bridge_1_16_5.c
 	loot/loot_tables/chests/bastion_bridge_1_20.c
