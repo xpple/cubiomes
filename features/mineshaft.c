@@ -115,7 +115,7 @@ static void extendMineshaft(MineshaftPieceEnv *env, int x, int y, int z, int fac
                 extendMineshaftPiece(env, p);
                 return;
             }
-        } // TODO check corridorLength > 0 check in older versions
+        }
     }
 }
 

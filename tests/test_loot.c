@@ -134,8 +134,8 @@ static int test_mineshaft_loot_26_3() {
         {{128, -46}, -3843451099099621343ULL},
         {{156, -65}, 7194228460717663736ULL},
         {{160, -28}, 8746672172609158251ULL},
-        {{155, -20}, -639644489539700087ULL}, // bug, does not actually generate
-        {{154, -17}, -8781631419607476400ULL}, // bug, does not actually generate
+        {{155, -20}, -639644489539700087ULL}, // inaccuracy, does not actually generate
+        {{154, -17}, -8781631419607476400ULL}, // inaccuracy, does not actually generate
         {{189, -18}, 4897799277421823215ULL},
     };
 
