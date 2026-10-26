@@ -9,6 +9,7 @@
 
 STRUCT(MineshaftPieceEnv) {
     int mc;
+    int maxDepth;
     Piece *list;
     int *n;
     uint64_t *rng;
@@ -29,7 +30,7 @@ static inline Piece* hasCollision(MineshaftPieceEnv *env, Pos3 b0, Pos3 b1) {
 static void extendMineshaftPiece(MineshaftPieceEnv *env, Piece *piece);
 
 static void extendMineshaft(MineshaftPieceEnv *env, int x, int y, int z, int facing, int depth) {
-    if (*env->n >= env->nmax || depth > 8) {
+    if (*env->n >= env->nmax || depth > env->maxDepth) {
         return;
     }
 
@@ -167,7 +168,7 @@ static void extendMineshaftPiece(MineshaftPieceEnv *env, Piece *piece) {
         default: UNREACHABLE();
         }
 
-        if (piece->depth >= 8) {
+        if (piece->depth >= env->maxDepth) {
             break;
         }
         if (rot != 0 && rot != 2) {
@@ -298,11 +299,21 @@ static void extendMineshaftPiece(MineshaftPieceEnv *env, Piece *piece) {
 }
 
 int getMineshaftPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, int chunkZ) {
+    if (list == NULL || n <= 0) {
+        return 0;
+    }
+
     int x = (chunkX << 4) + 2;
     int z = (chunkZ << 4) + 2;
 
     uint64_t rng = chunkGenerateRnd(seed, chunkX, chunkZ);
-    if (mc > MC_1_18_2) {
+    if (mc < MC_1_13) {
+        next(&rng, 32);
+        if (mc == MC_B1_8) nextInt(&rng, 80);
+        else if (mc < MC_1_4) nextInt(&rng, 100);
+        else nextDouble(&rng);
+        nextInt(&rng, 80);
+    } else if (mc > MC_1_18_2) {
         nextDouble(&rng);
     }
 
@@ -311,6 +322,7 @@ int getMineshaftPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, in
     MineshaftPieceEnv env;
     memset(&env, 0, sizeof(env));
     env.mc = mc;
+    env.maxDepth = mc == MC_B1_8 ? 10 : 8;
     env.list = list;
     env.n = &count;
     env.rng = &rng;
@@ -362,6 +374,9 @@ static void maybePlaceCobWeb(Piece *p, int cx, int cz, RandomSource *rnd, int x,
 
 int getMineshaftLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, uint64_t seed, int chunkX, int chunkZ) {
     int count = getMineshaftPieces(list, n, mc, seed, chunkX, chunkZ);
+    if (count == 0) {
+        return 0;
+    }
 
     const int legacy = mc <= MC_1_17;
     int minX = list->bb0.x;

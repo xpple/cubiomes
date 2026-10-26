@@ -717,7 +717,11 @@ int getMineshafts(int mc, uint64_t seed, int cx0, int cz0, int cx1, int cz1,
             else
             {
                 skipNextN(&s, 1);
-                if unlikely(nextDouble(&s) < 0.004)
+                int isStart;
+                if (mc == MC_B1_8) isStart = nextInt(&s, 80) == 0;
+                else if (mc < MC_1_4) isStart = nextInt(&s, 100) == 0;
+                else isStart = nextDouble(&s) < (mc < MC_1_7 ? 0.01 : 0.004);
+                if unlikely(isStart)
                 {
                     int d = i;
                     if (-i > d) d = -i;
