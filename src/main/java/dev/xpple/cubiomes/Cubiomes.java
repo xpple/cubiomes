@@ -17,6 +17,159 @@ public class Cubiomes extends Cubiomes_1 {
     Cubiomes() {
         // Should not be called directly
     }
+    private static final int INFINITY_ENCHANTMENT = (int)28L;
+    /**
+     * {@snippet lang=c :
+     * enum Enchantment.INFINITY_ENCHANTMENT = 28
+     * }
+     */
+    public static int INFINITY_ENCHANTMENT() {
+        return INFINITY_ENCHANTMENT;
+    }
+    private static final int QUICK_CHARGE = (int)29L;
+    /**
+     * {@snippet lang=c :
+     * enum Enchantment.QUICK_CHARGE = 29
+     * }
+     */
+    public static int QUICK_CHARGE() {
+        return QUICK_CHARGE;
+    }
+    private static final int MULTISHOT = (int)30L;
+    /**
+     * {@snippet lang=c :
+     * enum Enchantment.MULTISHOT = 30
+     * }
+     */
+    public static int MULTISHOT() {
+        return MULTISHOT;
+    }
+    private static final int PIERCING = (int)31L;
+    /**
+     * {@snippet lang=c :
+     * enum Enchantment.PIERCING = 31
+     * }
+     */
+    public static int PIERCING() {
+        return PIERCING;
+    }
+    private static final int IMPALING = (int)32L;
+    /**
+     * {@snippet lang=c :
+     * enum Enchantment.IMPALING = 32
+     * }
+     */
+    public static int IMPALING() {
+        return IMPALING;
+    }
+    private static final int RIPTIDE = (int)33L;
+    /**
+     * {@snippet lang=c :
+     * enum Enchantment.RIPTIDE = 33
+     * }
+     */
+    public static int RIPTIDE() {
+        return RIPTIDE;
+    }
+    private static final int LOYALTY = (int)34L;
+    /**
+     * {@snippet lang=c :
+     * enum Enchantment.LOYALTY = 34
+     * }
+     */
+    public static int LOYALTY() {
+        return LOYALTY;
+    }
+    private static final int CHANNELING = (int)35L;
+    /**
+     * {@snippet lang=c :
+     * enum Enchantment.CHANNELING = 35
+     * }
+     */
+    public static int CHANNELING() {
+        return CHANNELING;
+    }
+    private static final int DENSITY = (int)36L;
+    /**
+     * {@snippet lang=c :
+     * enum Enchantment.DENSITY = 36
+     * }
+     */
+    public static int DENSITY() {
+        return DENSITY;
+    }
+    private static final int BREACH = (int)37L;
+    /**
+     * {@snippet lang=c :
+     * enum Enchantment.BREACH = 37
+     * }
+     */
+    public static int BREACH() {
+        return BREACH;
+    }
+    private static final int WIND_BURST = (int)38L;
+    /**
+     * {@snippet lang=c :
+     * enum Enchantment.WIND_BURST = 38
+     * }
+     */
+    public static int WIND_BURST() {
+        return WIND_BURST;
+    }
+    private static final int MENDING = (int)39L;
+    /**
+     * {@snippet lang=c :
+     * enum Enchantment.MENDING = 39
+     * }
+     */
+    public static int MENDING() {
+        return MENDING;
+    }
+    private static final int UNBREAKING = (int)40L;
+    /**
+     * {@snippet lang=c :
+     * enum Enchantment.UNBREAKING = 40
+     * }
+     */
+    public static int UNBREAKING() {
+        return UNBREAKING;
+    }
+    private static final int CURSE_OF_VANISHING = (int)41L;
+    /**
+     * {@snippet lang=c :
+     * enum Enchantment.CURSE_OF_VANISHING = 41
+     * }
+     */
+    public static int CURSE_OF_VANISHING() {
+        return CURSE_OF_VANISHING;
+    }
+    private static final int CURSE_OF_BINDING = (int)42L;
+    /**
+     * {@snippet lang=c :
+     * enum Enchantment.CURSE_OF_BINDING = 42
+     * }
+     */
+    public static int CURSE_OF_BINDING() {
+        return CURSE_OF_BINDING;
+    }
+    private static final int LUNGE = (int)43L;
+    /**
+     * {@snippet lang=c :
+     * enum Enchantment.LUNGE = 43
+     * }
+     */
+    public static int LUNGE() {
+        return LUNGE;
+    }
+    private static final int EFFECT_SPEED = (int)0L;
+    /**
+     * {@snippet lang=c :
+     * enum MobEffectType.EFFECT_SPEED = 0
+     * }
+     */
+    public static int EFFECT_SPEED() {
+        return EFFECT_SPEED;
+    }
     private static final int EFFECT_SLOWNESS = (int)1L;
     /**
      * {@snippet lang=c :
@@ -1000,6 +1153,126 @@ public class Cubiomes extends Cubiomes_1 {
                 traceDowncall("create_random_chance", lic, chance);
             }
             mh$.invokeExact(lic, chance);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class create_location_predicate {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Cubiomes.C_POINTER,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("create_location_predicate");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void create_location_predicate(LootItemCondition *lic, const int *biomes, int list_length)
+     * }
+     */
+    public static FunctionDescriptor create_location_predicate$descriptor() {
+        return create_location_predicate.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void create_location_predicate(LootItemCondition *lic, const int *biomes, int list_length)
+     * }
+     */
+    public static MethodHandle create_location_predicate$handle() {
+        return create_location_predicate.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void create_location_predicate(LootItemCondition *lic, const int *biomes, int list_length)
+     * }
+     */
+    public static MemorySegment create_location_predicate$address() {
+        return create_location_predicate.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void create_location_predicate(LootItemCondition *lic, const int *biomes, int list_length)
+     * }
+     */
+    public static void create_location_predicate(MemorySegment lic, MemorySegment biomes, int list_length) {
+        var mh$ = create_location_predicate.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("create_location_predicate", lic, biomes, list_length);
+            }
+            mh$.invokeExact(lic, biomes, list_length);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class create_no_op_condition {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Cubiomes.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("create_no_op_condition");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void create_no_op_condition(LootItemCondition *lic)
+     * }
+     */
+    public static FunctionDescriptor create_no_op_condition$descriptor() {
+        return create_no_op_condition.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void create_no_op_condition(LootItemCondition *lic)
+     * }
+     */
+    public static MethodHandle create_no_op_condition$handle() {
+        return create_no_op_condition.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void create_no_op_condition(LootItemCondition *lic)
+     * }
+     */
+    public static MemorySegment create_no_op_condition$address() {
+        return create_no_op_condition.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void create_no_op_condition(LootItemCondition *lic)
+     * }
+     */
+    public static void create_no_op_condition(MemorySegment lic) {
+        var mh$ = create_no_op_condition.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("create_no_op_condition", lic);
+            }
+            mh$.invokeExact(lic);
         } catch (Error | RuntimeException ex) {
            throw ex;
         } catch (Throwable ex$) {
@@ -2699,6 +2972,67 @@ public class Cubiomes extends Cubiomes_1 {
         try {
             if (TRACE_DOWNCALLS) {
                 traceDowncall("init_abandoned_camp_secret_chest", context, version);
+            }
+            return (int)mh$.invokeExact(context, version);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
+    private static class init_abandoned_mineshaft {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("init_abandoned_mineshaft");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int init_abandoned_mineshaft(LootTableContext **context, int version)
+     * }
+     */
+    public static FunctionDescriptor init_abandoned_mineshaft$descriptor() {
+        return init_abandoned_mineshaft.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int init_abandoned_mineshaft(LootTableContext **context, int version)
+     * }
+     */
+    public static MethodHandle init_abandoned_mineshaft$handle() {
+        return init_abandoned_mineshaft.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int init_abandoned_mineshaft(LootTableContext **context, int version)
+     * }
+     */
+    public static MemorySegment init_abandoned_mineshaft$address() {
+        return init_abandoned_mineshaft.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int init_abandoned_mineshaft(LootTableContext **context, int version)
+     * }
+     */
+    public static int init_abandoned_mineshaft(MemorySegment context, int version) {
+        var mh$ = init_abandoned_mineshaft.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("init_abandoned_mineshaft", context, version);
             }
             return (int)mh$.invokeExact(context, version);
         } catch (Error | RuntimeException ex) {
@@ -5164,6 +5498,286 @@ public class Cubiomes extends Cubiomes_1 {
             try {
                 if (TRACE_DOWNCALLS) {
                     traceDowncall("init_abandoned_camp_secret_chest_26_3", x0);
+                }
+                return (MemorySegment) spreader.invokeExact(x0);
+            } catch(IllegalArgumentException | ClassCastException ex$)  {
+                throw ex$; // rethrow IAE from passing wrong number/type of args
+            } catch (Throwable ex$) {
+               throw new AssertionError("should not reach here", ex$);
+            }
+        }
+    }
+
+    /**
+     * Variadic invoker class for:
+     * {@snippet lang=c :
+     * LootTableContext *init_abandoned_mineshaft_1_13()
+     * }
+     */
+    public static class init_abandoned_mineshaft_1_13 {
+        private static final FunctionDescriptor BASE_DESC = FunctionDescriptor.of(
+                Cubiomes.C_POINTER        );
+        private static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("init_abandoned_mineshaft_1_13");
+
+        private final MethodHandle handle;
+        private final FunctionDescriptor descriptor;
+        private final MethodHandle spreader;
+
+        private init_abandoned_mineshaft_1_13(MethodHandle handle, FunctionDescriptor descriptor, MethodHandle spreader) {
+            this.handle = handle;
+            this.descriptor = descriptor;
+            this.spreader = spreader;
+        }
+
+        /**
+         * Variadic invoker factory for:
+         * {@snippet lang=c :
+         * LootTableContext *init_abandoned_mineshaft_1_13()
+         * }
+         */
+        public static init_abandoned_mineshaft_1_13 makeInvoker(MemoryLayout... layouts) {
+            FunctionDescriptor desc$ = BASE_DESC.appendArgumentLayouts(layouts);
+            Linker.Option fva$ = Linker.Option.firstVariadicArg(BASE_DESC.argumentLayouts().size());
+            var mh$ = Linker.nativeLinker().downcallHandle(ADDR, desc$, fva$);
+            var spreader$ = mh$.asSpreader(Object[].class, layouts.length);
+            return new init_abandoned_mineshaft_1_13(mh$, desc$, spreader$);
+        }
+
+        /**
+         * {@return the address}
+         */
+        public static MemorySegment address() {
+            return ADDR;
+        }
+
+        /**
+         * {@return the specialized method handle}
+         */
+        public MethodHandle handle() {
+            return handle;
+        }
+
+        /**
+         * {@return the specialized descriptor}
+         */
+        public FunctionDescriptor descriptor() {
+            return descriptor;
+        }
+
+        public MemorySegment apply(Object... x0) {
+            try {
+                if (TRACE_DOWNCALLS) {
+                    traceDowncall("init_abandoned_mineshaft_1_13", x0);
+                }
+                return (MemorySegment) spreader.invokeExact(x0);
+            } catch(IllegalArgumentException | ClassCastException ex$)  {
+                throw ex$; // rethrow IAE from passing wrong number/type of args
+            } catch (Throwable ex$) {
+               throw new AssertionError("should not reach here", ex$);
+            }
+        }
+    }
+
+    /**
+     * Variadic invoker class for:
+     * {@snippet lang=c :
+     * LootTableContext *init_abandoned_mineshaft_1_17()
+     * }
+     */
+    public static class init_abandoned_mineshaft_1_17 {
+        private static final FunctionDescriptor BASE_DESC = FunctionDescriptor.of(
+                Cubiomes.C_POINTER        );
+        private static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("init_abandoned_mineshaft_1_17");
+
+        private final MethodHandle handle;
+        private final FunctionDescriptor descriptor;
+        private final MethodHandle spreader;
+
+        private init_abandoned_mineshaft_1_17(MethodHandle handle, FunctionDescriptor descriptor, MethodHandle spreader) {
+            this.handle = handle;
+            this.descriptor = descriptor;
+            this.spreader = spreader;
+        }
+
+        /**
+         * Variadic invoker factory for:
+         * {@snippet lang=c :
+         * LootTableContext *init_abandoned_mineshaft_1_17()
+         * }
+         */
+        public static init_abandoned_mineshaft_1_17 makeInvoker(MemoryLayout... layouts) {
+            FunctionDescriptor desc$ = BASE_DESC.appendArgumentLayouts(layouts);
+            Linker.Option fva$ = Linker.Option.firstVariadicArg(BASE_DESC.argumentLayouts().size());
+            var mh$ = Linker.nativeLinker().downcallHandle(ADDR, desc$, fva$);
+            var spreader$ = mh$.asSpreader(Object[].class, layouts.length);
+            return new init_abandoned_mineshaft_1_17(mh$, desc$, spreader$);
+        }
+
+        /**
+         * {@return the address}
+         */
+        public static MemorySegment address() {
+            return ADDR;
+        }
+
+        /**
+         * {@return the specialized method handle}
+         */
+        public MethodHandle handle() {
+            return handle;
+        }
+
+        /**
+         * {@return the specialized descriptor}
+         */
+        public FunctionDescriptor descriptor() {
+            return descriptor;
+        }
+
+        public MemorySegment apply(Object... x0) {
+            try {
+                if (TRACE_DOWNCALLS) {
+                    traceDowncall("init_abandoned_mineshaft_1_17", x0);
+                }
+                return (MemorySegment) spreader.invokeExact(x0);
+            } catch(IllegalArgumentException | ClassCastException ex$)  {
+                throw ex$; // rethrow IAE from passing wrong number/type of args
+            } catch (Throwable ex$) {
+               throw new AssertionError("should not reach here", ex$);
+            }
+        }
+    }
+
+    /**
+     * Variadic invoker class for:
+     * {@snippet lang=c :
+     * LootTableContext *init_abandoned_mineshaft_1_21_1()
+     * }
+     */
+    public static class init_abandoned_mineshaft_1_21_1 {
+        private static final FunctionDescriptor BASE_DESC = FunctionDescriptor.of(
+                Cubiomes.C_POINTER        );
+        private static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("init_abandoned_mineshaft_1_21_1");
+
+        private final MethodHandle handle;
+        private final FunctionDescriptor descriptor;
+        private final MethodHandle spreader;
+
+        private init_abandoned_mineshaft_1_21_1(MethodHandle handle, FunctionDescriptor descriptor, MethodHandle spreader) {
+            this.handle = handle;
+            this.descriptor = descriptor;
+            this.spreader = spreader;
+        }
+
+        /**
+         * Variadic invoker factory for:
+         * {@snippet lang=c :
+         * LootTableContext *init_abandoned_mineshaft_1_21_1()
+         * }
+         */
+        public static init_abandoned_mineshaft_1_21_1 makeInvoker(MemoryLayout... layouts) {
+            FunctionDescriptor desc$ = BASE_DESC.appendArgumentLayouts(layouts);
+            Linker.Option fva$ = Linker.Option.firstVariadicArg(BASE_DESC.argumentLayouts().size());
+            var mh$ = Linker.nativeLinker().downcallHandle(ADDR, desc$, fva$);
+            var spreader$ = mh$.asSpreader(Object[].class, layouts.length);
+            return new init_abandoned_mineshaft_1_21_1(mh$, desc$, spreader$);
+        }
+
+        /**
+         * {@return the address}
+         */
+        public static MemorySegment address() {
+            return ADDR;
+        }
+
+        /**
+         * {@return the specialized method handle}
+         */
+        public MethodHandle handle() {
+            return handle;
+        }
+
+        /**
+         * {@return the specialized descriptor}
+         */
+        public FunctionDescriptor descriptor() {
+            return descriptor;
+        }
+
+        public MemorySegment apply(Object... x0) {
+            try {
+                if (TRACE_DOWNCALLS) {
+                    traceDowncall("init_abandoned_mineshaft_1_21_1", x0);
+                }
+                return (MemorySegment) spreader.invokeExact(x0);
+            } catch(IllegalArgumentException | ClassCastException ex$)  {
+                throw ex$; // rethrow IAE from passing wrong number/type of args
+            } catch (Throwable ex$) {
+               throw new AssertionError("should not reach here", ex$);
+            }
+        }
+    }
+
+    /**
+     * Variadic invoker class for:
+     * {@snippet lang=c :
+     * LootTableContext *init_abandoned_mineshaft_26_2()
+     * }
+     */
+    public static class init_abandoned_mineshaft_26_2 {
+        private static final FunctionDescriptor BASE_DESC = FunctionDescriptor.of(
+                Cubiomes.C_POINTER        );
+        private static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("init_abandoned_mineshaft_26_2");
+
+        private final MethodHandle handle;
+        private final FunctionDescriptor descriptor;
+        private final MethodHandle spreader;
+
+        private init_abandoned_mineshaft_26_2(MethodHandle handle, FunctionDescriptor descriptor, MethodHandle spreader) {
+            this.handle = handle;
+            this.descriptor = descriptor;
+            this.spreader = spreader;
+        }
+
+        /**
+         * Variadic invoker factory for:
+         * {@snippet lang=c :
+         * LootTableContext *init_abandoned_mineshaft_26_2()
+         * }
+         */
+        public static init_abandoned_mineshaft_26_2 makeInvoker(MemoryLayout... layouts) {
+            FunctionDescriptor desc$ = BASE_DESC.appendArgumentLayouts(layouts);
+            Linker.Option fva$ = Linker.Option.firstVariadicArg(BASE_DESC.argumentLayouts().size());
+            var mh$ = Linker.nativeLinker().downcallHandle(ADDR, desc$, fva$);
+            var spreader$ = mh$.asSpreader(Object[].class, layouts.length);
+            return new init_abandoned_mineshaft_26_2(mh$, desc$, spreader$);
+        }
+
+        /**
+         * {@return the address}
+         */
+        public static MemorySegment address() {
+            return ADDR;
+        }
+
+        /**
+         * {@return the specialized method handle}
+         */
+        public MethodHandle handle() {
+            return handle;
+        }
+
+        /**
+         * {@return the specialized descriptor}
+         */
+        public FunctionDescriptor descriptor() {
+            return descriptor;
+        }
+
+        public MemorySegment apply(Object... x0) {
+            try {
+                if (TRACE_DOWNCALLS) {
+                    traceDowncall("init_abandoned_mineshaft_26_2", x0);
                 }
                 return (MemorySegment) spreader.invokeExact(x0);
             } catch(IllegalArgumentException | ClassCastException ex$)  {

@@ -17730,6 +17730,182 @@ class Cubiomes_1 extends Cubiomes$shared {
     public static int FORTRESS_PIECE_COUNT() {
         return FORTRESS_PIECE_COUNT;
     }
+
+    private static class getMineshaftPieces {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT,
+            Cubiomes.C_LONG,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("getMineshaftPieces");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int getMineshaftPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, int chunkZ)
+     * }
+     */
+    public static FunctionDescriptor getMineshaftPieces$descriptor() {
+        return getMineshaftPieces.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int getMineshaftPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, int chunkZ)
+     * }
+     */
+    public static MethodHandle getMineshaftPieces$handle() {
+        return getMineshaftPieces.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int getMineshaftPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, int chunkZ)
+     * }
+     */
+    public static MemorySegment getMineshaftPieces$address() {
+        return getMineshaftPieces.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int getMineshaftPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, int chunkZ)
+     * }
+     */
+    public static int getMineshaftPieces(MemorySegment list, int n, int mc, long seed, int chunkX, int chunkZ) {
+        var mh$ = getMineshaftPieces.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("getMineshaftPieces", list, n, mc, seed, chunkX, chunkZ);
+            }
+            return (int)mh$.invokeExact(list, n, mc, seed, chunkX, chunkZ);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+    private static final int MS_CORRIDOR = (int)0L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.MS_CORRIDOR = 0
+     * }
+     */
+    public static int MS_CORRIDOR() {
+        return MS_CORRIDOR;
+    }
+    private static final int MS_CROSSING = (int)1L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.MS_CROSSING = 1
+     * }
+     */
+    public static int MS_CROSSING() {
+        return MS_CROSSING;
+    }
+    private static final int MS_ROOM = (int)2L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.MS_ROOM = 2
+     * }
+     */
+    public static int MS_ROOM() {
+        return MS_ROOM;
+    }
+    private static final int MS_STAIRS = (int)3L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.MS_STAIRS = 3
+     * }
+     */
+    public static int MS_STAIRS() {
+        return MS_STAIRS;
+    }
+    private static final int MS_PIECE_COUNT = (int)4L;
+    /**
+     * {@snippet lang=c :
+     * enum <anonymous>.MS_PIECE_COUNT = 4
+     * }
+     */
+    public static int MS_PIECE_COUNT() {
+        return MS_PIECE_COUNT;
+    }
+
+    private static class getMineshaftLoot {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+            Cubiomes.C_INT,
+            Cubiomes.C_POINTER,
+            Cubiomes.C_INT,
+            StructureSaltConfig.layout(),
+            Cubiomes.C_INT,
+            Cubiomes.C_LONG,
+            Cubiomes.C_INT,
+            Cubiomes.C_INT
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("getMineshaftLoot");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * int getMineshaftLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, uint64_t seed, int chunkX, int chunkZ)
+     * }
+     */
+    public static FunctionDescriptor getMineshaftLoot$descriptor() {
+        return getMineshaftLoot.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * int getMineshaftLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, uint64_t seed, int chunkX, int chunkZ)
+     * }
+     */
+    public static MethodHandle getMineshaftLoot$handle() {
+        return getMineshaftLoot.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * int getMineshaftLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, uint64_t seed, int chunkX, int chunkZ)
+     * }
+     */
+    public static MemorySegment getMineshaftLoot$address() {
+        return getMineshaftLoot.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * int getMineshaftLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, uint64_t seed, int chunkX, int chunkZ)
+     * }
+     */
+    public static int getMineshaftLoot(MemorySegment list, int n, MemorySegment ssconf, int mc, long seed, int chunkX, int chunkZ) {
+        var mh$ = getMineshaftLoot.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("getMineshaftLoot", list, n, ssconf, mc, seed, chunkX, chunkZ);
+            }
+            return (int)mh$.invokeExact(list, n, ssconf, mc, seed, chunkX, chunkZ);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
     private static final int AndesiteOre = (int)0L;
     /**
      * {@snippet lang=c :
@@ -18872,1522 +19048,1612 @@ class Cubiomes_1 extends Cubiomes$shared {
     public static int ITEM_ABANDONED_CAMP_MAP() {
         return ITEM_ABANDONED_CAMP_MAP;
     }
-    private static final int ITEM_ANCIENT_DEBRIS = (int)1L;
+    private static final int ITEM_ACTIVATOR_RAIL = (int)1L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_ANCIENT_DEBRIS = 1
+     * enum Item.ITEM_ACTIVATOR_RAIL = 1
+     * }
+     */
+    public static int ITEM_ACTIVATOR_RAIL() {
+        return ITEM_ACTIVATOR_RAIL;
+    }
+    private static final int ITEM_ANCIENT_DEBRIS = (int)2L;
+    /**
+     * {@snippet lang=c :
+     * enum Item.ITEM_ANCIENT_DEBRIS = 2
      * }
      */
     public static int ITEM_ANCIENT_DEBRIS() {
         return ITEM_ANCIENT_DEBRIS;
     }
-    private static final int ITEM_APPLE = (int)2L;
+    private static final int ITEM_APPLE = (int)3L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_APPLE = 2
+     * enum Item.ITEM_APPLE = 3
      * }
      */
     public static int ITEM_APPLE() {
         return ITEM_APPLE;
     }
-    private static final int ITEM_ARROW = (int)3L;
+    private static final int ITEM_ARROW = (int)4L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_ARROW = 3
+     * enum Item.ITEM_ARROW = 4
      * }
      */
     public static int ITEM_ARROW() {
         return ITEM_ARROW;
     }
-    private static final int ITEM_BAMBOO = (int)4L;
+    private static final int ITEM_BAMBOO = (int)5L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_BAMBOO = 4
+     * enum Item.ITEM_BAMBOO = 5
      * }
      */
     public static int ITEM_BAMBOO() {
         return ITEM_BAMBOO;
     }
-    private static final int ITEM_BEETROOT_SEEDS = (int)5L;
+    private static final int ITEM_BEETROOT_SEEDS = (int)6L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_BEETROOT_SEEDS = 5
+     * enum Item.ITEM_BEETROOT_SEEDS = 6
      * }
      */
     public static int ITEM_BEETROOT_SEEDS() {
         return ITEM_BEETROOT_SEEDS;
     }
-    private static final int ITEM_BELL = (int)6L;
+    private static final int ITEM_BELL = (int)7L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_BELL = 6
+     * enum Item.ITEM_BELL = 7
      * }
      */
     public static int ITEM_BELL() {
         return ITEM_BELL;
     }
-    private static final int ITEM_BOLT_ARMOR_TRIM_SMITHING_TEMPLATE = (int)7L;
+    private static final int ITEM_BOLT_ARMOR_TRIM_SMITHING_TEMPLATE = (int)8L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_BOLT_ARMOR_TRIM_SMITHING_TEMPLATE = 7
+     * enum Item.ITEM_BOLT_ARMOR_TRIM_SMITHING_TEMPLATE = 8
      * }
      */
     public static int ITEM_BOLT_ARMOR_TRIM_SMITHING_TEMPLATE() {
         return ITEM_BOLT_ARMOR_TRIM_SMITHING_TEMPLATE;
     }
-    private static final int ITEM_BONE = (int)8L;
+    private static final int ITEM_BONE = (int)9L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_BONE = 8
+     * enum Item.ITEM_BONE = 9
      * }
      */
     public static int ITEM_BONE() {
         return ITEM_BONE;
     }
-    private static final int ITEM_BONE_BLOCK = (int)9L;
+    private static final int ITEM_BONE_BLOCK = (int)10L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_BONE_BLOCK = 9
+     * enum Item.ITEM_BONE_BLOCK = 10
      * }
      */
     public static int ITEM_BONE_BLOCK() {
         return ITEM_BONE_BLOCK;
     }
-    private static final int ITEM_BOOK = (int)10L;
+    private static final int ITEM_BOOK = (int)11L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_BOOK = 10
+     * enum Item.ITEM_BOOK = 11
      * }
      */
     public static int ITEM_BOOK() {
         return ITEM_BOOK;
     }
-    private static final int ITEM_BOW = (int)11L;
+    private static final int ITEM_BOW = (int)12L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_BOW = 11
+     * enum Item.ITEM_BOW = 12
      * }
      */
     public static int ITEM_BOW() {
         return ITEM_BOW;
     }
-    private static final int ITEM_BOWL = (int)12L;
+    private static final int ITEM_BOWL = (int)13L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_BOWL = 12
+     * enum Item.ITEM_BOWL = 13
      * }
      */
     public static int ITEM_BOWL() {
         return ITEM_BOWL;
     }
-    private static final int ITEM_BREAD = (int)13L;
+    private static final int ITEM_BREAD = (int)14L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_BREAD = 13
+     * enum Item.ITEM_BREAD = 14
      * }
      */
     public static int ITEM_BREAD() {
         return ITEM_BREAD;
     }
-    private static final int ITEM_BUCKET = (int)14L;
+    private static final int ITEM_BUCKET = (int)15L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_BUCKET = 14
+     * enum Item.ITEM_BUCKET = 15
      * }
      */
     public static int ITEM_BUCKET() {
         return ITEM_BUCKET;
     }
-    private static final int ITEM_BUNDLE = (int)15L;
+    private static final int ITEM_BUNDLE = (int)16L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_BUNDLE = 15
+     * enum Item.ITEM_BUNDLE = 16
      * }
      */
     public static int ITEM_BUNDLE() {
         return ITEM_BUNDLE;
     }
-    private static final int ITEM_BURIED_ANCIENT_CITY_MAP = (int)16L;
+    private static final int ITEM_BURIED_ANCIENT_CITY_MAP = (int)17L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_BURIED_ANCIENT_CITY_MAP = 16
+     * enum Item.ITEM_BURIED_ANCIENT_CITY_MAP = 17
      * }
      */
     public static int ITEM_BURIED_ANCIENT_CITY_MAP() {
         return ITEM_BURIED_ANCIENT_CITY_MAP;
     }
-    private static final int ITEM_BURIED_MINESHAFT_MAP = (int)17L;
+    private static final int ITEM_BURIED_MINESHAFT_MAP = (int)18L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_BURIED_MINESHAFT_MAP = 17
+     * enum Item.ITEM_BURIED_MINESHAFT_MAP = 18
      * }
      */
     public static int ITEM_BURIED_MINESHAFT_MAP() {
         return ITEM_BURIED_MINESHAFT_MAP;
     }
-    private static final int ITEM_BURIED_TRIAL_CHAMBERS_MAP = (int)18L;
+    private static final int ITEM_BURIED_TRIAL_CHAMBERS_MAP = (int)19L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_BURIED_TRIAL_CHAMBERS_MAP = 18
+     * enum Item.ITEM_BURIED_TRIAL_CHAMBERS_MAP = 19
      * }
      */
     public static int ITEM_BURIED_TRIAL_CHAMBERS_MAP() {
         return ITEM_BURIED_TRIAL_CHAMBERS_MAP;
     }
-    private static final int ITEM_CARROT = (int)19L;
+    private static final int ITEM_CARROT = (int)20L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_CARROT = 19
+     * enum Item.ITEM_CARROT = 20
      * }
      */
     public static int ITEM_CARROT() {
         return ITEM_CARROT;
     }
-    private static final int ITEM_CHAIN = (int)20L;
+    private static final int ITEM_CHAIN = (int)21L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_CHAIN = 20
+     * enum Item.ITEM_CHAIN = 21
      * }
      */
     public static int ITEM_CHAIN() {
         return ITEM_CHAIN;
     }
-    private static final int ITEM_IRON_CHAIN = (int)20L;
+    private static final int ITEM_IRON_CHAIN = (int)21L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_IRON_CHAIN = 20
+     * enum Item.ITEM_IRON_CHAIN = 21
      * }
      */
     public static int ITEM_IRON_CHAIN() {
         return ITEM_IRON_CHAIN;
     }
-    private static final int ITEM_CLOCK = (int)21L;
+    private static final int ITEM_CLOCK = (int)22L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_CLOCK = 21
+     * enum Item.ITEM_CLOCK = 22
      * }
      */
     public static int ITEM_CLOCK() {
         return ITEM_CLOCK;
     }
-    private static final int ITEM_COAL = (int)22L;
+    private static final int ITEM_COAL = (int)23L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_COAL = 22
+     * enum Item.ITEM_COAL = 23
      * }
      */
     public static int ITEM_COAL() {
         return ITEM_COAL;
     }
-    private static final int ITEM_COAST_ARMOR_TRIM_SMITHING_TEMPLATE = (int)23L;
+    private static final int ITEM_COAST_ARMOR_TRIM_SMITHING_TEMPLATE = (int)24L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_COAST_ARMOR_TRIM_SMITHING_TEMPLATE = 23
+     * enum Item.ITEM_COAST_ARMOR_TRIM_SMITHING_TEMPLATE = 24
      * }
      */
     public static int ITEM_COAST_ARMOR_TRIM_SMITHING_TEMPLATE() {
         return ITEM_COAST_ARMOR_TRIM_SMITHING_TEMPLATE;
     }
-    private static final int ITEM_COBWEB = (int)24L;
+    private static final int ITEM_COBWEB = (int)25L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_COBWEB = 24
+     * enum Item.ITEM_COBWEB = 25
      * }
      */
     public static int ITEM_COBWEB() {
         return ITEM_COBWEB;
     }
-    private static final int ITEM_COMPASS = (int)25L;
+    private static final int ITEM_COMPASS = (int)26L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_COMPASS = 25
+     * enum Item.ITEM_COMPASS = 26
      * }
      */
     public static int ITEM_COMPASS() {
         return ITEM_COMPASS;
     }
-    private static final int ITEM_COOKED_COD = (int)26L;
+    private static final int ITEM_COOKED_COD = (int)27L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_COOKED_COD = 26
+     * enum Item.ITEM_COOKED_COD = 27
      * }
      */
     public static int ITEM_COOKED_COD() {
         return ITEM_COOKED_COD;
     }
-    private static final int ITEM_COOKED_PORKCHOP = (int)27L;
+    private static final int ITEM_COOKED_PORKCHOP = (int)28L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_COOKED_PORKCHOP = 27
+     * enum Item.ITEM_COOKED_PORKCHOP = 28
      * }
      */
     public static int ITEM_COOKED_PORKCHOP() {
         return ITEM_COOKED_PORKCHOP;
     }
-    private static final int ITEM_COOKED_SALMON = (int)28L;
+    private static final int ITEM_COOKED_SALMON = (int)29L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_COOKED_SALMON = 28
+     * enum Item.ITEM_COOKED_SALMON = 29
      * }
      */
     public static int ITEM_COOKED_SALMON() {
         return ITEM_COOKED_SALMON;
     }
-    private static final int ITEM_COPPER_AXE = (int)29L;
+    private static final int ITEM_COPPER_AXE = (int)30L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_COPPER_AXE = 29
+     * enum Item.ITEM_COPPER_AXE = 30
      * }
      */
     public static int ITEM_COPPER_AXE() {
         return ITEM_COPPER_AXE;
     }
-    private static final int ITEM_COPPER_BOOTS = (int)30L;
+    private static final int ITEM_COPPER_BOOTS = (int)31L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_COPPER_BOOTS = 30
+     * enum Item.ITEM_COPPER_BOOTS = 31
      * }
      */
     public static int ITEM_COPPER_BOOTS() {
         return ITEM_COPPER_BOOTS;
     }
-    private static final int ITEM_COPPER_CHESTPLATE = (int)31L;
+    private static final int ITEM_COPPER_CHESTPLATE = (int)32L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_COPPER_CHESTPLATE = 31
+     * enum Item.ITEM_COPPER_CHESTPLATE = 32
      * }
      */
     public static int ITEM_COPPER_CHESTPLATE() {
         return ITEM_COPPER_CHESTPLATE;
     }
-    private static final int ITEM_COPPER_HORSE_ARMOR = (int)32L;
+    private static final int ITEM_COPPER_HORSE_ARMOR = (int)33L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_COPPER_HORSE_ARMOR = 32
+     * enum Item.ITEM_COPPER_HORSE_ARMOR = 33
      * }
      */
     public static int ITEM_COPPER_HORSE_ARMOR() {
         return ITEM_COPPER_HORSE_ARMOR;
     }
-    private static final int ITEM_COPPER_INGOT = (int)33L;
+    private static final int ITEM_COPPER_INGOT = (int)34L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_COPPER_INGOT = 33
+     * enum Item.ITEM_COPPER_INGOT = 34
      * }
      */
     public static int ITEM_COPPER_INGOT() {
         return ITEM_COPPER_INGOT;
     }
-    private static final int ITEM_COPPER_LEGGINGS = (int)34L;
+    private static final int ITEM_COPPER_LEGGINGS = (int)35L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_COPPER_LEGGINGS = 34
+     * enum Item.ITEM_COPPER_LEGGINGS = 35
      * }
      */
     public static int ITEM_COPPER_LEGGINGS() {
         return ITEM_COPPER_LEGGINGS;
     }
-    private static final int ITEM_COPPER_NAUTILUS_ARMOR = (int)35L;
+    private static final int ITEM_COPPER_NAUTILUS_ARMOR = (int)36L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_COPPER_NAUTILUS_ARMOR = 35
+     * enum Item.ITEM_COPPER_NAUTILUS_ARMOR = 36
      * }
      */
     public static int ITEM_COPPER_NAUTILUS_ARMOR() {
         return ITEM_COPPER_NAUTILUS_ARMOR;
     }
-    private static final int ITEM_COPPER_SPEAR = (int)36L;
+    private static final int ITEM_COPPER_SPEAR = (int)37L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_COPPER_SPEAR = 36
+     * enum Item.ITEM_COPPER_SPEAR = 37
      * }
      */
     public static int ITEM_COPPER_SPEAR() {
         return ITEM_COPPER_SPEAR;
     }
-    private static final int ITEM_COPPER_SWORD = (int)37L;
+    private static final int ITEM_COPPER_SWORD = (int)38L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_COPPER_SWORD = 37
+     * enum Item.ITEM_COPPER_SWORD = 38
      * }
      */
     public static int ITEM_COPPER_SWORD() {
         return ITEM_COPPER_SWORD;
     }
-    private static final int ITEM_CROSSBOW = (int)38L;
+    private static final int ITEM_CROSSBOW = (int)39L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_CROSSBOW = 38
+     * enum Item.ITEM_CROSSBOW = 39
      * }
      */
     public static int ITEM_CROSSBOW() {
         return ITEM_CROSSBOW;
     }
-    private static final int ITEM_CRYING_OBSIDIAN = (int)39L;
+    private static final int ITEM_CRYING_OBSIDIAN = (int)40L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_CRYING_OBSIDIAN = 39
+     * enum Item.ITEM_CRYING_OBSIDIAN = 40
      * }
      */
     public static int ITEM_CRYING_OBSIDIAN() {
         return ITEM_CRYING_OBSIDIAN;
     }
-    private static final int ITEM_DARK_OAK_LOG = (int)40L;
+    private static final int ITEM_DARK_OAK_LOG = (int)41L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_DARK_OAK_LOG = 40
+     * enum Item.ITEM_DARK_OAK_LOG = 41
      * }
      */
     public static int ITEM_DARK_OAK_LOG() {
         return ITEM_DARK_OAK_LOG;
     }
-    private static final int ITEM_DESERT_PYRAMID_MAP = (int)41L;
+    private static final int ITEM_DESERT_PYRAMID_MAP = (int)42L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_DESERT_PYRAMID_MAP = 41
+     * enum Item.ITEM_DESERT_PYRAMID_MAP = 42
      * }
      */
     public static int ITEM_DESERT_PYRAMID_MAP() {
         return ITEM_DESERT_PYRAMID_MAP;
     }
-    private static final int ITEM_DIAMOND = (int)42L;
+    private static final int ITEM_DETECTOR_RAIL = (int)43L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_DIAMOND = 42
+     * enum Item.ITEM_DETECTOR_RAIL = 43
+     * }
+     */
+    public static int ITEM_DETECTOR_RAIL() {
+        return ITEM_DETECTOR_RAIL;
+    }
+    private static final int ITEM_DIAMOND = (int)44L;
+    /**
+     * {@snippet lang=c :
+     * enum Item.ITEM_DIAMOND = 44
      * }
      */
     public static int ITEM_DIAMOND() {
         return ITEM_DIAMOND;
     }
-    private static final int ITEM_DIAMOND_AXE = (int)43L;
+    private static final int ITEM_DIAMOND_AXE = (int)45L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_DIAMOND_AXE = 43
+     * enum Item.ITEM_DIAMOND_AXE = 45
      * }
      */
     public static int ITEM_DIAMOND_AXE() {
         return ITEM_DIAMOND_AXE;
     }
-    private static final int ITEM_DIAMOND_BLOCK = (int)44L;
+    private static final int ITEM_DIAMOND_BLOCK = (int)46L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_DIAMOND_BLOCK = 44
+     * enum Item.ITEM_DIAMOND_BLOCK = 46
      * }
      */
     public static int ITEM_DIAMOND_BLOCK() {
         return ITEM_DIAMOND_BLOCK;
     }
-    private static final int ITEM_DIAMOND_BOOTS = (int)45L;
+    private static final int ITEM_DIAMOND_BOOTS = (int)47L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_DIAMOND_BOOTS = 45
+     * enum Item.ITEM_DIAMOND_BOOTS = 47
      * }
      */
     public static int ITEM_DIAMOND_BOOTS() {
         return ITEM_DIAMOND_BOOTS;
     }
-    private static final int ITEM_DIAMOND_CHESTPLATE = (int)46L;
+    private static final int ITEM_DIAMOND_CHESTPLATE = (int)48L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_DIAMOND_CHESTPLATE = 46
+     * enum Item.ITEM_DIAMOND_CHESTPLATE = 48
      * }
      */
     public static int ITEM_DIAMOND_CHESTPLATE() {
         return ITEM_DIAMOND_CHESTPLATE;
     }
-    private static final int ITEM_DIAMOND_HELMET = (int)47L;
+    private static final int ITEM_DIAMOND_HELMET = (int)49L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_DIAMOND_HELMET = 47
+     * enum Item.ITEM_DIAMOND_HELMET = 49
      * }
      */
     public static int ITEM_DIAMOND_HELMET() {
         return ITEM_DIAMOND_HELMET;
     }
-    private static final int ITEM_DIAMOND_HORSE_ARMOR = (int)48L;
+    private static final int ITEM_DIAMOND_HORSE_ARMOR = (int)50L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_DIAMOND_HORSE_ARMOR = 48
+     * enum Item.ITEM_DIAMOND_HORSE_ARMOR = 50
      * }
      */
     public static int ITEM_DIAMOND_HORSE_ARMOR() {
         return ITEM_DIAMOND_HORSE_ARMOR;
     }
-    private static final int ITEM_DIAMOND_LEGGINGS = (int)49L;
+    private static final int ITEM_DIAMOND_LEGGINGS = (int)51L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_DIAMOND_LEGGINGS = 49
+     * enum Item.ITEM_DIAMOND_LEGGINGS = 51
      * }
      */
     public static int ITEM_DIAMOND_LEGGINGS() {
         return ITEM_DIAMOND_LEGGINGS;
     }
-    private static final int ITEM_DIAMOND_NAUTILUS_ARMOR = (int)50L;
+    private static final int ITEM_DIAMOND_NAUTILUS_ARMOR = (int)52L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_DIAMOND_NAUTILUS_ARMOR = 50
+     * enum Item.ITEM_DIAMOND_NAUTILUS_ARMOR = 52
      * }
      */
     public static int ITEM_DIAMOND_NAUTILUS_ARMOR() {
         return ITEM_DIAMOND_NAUTILUS_ARMOR;
     }
-    private static final int ITEM_DIAMOND_PICKAXE = (int)51L;
+    private static final int ITEM_DIAMOND_PICKAXE = (int)53L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_DIAMOND_PICKAXE = 51
+     * enum Item.ITEM_DIAMOND_PICKAXE = 53
      * }
      */
     public static int ITEM_DIAMOND_PICKAXE() {
         return ITEM_DIAMOND_PICKAXE;
     }
-    private static final int ITEM_DIAMOND_SHOVEL = (int)52L;
+    private static final int ITEM_DIAMOND_SHOVEL = (int)54L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_DIAMOND_SHOVEL = 52
+     * enum Item.ITEM_DIAMOND_SHOVEL = 54
      * }
      */
     public static int ITEM_DIAMOND_SHOVEL() {
         return ITEM_DIAMOND_SHOVEL;
     }
-    private static final int ITEM_DIAMOND_SPEAR = (int)53L;
+    private static final int ITEM_DIAMOND_SPEAR = (int)55L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_DIAMOND_SPEAR = 53
+     * enum Item.ITEM_DIAMOND_SPEAR = 55
      * }
      */
     public static int ITEM_DIAMOND_SPEAR() {
         return ITEM_DIAMOND_SPEAR;
     }
-    private static final int ITEM_DIAMOND_SWORD = (int)54L;
+    private static final int ITEM_DIAMOND_SWORD = (int)56L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_DIAMOND_SWORD = 54
+     * enum Item.ITEM_DIAMOND_SWORD = 56
      * }
      */
     public static int ITEM_DIAMOND_SWORD() {
         return ITEM_DIAMOND_SWORD;
     }
-    private static final int ITEM_DUNE_ARMOR_TRIM_SMITHING_TEMPLATE = (int)55L;
+    private static final int ITEM_DUNE_ARMOR_TRIM_SMITHING_TEMPLATE = (int)57L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_DUNE_ARMOR_TRIM_SMITHING_TEMPLATE = 55
+     * enum Item.ITEM_DUNE_ARMOR_TRIM_SMITHING_TEMPLATE = 57
      * }
      */
     public static int ITEM_DUNE_ARMOR_TRIM_SMITHING_TEMPLATE() {
         return ITEM_DUNE_ARMOR_TRIM_SMITHING_TEMPLATE;
     }
-    private static final int ITEM_EMERALD = (int)56L;
+    private static final int ITEM_EMERALD = (int)58L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_EMERALD = 56
+     * enum Item.ITEM_EMERALD = 58
      * }
      */
     public static int ITEM_EMERALD() {
         return ITEM_EMERALD;
     }
-    private static final int ITEM_EMERALD_BLOCK = (int)57L;
+    private static final int ITEM_EMERALD_BLOCK = (int)59L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_EMERALD_BLOCK = 57
+     * enum Item.ITEM_EMERALD_BLOCK = 59
      * }
      */
     public static int ITEM_EMERALD_BLOCK() {
         return ITEM_EMERALD_BLOCK;
     }
-    private static final int ITEM_ENCHANTED_GOLDEN_APPLE = (int)58L;
+    private static final int ITEM_ENCHANTED_GOLDEN_APPLE = (int)60L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_ENCHANTED_GOLDEN_APPLE = 58
+     * enum Item.ITEM_ENCHANTED_GOLDEN_APPLE = 60
      * }
      */
     public static int ITEM_ENCHANTED_GOLDEN_APPLE() {
         return ITEM_ENCHANTED_GOLDEN_APPLE;
     }
-    private static final int ITEM_ENDER_PEARL = (int)59L;
+    private static final int ITEM_ENDER_PEARL = (int)61L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_ENDER_PEARL = 59
+     * enum Item.ITEM_ENDER_PEARL = 61
      * }
      */
     public static int ITEM_ENDER_PEARL() {
         return ITEM_ENDER_PEARL;
     }
-    private static final int ITEM_EXPERIENCE_BOTTLE = (int)60L;
+    private static final int ITEM_EXPERIENCE_BOTTLE = (int)62L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_EXPERIENCE_BOTTLE = 60
+     * enum Item.ITEM_EXPERIENCE_BOTTLE = 62
      * }
      */
     public static int ITEM_EXPERIENCE_BOTTLE() {
         return ITEM_EXPERIENCE_BOTTLE;
     }
-    private static final int ITEM_EYE_ARMOR_TRIM_SMITHING_TEMPLATE = (int)61L;
+    private static final int ITEM_EYE_ARMOR_TRIM_SMITHING_TEMPLATE = (int)63L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_EYE_ARMOR_TRIM_SMITHING_TEMPLATE = 61
+     * enum Item.ITEM_EYE_ARMOR_TRIM_SMITHING_TEMPLATE = 63
      * }
      */
     public static int ITEM_EYE_ARMOR_TRIM_SMITHING_TEMPLATE() {
         return ITEM_EYE_ARMOR_TRIM_SMITHING_TEMPLATE;
     }
-    private static final int ITEM_FEATHER = (int)62L;
+    private static final int ITEM_FEATHER = (int)64L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_FEATHER = 62
+     * enum Item.ITEM_FEATHER = 64
      * }
      */
     public static int ITEM_FEATHER() {
         return ITEM_FEATHER;
     }
-    private static final int ITEM_FIRE_CHARGE = (int)63L;
+    private static final int ITEM_FIRE_CHARGE = (int)65L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_FIRE_CHARGE = 63
+     * enum Item.ITEM_FIRE_CHARGE = 65
      * }
      */
     public static int ITEM_FIRE_CHARGE() {
         return ITEM_FIRE_CHARGE;
     }
-    private static final int ITEM_FIREWORK_ROCKET = (int)64L;
+    private static final int ITEM_FIREWORK_ROCKET = (int)66L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_FIREWORK_ROCKET = 64
+     * enum Item.ITEM_FIREWORK_ROCKET = 66
      * }
      */
     public static int ITEM_FIREWORK_ROCKET() {
         return ITEM_FIREWORK_ROCKET;
     }
-    private static final int ITEM_FISHING_ROD = (int)65L;
+    private static final int ITEM_FISHING_ROD = (int)67L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_FISHING_ROD = 65
+     * enum Item.ITEM_FISHING_ROD = 67
      * }
      */
     public static int ITEM_FISHING_ROD() {
         return ITEM_FISHING_ROD;
     }
-    private static final int ITEM_FLINT = (int)66L;
+    private static final int ITEM_FLINT = (int)68L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_FLINT = 66
+     * enum Item.ITEM_FLINT = 68
      * }
      */
     public static int ITEM_FLINT() {
         return ITEM_FLINT;
     }
-    private static final int ITEM_FLINT_AND_STEEL = (int)67L;
+    private static final int ITEM_FLINT_AND_STEEL = (int)69L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_FLINT_AND_STEEL = 67
+     * enum Item.ITEM_FLINT_AND_STEEL = 69
      * }
      */
     public static int ITEM_FLINT_AND_STEEL() {
         return ITEM_FLINT_AND_STEEL;
     }
-    private static final int ITEM_FLOW_ARMOR_TRIM_SMITHING_TEMPLATE = (int)68L;
+    private static final int ITEM_FLOW_ARMOR_TRIM_SMITHING_TEMPLATE = (int)70L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_FLOW_ARMOR_TRIM_SMITHING_TEMPLATE = 68
+     * enum Item.ITEM_FLOW_ARMOR_TRIM_SMITHING_TEMPLATE = 70
      * }
      */
     public static int ITEM_FLOW_ARMOR_TRIM_SMITHING_TEMPLATE() {
         return ITEM_FLOW_ARMOR_TRIM_SMITHING_TEMPLATE;
     }
-    private static final int ITEM_FLOW_BANNER_PATTERN = (int)69L;
+    private static final int ITEM_FLOW_BANNER_PATTERN = (int)71L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_FLOW_BANNER_PATTERN = 69
+     * enum Item.ITEM_FLOW_BANNER_PATTERN = 71
      * }
      */
     public static int ITEM_FLOW_BANNER_PATTERN() {
         return ITEM_FLOW_BANNER_PATTERN;
     }
-    private static final int ITEM_GILDED_BLACKSTONE = (int)70L;
+    private static final int ITEM_GILDED_BLACKSTONE = (int)72L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GILDED_BLACKSTONE = 70
+     * enum Item.ITEM_GILDED_BLACKSTONE = 72
      * }
      */
     public static int ITEM_GILDED_BLACKSTONE() {
         return ITEM_GILDED_BLACKSTONE;
     }
-    private static final int ITEM_GLASS_BOTTLE = (int)71L;
+    private static final int ITEM_GLASS_BOTTLE = (int)73L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GLASS_BOTTLE = 71
+     * enum Item.ITEM_GLASS_BOTTLE = 73
      * }
      */
     public static int ITEM_GLASS_BOTTLE() {
         return ITEM_GLASS_BOTTLE;
     }
-    private static final int ITEM_GLISTERING_MELON_SLICE = (int)72L;
+    private static final int ITEM_GLISTERING_MELON_SLICE = (int)74L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GLISTERING_MELON_SLICE = 72
+     * enum Item.ITEM_GLISTERING_MELON_SLICE = 74
      * }
      */
     public static int ITEM_GLISTERING_MELON_SLICE() {
         return ITEM_GLISTERING_MELON_SLICE;
     }
-    private static final int ITEM_GOAT_HORN = (int)73L;
+    private static final int ITEM_GLOW_BERRIES = (int)75L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GOAT_HORN = 73
+     * enum Item.ITEM_GLOW_BERRIES = 75
+     * }
+     */
+    public static int ITEM_GLOW_BERRIES() {
+        return ITEM_GLOW_BERRIES;
+    }
+    private static final int ITEM_GOAT_HORN = (int)76L;
+    /**
+     * {@snippet lang=c :
+     * enum Item.ITEM_GOAT_HORN = 76
      * }
      */
     public static int ITEM_GOAT_HORN() {
         return ITEM_GOAT_HORN;
     }
-    private static final int ITEM_GOLDEN_APPLE = (int)74L;
+    private static final int ITEM_GOLDEN_APPLE = (int)77L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GOLDEN_APPLE = 74
+     * enum Item.ITEM_GOLDEN_APPLE = 77
      * }
      */
     public static int ITEM_GOLDEN_APPLE() {
         return ITEM_GOLDEN_APPLE;
     }
-    private static final int ITEM_GOLDEN_AXE = (int)75L;
+    private static final int ITEM_GOLDEN_AXE = (int)78L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GOLDEN_AXE = 75
+     * enum Item.ITEM_GOLDEN_AXE = 78
      * }
      */
     public static int ITEM_GOLDEN_AXE() {
         return ITEM_GOLDEN_AXE;
     }
-    private static final int ITEM_GOLDEN_BOOTS = (int)76L;
+    private static final int ITEM_GOLDEN_BOOTS = (int)79L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GOLDEN_BOOTS = 76
+     * enum Item.ITEM_GOLDEN_BOOTS = 79
      * }
      */
     public static int ITEM_GOLDEN_BOOTS() {
         return ITEM_GOLDEN_BOOTS;
     }
-    private static final int ITEM_GOLDEN_CARROT = (int)77L;
+    private static final int ITEM_GOLDEN_CARROT = (int)80L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GOLDEN_CARROT = 77
+     * enum Item.ITEM_GOLDEN_CARROT = 80
      * }
      */
     public static int ITEM_GOLDEN_CARROT() {
         return ITEM_GOLDEN_CARROT;
     }
-    private static final int ITEM_GOLDEN_CHESTPLATE = (int)78L;
+    private static final int ITEM_GOLDEN_CHESTPLATE = (int)81L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GOLDEN_CHESTPLATE = 78
+     * enum Item.ITEM_GOLDEN_CHESTPLATE = 81
      * }
      */
     public static int ITEM_GOLDEN_CHESTPLATE() {
         return ITEM_GOLDEN_CHESTPLATE;
     }
-    private static final int ITEM_GOLDEN_HELMET = (int)79L;
+    private static final int ITEM_GOLDEN_HELMET = (int)82L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GOLDEN_HELMET = 79
+     * enum Item.ITEM_GOLDEN_HELMET = 82
      * }
      */
     public static int ITEM_GOLDEN_HELMET() {
         return ITEM_GOLDEN_HELMET;
     }
-    private static final int ITEM_GOLDEN_HOE = (int)80L;
+    private static final int ITEM_GOLDEN_HOE = (int)83L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GOLDEN_HOE = 80
+     * enum Item.ITEM_GOLDEN_HOE = 83
      * }
      */
     public static int ITEM_GOLDEN_HOE() {
         return ITEM_GOLDEN_HOE;
     }
-    private static final int ITEM_GOLDEN_HORSE_ARMOR = (int)81L;
+    private static final int ITEM_GOLDEN_HORSE_ARMOR = (int)84L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GOLDEN_HORSE_ARMOR = 81
+     * enum Item.ITEM_GOLDEN_HORSE_ARMOR = 84
      * }
      */
     public static int ITEM_GOLDEN_HORSE_ARMOR() {
         return ITEM_GOLDEN_HORSE_ARMOR;
     }
-    private static final int ITEM_GOLDEN_LEGGINGS = (int)82L;
+    private static final int ITEM_GOLDEN_LEGGINGS = (int)85L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GOLDEN_LEGGINGS = 82
+     * enum Item.ITEM_GOLDEN_LEGGINGS = 85
      * }
      */
     public static int ITEM_GOLDEN_LEGGINGS() {
         return ITEM_GOLDEN_LEGGINGS;
     }
-    private static final int ITEM_GOLDEN_NAUTILUS_ARMOR = (int)83L;
+    private static final int ITEM_GOLDEN_NAUTILUS_ARMOR = (int)86L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GOLDEN_NAUTILUS_ARMOR = 83
+     * enum Item.ITEM_GOLDEN_NAUTILUS_ARMOR = 86
      * }
      */
     public static int ITEM_GOLDEN_NAUTILUS_ARMOR() {
         return ITEM_GOLDEN_NAUTILUS_ARMOR;
     }
-    private static final int ITEM_GOLDEN_PICKAXE = (int)84L;
+    private static final int ITEM_GOLDEN_PICKAXE = (int)87L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GOLDEN_PICKAXE = 84
+     * enum Item.ITEM_GOLDEN_PICKAXE = 87
      * }
      */
     public static int ITEM_GOLDEN_PICKAXE() {
         return ITEM_GOLDEN_PICKAXE;
     }
-    private static final int ITEM_GOLDEN_SHOVEL = (int)85L;
+    private static final int ITEM_GOLDEN_SHOVEL = (int)88L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GOLDEN_SHOVEL = 85
+     * enum Item.ITEM_GOLDEN_SHOVEL = 88
      * }
      */
     public static int ITEM_GOLDEN_SHOVEL() {
         return ITEM_GOLDEN_SHOVEL;
     }
-    private static final int ITEM_GOLDEN_SWORD = (int)86L;
+    private static final int ITEM_GOLDEN_SWORD = (int)89L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GOLDEN_SWORD = 86
+     * enum Item.ITEM_GOLDEN_SWORD = 89
      * }
      */
     public static int ITEM_GOLDEN_SWORD() {
         return ITEM_GOLDEN_SWORD;
     }
-    private static final int ITEM_GOLD_BLOCK = (int)87L;
+    private static final int ITEM_GOLD_BLOCK = (int)90L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GOLD_BLOCK = 87
+     * enum Item.ITEM_GOLD_BLOCK = 90
      * }
      */
     public static int ITEM_GOLD_BLOCK() {
         return ITEM_GOLD_BLOCK;
     }
-    private static final int ITEM_GOLD_INGOT = (int)88L;
+    private static final int ITEM_GOLD_INGOT = (int)91L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GOLD_INGOT = 88
+     * enum Item.ITEM_GOLD_INGOT = 91
      * }
      */
     public static int ITEM_GOLD_INGOT() {
         return ITEM_GOLD_INGOT;
     }
-    private static final int ITEM_GOLD_NUGGET = (int)89L;
+    private static final int ITEM_GOLD_NUGGET = (int)92L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GOLD_NUGGET = 89
+     * enum Item.ITEM_GOLD_NUGGET = 92
      * }
      */
     public static int ITEM_GOLD_NUGGET() {
         return ITEM_GOLD_NUGGET;
     }
-    private static final int ITEM_GUNPOWDER = (int)90L;
+    private static final int ITEM_GUNPOWDER = (int)93L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GUNPOWDER = 90
+     * enum Item.ITEM_GUNPOWDER = 93
      * }
      */
     public static int ITEM_GUNPOWDER() {
         return ITEM_GUNPOWDER;
     }
-    private static final int ITEM_GUSTER_BANNER_PATTERN = (int)91L;
+    private static final int ITEM_GUSTER_BANNER_PATTERN = (int)94L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_GUSTER_BANNER_PATTERN = 91
+     * enum Item.ITEM_GUSTER_BANNER_PATTERN = 94
      * }
      */
     public static int ITEM_GUSTER_BANNER_PATTERN() {
         return ITEM_GUSTER_BANNER_PATTERN;
     }
-    private static final int ITEM_HEART_OF_THE_SEA = (int)92L;
+    private static final int ITEM_HEART_OF_THE_SEA = (int)95L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_HEART_OF_THE_SEA = 92
+     * enum Item.ITEM_HEART_OF_THE_SEA = 95
      * }
      */
     public static int ITEM_HEART_OF_THE_SEA() {
         return ITEM_HEART_OF_THE_SEA;
     }
-    private static final int ITEM_HEAVY_CORE = (int)93L;
+    private static final int ITEM_HEAVY_CORE = (int)96L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_HEAVY_CORE = 93
+     * enum Item.ITEM_HEAVY_CORE = 96
      * }
      */
     public static int ITEM_HEAVY_CORE() {
         return ITEM_HEAVY_CORE;
     }
-    private static final int ITEM_HONEY_BOTTLE = (int)94L;
+    private static final int ITEM_HONEY_BOTTLE = (int)97L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_HONEY_BOTTLE = 94
+     * enum Item.ITEM_HONEY_BOTTLE = 97
      * }
      */
     public static int ITEM_HONEY_BOTTLE() {
         return ITEM_HONEY_BOTTLE;
     }
-    private static final int ITEM_IRON_AXE = (int)95L;
+    private static final int ITEM_IRON_AXE = (int)98L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_IRON_AXE = 95
+     * enum Item.ITEM_IRON_AXE = 98
      * }
      */
     public static int ITEM_IRON_AXE() {
         return ITEM_IRON_AXE;
     }
-    private static final int ITEM_IRON_BLOCK = (int)96L;
+    private static final int ITEM_IRON_BLOCK = (int)99L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_IRON_BLOCK = 96
+     * enum Item.ITEM_IRON_BLOCK = 99
      * }
      */
     public static int ITEM_IRON_BLOCK() {
         return ITEM_IRON_BLOCK;
     }
-    private static final int ITEM_IRON_BOOTS = (int)97L;
+    private static final int ITEM_IRON_BOOTS = (int)100L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_IRON_BOOTS = 97
+     * enum Item.ITEM_IRON_BOOTS = 100
      * }
      */
     public static int ITEM_IRON_BOOTS() {
         return ITEM_IRON_BOOTS;
     }
-    private static final int ITEM_IRON_CHESTPLATE = (int)98L;
+    private static final int ITEM_IRON_CHESTPLATE = (int)101L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_IRON_CHESTPLATE = 98
+     * enum Item.ITEM_IRON_CHESTPLATE = 101
      * }
      */
     public static int ITEM_IRON_CHESTPLATE() {
         return ITEM_IRON_CHESTPLATE;
     }
-    private static final int ITEM_IRON_HELMET = (int)99L;
+    private static final int ITEM_IRON_HELMET = (int)102L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_IRON_HELMET = 99
+     * enum Item.ITEM_IRON_HELMET = 102
      * }
      */
     public static int ITEM_IRON_HELMET() {
         return ITEM_IRON_HELMET;
     }
-    private static final int ITEM_IRON_HORSE_ARMOR = (int)100L;
+    private static final int ITEM_IRON_HORSE_ARMOR = (int)103L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_IRON_HORSE_ARMOR = 100
+     * enum Item.ITEM_IRON_HORSE_ARMOR = 103
      * }
      */
     public static int ITEM_IRON_HORSE_ARMOR() {
         return ITEM_IRON_HORSE_ARMOR;
     }
-    private static final int ITEM_IRON_INGOT = (int)101L;
+    private static final int ITEM_IRON_INGOT = (int)104L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_IRON_INGOT = 101
+     * enum Item.ITEM_IRON_INGOT = 104
      * }
      */
     public static int ITEM_IRON_INGOT() {
         return ITEM_IRON_INGOT;
     }
-    private static final int ITEM_IRON_LEGGINGS = (int)102L;
+    private static final int ITEM_IRON_LEGGINGS = (int)105L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_IRON_LEGGINGS = 102
+     * enum Item.ITEM_IRON_LEGGINGS = 105
      * }
      */
     public static int ITEM_IRON_LEGGINGS() {
         return ITEM_IRON_LEGGINGS;
     }
-    private static final int ITEM_IRON_NAUTILUS_ARMOR = (int)103L;
+    private static final int ITEM_IRON_NAUTILUS_ARMOR = (int)106L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_IRON_NAUTILUS_ARMOR = 103
+     * enum Item.ITEM_IRON_NAUTILUS_ARMOR = 106
      * }
      */
     public static int ITEM_IRON_NAUTILUS_ARMOR() {
         return ITEM_IRON_NAUTILUS_ARMOR;
     }
-    private static final int ITEM_IRON_NUGGET = (int)104L;
+    private static final int ITEM_IRON_NUGGET = (int)107L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_IRON_NUGGET = 104
+     * enum Item.ITEM_IRON_NUGGET = 107
      * }
      */
     public static int ITEM_IRON_NUGGET() {
         return ITEM_IRON_NUGGET;
     }
-    private static final int ITEM_IRON_PICKAXE = (int)105L;
+    private static final int ITEM_IRON_PICKAXE = (int)108L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_IRON_PICKAXE = 105
+     * enum Item.ITEM_IRON_PICKAXE = 108
      * }
      */
     public static int ITEM_IRON_PICKAXE() {
         return ITEM_IRON_PICKAXE;
     }
-    private static final int ITEM_IRON_SHOVEL = (int)106L;
+    private static final int ITEM_IRON_SHOVEL = (int)109L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_IRON_SHOVEL = 106
+     * enum Item.ITEM_IRON_SHOVEL = 109
      * }
      */
     public static int ITEM_IRON_SHOVEL() {
         return ITEM_IRON_SHOVEL;
     }
-    private static final int ITEM_IRON_SPEAR = (int)107L;
+    private static final int ITEM_IRON_SPEAR = (int)110L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_IRON_SPEAR = 107
+     * enum Item.ITEM_IRON_SPEAR = 110
      * }
      */
     public static int ITEM_IRON_SPEAR() {
         return ITEM_IRON_SPEAR;
     }
-    private static final int ITEM_IRON_SWORD = (int)108L;
+    private static final int ITEM_IRON_SWORD = (int)111L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_IRON_SWORD = 108
+     * enum Item.ITEM_IRON_SWORD = 111
      * }
      */
     public static int ITEM_IRON_SWORD() {
         return ITEM_IRON_SWORD;
     }
-    private static final int ITEM_JUNGLE_PYRAMID_MAP = (int)109L;
+    private static final int ITEM_JUNGLE_PYRAMID_MAP = (int)112L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_JUNGLE_PYRAMID_MAP = 109
+     * enum Item.ITEM_JUNGLE_PYRAMID_MAP = 112
      * }
      */
     public static int ITEM_JUNGLE_PYRAMID_MAP() {
         return ITEM_JUNGLE_PYRAMID_MAP;
     }
-    private static final int ITEM_LAPIS_LAZULI = (int)110L;
+    private static final int ITEM_LAPIS_LAZULI = (int)113L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_LAPIS_LAZULI = 110
+     * enum Item.ITEM_LAPIS_LAZULI = 113
      * }
      */
     public static int ITEM_LAPIS_LAZULI() {
         return ITEM_LAPIS_LAZULI;
     }
-    private static final int ITEM_LEAD = (int)111L;
+    private static final int ITEM_LEAD = (int)114L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_LEAD = 111
+     * enum Item.ITEM_LEAD = 114
      * }
      */
     public static int ITEM_LEAD() {
         return ITEM_LEAD;
     }
-    private static final int ITEM_LEATHER = (int)112L;
+    private static final int ITEM_LEATHER = (int)115L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_LEATHER = 112
+     * enum Item.ITEM_LEATHER = 115
      * }
      */
     public static int ITEM_LEATHER() {
         return ITEM_LEATHER;
     }
-    private static final int ITEM_LEATHER_BOOTS = (int)113L;
+    private static final int ITEM_LEATHER_BOOTS = (int)116L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_LEATHER_BOOTS = 113
+     * enum Item.ITEM_LEATHER_BOOTS = 116
      * }
      */
     public static int ITEM_LEATHER_BOOTS() {
         return ITEM_LEATHER_BOOTS;
     }
-    private static final int ITEM_LEATHER_CHESTPLATE = (int)114L;
+    private static final int ITEM_LEATHER_CHESTPLATE = (int)117L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_LEATHER_CHESTPLATE = 114
+     * enum Item.ITEM_LEATHER_CHESTPLATE = 117
      * }
      */
     public static int ITEM_LEATHER_CHESTPLATE() {
         return ITEM_LEATHER_CHESTPLATE;
     }
-    private static final int ITEM_LEATHER_HELMET = (int)115L;
+    private static final int ITEM_LEATHER_HELMET = (int)118L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_LEATHER_HELMET = 115
+     * enum Item.ITEM_LEATHER_HELMET = 118
      * }
      */
     public static int ITEM_LEATHER_HELMET() {
         return ITEM_LEATHER_HELMET;
     }
-    private static final int ITEM_LEATHER_LEGGINGS = (int)116L;
+    private static final int ITEM_LEATHER_LEGGINGS = (int)119L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_LEATHER_LEGGINGS = 116
+     * enum Item.ITEM_LEATHER_LEGGINGS = 119
      * }
      */
     public static int ITEM_LEATHER_LEGGINGS() {
         return ITEM_LEATHER_LEGGINGS;
     }
-    private static final int ITEM_LIGHT_WEIGHTED_PRESSURE_PLATE = (int)117L;
+    private static final int ITEM_LIGHT_WEIGHTED_PRESSURE_PLATE = (int)120L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_LIGHT_WEIGHTED_PRESSURE_PLATE = 117
+     * enum Item.ITEM_LIGHT_WEIGHTED_PRESSURE_PLATE = 120
      * }
      */
     public static int ITEM_LIGHT_WEIGHTED_PRESSURE_PLATE() {
         return ITEM_LIGHT_WEIGHTED_PRESSURE_PLATE;
     }
-    private static final int ITEM_LODESTONE = (int)118L;
+    private static final int ITEM_LODESTONE = (int)121L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_LODESTONE = 118
+     * enum Item.ITEM_LODESTONE = 121
      * }
      */
     public static int ITEM_LODESTONE() {
         return ITEM_LODESTONE;
     }
-    private static final int ITEM_MAGMA_CREAM = (int)119L;
+    private static final int ITEM_MAGMA_CREAM = (int)122L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_MAGMA_CREAM = 119
+     * enum Item.ITEM_MAGMA_CREAM = 122
      * }
      */
     public static int ITEM_MAGMA_CREAM() {
         return ITEM_MAGMA_CREAM;
     }
-    private static final int ITEM_MAP = (int)120L;
+    private static final int ITEM_MAP = (int)123L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_MAP = 120
+     * enum Item.ITEM_MAP = 123
      * }
      */
     public static int ITEM_MAP() {
         return ITEM_MAP;
     }
-    private static final int ITEM_MOSS_BLOCK = (int)121L;
+    private static final int ITEM_MELON_SEEDS = (int)124L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_MOSS_BLOCK = 121
+     * enum Item.ITEM_MELON_SEEDS = 124
+     * }
+     */
+    public static int ITEM_MELON_SEEDS() {
+        return ITEM_MELON_SEEDS;
+    }
+    private static final int ITEM_MOSS_BLOCK = (int)125L;
+    /**
+     * {@snippet lang=c :
+     * enum Item.ITEM_MOSS_BLOCK = 125
      * }
      */
     public static int ITEM_MOSS_BLOCK() {
         return ITEM_MOSS_BLOCK;
     }
-    private static final int ITEM_MUSIC_DISC_CREATOR = (int)122L;
+    private static final int ITEM_MUSIC_DISC_BOUNCE = (int)126L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_MUSIC_DISC_CREATOR = 122
+     * enum Item.ITEM_MUSIC_DISC_BOUNCE = 126
+     * }
+     */
+    public static int ITEM_MUSIC_DISC_BOUNCE() {
+        return ITEM_MUSIC_DISC_BOUNCE;
+    }
+    private static final int ITEM_MUSIC_DISC_CREATOR = (int)127L;
+    /**
+     * {@snippet lang=c :
+     * enum Item.ITEM_MUSIC_DISC_CREATOR = 127
      * }
      */
     public static int ITEM_MUSIC_DISC_CREATOR() {
         return ITEM_MUSIC_DISC_CREATOR;
     }
-    private static final int ITEM_MUSIC_DISC_OTHERSIDE = (int)123L;
+    private static final int ITEM_MUSIC_DISC_OTHERSIDE = (int)128L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_MUSIC_DISC_OTHERSIDE = 123
+     * enum Item.ITEM_MUSIC_DISC_OTHERSIDE = 128
      * }
      */
     public static int ITEM_MUSIC_DISC_OTHERSIDE() {
         return ITEM_MUSIC_DISC_OTHERSIDE;
     }
-    private static final int ITEM_MUSIC_DISC_PIGSTEP = (int)124L;
+    private static final int ITEM_MUSIC_DISC_PIGSTEP = (int)129L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_MUSIC_DISC_PIGSTEP = 124
+     * enum Item.ITEM_MUSIC_DISC_PIGSTEP = 129
      * }
      */
     public static int ITEM_MUSIC_DISC_PIGSTEP() {
         return ITEM_MUSIC_DISC_PIGSTEP;
     }
-    private static final int ITEM_MUSIC_DISC_PRECIPICE = (int)125L;
+    private static final int ITEM_MUSIC_DISC_PRECIPICE = (int)130L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_MUSIC_DISC_PRECIPICE = 125
+     * enum Item.ITEM_MUSIC_DISC_PRECIPICE = 130
      * }
      */
     public static int ITEM_MUSIC_DISC_PRECIPICE() {
         return ITEM_MUSIC_DISC_PRECIPICE;
     }
-    private static final int ITEM_NETHERITE_SCRAP = (int)126L;
+    private static final int ITEM_NAME_TAG = (int)131L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_NETHERITE_SCRAP = 126
+     * enum Item.ITEM_NAME_TAG = 131
+     * }
+     */
+    public static int ITEM_NAME_TAG() {
+        return ITEM_NAME_TAG;
+    }
+    private static final int ITEM_NETHERITE_SCRAP = (int)132L;
+    /**
+     * {@snippet lang=c :
+     * enum Item.ITEM_NETHERITE_SCRAP = 132
      * }
      */
     public static int ITEM_NETHERITE_SCRAP() {
         return ITEM_NETHERITE_SCRAP;
     }
-    private static final int ITEM_NETHERITE_UPGRADE_SMITHING_TEMPLATE = (int)127L;
+    private static final int ITEM_NETHERITE_UPGRADE_SMITHING_TEMPLATE = (int)133L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_NETHERITE_UPGRADE_SMITHING_TEMPLATE = 127
+     * enum Item.ITEM_NETHERITE_UPGRADE_SMITHING_TEMPLATE = 133
      * }
      */
     public static int ITEM_NETHERITE_UPGRADE_SMITHING_TEMPLATE() {
         return ITEM_NETHERITE_UPGRADE_SMITHING_TEMPLATE;
     }
-    private static final int ITEM_NETHER_WART = (int)128L;
+    private static final int ITEM_NETHER_WART = (int)134L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_NETHER_WART = 128
+     * enum Item.ITEM_NETHER_WART = 134
      * }
      */
     public static int ITEM_NETHER_WART() {
         return ITEM_NETHER_WART;
     }
-    private static final int ITEM_OBSIDIAN = (int)129L;
+    private static final int ITEM_OBSIDIAN = (int)135L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_OBSIDIAN = 129
+     * enum Item.ITEM_OBSIDIAN = 135
      * }
      */
     public static int ITEM_OBSIDIAN() {
         return ITEM_OBSIDIAN;
     }
-    private static final int ITEM_OMINOUS_BOTTLE = (int)130L;
+    private static final int ITEM_OMINOUS_BOTTLE = (int)136L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_OMINOUS_BOTTLE = 130
+     * enum Item.ITEM_OMINOUS_BOTTLE = 136
      * }
      */
     public static int ITEM_OMINOUS_BOTTLE() {
         return ITEM_OMINOUS_BOTTLE;
     }
-    private static final int ITEM_PAPER = (int)131L;
+    private static final int ITEM_PAPER = (int)137L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_PAPER = 131
+     * enum Item.ITEM_PAPER = 137
      * }
      */
     public static int ITEM_PAPER() {
         return ITEM_PAPER;
     }
-    private static final int ITEM_PIGLIN_BANNER_PATTERN = (int)132L;
+    private static final int ITEM_PIGLIN_BANNER_PATTERN = (int)138L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_PIGLIN_BANNER_PATTERN = 132
+     * enum Item.ITEM_PIGLIN_BANNER_PATTERN = 138
      * }
      */
     public static int ITEM_PIGLIN_BANNER_PATTERN() {
         return ITEM_PIGLIN_BANNER_PATTERN;
     }
-    private static final int ITEM_POISONOUS_POTATO = (int)133L;
+    private static final int ITEM_POISONOUS_POTATO = (int)139L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_POISONOUS_POTATO = 133
+     * enum Item.ITEM_POISONOUS_POTATO = 139
      * }
      */
     public static int ITEM_POISONOUS_POTATO() {
         return ITEM_POISONOUS_POTATO;
     }
-    private static final int ITEM_POTATO = (int)134L;
+    private static final int ITEM_POTATO = (int)140L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_POTATO = 134
+     * enum Item.ITEM_POTATO = 140
      * }
      */
     public static int ITEM_POTATO() {
         return ITEM_POTATO;
     }
-    private static final int ITEM_POTION = (int)135L;
+    private static final int ITEM_POTION = (int)141L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_POTION = 135
+     * enum Item.ITEM_POTION = 141
      * }
      */
     public static int ITEM_POTION() {
         return ITEM_POTION;
     }
-    private static final int ITEM_PRISMARINE_CRYSTALS = (int)136L;
+    private static final int ITEM_POWERED_RAIL = (int)142L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_PRISMARINE_CRYSTALS = 136
+     * enum Item.ITEM_POWERED_RAIL = 142
+     * }
+     */
+    public static int ITEM_POWERED_RAIL() {
+        return ITEM_POWERED_RAIL;
+    }
+    private static final int ITEM_PRISMARINE_CRYSTALS = (int)143L;
+    /**
+     * {@snippet lang=c :
+     * enum Item.ITEM_PRISMARINE_CRYSTALS = 143
      * }
      */
     public static int ITEM_PRISMARINE_CRYSTALS() {
         return ITEM_PRISMARINE_CRYSTALS;
     }
-    private static final int ITEM_PUMPKIN = (int)137L;
+    private static final int ITEM_PUMPKIN = (int)144L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_PUMPKIN = 137
+     * enum Item.ITEM_PUMPKIN = 144
      * }
      */
     public static int ITEM_PUMPKIN() {
         return ITEM_PUMPKIN;
     }
-    private static final int ITEM_RABBIT_HIDE = (int)138L;
+    private static final int ITEM_PUMPKIN_SEEDS = (int)145L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_RABBIT_HIDE = 138
+     * enum Item.ITEM_PUMPKIN_SEEDS = 145
+     * }
+     */
+    public static int ITEM_PUMPKIN_SEEDS() {
+        return ITEM_PUMPKIN_SEEDS;
+    }
+    private static final int ITEM_RABBIT_HIDE = (int)146L;
+    /**
+     * {@snippet lang=c :
+     * enum Item.ITEM_RABBIT_HIDE = 146
      * }
      */
     public static int ITEM_RABBIT_HIDE() {
         return ITEM_RABBIT_HIDE;
     }
-    private static final int ITEM_REDSTONE = (int)139L;
+    private static final int ITEM_RAIL = (int)147L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_REDSTONE = 139
+     * enum Item.ITEM_RAIL = 147
+     * }
+     */
+    public static int ITEM_RAIL() {
+        return ITEM_RAIL;
+    }
+    private static final int ITEM_REDSTONE = (int)148L;
+    /**
+     * {@snippet lang=c :
+     * enum Item.ITEM_REDSTONE = 148
      * }
      */
     public static int ITEM_REDSTONE() {
         return ITEM_REDSTONE;
     }
-    private static final int ITEM_RIB_ARMOR_TRIM_SMITHING_TEMPLATE = (int)140L;
+    private static final int ITEM_RIB_ARMOR_TRIM_SMITHING_TEMPLATE = (int)149L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_RIB_ARMOR_TRIM_SMITHING_TEMPLATE = 140
+     * enum Item.ITEM_RIB_ARMOR_TRIM_SMITHING_TEMPLATE = 149
      * }
      */
     public static int ITEM_RIB_ARMOR_TRIM_SMITHING_TEMPLATE() {
         return ITEM_RIB_ARMOR_TRIM_SMITHING_TEMPLATE;
     }
-    private static final int ITEM_ROTTEN_FLESH = (int)141L;
+    private static final int ITEM_ROTTEN_FLESH = (int)150L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_ROTTEN_FLESH = 141
+     * enum Item.ITEM_ROTTEN_FLESH = 150
      * }
      */
     public static int ITEM_ROTTEN_FLESH() {
         return ITEM_ROTTEN_FLESH;
     }
-    private static final int ITEM_SADDLE = (int)142L;
+    private static final int ITEM_SADDLE = (int)151L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_SADDLE = 142
+     * enum Item.ITEM_SADDLE = 151
      * }
      */
     public static int ITEM_SADDLE() {
         return ITEM_SADDLE;
     }
-    private static final int ITEM_SAND = (int)143L;
+    private static final int ITEM_SAND = (int)152L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_SAND = 143
+     * enum Item.ITEM_SAND = 152
      * }
      */
     public static int ITEM_SAND() {
         return ITEM_SAND;
     }
-    private static final int ITEM_SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE = (int)144L;
+    private static final int ITEM_SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE = (int)153L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE = 144
+     * enum Item.ITEM_SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE = 153
      * }
      */
     public static int ITEM_SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE() {
         return ITEM_SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE;
     }
-    private static final int ITEM_SHEARS = (int)145L;
+    private static final int ITEM_SHEARS = (int)154L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_SHEARS = 145
+     * enum Item.ITEM_SHEARS = 154
      * }
      */
     public static int ITEM_SHEARS() {
         return ITEM_SHEARS;
     }
-    private static final int ITEM_SHIELD = (int)146L;
+    private static final int ITEM_SHIELD = (int)155L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_SHIELD = 146
+     * enum Item.ITEM_SHIELD = 155
      * }
      */
     public static int ITEM_SHIELD() {
         return ITEM_SHIELD;
     }
-    private static final int ITEM_SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE = (int)147L;
+    private static final int ITEM_SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE = (int)156L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE = 147
+     * enum Item.ITEM_SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE = 156
      * }
      */
     public static int ITEM_SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE() {
         return ITEM_SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE;
     }
-    private static final int ITEM_SPECTRAL_ARROW = (int)148L;
+    private static final int ITEM_SPECTRAL_ARROW = (int)157L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_SPECTRAL_ARROW = 148
+     * enum Item.ITEM_SPECTRAL_ARROW = 157
      * }
      */
     public static int ITEM_SPECTRAL_ARROW() {
         return ITEM_SPECTRAL_ARROW;
     }
-    private static final int ITEM_SPIDER_EYE = (int)149L;
+    private static final int ITEM_SPIDER_EYE = (int)158L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_SPIDER_EYE = 149
+     * enum Item.ITEM_SPIDER_EYE = 158
      * }
      */
     public static int ITEM_SPIDER_EYE() {
         return ITEM_SPIDER_EYE;
     }
-    private static final int ITEM_SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE = (int)150L;
+    private static final int ITEM_SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE = (int)159L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE = 150
+     * enum Item.ITEM_SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE = 159
      * }
      */
     public static int ITEM_SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE() {
         return ITEM_SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE;
     }
-    private static final int ITEM_SPYGLASS = (int)151L;
+    private static final int ITEM_SPYGLASS = (int)160L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_SPYGLASS = 151
+     * enum Item.ITEM_SPYGLASS = 160
      * }
      */
     public static int ITEM_SPYGLASS() {
         return ITEM_SPYGLASS;
     }
-    private static final int ITEM_STONE_AXE = (int)152L;
+    private static final int ITEM_STONE_AXE = (int)161L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_STONE_AXE = 152
+     * enum Item.ITEM_STONE_AXE = 161
      * }
      */
     public static int ITEM_STONE_AXE() {
         return ITEM_STONE_AXE;
     }
-    private static final int ITEM_STRAW_BED = (int)153L;
+    private static final int ITEM_STRAW_BED = (int)162L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_STRAW_BED = 153
+     * enum Item.ITEM_STRAW_BED = 162
      * }
      */
     public static int ITEM_STRAW_BED() {
         return ITEM_STRAW_BED;
     }
-    private static final int ITEM_STRING = (int)154L;
+    private static final int ITEM_STRING = (int)163L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_STRING = 154
+     * enum Item.ITEM_STRING = 163
      * }
      */
     public static int ITEM_STRING() {
         return ITEM_STRING;
     }
-    private static final int ITEM_SUSPICIOUS_STEW = (int)155L;
+    private static final int ITEM_SUSPICIOUS_STEW = (int)164L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_SUSPICIOUS_STEW = 155
+     * enum Item.ITEM_SUSPICIOUS_STEW = 164
      * }
      */
     public static int ITEM_SUSPICIOUS_STEW() {
         return ITEM_SUSPICIOUS_STEW;
     }
-    private static final int ITEM_TIPPED_ARROW = (int)156L;
+    private static final int ITEM_TIPPED_ARROW = (int)165L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_TIPPED_ARROW = 156
+     * enum Item.ITEM_TIPPED_ARROW = 165
      * }
      */
     public static int ITEM_TIPPED_ARROW() {
         return ITEM_TIPPED_ARROW;
     }
-    private static final int ITEM_TNT = (int)157L;
+    private static final int ITEM_TNT = (int)166L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_TNT = 157
+     * enum Item.ITEM_TNT = 166
      * }
      */
     public static int ITEM_TNT() {
         return ITEM_TNT;
     }
-    private static final int ITEM_TRIDENT = (int)158L;
+    private static final int ITEM_TORCH = (int)167L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_TRIDENT = 158
+     * enum Item.ITEM_TORCH = 167
+     * }
+     */
+    public static int ITEM_TORCH() {
+        return ITEM_TORCH;
+    }
+    private static final int ITEM_TRIDENT = (int)168L;
+    /**
+     * {@snippet lang=c :
+     * enum Item.ITEM_TRIDENT = 168
      * }
      */
     public static int ITEM_TRIDENT() {
         return ITEM_TRIDENT;
     }
-    private static final int ITEM_TRIPWIRE_HOOK = (int)159L;
+    private static final int ITEM_TRIPWIRE_HOOK = (int)169L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_TRIPWIRE_HOOK = 159
+     * enum Item.ITEM_TRIPWIRE_HOOK = 169
      * }
      */
     public static int ITEM_TRIPWIRE_HOOK() {
         return ITEM_TRIPWIRE_HOOK;
     }
-    private static final int ITEM_WARM_OCEAN_RUINS_MAP = (int)160L;
+    private static final int ITEM_WARM_OCEAN_RUINS_MAP = (int)170L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_WARM_OCEAN_RUINS_MAP = 160
+     * enum Item.ITEM_WARM_OCEAN_RUINS_MAP = 170
      * }
      */
     public static int ITEM_WARM_OCEAN_RUINS_MAP() {
         return ITEM_WARM_OCEAN_RUINS_MAP;
     }
-    private static final int ITEM_WHEAT = (int)161L;
+    private static final int ITEM_WHEAT = (int)171L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_WHEAT = 161
+     * enum Item.ITEM_WHEAT = 171
      * }
      */
     public static int ITEM_WHEAT() {
         return ITEM_WHEAT;
     }
-    private static final int ITEM_WHITE_CANDLE = (int)162L;
+    private static final int ITEM_WHITE_CANDLE = (int)172L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_WHITE_CANDLE = 162
+     * enum Item.ITEM_WHITE_CANDLE = 172
      * }
      */
     public static int ITEM_WHITE_CANDLE() {
         return ITEM_WHITE_CANDLE;
     }
-    private static final int ITEM_WHITE_CUSHION = (int)163L;
+    private static final int ITEM_WHITE_CUSHION = (int)173L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_WHITE_CUSHION = 163
+     * enum Item.ITEM_WHITE_CUSHION = 173
      * }
      */
     public static int ITEM_WHITE_CUSHION() {
         return ITEM_WHITE_CUSHION;
     }
-    private static final int ITEM_WILD_ARMOR_TRIM_SMITHING_TEMPLATE = (int)164L;
+    private static final int ITEM_WILD_ARMOR_TRIM_SMITHING_TEMPLATE = (int)174L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_WILD_ARMOR_TRIM_SMITHING_TEMPLATE = 164
+     * enum Item.ITEM_WILD_ARMOR_TRIM_SMITHING_TEMPLATE = 174
      * }
      */
     public static int ITEM_WILD_ARMOR_TRIM_SMITHING_TEMPLATE() {
         return ITEM_WILD_ARMOR_TRIM_SMITHING_TEMPLATE;
     }
-    private static final int ITEM_WIND_CHARGE = (int)165L;
+    private static final int ITEM_WIND_CHARGE = (int)175L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_WIND_CHARGE = 165
+     * enum Item.ITEM_WIND_CHARGE = 175
      * }
      */
     public static int ITEM_WIND_CHARGE() {
         return ITEM_WIND_CHARGE;
     }
-    private static final int ITEM_WOODEN_AXE = (int)166L;
+    private static final int ITEM_WOODEN_AXE = (int)176L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_WOODEN_AXE = 166
+     * enum Item.ITEM_WOODEN_AXE = 176
      * }
      */
     public static int ITEM_WOODEN_AXE() {
         return ITEM_WOODEN_AXE;
     }
-    private static final int ITEM_WOODLAND_MANSION_MAP = (int)167L;
+    private static final int ITEM_WOODLAND_MANSION_MAP = (int)177L;
     /**
      * {@snippet lang=c :
-     * enum Item.ITEM_WOODLAND_MANSION_MAP = 167
+     * enum Item.ITEM_WOODLAND_MANSION_MAP = 177
      * }
      */
     public static int ITEM_WOODLAND_MANSION_MAP() {
         return ITEM_WOODLAND_MANSION_MAP;
     }
-    private static final int NUM_ITEMS = (int)168L;
+    private static final int NUM_ITEMS = (int)178L;
     /**
      * {@snippet lang=c :
-     * enum Item.NUM_ITEMS = 168
+     * enum Item.NUM_ITEMS = 178
      * }
      */
     public static int NUM_ITEMS() {
@@ -20918,159 +21184,6 @@ class Cubiomes_1 extends Cubiomes$shared {
      */
     public static int FLAME() {
         return FLAME;
-    }
-    private static final int INFINITY_ENCHANTMENT = (int)28L;
-    /**
-     * {@snippet lang=c :
-     * enum Enchantment.INFINITY_ENCHANTMENT = 28
-     * }
-     */
-    public static int INFINITY_ENCHANTMENT() {
-        return INFINITY_ENCHANTMENT;
-    }
-    private static final int QUICK_CHARGE = (int)29L;
-    /**
-     * {@snippet lang=c :
-     * enum Enchantment.QUICK_CHARGE = 29
-     * }
-     */
-    public static int QUICK_CHARGE() {
-        return QUICK_CHARGE;
-    }
-    private static final int MULTISHOT = (int)30L;
-    /**
-     * {@snippet lang=c :
-     * enum Enchantment.MULTISHOT = 30
-     * }
-     */
-    public static int MULTISHOT() {
-        return MULTISHOT;
-    }
-    private static final int PIERCING = (int)31L;
-    /**
-     * {@snippet lang=c :
-     * enum Enchantment.PIERCING = 31
-     * }
-     */
-    public static int PIERCING() {
-        return PIERCING;
-    }
-    private static final int IMPALING = (int)32L;
-    /**
-     * {@snippet lang=c :
-     * enum Enchantment.IMPALING = 32
-     * }
-     */
-    public static int IMPALING() {
-        return IMPALING;
-    }
-    private static final int RIPTIDE = (int)33L;
-    /**
-     * {@snippet lang=c :
-     * enum Enchantment.RIPTIDE = 33
-     * }
-     */
-    public static int RIPTIDE() {
-        return RIPTIDE;
-    }
-    private static final int LOYALTY = (int)34L;
-    /**
-     * {@snippet lang=c :
-     * enum Enchantment.LOYALTY = 34
-     * }
-     */
-    public static int LOYALTY() {
-        return LOYALTY;
-    }
-    private static final int CHANNELING = (int)35L;
-    /**
-     * {@snippet lang=c :
-     * enum Enchantment.CHANNELING = 35
-     * }
-     */
-    public static int CHANNELING() {
-        return CHANNELING;
-    }
-    private static final int DENSITY = (int)36L;
-    /**
-     * {@snippet lang=c :
-     * enum Enchantment.DENSITY = 36
-     * }
-     */
-    public static int DENSITY() {
-        return DENSITY;
-    }
-    private static final int BREACH = (int)37L;
-    /**
-     * {@snippet lang=c :
-     * enum Enchantment.BREACH = 37
-     * }
-     */
-    public static int BREACH() {
-        return BREACH;
-    }
-    private static final int WIND_BURST = (int)38L;
-    /**
-     * {@snippet lang=c :
-     * enum Enchantment.WIND_BURST = 38
-     * }
-     */
-    public static int WIND_BURST() {
-        return WIND_BURST;
-    }
-    private static final int MENDING = (int)39L;
-    /**
-     * {@snippet lang=c :
-     * enum Enchantment.MENDING = 39
-     * }
-     */
-    public static int MENDING() {
-        return MENDING;
-    }
-    private static final int UNBREAKING = (int)40L;
-    /**
-     * {@snippet lang=c :
-     * enum Enchantment.UNBREAKING = 40
-     * }
-     */
-    public static int UNBREAKING() {
-        return UNBREAKING;
-    }
-    private static final int CURSE_OF_VANISHING = (int)41L;
-    /**
-     * {@snippet lang=c :
-     * enum Enchantment.CURSE_OF_VANISHING = 41
-     * }
-     */
-    public static int CURSE_OF_VANISHING() {
-        return CURSE_OF_VANISHING;
-    }
-    private static final int CURSE_OF_BINDING = (int)42L;
-    /**
-     * {@snippet lang=c :
-     * enum Enchantment.CURSE_OF_BINDING = 42
-     * }
-     */
-    public static int CURSE_OF_BINDING() {
-        return CURSE_OF_BINDING;
-    }
-    private static final int LUNGE = (int)43L;
-    /**
-     * {@snippet lang=c :
-     * enum Enchantment.LUNGE = 43
-     * }
-     */
-    public static int LUNGE() {
-        return LUNGE;
-    }
-    private static final int EFFECT_SPEED = (int)0L;
-    /**
-     * {@snippet lang=c :
-     * enum MobEffectType.EFFECT_SPEED = 0
-     * }
-     */
-    public static int EFFECT_SPEED() {
-        return EFFECT_SPEED;
     }
 }
 

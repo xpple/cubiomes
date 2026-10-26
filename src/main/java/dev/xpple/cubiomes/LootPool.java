@@ -15,7 +15,7 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
 /**
  * {@snippet lang=c :
  * struct LootPool {
- *     int condition_count;
+ *     int pool_condition_count;
  *     LootItemCondition *conditions;
  *     int min_rolls;
  *     int max_rolls;
@@ -24,6 +24,8 @@ import static java.lang.foreign.MemoryLayout.PathElement.*;
  *     int *precomputed_loot;
  *     int entry_count;
  *     int *entry_to_item;
+ *     int *entry_conditions_index;
+ *     int *entry_conditions_count;
  *     int *entry_functions_index;
  *     int *entry_functions_count;
  *     LootFunction *loot_functions;
@@ -37,7 +39,7 @@ public class LootPool {
     }
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-        Cubiomes.C_INT.withName("condition_count"),
+        Cubiomes.C_INT.withName("pool_condition_count"),
         MemoryLayout.paddingLayout(4),
         Cubiomes.C_POINTER.withName("conditions"),
         Cubiomes.C_INT.withName("min_rolls"),
@@ -49,6 +51,8 @@ public class LootPool {
         Cubiomes.C_INT.withName("entry_count"),
         MemoryLayout.paddingLayout(4),
         Cubiomes.C_POINTER.withName("entry_to_item"),
+        Cubiomes.C_POINTER.withName("entry_conditions_index"),
+        Cubiomes.C_POINTER.withName("entry_conditions_count"),
         Cubiomes.C_POINTER.withName("entry_functions_index"),
         Cubiomes.C_POINTER.withName("entry_functions_count"),
         Cubiomes.C_POINTER.withName("loot_functions")
@@ -61,48 +65,48 @@ public class LootPool {
         return $LAYOUT;
     }
 
-    private static final OfInt condition_count$LAYOUT = (OfInt)$LAYOUT.select(groupElement("condition_count"));
+    private static final OfInt pool_condition_count$LAYOUT = (OfInt)$LAYOUT.select(groupElement("pool_condition_count"));
 
     /**
      * Layout for field:
      * {@snippet lang=c :
-     * int condition_count
+     * int pool_condition_count
      * }
      */
-    public static final OfInt condition_count$layout() {
-        return condition_count$LAYOUT;
+    public static final OfInt pool_condition_count$layout() {
+        return pool_condition_count$LAYOUT;
     }
 
-    private static final long condition_count$OFFSET = $LAYOUT.byteOffset(groupElement("condition_count"));
+    private static final long pool_condition_count$OFFSET = $LAYOUT.byteOffset(groupElement("pool_condition_count"));
 
     /**
      * Offset for field:
      * {@snippet lang=c :
-     * int condition_count
+     * int pool_condition_count
      * }
      */
-    public static final long condition_count$offset() {
-        return condition_count$OFFSET;
+    public static final long pool_condition_count$offset() {
+        return pool_condition_count$OFFSET;
     }
 
     /**
      * Getter for field:
      * {@snippet lang=c :
-     * int condition_count
+     * int pool_condition_count
      * }
      */
-    public static int condition_count(MemorySegment struct) {
-        return struct.get(condition_count$LAYOUT, condition_count$OFFSET);
+    public static int pool_condition_count(MemorySegment struct) {
+        return struct.get(pool_condition_count$LAYOUT, pool_condition_count$OFFSET);
     }
 
     /**
      * Setter for field:
      * {@snippet lang=c :
-     * int condition_count
+     * int pool_condition_count
      * }
      */
-    public static void condition_count(MemorySegment struct, int fieldValue) {
-        struct.set(condition_count$LAYOUT, condition_count$OFFSET, fieldValue);
+    public static void pool_condition_count(MemorySegment struct, int fieldValue) {
+        struct.set(pool_condition_count$LAYOUT, pool_condition_count$OFFSET, fieldValue);
     }
 
     private static final AddressLayout conditions$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("conditions"));
@@ -455,6 +459,94 @@ public class LootPool {
      */
     public static void entry_to_item(MemorySegment struct, MemorySegment fieldValue) {
         struct.set(entry_to_item$LAYOUT, entry_to_item$OFFSET, fieldValue);
+    }
+
+    private static final AddressLayout entry_conditions_index$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("entry_conditions_index"));
+
+    /**
+     * Layout for field:
+     * {@snippet lang=c :
+     * int *entry_conditions_index
+     * }
+     */
+    public static final AddressLayout entry_conditions_index$layout() {
+        return entry_conditions_index$LAYOUT;
+    }
+
+    private static final long entry_conditions_index$OFFSET = $LAYOUT.byteOffset(groupElement("entry_conditions_index"));
+
+    /**
+     * Offset for field:
+     * {@snippet lang=c :
+     * int *entry_conditions_index
+     * }
+     */
+    public static final long entry_conditions_index$offset() {
+        return entry_conditions_index$OFFSET;
+    }
+
+    /**
+     * Getter for field:
+     * {@snippet lang=c :
+     * int *entry_conditions_index
+     * }
+     */
+    public static MemorySegment entry_conditions_index(MemorySegment struct) {
+        return struct.get(entry_conditions_index$LAYOUT, entry_conditions_index$OFFSET);
+    }
+
+    /**
+     * Setter for field:
+     * {@snippet lang=c :
+     * int *entry_conditions_index
+     * }
+     */
+    public static void entry_conditions_index(MemorySegment struct, MemorySegment fieldValue) {
+        struct.set(entry_conditions_index$LAYOUT, entry_conditions_index$OFFSET, fieldValue);
+    }
+
+    private static final AddressLayout entry_conditions_count$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("entry_conditions_count"));
+
+    /**
+     * Layout for field:
+     * {@snippet lang=c :
+     * int *entry_conditions_count
+     * }
+     */
+    public static final AddressLayout entry_conditions_count$layout() {
+        return entry_conditions_count$LAYOUT;
+    }
+
+    private static final long entry_conditions_count$OFFSET = $LAYOUT.byteOffset(groupElement("entry_conditions_count"));
+
+    /**
+     * Offset for field:
+     * {@snippet lang=c :
+     * int *entry_conditions_count
+     * }
+     */
+    public static final long entry_conditions_count$offset() {
+        return entry_conditions_count$OFFSET;
+    }
+
+    /**
+     * Getter for field:
+     * {@snippet lang=c :
+     * int *entry_conditions_count
+     * }
+     */
+    public static MemorySegment entry_conditions_count(MemorySegment struct) {
+        return struct.get(entry_conditions_count$LAYOUT, entry_conditions_count$OFFSET);
+    }
+
+    /**
+     * Setter for field:
+     * {@snippet lang=c :
+     * int *entry_conditions_count
+     * }
+     */
+    public static void entry_conditions_count(MemorySegment struct, MemorySegment fieldValue) {
+        struct.set(entry_conditions_count$LAYOUT, entry_conditions_count$OFFSET, fieldValue);
     }
 
     private static final AddressLayout entry_functions_index$LAYOUT = (AddressLayout)$LAYOUT.select(groupElement("entry_functions_index"));
