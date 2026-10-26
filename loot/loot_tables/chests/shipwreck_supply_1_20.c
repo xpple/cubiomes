@@ -15,11 +15,13 @@ static int global_item_ids[18] = {ITEM_PAPER, ITEM_POTATO, ITEM_MOSS_BLOCK, ITEM
 static LootItemCondition conditions__0[0];
 static int precomputed_loot__0[84] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 9, 9, 10, 10, 11, 11, 11, 12, 13, 13, 13, 14, 14, 14, 15, 15, 15, 16, 16, 16};
 static int entry_to_item__0[17] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+static int entry_conditions_count__0[17] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static int entry_conditions_index__0[17] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static int entry_functions_count__0[17] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 static int entry_functions_index__0[17] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
 static LootFunction loot_functions__0[17];
 static const LootPool shipwreck_supply_1_20__0 = {
-    .condition_count = 0,
+    .pool_condition_count = 0,
     .conditions = conditions__0,
     .min_rolls = 3,
     .max_rolls = 10,
@@ -28,6 +30,8 @@ static const LootPool shipwreck_supply_1_20__0 = {
     .total_weight = 84,
     .precomputed_loot = precomputed_loot__0,
     .entry_to_item = entry_to_item__0,
+    .entry_conditions_index = entry_conditions_index__0,
+    .entry_conditions_count = entry_conditions_count__0,
     .entry_functions_count = entry_functions_count__0,
     .entry_functions_index = entry_functions_index__0,
     .loot_functions = loot_functions__0,
@@ -35,11 +39,13 @@ static const LootPool shipwreck_supply_1_20__0 = {
 static LootItemCondition conditions__1[0];
 static int precomputed_loot__1[6] = {0, 0, 0, 0, 0, 1};
 static int entry_to_item__1[2] = {-1, 17};
+static int entry_conditions_count__1[2] = {0, 0};
+static int entry_conditions_index__1[2] = {0, 0};
 static int entry_functions_count__1[2] = {0, 1};
 static int entry_functions_index__1[2] = {0, 0};
 static LootFunction loot_functions__1[1];
 static const LootPool shipwreck_supply_1_20__1 = {
-    .condition_count = 0,
+    .pool_condition_count = 0,
     .conditions = conditions__1,
     .min_rolls = 1,
     .max_rolls = 1,
@@ -48,6 +54,8 @@ static const LootPool shipwreck_supply_1_20__1 = {
     .total_weight = 6,
     .precomputed_loot = precomputed_loot__1,
     .entry_to_item = entry_to_item__1,
+    .entry_conditions_index = entry_conditions_index__1,
+    .entry_conditions_count = entry_conditions_count__1,
     .entry_functions_count = entry_functions_count__1,
     .entry_functions_index = entry_functions_index__1,
     .loot_functions = loot_functions__1,

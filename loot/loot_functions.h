@@ -259,6 +259,8 @@ STRUCT(LootItemCondition) {
 };
 
 void create_random_chance(LootItemCondition* lic, float chance);
+void create_location_predicate(LootItemCondition* lic, const int* biomes, int list_length);
+void create_no_op_condition(LootItemCondition* lic);
 
 typedef int (*RollCountFunction)(RandomSource*, const int, const int);
 

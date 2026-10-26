@@ -15,11 +15,13 @@ static int global_item_ids[12] = {ITEM_DIAMOND, ITEM_IRON_INGOT, ITEM_GOLD_INGOT
 static LootItemCondition conditions__0[0];
 static int precomputed_loot__0[88] = {0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 8, 9, 10, 11};
 static int entry_to_item__0[12] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+static int entry_conditions_count__0[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static int entry_conditions_index__0[12] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static int entry_functions_count__0[12] = {1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1};
 static int entry_functions_index__0[12] = {0, 1, 2, 3, 4, 5, 6, 7, 7, 7, 7, 7};
 static LootFunction loot_functions__0[8];
 static const LootPool jungle_temple_1_14__0 = {
-    .condition_count = 0,
+    .pool_condition_count = 0,
     .conditions = conditions__0,
     .min_rolls = 2,
     .max_rolls = 6,
@@ -28,6 +30,8 @@ static const LootPool jungle_temple_1_14__0 = {
     .total_weight = 88,
     .precomputed_loot = precomputed_loot__0,
     .entry_to_item = entry_to_item__0,
+    .entry_conditions_index = entry_conditions_index__0,
+    .entry_conditions_count = entry_conditions_count__0,
     .entry_functions_count = entry_functions_count__0,
     .entry_functions_index = entry_functions_index__0,
     .loot_functions = loot_functions__0,

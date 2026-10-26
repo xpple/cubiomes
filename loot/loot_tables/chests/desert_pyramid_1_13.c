@@ -15,11 +15,13 @@ static int global_item_ids[19] = {ITEM_DIAMOND, ITEM_IRON_INGOT, ITEM_GOLD_INGOT
 static LootItemCondition conditions__0[0];
 static int precomputed_loot__0[232] = {0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 13, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14};
 static int entry_to_item__0[15] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, -1};
+static int entry_conditions_count__0[15] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static int entry_conditions_index__0[15] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static int entry_functions_count__0[15] = {1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0};
 static int entry_functions_index__0[15] = {0, 1, 2, 3, 4, 5, 6, 7, 7, 7, 7, 7, 8, 8, 8};
 static LootFunction loot_functions__0[8];
 static const LootPool desert_pyramid_1_13__0 = {
-    .condition_count = 0,
+    .pool_condition_count = 0,
     .conditions = conditions__0,
     .min_rolls = 2,
     .max_rolls = 4,
@@ -28,6 +30,8 @@ static const LootPool desert_pyramid_1_13__0 = {
     .total_weight = 232,
     .precomputed_loot = precomputed_loot__0,
     .entry_to_item = entry_to_item__0,
+    .entry_conditions_index = entry_conditions_index__0,
+    .entry_conditions_count = entry_conditions_count__0,
     .entry_functions_count = entry_functions_count__0,
     .entry_functions_index = entry_functions_index__0,
     .loot_functions = loot_functions__0,
@@ -35,11 +39,13 @@ static const LootPool desert_pyramid_1_13__0 = {
 static LootItemCondition conditions__1[0];
 static int precomputed_loot__1[50] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4};
 static int entry_to_item__1[5] = {4, 15, 6, 17, 18};
+static int entry_conditions_count__1[5] = {0, 0, 0, 0, 0};
+static int entry_conditions_index__1[5] = {0, 0, 0, 0, 0};
 static int entry_functions_count__1[5] = {1, 1, 1, 1, 1};
 static int entry_functions_index__1[5] = {0, 1, 2, 3, 4};
 static LootFunction loot_functions__1[5];
 static const LootPool desert_pyramid_1_13__1 = {
-    .condition_count = 0,
+    .pool_condition_count = 0,
     .conditions = conditions__1,
     .min_rolls = 4,
     .max_rolls = 4,
@@ -48,6 +54,8 @@ static const LootPool desert_pyramid_1_13__1 = {
     .total_weight = 50,
     .precomputed_loot = precomputed_loot__1,
     .entry_to_item = entry_to_item__1,
+    .entry_conditions_index = entry_conditions_index__1,
+    .entry_conditions_count = entry_conditions_count__1,
     .entry_functions_count = entry_functions_count__1,
     .entry_functions_index = entry_functions_index__1,
     .loot_functions = loot_functions__1,

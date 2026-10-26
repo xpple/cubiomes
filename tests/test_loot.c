@@ -1,5 +1,6 @@
 #include "testing.h"
 #include "../finders.h"
+#include "../features/mineshaft.h"
 #include "../loot/items.h"
 #include "../loot/loot_tables.h"
 #include "../loot/mc_loot.h"
@@ -109,6 +110,55 @@ static int test_jungle_pyramid_loot_26_2() {
     return ret;
 }
 
+static int test_mineshaft_loot_26_3() {
+    int ret = 0;
+    uint64_t seed = 3369970434276511809ULL;
+    int mc = MC_26_3;
+
+    int x = 112, z = -48;
+
+    StructureSaltConfig saltConfig;
+    ASSERT_NONZERO(ret, getStructureSaltConfig(Mineshaft, mc, old_growth_birch_forest, &saltConfig));
+
+    Piece *pieces = malloc(200 * sizeof(Piece));
+    int count = getMineshaftLoot(pieces, 200, saltConfig, mc, seed, x >> 4, z >> 4);
+    ASSERT_EQ(ret, count, 150);
+
+    const int lootIndices[] = {3, 32, 36, 92, 102, 126, 129, 140, 148, -1};
+    uint64_t indexMask[(150 >> 6) + 1] = {0};
+    for (int i = 0; lootIndices[i] != -1; i++) indexMask[lootIndices[i] >> 6] |= (1ULL << (lootIndices[i] & 63));
+    const struct { Pos pos; uint64_t ls; } lootData[] = {
+        {{120, -20}, -4041050700429928222ULL},
+        {{104, -17}, -6582812262988681321ULL},
+        {{89,    0}, -6021927060282425232ULL},
+        {{128, -46}, -3843451099099621343ULL},
+        {{156, -65}, 7194228460717663736ULL},
+        {{160, -28}, 8746672172609158251ULL},
+        {{155, -20}, -639644489539700087ULL}, // inaccuracy, does not actually generate
+        {{154, -17}, -8781631419607476400ULL}, // inaccuracy, does not actually generate
+        {{189, -18}, 4897799277421823215ULL},
+    };
+
+    int offset = 0;
+    for (int i = 0; i < count; i++) {
+        Piece piece = pieces[i];
+        if (!(indexMask[i >> 6] & (1ULL << (i & 63)))) {
+            ASSERT_EQ(ret, piece.chestCount, 0);
+            continue;
+        }
+
+        int idx = offset++;
+        ASSERT_EQ(ret, piece.chestCount, 1);
+        ASSERT_EQ(ret, piece.chestPoses[0].x, lootData[idx].pos.x);
+        ASSERT_EQ(ret, piece.chestPoses[0].z, lootData[idx].pos.z);
+        ASSERT_EQ(ret, piece.lootSeeds[0], lootData[idx].ls);
+        ASSERT_STR_EQ(ret, piece.lootTables[0], "chests/abandoned_mineshaft");
+    }
+    free(pieces);
+
+    return ret;
+}
+
 static int test_abandoned_camp_loot_26_3() {
     int ret = 0;
 
@@ -154,6 +204,7 @@ int main() {
 
     ret += test_outpost_loot_1_21_11();
     ret += test_jungle_pyramid_loot_26_2();
+    ret += test_mineshaft_loot_26_3();
     ret += test_abandoned_camp_loot_26_3();
 
     return ret;

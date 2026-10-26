@@ -4,6 +4,7 @@
 #include "features/abandoned_camp.h"
 #include "features/end_city.h"
 #include "features/fortress.h"
+#include "features/mineshaft.h"
 #include "features/stronghold.h"
 
 #include <stdio.h>
@@ -371,6 +372,13 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
     ss_stronghold_1194 =                            {4, 19},
     ss_stronghold_263 =                             {4, 37},
 
+    ss_mineshaft_113 =                              {2,  0},
+    ss_mineshaft_1161 =                             {3,  0},
+    ss_mineshaft_1194 =                             {3,  1},
+
+    ss_mineshaft_mesa_118 =                         {3,  1},
+    ss_mineshaft_mesa_1194 =                        {3,  2},
+
     ss_ruined_portal_nether_118 =                   {4, 24},
     ss_ruined_portal_nether_1192 =                  {4, 25},
     ss_ruined_portal_nether_1194 =                  {4, 14},
@@ -503,6 +511,18 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
         else if (mc < MC_1_19_4) *ssconf = ss_stronghold_1192;
         else if (mc < MC_26_3) *ssconf = ss_stronghold_1194;
         else *ssconf = ss_stronghold_263;
+        return mc >= MC_1_13;
+    case Mineshaft:
+        if (mc < MC_1_16_1) *ssconf = ss_mineshaft_113;
+        else if (mc < MC_1_18) *ssconf = ss_mineshaft_1161;
+        else if (mc < MC_1_19_4) {
+            if (getCategory(mc, biome) == mesa) *ssconf = ss_mineshaft_mesa_118;
+            else *ssconf = ss_mineshaft_1161;
+        }
+        else {
+            if (getCategory(mc, biome) == mesa) *ssconf = ss_mineshaft_mesa_1194;
+            else *ssconf = ss_mineshaft_1194;
+        }
         return mc >= MC_1_13;
     case Ruined_Portal_N:
         if (mc < MC_1_19_2) *ssconf = ss_ruined_portal_nether_118;
@@ -697,7 +717,11 @@ int getMineshafts(int mc, uint64_t seed, int cx0, int cz0, int cx1, int cz1,
             else
             {
                 skipNextN(&s, 1);
-                if unlikely(nextDouble(&s) < 0.004)
+                int isStart;
+                if (mc == MC_B1_8) isStart = nextInt(&s, 80) == 0;
+                else if (mc < MC_1_4) isStart = nextInt(&s, 100) == 0;
+                else isStart = nextDouble(&s) < (mc < MC_1_7 ? 0.01 : 0.004);
+                if unlikely(isStart)
                 {
                     int d = i;
                     if (-i > d) d = -i;
@@ -3598,6 +3622,7 @@ int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf
         return count;
     }
     case Stronghold: return getStrongholdLoot(list, n, ssconf, mc, seed, posX >> 4, posZ >> 4);
+    case Mineshaft: return getMineshaftLoot(list, n, ssconf, mc, seed, posX >> 4, posZ >> 4);
     case Abandoned_Camp: return getAbandonedCampPieces(list, ssconf, sv, mc, seed, posX >> 4, posZ >> 4);
     // structures that have one piece and one chest
     case Treasure: {
