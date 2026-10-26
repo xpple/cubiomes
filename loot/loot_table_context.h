@@ -20,7 +20,7 @@ typedef enum GenerationMode GenerationMode;
 typedef struct LootPool LootPool;
 struct LootPool {
     // conditions
-    int condition_count;
+    int pool_condition_count;
     LootItemCondition* conditions;
 
     // roll count choice function
@@ -35,9 +35,11 @@ struct LootPool {
 
     // loot entry arrays
     int entry_count;
-    int* entry_to_item;         // entryID -> context itemID
-    int* entry_functions_index; // entryID -> ID of first loot function in functions array
-    int* entry_functions_count; // entryID -> number of functions applied to the item
+    int* entry_to_item;          // entryID -> context itemID
+    int* entry_conditions_index; // entryID -> ID of first loot condition in conditions array
+    int* entry_conditions_count; // entryID -> number of conditions applied to the item
+    int* entry_functions_index;  // entryID -> ID of first loot function in functions array
+    int* entry_functions_count;  // entryID -> number of functions applied to the item
 
     // loot function array, containing all the extra processors that get applied to the item
     LootFunction* loot_functions;

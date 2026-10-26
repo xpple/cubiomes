@@ -15,11 +15,13 @@ static int global_item_ids[5] = {ITEM_EMERALD, ITEM_WIND_CHARGE, ITEM_TIPPED_ARR
 static LootItemCondition conditions__0[0];
 static int precomputed_loot__0[15] = {0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4};
 static int entry_to_item__0[5] = {0, 1, 2, 3, 4};
+static int entry_conditions_count__0[5] = {0, 0, 0, 0, 0};
+static int entry_conditions_index__0[5] = {0, 0, 0, 0, 0};
 static int entry_functions_count__0[5] = {1, 1, 2, 1, 2};
 static int entry_functions_index__0[5] = {0, 1, 2, 4, 5};
 static LootFunction loot_functions__0[7];
 static const LootPool reward_ominous_common_1_21_1__0 = {
-    .condition_count = 0,
+    .pool_condition_count = 0,
     .conditions = conditions__0,
     .min_rolls = 1,
     .max_rolls = 1,
@@ -28,6 +30,8 @@ static const LootPool reward_ominous_common_1_21_1__0 = {
     .total_weight = 15,
     .precomputed_loot = precomputed_loot__0,
     .entry_to_item = entry_to_item__0,
+    .entry_conditions_index = entry_conditions_index__0,
+    .entry_conditions_count = entry_conditions_count__0,
     .entry_functions_count = entry_functions_count__0,
     .entry_functions_index = entry_functions_index__0,
     .loot_functions = loot_functions__0,

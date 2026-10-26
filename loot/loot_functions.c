@@ -108,10 +108,24 @@ static int random_chance_condition(RandomSource* rand, const void* params) {
     return absNextFloat(rand) < probability;
 }
 
+static int location_predicate_condition(RandomSource* rand, const void* params) {
+    (void)rand;
+    (void)params;
+    // approximation, the chest is assumed to be outside the allowed biome list
+    return 0;
+}
+
 void create_random_chance(LootItemCondition* lic, float chance) {
     lic->fun = random_chance_condition;
     lic->params = lic->params_float;
     lic->params_float[0] = chance;
+}
+
+void create_location_predicate(LootItemCondition* lic, const int* biomes, const int list_length) {
+    (void)biomes;
+    (void)list_length;
+    lic->fun = location_predicate_condition;
+    lic->params = NULL;
 }
 
 // ----------------------------------------------------------------------------------------

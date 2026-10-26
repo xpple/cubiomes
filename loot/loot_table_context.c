@@ -70,7 +70,7 @@ static void generate_loot_pool(LootTableContext* context, int pool_index)
 {
     const LootPool* pool = &(context->loot_pools[pool_index]);
 
-    const int condition_count = pool->condition_count;
+    const int condition_count = pool->pool_condition_count;
     for (int i = 0; i < condition_count; i++) {
         const LootItemCondition* condition = &pool->conditions[i];
         if (!condition->fun(&context->prng_state, condition->params)) {
@@ -82,11 +82,67 @@ static void generate_loot_pool(LootTableContext* context, int pool_index)
     RollCountFunction roll_choice = pool->roll_count_function;
     const int rolls = roll_choice(&(context->prng_state), pool->min_rolls, pool->max_rolls);
 
+    if (rolls <= 0 || pool->entry_count == 0) {
+        return;
+    }
+
+    const int last = pool->entry_count - 1;
+    const int has_entry_conditions = pool->entry_conditions_index[last] + pool->entry_conditions_count[last] > pool->pool_condition_count;
+
+    // recover entry weights only for pools with conditional entries
+    int entry_weights[has_entry_conditions ? pool->entry_count : 1];
+    if (has_entry_conditions) {
+        memset(entry_weights, 0, sizeof(entry_weights));
+        for (int w = 0; w < pool->total_weight; w++) {
+            entry_weights[pool->precomputed_loot[w]]++;
+        }
+    }
+
     for (int r = 0; r < rolls; r++)
     {
-        // roll a weighted random entry
-        int w = pool->entry_count > 1 ? absNextInt(&context->prng_state, pool->total_weight) : 0;
-        int entry = pool->precomputed_loot[w];
+        int entry = -1;
+        if (!has_entry_conditions) {
+            // fast path
+            if (pool->total_weight == 0) {
+                continue;
+            }
+
+            int multiple_entries = pool->precomputed_loot[0] != pool->precomputed_loot[pool->total_weight - 1];
+            int w = multiple_entries ? absNextInt(&context->prng_state, pool->total_weight) : 0;
+            entry = pool->precomputed_loot[w];
+        } else {
+            // check entry conditions
+            int cumulative_weights[pool->entry_count];
+            int total_weight = 0;
+            int entry_count = 0;
+            for (int e = 0; e < pool->entry_count; e++) {
+                int passes = 1;
+                const int count = pool->entry_conditions_count[e];
+                const int index = pool->entry_conditions_index[e];
+                for (int c = 0; c < count; c++) {
+                    const LootItemCondition* condition = &pool->conditions[index + c];
+                    if (!condition->fun(&context->prng_state, condition->params)) {
+                        passes = 0;
+                        break;
+                    }
+                }
+                if (passes && entry_weights[e] > 0) {
+                    total_weight += entry_weights[e];
+                    entry_count++;
+                    entry = e;
+                }
+                cumulative_weights[e] = total_weight;
+            }
+
+            if (entry_count == 0) {
+                continue;
+            }
+
+            if (entry_count > 1) {
+                int w = absNextInt(&context->prng_state, total_weight);
+                for (entry = 0; w >= cumulative_weights[entry]; entry++);
+            }
+        }
         int item = pool->entry_to_item[entry];
         if (item == -1)
             continue;

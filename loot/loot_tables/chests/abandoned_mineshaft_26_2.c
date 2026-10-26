@@ -15,11 +15,13 @@ static int global_item_ids[22] = {ITEM_GOLDEN_APPLE, ITEM_ENCHANTED_GOLDEN_APPLE
 static LootItemCondition conditions__0[0];
 static int precomputed_loot__0[71] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5};
 static int entry_to_item__0[6] = {0, 1, 2, 3, 4, -1};
+static int entry_conditions_count__0[6] = {0, 0, 0, 0, 0, 0};
+static int entry_conditions_index__0[6] = {0, 0, 0, 0, 0, 0};
 static int entry_functions_count__0[6] = {0, 0, 0, 1, 0, 0};
 static int entry_functions_index__0[6] = {0, 0, 0, 0, 1, 1};
 static LootFunction loot_functions__0[1];
 static const LootPool abandoned_mineshaft_26_2__0 = {
-    .condition_count = 0,
+    .pool_condition_count = 0,
     .conditions = conditions__0,
     .min_rolls = 1,
     .max_rolls = 1,
@@ -28,6 +30,8 @@ static const LootPool abandoned_mineshaft_26_2__0 = {
     .total_weight = 71,
     .precomputed_loot = precomputed_loot__0,
     .entry_to_item = entry_to_item__0,
+    .entry_conditions_index = entry_conditions_index__0,
+    .entry_conditions_count = entry_conditions_count__0,
     .entry_functions_count = entry_functions_count__0,
     .entry_functions_index = entry_functions_index__0,
     .loot_functions = loot_functions__0,
@@ -35,11 +39,13 @@ static const LootPool abandoned_mineshaft_26_2__0 = {
 static LootItemCondition conditions__1[0];
 static int precomputed_loot__1[98] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10};
 static int entry_to_item__1[11] = {5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+static int entry_conditions_count__1[11] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static int entry_conditions_index__1[11] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static int entry_functions_count__1[11] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 static int entry_functions_index__1[11] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 static LootFunction loot_functions__1[11];
 static const LootPool abandoned_mineshaft_26_2__1 = {
-    .condition_count = 0,
+    .pool_condition_count = 0,
     .conditions = conditions__1,
     .min_rolls = 2,
     .max_rolls = 4,
@@ -48,18 +54,22 @@ static const LootPool abandoned_mineshaft_26_2__1 = {
     .total_weight = 98,
     .precomputed_loot = precomputed_loot__1,
     .entry_to_item = entry_to_item__1,
+    .entry_conditions_index = entry_conditions_index__1,
+    .entry_conditions_count = entry_conditions_count__1,
     .entry_functions_count = entry_functions_count__1,
     .entry_functions_index = entry_functions_index__1,
     .loot_functions = loot_functions__1,
 };
-static LootItemCondition conditions__2[0];
+static LootItemCondition conditions__2[1];
 static int precomputed_loot__2[60] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5};
 static int entry_to_item__2[6] = {16, 17, 18, 19, 20, 21};
+static int entry_conditions_count__2[6] = {0, 0, 0, 0, 0, 1};
+static int entry_conditions_index__2[6] = {0, 0, 0, 0, 0, 0};
 static int entry_functions_count__2[6] = {1, 1, 1, 1, 1, 0};
 static int entry_functions_index__2[6] = {0, 1, 2, 3, 4, 5};
 static LootFunction loot_functions__2[5];
 static const LootPool abandoned_mineshaft_26_2__2 = {
-    .condition_count = 0,
+    .pool_condition_count = 0,
     .conditions = conditions__2,
     .min_rolls = 3,
     .max_rolls = 3,
@@ -68,6 +78,8 @@ static const LootPool abandoned_mineshaft_26_2__2 = {
     .total_weight = 60,
     .precomputed_loot = precomputed_loot__2,
     .entry_to_item = entry_to_item__2,
+    .entry_conditions_index = entry_conditions_index__2,
+    .entry_conditions_count = entry_conditions_count__2,
     .entry_functions_count = entry_functions_count__2,
     .entry_functions_index = entry_functions_index__2,
     .loot_functions = loot_functions__2,
@@ -103,6 +115,7 @@ static void create_loot_functions() {
     create_set_count(&(loot_pool__1->loot_functions[9]), 2, 4);
     create_set_count(&(loot_pool__1->loot_functions[10]), 2, 4);
     LootPool* loot_pool__2 = &(context.loot_pools[2]);
+    create_location_predicate(&(loot_pool__2->conditions[0]), (int[]){sulfur_caves}, 1);
     create_set_count(&(loot_pool__2->loot_functions[0]), 4, 8);
     create_set_count(&(loot_pool__2->loot_functions[1]), 1, 4);
     create_set_count(&(loot_pool__2->loot_functions[2]), 1, 4);

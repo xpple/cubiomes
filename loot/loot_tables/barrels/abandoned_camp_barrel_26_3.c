@@ -15,11 +15,13 @@ static int global_item_ids[17] = {ITEM_ARROW, ITEM_BONE, ITEM_BOWL, ITEM_BREAD, 
 static LootItemCondition conditions__0[0];
 static int precomputed_loot__0[14] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
 static int entry_to_item__0[14] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+static int entry_conditions_count__0[14] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static int entry_conditions_index__0[14] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static int entry_functions_count__0[14] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 static int entry_functions_index__0[14] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
 static LootFunction loot_functions__0[14];
 static const LootPool abandoned_camp_barrel_26_3__0 = {
-    .condition_count = 0,
+    .pool_condition_count = 0,
     .conditions = conditions__0,
     .min_rolls = 4,
     .max_rolls = 8,
@@ -28,6 +30,8 @@ static const LootPool abandoned_camp_barrel_26_3__0 = {
     .total_weight = 14,
     .precomputed_loot = precomputed_loot__0,
     .entry_to_item = entry_to_item__0,
+    .entry_conditions_index = entry_conditions_index__0,
+    .entry_conditions_count = entry_conditions_count__0,
     .entry_functions_count = entry_functions_count__0,
     .entry_functions_index = entry_functions_index__0,
     .loot_functions = loot_functions__0,
@@ -35,11 +39,13 @@ static const LootPool abandoned_camp_barrel_26_3__0 = {
 static LootItemCondition conditions__1[0];
 static int precomputed_loot__1[3] = {0, 1, 2};
 static int entry_to_item__1[3] = {14, 15, 16};
+static int entry_conditions_count__1[3] = {0, 0, 0};
+static int entry_conditions_index__1[3] = {0, 0, 0};
 static int entry_functions_count__1[3] = {1, 1, 1};
 static int entry_functions_index__1[3] = {0, 1, 2};
 static LootFunction loot_functions__1[3];
 static const LootPool abandoned_camp_barrel_26_3__1 = {
-    .condition_count = 0,
+    .pool_condition_count = 0,
     .conditions = conditions__1,
     .min_rolls = 1,
     .max_rolls = 1,
@@ -48,6 +54,8 @@ static const LootPool abandoned_camp_barrel_26_3__1 = {
     .total_weight = 3,
     .precomputed_loot = precomputed_loot__1,
     .entry_to_item = entry_to_item__1,
+    .entry_conditions_index = entry_conditions_index__1,
+    .entry_conditions_count = entry_conditions_count__1,
     .entry_functions_count = entry_functions_count__1,
     .entry_functions_index = entry_functions_index__1,
     .loot_functions = loot_functions__1,
