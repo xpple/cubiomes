@@ -115,6 +115,12 @@ static int location_predicate_condition(RandomSource* rand, const void* params) 
     return 0;
 }
 
+static int no_op_condition(RandomSource* rand, const void* params) {
+    (void)rand;
+    (void)params;
+    return 1;
+}
+
 void create_random_chance(LootItemCondition* lic, float chance) {
     lic->fun = random_chance_condition;
     lic->params = lic->params_float;
@@ -125,6 +131,11 @@ void create_location_predicate(LootItemCondition* lic, const int* biomes, const 
     (void)biomes;
     (void)list_length;
     lic->fun = location_predicate_condition;
+    lic->params = NULL;
+}
+
+void create_no_op_condition(LootItemCondition* lic) {
+    lic->fun = no_op_condition;
     lic->params = NULL;
 }
 

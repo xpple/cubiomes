@@ -210,7 +210,7 @@ class NoOpCondition(LootItemCondition):
         super().__init__()
 
     def to_function_call(self, arg: str, version: str):
-        pass
+        return f"create_no_op_condition({arg})"
 
 
 class LootPool:
