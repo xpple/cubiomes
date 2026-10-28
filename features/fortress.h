@@ -7,14 +7,14 @@
 extern "C" {
 #endif
 
-/* Generate the structure pieces of a Nether Fortress. The maximum number of
- * pieces that are generated is limited to 'n'. A buffer length of around 400
- * should be sufficient in practice, but a fortress can in theory contain many
- * more than that. The number of generated pieces is given by the return value.
- */
+/// Generate the structure pieces of a Nether Fortress. The maximum number of
+/// pieces that are generated is limited to 'n'. A buffer length of around 400
+/// should be sufficient in practice, but a fortress can in theory contain many
+/// more than that. The number of generated pieces is given by the return value.
 int getFortressPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, int chunkZ);
+/// Fortress piece types
 enum
-{   // Fortress piece types
+{
     FORTRESS_START,
     BRIDGE_STRAIGHT,
     BRIDGE_CROSSING,

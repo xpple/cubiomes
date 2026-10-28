@@ -30,30 +30,30 @@ extern "C"
  */
 
 
-// lower 20 bits, only the very best constellations
-// (the structure salt has to be subtracted before use)
+/// lower 20 bits, only the very best constellations
+/// (the structure salt has to be subtracted before use)
 static const uint64_t low20QuadIdeal[] =
 {
         0x43f18,0xc751a,0xf520a, 0
 };
 
-// lower 20 bits, the classic quad-structure constellations
+/// lower 20 bits, the classic quad-structure constellations
 static const uint64_t low20QuadClassic[] =
 {
         0x43f18,0x79a0a,0xc751a,0xf520a, 0
 };
 
-// for any valid quad-structure constellation with a structure size:
-// (7+1,7+43+1,9+1) which corresponds to a fall-damage based quad-witch-farm,
-// but may require a perfect player position
+/// for any valid quad-structure constellation with a structure size:
+/// (7+1,7+43+1,9+1) which corresponds to a fall-damage based quad-witch-farm,
+/// but may require a perfect player position
 static const uint64_t low20QuadHutNormal[] =
 {
         0x43f18,0x65118,0x75618,0x79a0a, 0x89718,0x9371a,0xa5a08,0xb5e18,
         0xc751a,0xf520a, 0
 };
 
-// for any valid quad-structure constellation with a structure size:
-// (7+1,7+1,9+1) which corresponds to quad-witch-farms without drop chute
+/// for any valid quad-structure constellation with a structure size:
+/// (7+1,7+1,9+1) which corresponds to quad-witch-farms without drop chute
 static const uint64_t low20QuadHutBarely[] =
 {
         0x1272d,0x17908,0x367b9,0x43f18, 0x487c9,0x487ce,0x50aa7,0x647b5,
@@ -63,7 +63,7 @@ static const uint64_t low20QuadHutBarely[] =
 };
 
 
-// categorize a constellation
+/// categorize a constellation
 enum { CST_NONE, CST_IDEAL, CST_CLASSIC, CST_NORMAL, CST_BARELY };
 int getQuadHutCst(uint64_t low20);
 
@@ -73,53 +73,24 @@ int getQuadHutCst(uint64_t low20);
 //==============================================================================
 
 
-/* This function determines if the lower 48-bits of a seed qualify as a
- * quad-base. This implies that the four structures in the adjacent regions
- * (0,0)-(1,1) will attempt to generate close enough together to be within the
- * specified block radius of a single block position. The quad-structure can be
- * moved to a different location by applying moveStructure() to the quad-base.
- * The upper 16 bits of the seed can be chosen freely, as they do not affect
- * structure positions.
- *
- * This function is a wrapper for more specific filtering functions which can
- * be found below. Using the correct quad-base finder directly can be faster as
- * it is more likely to avoid code branching and offers more control over the
- * quality of the structure positions.
- *
- * The return value is zero if the seed is not a quad-base, and equal to the
- * radius of the enclosing sphere if it is, and can be used as a measure of
- * quality for the quad-base (smaller is better).
- */
+/// This function determines if the lower 48-bits of a seed qualify as a
+/// quad-base. This implies that the four structures in the adjacent regions
+/// (0,0)-(1,1) will attempt to generate close enough together to be within the
+/// specified block radius of a single block position. The quad-structure can be
+/// moved to a different location by applying moveStructure() to the quad-base.
+/// The upper 16 bits of the seed can be chosen freely, as they do not affect
+/// structure positions.
+///
+/// This function is a wrapper for more specific filtering functions which can
+/// be found below. Using the correct quad-base finder directly can be faster as
+/// it is more likely to avoid code branching and offers more control over the
+/// quality of the structure positions.
+///
+/// The return value is zero if the seed is not a quad-base, and equal to the
+/// radius of the enclosing sphere if it is, and can be used as a measure of
+/// quality for the quad-base (smaller is better).
 static inline float isQuadBase(const StructureConfig sconf, uint64_t seed, int radius);
 
-/* Determines if the specified seed qualifies as a quad-base, given a required
- * structure size. The structure size should include the actual dimensions of
- * the structure and any additional size requirements where despawning shall
- * not occur (such as fall damage drop chutes). A smaller size requirement can
- * yield more seeds and relax constraints for other structure positions.
- * (Since most structures use the same positioning algorithm with an offset,
- * this also affects restrictions on the placement of other structure types.)
- *
- * The function variants are:
- *  isQuadBaseFeature24Classic() - finds only the classic constellations
- *  isQuadBaseFeature24() - optimisation for region=32,range=24,radius=128
- *  isQuadBaseFeature() - for small features (chunkRange not a power of 2)
- *  isQuadBaseLarge() - for large structures (chunkRange not a power of 2)
- *
- * The function returns the actual block radius to the furthest block inside
- * any of the four structures or zero if the seed does not satisfy the
- * quad-base requirements.
- *
- * @sconf       : structure configuration
- * @seed        : world seed (only the lower 48-bits are relevant)
- * @ax,ay,az    : required structure size
- * @radius      : maximum radius for a sphere that encloses all four structures
- *
- * Implementation sidenote:
- * Inline actually matters here, as these functions are not small and compilers
- * generally don't want to inline them. However, these functions usually return
- * so quickly that the function call is a major contributor to the overall time.
- */
 static inline ATTR(always_inline, const)
 float isQuadBaseFeature24Classic (const StructureConfig sconf, uint64_t seed);
 
@@ -127,6 +98,33 @@ static inline ATTR(always_inline, const)
 float isQuadBaseFeature24 (const StructureConfig sconf, uint64_t seed,
         int ax, int ay, int az);
 
+/// Determines if the specified seed qualifies as a quad-base, given a required
+/// structure size. The structure size should include the actual dimensions of
+/// the structure and any additional size requirements where despawning shall
+/// not occur (such as fall damage drop chutes). A smaller size requirement can
+/// yield more seeds and relax constraints for other structure positions.
+/// (Since most structures use the same positioning algorithm with an offset,
+/// this also affects restrictions on the placement of other structure types.)
+///
+/// The function variants are:
+///  isQuadBaseFeature24Classic() - finds only the classic constellations
+///  isQuadBaseFeature24() - optimisation for region=32,range=24,radius=128
+///  isQuadBaseFeature() - for small features (chunkRange not a power of 2)
+///  isQuadBaseLarge() - for large structures (chunkRange not a power of 2)
+///
+/// The function returns the actual block radius to the furthest block inside
+/// any of the four structures or zero if the seed does not satisfy the
+/// quad-base requirements.
+///
+/// \param sconf structure configuration
+/// \param seed world seed (only the lower 48-bits are relevant)
+/// \param ax,ay,az required structure size
+/// \param radius maximum radius for a sphere that encloses all four structures
+///
+/// Implementation sidenote:
+/// Inline actually matters here, as these functions are not small and compilers
+/// generally don't want to inline them. However, these functions usually return
+/// so quickly that the function call is a major contributor to the overall time.
 static inline ATTR(always_inline, const)
 float isQuadBaseFeature (const StructureConfig sconf, uint64_t seed,
         int ax, int ay, int az, int radius);
@@ -136,26 +134,25 @@ float isQuadBaseLarge (const StructureConfig sconf, uint64_t seed,
         int ax, int ay, int az, int radius);
 
 
-/* Starts a multi-threaded search through all 48-bit seeds. Since this can
- * potentially be a lengthy calculation, results can be written to temporary
- * files immediately, in order to save progress in case of interruption. Seeds
- * are tested using the function 'check' which takes a 48-bit seed and a custom
- * 'data' argument. The output can be a dynamically allocated seed buffer
- * and/or a destination file [which can be loaded using loadSavedSeeds()].
- * Optionally, only a subset of the lower 20 bits are searched.
- *
- * @seedbuf     output seed buffer (nullable for file only)
- * @buflen      length of output buffer (nullable)
- * @path        output file path (nullable, also toggles temporary files)
- * @threads     number of threads to use
- * @lowBits     lower bit subset (nullable)
- * @lowBitN     number of bits in the subset values
- * @check       the testing function, should return non-zero for desired seeds
- * @data        custom data argument passed to 'check'
- * @stop        occasional check for abort (nullable)
- *
- * Returns zero upon success.
- */
+/// Starts a multi-threaded search through all 48-bit seeds. Since this can
+/// potentially be a lengthy calculation, results can be written to temporary
+/// files immediately, in order to save progress in case of interruption. Seeds
+/// are tested using the function 'check' which takes a 48-bit seed and a custom
+/// 'data' argument. The output can be a dynamically allocated seed buffer
+/// and/or a destination file [which can be loaded using loadSavedSeeds()].
+/// Optionally, only a subset of the lower 20 bits are searched.
+///
+/// \param seedbuf output seed buffer (nullable for file only)
+/// \param buflen length of output buffer (nullable)
+/// \param path output file path (nullable, also toggles temporary files)
+/// \param threads number of threads to use
+/// \param lowBits lower bit subset (nullable)
+/// \param lowBitN number of bits in the subset values
+/// \param check the testing function, should return non-zero for desired seeds
+/// \param data custom data argument passed to 'check'
+/// \param stop occasional check for abort (nullable)
+///
+/// \return zero upon success.
 int searchAll48(
         uint64_t **         seedbuf,
         uint64_t *          buflen,
@@ -168,40 +165,38 @@ int searchAll48(
         volatile char *     stop // should be atomic, but is fine as stop flag
         );
 
-/* Finds the optimal AFK location for four structures of size (ax,ay,az),
- * located at the positions of 'p'. The AFK position is determined by looking
- * for whole block coordinates which offer the maximum number of spawning
- * spaces on the horizontal plane, which have the vertical structure height, ay,
- * inside the enclosing sphere of radius 128 blocks. If there are multiple
- * positions of this type (such as when all structures can be enclosed
- * completly inside the sphere with some tollerance) then an average of those
- * equally valid positions is returned.
- *
- * @p           : positions of the structures
- * @ax,ay,az    : size of one structure
- * @spcnt       : output number of planar spawning spaces in reach (nullable)
- *
- * Returns an optimal block-coordinate to operate a farm.
- */
+/// Finds the optimal AFK location for four structures of size (ax,ay,az),
+/// located at the positions of 'p'. The AFK position is determined by looking
+/// for whole block coordinates which offer the maximum number of spawning
+/// spaces on the horizontal plane, which have the vertical structure height, ay,
+/// inside the enclosing sphere of radius 128 blocks. If there are multiple
+/// positions of this type (such as when all structures can be enclosed
+/// completly inside the sphere with some tollerance) then an average of those
+/// equally valid positions is returned.
+///
+/// \param p positions of the structures
+/// \param ax,ay,az size of one structure
+/// \param spcnt output number of planar spawning spaces in reach (nullable)
+///
+/// \return an optimal block-coordinate to operate a farm.
 Pos getOptimalAfk(Pos p[4], int ax, int ay, int az, int *spcnt);
 
-/* Scans the seed 's48' for quad-structures in the given area of region
- * coordiantes. The search is performed for only a specific set of lower bits
- * of the transformed bases (each constellation of quad-structures is
- * considered separately).
- *
- * @sconf       : structure config
- * @radius      : radius for isQuadBase (use 128 for quad-huts)
- * @s48         : 48-bit seed to scan
- * @lowBits     : consider transformations that yield one of these lower bits
- * @lowBitN     : number of bits in the subset values (0 < lowBitN <= 48)
- * @salt        : salt subtracted from subset values (useful for protobases)
- * @x,z,w,h     : area to scan in region coordinates (inclusive)
- * @qplist      : output region coordinates for the descovered quad-structures
- * @n           : maximum number of quad-structures to look for
- *<
- * Returns the number of quad-structures found (up to 'n').
- */
+/// Scans the seed 's48' for quad-structures in the given area of region
+/// coordiantes. The search is performed for only a specific set of lower bits
+/// of the transformed bases (each constellation of quad-structures is
+/// considered separately).
+///
+/// \param sconf structure config
+/// \param radius radius for isQuadBase (use 128 for quad-huts)
+/// \param s48 48-bit seed to scan
+/// \param lowBits consider transformations that yield one of these lower bits
+/// \param lowBitN number of bits in the subset values (0 < lowBitN <= 48)
+/// \param salt salt subtracted from subset values (useful for protobases)
+/// \param x,z,w,h area to scan in region coordinates (inclusive)
+/// \param qplist output region coordinates for the descovered quad-structures
+/// \param n maximum number of quad-structures to look for
+///
+/// \return the number of quad-structures found (up to 'n').
 int scanForQuads(
         const StructureConfig sconf, int radius, uint64_t s48,
         const uint64_t *lowBits, int lowBitN, uint64_t salt,
@@ -300,7 +295,7 @@ static inline float isQuadBase(const StructureConfig sconf, uint64_t seed, int r
     return 0;
 }
 
-// optimised version for regionSize=32,chunkRange=24,radius=128
+/// optimised version for regionSize=32,chunkRange=24,radius=128
 static inline ATTR(always_inline, const)
 float isQuadBaseFeature24(const StructureConfig sconf, uint64_t seed,
         int ax, int ay, int az)
@@ -352,7 +347,7 @@ float isQuadBaseFeature24(const StructureConfig sconf, uint64_t seed,
     return sqrad < 128 ? sqrad : 0;
 }
 
-// variant of isQuadBaseFeature24 which finds only the classic constellations
+/// variant of isQuadBaseFeature24 which finds only the classic constellations
 static inline ATTR(always_inline, const)
 float isQuadBaseFeature24Classic(const StructureConfig sconf, uint64_t seed)
 {
@@ -445,14 +440,13 @@ float isQuadBaseFeature(const StructureConfig sconf, uint64_t seed,
 }
 
 
+/// Good quad-monument bases are very rare indeed and the search takes much
+/// longer since it cannot be abbreviated by the low-20-bit method. For a
+/// complete list of bases see the implementation of cubiomes-viewer.
 static inline ATTR(always_inline, const)
 float isQuadBaseLarge(const StructureConfig sconf, uint64_t seed,
         int ax, int ay, int az, int radius)
 {
-    // Good quad-monument bases are very rare indeed and the search takes much
-    // longer since it cannot be abbreviated by the low-20-bit method. For a
-    // complete list of bases see the implementation of cubiomes-viewer.
-
     const uint64_t M = (1ULL << 48) - 1;
     const uint64_t K = 0x5deece66dULL;
     const uint64_t b = 0xb;

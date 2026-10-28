@@ -58,7 +58,8 @@ enum Ores {
 };
 
 
-// use getOreConfig() for the version specific ore configuration
+/// \struct OreConfig
+/// use getOreConfig() for the version specific ore configuration
 STRUCT(OreConfig)
 {
     int32_t         index;
@@ -81,12 +82,12 @@ STRUCT(OreConfig)
 // Ore height providers
 //==============================================================================
 
-// <=1.16.5
+/// <=1.16.5
 static inline int providerRange(RandomSource *rnd, const int bottomOffset, const int topOffset, const int maximumY) {
     return absNextInt(rnd, maximumY - topOffset) + bottomOffset;
 }
 
-// <=1.16.5
+/// <=1.16.5
 static inline int providerDepthAverage(RandomSource *rnd, const int baseline, const int spread, int unused_) {
     (void)(unused_); // Unused
     int a = absNextInt(rnd, spread);
@@ -94,7 +95,7 @@ static inline int providerDepthAverage(RandomSource *rnd, const int baseline, co
     return a + b - spread + baseline;
 }
 
-// <=1.16.5
+/// <=1.16.5
 static inline int providerEmeraldOre(RandomSource *rnd, int unused1_, int unused2_, int unused3_) {
     (void)(unused1_); // Unused
     (void)(unused2_); // Unused
@@ -102,7 +103,7 @@ static inline int providerEmeraldOre(RandomSource *rnd, int unused1_, int unused
     return absNextInt(rnd, 28) + 4;
 }
 
-// <=1.16.5
+/// <=1.16.5
 static inline int providerMagmaOre(RandomSource *rnd, int unused1_, int unused2_, int unused3_) {
     (void)(unused1_); // Unused
     (void)(unused2_); // Unused
@@ -110,7 +111,7 @@ static inline int providerMagmaOre(RandomSource *rnd, int unused1_, int unused2_
     return 32 - 5 + absNextInt(rnd, 10);
 }
 
-// >=1.17
+/// >=1.17
 static inline int providerUniformRange(RandomSource *rnd, const int minOffset, const int maxOffset, int unused_) {
     (void)(unused_); // Unused
     if (minOffset > maxOffset) {
@@ -119,7 +120,7 @@ static inline int providerUniformRange(RandomSource *rnd, const int minOffset, c
     return absNextIntBetween(rnd, minOffset, maxOffset);
 }
 
-// >=1.17
+/// >=1.17
 static inline int providerTriangleRange(RandomSource *rnd, const int minOffset, const int maxOffset, int unused_) {
     (void)(unused_); // Unused
     if (minOffset > maxOffset) {
@@ -137,46 +138,38 @@ static inline int providerTriangleRange(RandomSource *rnd, const int minOffset, 
 }
 
 
-/**
- * Get the ore config for a given ore type.
- *
- * @param oreType the ore type as listed in Ores.
- * @param mc the Minecraft version as listed in MCVersion
- * @param biomeID the biome ID as listed in BiomeID, unused for >=1.18
- * @param oconf the target config
- * @return 0 on failure
- */
+/// Get the ore config for a given ore type.
+///
+/// \param oreType the ore type as listed in Ores.
+/// \param mc the Minecraft version as listed in MCVersion
+/// \param biomeID the biome ID as listed in BiomeID, unused for >=1.18
+/// \param oconf the target config
+/// \return 0 on failure
 int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf);
 
-/**
- * Get the biome used for ore generation for a given chunk. After this, call
- * `isViableOreBiome` to check whether the ore can generate in the chunk.
- * @param g the generator
- * @param chunkX the chunk X-coordinate
- * @param chunkZ the chunk Z-coordinate
- * @param y the Y-coordinate (in block coordinates) to check for, unused for <1.18
- * @return the biome ID
- */
+/// Get the biome used for ore generation for a given chunk. After this, call
+/// `isViableOreBiome` to check whether the ore can generate in the chunk.
+/// \param g the generator
+/// \param chunkX the chunk X-coordinate
+/// \param chunkZ the chunk Z-coordinate
+/// \param y the Y-coordinate (in block coordinates) to check for, unused for <1.18
+/// \return the biome ID
 int getBiomeForOreGen(const Generator *g, int chunkX, int chunkZ, int y);
 
-/**
- * Check whether the given ore type generates in this biome.
- * @param mc the Minecraft version
- * @param oreType the ore type
- * @param biomeID the biome ID
- * @return 0 if the ore does not generate in this biome
- */
+/// Check whether the given ore type generates in this biome.
+/// \param mc the Minecraft version
+/// \param oreType the ore type
+/// \param biomeID the biome ID
+/// \return 0 if the ore does not generate in this biome
 int isViableOreBiome(int mc, int oreType, int biomeID);
 
-/**
- * Generate the ores of the given type in the chunk.
- * @param g the generator
- * @param sn the surface noise
- * @param config the ore config
- * @param chunkX the chunk X-coordinate
- * @param chunkZ the chunk Y-coordinate
- * @return a sized array of ore positions
- */
+/// Generate the ores of the given type in the chunk.
+/// \param g the generator
+/// \param sn the surface noise
+/// \param config the ore config
+/// \param chunkX the chunk X-coordinate
+/// \param chunkZ the chunk Y-coordinate
+/// \return a sized array of ore positions
 Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig config, int chunkX, int chunkZ);
 
 Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource *rnd);
