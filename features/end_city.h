@@ -7,17 +7,17 @@
 extern "C" {
 #endif
 
-/* Generate the structure pieces of an End City. This pieces buffer should be
- * large enough to hold END_CITY_PIECES_MAX elements.
- * @pieces          : output buffer
- * @seed            : world seed
- * @chunkX, chunkZ  : 16x16 chunk position
- *
- * Returns the number of structure pieces generated.
- */
+/// Generate the structure pieces of an End City. This pieces buffer should be
+/// large enough to hold END_CITY_PIECES_MAX elements.
+/// \param pieces output buffer
+/// \param seed world seed
+/// \param chunkX,chunkZ 16x16 chunk position
+///
+/// \return the number of structure pieces generated.
 int getEndCityPieces(Piece *pieces, uint64_t seed, int chunkX, int chunkZ);
+/// End City piece types
 enum
-{   // End City piece types
+{
     BASE_FLOOR,
     BASE_ROOF,
     BRIDGE_END,
@@ -35,7 +35,7 @@ enum
     THIRD_FLOOR_2,
     THIRD_ROOF,
     TOWER_BASE,
-    TOWER_FLOOR, // unused
+    TOWER_FLOOR, ///< unused
     TOWER_PIECE,
     TOWER_TOP,
     END_CITY_PIECE_COUNT,
