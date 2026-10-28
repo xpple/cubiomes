@@ -144,7 +144,9 @@ double samplePerlin(const PerlinNoise *noise, double d1, double d2, double d3,
     if (yamp)
     {
         double yclamp = ymax >= 0.0 && ymax < d2 ? ymax : d2;
-        d2 -= floor(yclamp / yamp) * yamp;
+        // Vanilla ImprovedNoise adds (double)1.0E-7F (~1.0000000116860974E-7) to guard
+        // against floating-point precision loss at exact cell boundaries.
+        d2 -= floor(yclamp / yamp + 1.0000000116860974E-7) * yamp;
     }
 
     const uint8_t *idx = noise->d;
