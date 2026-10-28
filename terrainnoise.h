@@ -26,8 +26,53 @@ enum
     OTP_NOODLE_RIDGE_A,
     OTP_NOODLE_RIDGE_B,
     OTP_JAGGED,
+    // 1.18+ NoiseBasedAquifer noises
+    OTP_AQUIFER_BARRIER,
+    OTP_AQUIFER_FLUID_LEVEL_FLOODEDNESS,
+    OTP_AQUIFER_FLUID_LEVEL_SPREAD,
+    OTP_AQUIFER_LAVA,
     OTP_MAX,
 };
+
+// Block substance returned by 1.18+ computeAquiferSubstance
+enum
+{
+    AQUIFER_BLOCK_SOLID = 0, // Solid (non-air) block
+    AQUIFER_BLOCK_AIR   = 1, // Air block
+    AQUIFER_BLOCK_WATER = 2, // Water block
+    AQUIFER_BLOCK_LAVA  = 3, // Lava block
+};
+
+#define AQUIFER_MAX_CELLS (3 * 35 * 3)
+#define AQUIFER_PSL_CACHE_SIZE 256
+
+/**
+ * Cache for 1.18+ NoiseBasedAquifer fluid levels and fluid types within a chunk column.
+ * Grid coordinates are at 16x12x16 cell spacing with randomized (jittered) sample points.
+ */
+STRUCT(AquiferChunkCache)
+{
+    int64_t chunkKey;
+    int minGridX, minGridY, minGridZ;
+    int gridSizeX, gridSizeY, gridSizeZ;
+    int skipSamplingAboveY;
+    int fluidLevel[AQUIFER_MAX_CELLS];
+    uint8_t fluidType[AQUIFER_MAX_CELLS];
+    uint8_t cacheValid[AQUIFER_MAX_CELLS];
+    int64_t location[AQUIFER_MAX_CELLS];
+};
+
+/**
+ * Cache for 1.18+ Overworld 4x8x4 cell-corner densities and noodle cave sub-functions.
+ * Stores 5x5 corner columns across the 48 vertical cells (384 blocks) of a chunk.
+ */
+STRUCT(OverworldChunkCache)
+{
+    int64_t chunkKey;
+    double corners[25][49];
+    double noodleCorners[3][25][49];
+};
+
 STRUCT(TerrainNoise)
 {
     Generator g;
@@ -41,8 +86,13 @@ STRUCT(TerrainNoise)
             SplineStack ss;
             Spline* factorSpline;
             Spline* jaggednessSpline;
-            PerlinNoise oct[2*45];
+            PerlinNoise oct[2*49];
             DoublePerlinNoise noises[OTP_MAX];
+            Xoroshiro aquiferPositional; // PRNG for aquifer 3D grid point jittering
+            AquiferChunkCache aqCache;   // chunk cache for NoiseBasedAquifer
+            OverworldChunkCache owCache; // chunk cache for 4x8x4 cell-corner densities
+            int64_t pslKeys[AQUIFER_PSL_CACHE_SIZE]; // preliminary surface level cache keys
+            int pslValues[AQUIFER_PSL_CACHE_SIZE];  // preliminary surface level cache values
         };
         // end, <1.18 overworld
         struct {
@@ -244,14 +294,56 @@ double sampleFinalDensity(TerrainNoise *params, int x, int y, int z, double spag
 double sampleNetherFinalDensity(BlendedNoise* base3dNoise, int x, int y, int z);
 
 /**
- * Sample `preliminary_surface_level`.
+ * Sample 1.18+ `preliminary_surface_level` at block coordinates (x, z).
+ * Evaluated at quarter-resolution (x >> 2, z >> 2) flat cache coordinates,
+ * estimating the approximate surface Y-level used by aquifers to bound fluid generation.
  *
  * @param params the terrain noise parameters
  * @param x the world X-coordinate
  * @param z the world Z-coordinate
- * @return the preliminary surface Y-level
+ * @return the preliminary surface Y-level (or -64 if none)
  */
 int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z);
+
+/**
+ * Sample the 1.18+ Overworld interpolated `final_density` at a block coordinate (x, y, z),
+ * using 4x8x4 trilinear cell interpolation for the pre-squeezed main density and the three
+ * interpolated noodle sub-functions (thickness, ridge_a, ridge_b).
+ *
+ * @param params the terrain noise parameters
+ * @param x the world X-coordinate
+ * @param y the world Y-coordinate
+ * @param z the world Z-coordinate
+ * @return the interpolated final density
+ */
+double sampleInterpolatedDensity18(TerrainNoise *params, int x, int y, int z);
+
+/**
+ * Evaluate 1.18+ `NoiseBasedAquifer.computeSubstance` at (x, y, z) given the interpolated
+ * final density.
+ *
+ * @param params the terrain noise parameters
+ * @param x the world X-coordinate
+ * @param y the world Y-coordinate
+ * @param z the world Z-coordinate
+ * @param density the interpolated final density at (x, y, z)
+ * @return one of AQUIFER_BLOCK_SOLID, AQUIFER_BLOCK_AIR, AQUIFER_BLOCK_WATER, AQUIFER_BLOCK_LAVA
+ */
+uint8_t computeAquiferSubstance(TerrainNoise *params, int x, int y, int z, double density);
+
+/**
+ * Get the exact `WORLD_SURFACE_WG` surface height at block coordinates (x, z).
+ * For >=1.18 Overworld, accounts for 3D cell interpolation, noodle caves, and `NoiseBasedAquifer`
+ * fluid levels and pressure barriers (range [-64, 320]).
+ * For <1.18 Overworld, uses classic noise column sampling and pre-1.18 cell interpolation (range [0, 256]).
+ * Returns `y + 1` for the highest non-air block (or worldMinY if none).
+ *
+ * @param params the terrain noise parameters
+ * @param x the world X-coordinate
+ * @param z the world Z-coordinate
+ * @return the exact WORLD_SURFACE_WG height (y + 1 of top non-air block)
+ */
+int getExactSurfaceHeight(TerrainNoise *params, int x, int z);
 
 /**
  * Sample the terrain noise column at the given cell coordinates. This function is for <1.18 overworld.
