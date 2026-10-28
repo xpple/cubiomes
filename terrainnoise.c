@@ -865,14 +865,8 @@ static double ewCaveLayer(TerrainNoise *p, int x, int y, int z) {
     return v * v * 4.0;
 }
 
-/**
- * Sample pre-squeeze main density at 4x8x4 cell corners (cellX, cellZ) across the vertical range.
- *
- * NOTE: In Vanilla 1.18+, main density is clamped to [-64, 64] before being trilinearly interpolated
- * across the cell corners. The non-linear postProcess (squeeze) is applied AFTER cell interpolation.
- * Squeezing at the cell corners before interpolation would distort the interpolation curve and shift
- * the surface zero-crossing, leading to 1-8 block height discrepancies.
- */
+/* Pre-squeeze main density at 4x8x4 cell corners clamped to [-64, 64].
+ * Post-process (squeeze) is applied AFTER cell interpolation to preserve surface zero-crossings. */
 static void sampleCornerColumn18(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double out[]) {
     const int bx = cellX * 4;
     const int bz = cellZ * 4;
@@ -926,7 +920,7 @@ static void sampleCornerColumn18(TerrainNoise *params, int cellX, int cellZ, int
                     cheese = 64.0;
                 } else {
                     double raw = sampleDoublePerlin(&params->noises[OTP_CAVE_CHEESE], (double) bx, (double) y / 1.5, (double) bz);
-                    double p = fmax(-1.0, fmin(1.0, raw + 0.27));
+                    double p = clamp(raw + 0.27, -1.0, 1.0);
                     double q = diff * 1.28;
                     cheese = p + clampedLerp(q, 0.5, 0.0) + layer;
                 }
@@ -938,49 +932,32 @@ static void sampleCornerColumn18(TerrainNoise *params, int cellX, int cellZ, int
 
         double v = fmax(fmin(cheese, spaghetti), pillarVal);
         v = ewApplySlides(v, y / 8);
-        if (v < -64.0) v = -64.0;
-        else if (v > 64.0) v = 64.0;
-        out[i - colYMin] = v;
+        out[i - colYMin] = clamp(v, -64.0, 64.0);
     }
 }
 
-#define EW_NOODLE_THICK_BIAS (-0.07500000000000001)
-#define EW_NOODLE_THICK_MUL (-0.025)
-#define EW_NOODLE_RIDGE_SCALE 2.6666666666666665
-
-static inline int ewNoodleYInRange(int y) {
-    return y >= -60 && y <= 320;
-}
-
-/**
- * Sample noodle cave sub-functions at cell corners across the vertical range.
- *
- * In Vanilla `overworld/caves/noodle.json`:
- *   - `noodle_thickness` (bias -0.075, factor -0.025)
- *   - `noodle_ridge_a`   (scale 2.6666666666666665)
- *   - `noodle_ridge_b`   (scale 2.6666666666666665)
- * are all wrapped in `interpolated`, meaning they are sampled at cell corners and trilinearly
- * interpolated. The `noodle` toggle noise, in contrast, is sampled per block.
- */
+/* In overworld/caves/noodle.json, noodle_thickness, noodle_ridge_a, and noodle_ridge_b
+ * are wrapped in `interpolated`, so they must be sampled at cell corners and lerped. */
 static void sampleNoodleCornerColumn18(TerrainNoise *params, int cellX, int cellZ, double thick[], double ridgeA[], double ridgeB[]) {
     const int bx = cellX * 4;
     const int bz = cellZ * 4;
+    const double scale = 8.0 / 3.0;
     for (int i = 0; i <= EW_CELLS_Y; i++) {
         int y = EW_MIN_Y + i * 8;
-        if (!ewNoodleYInRange(y)) {
+        if (y < -60 || y > 320) {
             thick[i] = 0.0;
             ridgeA[i] = 0.0;
             ridgeB[i] = 0.0;
         } else {
-            thick[i] = EW_NOODLE_THICK_BIAS + EW_NOODLE_THICK_MUL * sampleDoublePerlin(&params->noises[OTP_NOODLE_THICKNESS], (double) bx, (double) y, (double) bz);
-            ridgeA[i] = sampleDoublePerlin(&params->noises[OTP_NOODLE_RIDGE_A], (double) bx * EW_NOODLE_RIDGE_SCALE, (double) y * EW_NOODLE_RIDGE_SCALE, (double) bz * EW_NOODLE_RIDGE_SCALE);
-            ridgeB[i] = sampleDoublePerlin(&params->noises[OTP_NOODLE_RIDGE_B], (double) bx * EW_NOODLE_RIDGE_SCALE, (double) y * EW_NOODLE_RIDGE_SCALE, (double) bz * EW_NOODLE_RIDGE_SCALE);
+            thick[i] = -0.075 - 0.025 * sampleDoublePerlin(&params->noises[OTP_NOODLE_THICKNESS], (double) bx, (double) y, (double) bz);
+            ridgeA[i] = sampleDoublePerlin(&params->noises[OTP_NOODLE_RIDGE_A], (double) bx * scale, (double) y * scale, (double) bz * scale);
+            ridgeB[i] = sampleDoublePerlin(&params->noises[OTP_NOODLE_RIDGE_B], (double) bx * scale, (double) y * scale, (double) bz * scale);
         }
     }
 }
 
 static inline int64_t ewChunkKey(int chunkX, int chunkZ) {
-    return (int64_t) (((uint64_t) (int64_t) chunkX << 32) | (uint64_t) (uint32_t) chunkZ);
+    return (int64_t) (((uint64_t) (uint32_t) chunkX << 32) | (uint32_t) chunkZ);
 }
 
 static OverworldChunkCache *ewGetChunkCache(TerrainNoise *params, int chunkX, int chunkZ) {
@@ -1003,8 +980,7 @@ static OverworldChunkCache *ewGetChunkCache(TerrainNoise *params, int chunkX, in
     return cache;
 }
 
-// Trilinear interpolation matching Vanilla `NoiseInterpolator` / `Mth.lerp3`:
-// interpolates Y first, then X, then Z.
+/* Trilinear lerp matching Vanilla NoiseInterpolator / Mth.lerp3 order (Y, then X, then Z). */
 static inline double ewLerp3(double dx, double dy, double dz,
         double n000, double n100, double n010, double n110,
         double n001, double n101, double n011, double n111) {
@@ -1035,29 +1011,26 @@ double sampleInterpolatedDensity18(TerrainNoise *params, int x, int y, int z) {
         return -1.0;
     }
 
-    // 1. Get chunk cache of 4x8x4 cell corners
     OverworldChunkCache *entry = ewGetChunkCache(params, x >> 4, z >> 4);
     int gx = (x >> 2) & 3;
     int gz = (z >> 2) & 3;
     int cellY = yOff / 8;
-    double dx = (double) (x & 3) / 4.0;
-    double dy = (double) (yOff - cellY * 8) / 8.0;
-    double dz = (double) (z & 3) / 4.0;
+    double dx = (double) (x & 3) * 0.25;
+    double dy = (double) (yOff - cellY * 8) * 0.125;
+    double dz = (double) (z & 3) * 0.25;
 
-    // 2. Trilinearly interpolate pre-squeeze main density across cell corners, then squeeze
     double v = ewInterpCorners(entry->corners, gx, gz, dx, dy, dz, cellY);
     double squeezy = postProcess(v);
 
-    // 3. Evaluate noodle caves: toggle noise per-block, thickness & ridges interpolated from corners
-    double noodleN = ewNoodleYInRange(y) ? sampleDoublePerlin(&params->noises[OTP_NOODLE], (double) x, (double) y, (double) z) : -1.0;
-    double noodleVal;
-    if (noodleN >= -1000000.0 && noodleN < 0.0) {
-        noodleVal = 64.0;
-    } else {
-        double thick = ewInterpCorners(entry->noodleCorners[0], gx, gz, dx, dy, dz, cellY);
-        double ridgeA = ewInterpCorners(entry->noodleCorners[1], gx, gz, dx, dy, dz, cellY);
-        double ridgeB = ewInterpCorners(entry->noodleCorners[2], gx, gz, dx, dy, dz, cellY);
-        noodleVal = thick + 1.5 * fmax(fabs(ridgeA), fabs(ridgeB));
+    double noodleVal = 64.0;
+    if (y >= -60 && y <= 320) {
+        double noodleN = sampleDoublePerlin(&params->noises[OTP_NOODLE], (double) x, (double) y, (double) z);
+        if (noodleN >= 0.0) {
+            double thick = ewInterpCorners(entry->noodleCorners[0], gx, gz, dx, dy, dz, cellY);
+            double ridgeA = ewInterpCorners(entry->noodleCorners[1], gx, gz, dx, dy, dz, cellY);
+            double ridgeB = ewInterpCorners(entry->noodleCorners[2], gx, gz, dx, dy, dz, cellY);
+            noodleVal = thick + 1.5 * fmax(fabs(ridgeA), fabs(ridgeB));
+        }
     }
     return fmin(squeezy, noodleVal);
 }
@@ -1070,26 +1043,18 @@ double sampleInterpolatedDensity18(TerrainNoise *params, int x, int y, int z) {
 #define AQ_LAVA_Y (-54)
 #define AQ_WATER_Y 63
 #define AQ_LAVA_CUT (-54)
-#define AQ_FLOWING_UPDATE_SIMULARITY (-0.76)
+#define AQ_FLOWING_UPDATE_SIMILARITY (-0.76)
 #define AQ_DEEP_DARK_EROSION (-0.22499999403953552)
 #define AQ_DEEP_DARK_DEPTH (0.8999999761581421)
 
-static inline double ewClampedGradient(double y, double fromY, double toY, double fromValue, double toValue) {
-    double t = clamp((y - fromY) / (toY - fromY), 0.0, 1.0);
-    return lerp(t, fromValue, toValue);
-}
-
 static inline double pslDensity(double y, double offset, double factor) {
-    double depth = ewClampedGradient(y, -64.0, 320.0, 1.5, -1.5) + offset;
+    double depth = clampedMap(y, -64.0, 320.0, 1.5, -1.5) + offset;
     double f = depth * factor;
     double cheese = 4.0 * (f > 0.0 ? f : f * 0.25);
-    double c = clamp(-0.703125 + cheese, -64.0, 64.0);
-    double a1 = ewClampedGradient(y, 240.0, 256.0, 1.0, 0.0);
-    double a2 = ewClampedGradient(y, -64.0, -40.0, 0.0, 1.0);
-    return -0.390625 + (0.1171875 + a2 * (-0.1171875 + (-0.078125 + a1 * (0.078125 + c))));
+    double c = clamp(cheese - 0.703125, -64.0, 64.0);
+    return slideOverworld(c, (int) y) - 0.390625;
 }
 
-/// climate noise at the quarter-resolution (flat cache) coordinates of the block
 static void pslClimate(TerrainNoise *p, int biomeX, int biomeZ, double *c, double *e, double *w) {
     const BiomeNoise *bn = &p->g.bn;
     double sx = (double) biomeX + sampleDoublePerlin(&bn->climate[NP_SHIFT], (double) biomeX, 0.0, (double) biomeZ) * 4.0;
@@ -1099,14 +1064,7 @@ static void pslClimate(TerrainNoise *p, int biomeX, int biomeZ, double *c, doubl
     *w = sampleDoublePerlin(&bn->climate[NP_WEIRDNESS], sx, 0.0, sz);
 }
 
-/**
- * Sample 1.18+ preliminary surface level (Vanilla `preliminary_surface_level`).
- *
- * Evaluated at quarter-resolution coordinates (x >> 2, z >> 2) matching Vanilla's 2D flat cache.
- * Uses exact double constants (-0.5037500262260437 and 10.0 + (-10.0 + factor)) matching Vanilla's
- * OffsetDoubleFunction and FactorDoubleFunction, and scans downward in steps of 8 blocks to find
- * the highest Y where density is positive.
- */
+/* Approximates surface level at quarter resolution (x >> 2, z >> 2) to bound aquifer simulation. */
 int samplePreliminarySurfaceLevel(TerrainNoise *params, int blockX, int blockZ) {
     const int biomeX = blockX >> 2;
     const int biomeZ = blockZ >> 2;
@@ -1127,12 +1085,11 @@ int samplePreliminarySurfaceLevel(TerrainNoise *params, int blockX, int blockZ) 
     double offset = -0.5037500262260437 + rawOffset;
     double factor = 10.0 + (-10.0 + rawFactor);
 
-    double inv = 1.0 / factor;
-    double inner = inv * 0.2734375 + offset * -1.0;
-    double upper = clamp(128.0 + -128.0 * inner, -40.0, 320.0);
+    double inner = 0.2734375 / factor - offset;
+    double upper = clamp(128.0 * (1.0 - inner), -40.0, 320.0);
 
     int res = -64;
-    int y = (int) (upper / 8.0) * 8;
+    int y = ((int) upper / 8) * 8;
     if (y > -64) {
         for (int i = y; i >= -64; i -= 8) {
             if (pslDensity((double) i, offset, factor) > 0.0) {
@@ -1147,28 +1104,17 @@ int samplePreliminarySurfaceLevel(TerrainNoise *params, int blockX, int blockZ) 
 }
 
 static int aqIsDeepDarkRegion(TerrainNoise *p, int x, int y, int z) {
-    (void) z;
     double cd, ed, wd;
     pslClimate(p, x >> 2, z >> 2, &cd, &ed, &wd);
-    if (!(ed < AQ_DEEP_DARK_EROSION)) {
+    if (ed >= AQ_DEEP_DARK_EROSION) {
         return 0;
     }
     float cf = (float) cd, ef = (float) ed, wf = (float) wd;
     float np[4] = {cf, ef, peaksAndValleys(wf), wf};
-    double rawOffset = (double) getSpline(p->g.bn.sp, np);
-    double offset = -0.5037500262260437 + rawOffset;
-    double depth = ewClampedGradient((double) y, -64.0, 320.0, 1.5, -1.5) + offset;
+    double offset = -0.5037500262260437 + (double) getSpline(p->g.bn.sp, np);
+    double depth = clampedMap((double) y, -64.0, 320.0, 1.5, -1.5) + offset;
     return depth > AQ_DEEP_DARK_DEPTH;
 }
-
-static inline int64_t aqPackPos(int x, int y, int z) {
-    return (int64_t) ((((uint64_t) (int64_t) x & 0x3FFFFFFULL) << 38)
-            | (((uint64_t) (int64_t) z & 0x3FFFFFFULL) << 12)
-            | ((uint64_t) (int64_t) y & 0xFFFULL));
-}
-static inline int aqPosX(int64_t v) { return (int) (v >> 38); }
-static inline int aqPosY(int64_t v) { return (int) (((int64_t) ((uint64_t) v << 52)) >> 52); }
-static inline int aqPosZ(int64_t v) { return (int) (((int64_t) ((uint64_t) v << 26)) >> 38); }
 
 static inline int64_t aqHashCode(int x, int y, int z) {
     int32_t xm = (int32_t) ((uint32_t) x * 3129871u);
@@ -1177,24 +1123,12 @@ static inline int64_t aqHashCode(int x, int y, int z) {
     return ((int64_t) i) >> 16;
 }
 
-static inline int floorDivInt(int a, int b) {
-    int q = a / b;
-    if ((a % b != 0) && ((a < 0) != (b < 0))) q--;
-    return q;
-}
-
 static inline uint8_t aqLevelBlockAt(int level, uint8_t type, int atY) {
     return atY < level ? type : AQUIFER_BLOCK_AIR;
 }
 
 static inline double aqSimilarity(int a, int b) {
     return 1.0 - (double) (b - a) / 25.0;
-}
-
-static inline double aqClampedLerp(double start, double end, double delta) {
-    if (delta < 0.0) return start;
-    if (delta > 1.0) return end;
-    return lerp(delta, start, end);
 }
 
 static int aqIndex(const AquiferChunkCache *st, int gx, int gy, int gz) {
@@ -1225,8 +1159,8 @@ static AquiferChunkCache *aqGetChunkState(TerrainNoise *p, int chunkX, int chunk
     st->gridSizeX = maxGx - minGx + 1;
     st->minGridZ = minGz;
     st->gridSizeZ = maxGz - minGz + 1;
-    const int minGy = floorDivInt(EW_MIN_Y + 1, 12) - 1;
-    const int maxGy = floorDivInt(EW_MIN_Y + EW_HEIGHT + 1, 12) + 1;
+    const int minGy = floordiv(EW_MIN_Y + 1, 12) - 1;
+    const int maxGy = floordiv(EW_MIN_Y + EW_HEIGHT + 1, 12) + 1;
     st->minGridY = minGy;
     st->gridSizeY = maxGy - minGy + 1;
 
@@ -1235,10 +1169,7 @@ static AquiferChunkCache *aqGetChunkState(TerrainNoise *p, int chunkX, int chunk
         fprintf(stderr, "aqGetChunkState(): aquifer grid too large\n");
         exit(1);
     }
-    for (int i = 0; i < n; i++) {
-        st->cacheValid[i] = 0;
-        st->location[i] = INT64_MAX;
-    }
+    memset(st->cells, 0, n * sizeof(AquiferCell));
 
     const int x1 = minGx * 16, z1 = minGz * 16;
     const int x2 = maxGx * 16 + 9, z2 = maxGz * 16 + 9;
@@ -1249,19 +1180,18 @@ static AquiferChunkCache *aqGetChunkState(TerrainNoise *p, int chunkX, int chunk
             if (psl > maxPsl) maxPsl = psl;
         }
     }
-    const int g = floorDivInt((maxPsl + 8) + 12, 12) + 1;
-    st->skipSamplingAboveY = g * 12 + 11 - 1;
+    const int g = floordiv(maxPsl + 20, 12) + 1;
+    st->skipSamplingAboveY = g * 12 + 10;
     return st;
 }
 
 static int aqRandomizedFluidSurfaceLevel(TerrainNoise *p, int x, int y, int z, int minCellTopY) {
-    int fx = floorDivInt(x, 16);
-    int fy = floorDivInt(y, 40);
-    int fz = floorDivInt(z, 16);
+    int fx = floordiv(x, 16);
+    int fy = floordiv(y, 40);
+    int fz = floordiv(z, 16);
     int base = fy * 40 + 20;
-    double n = sampleDoublePerlin(&p->noises[OTP_AQUIFER_FLUID_LEVEL_SPREAD], (double) fx, (double) fy * 0.7142857142857143, (double) fz) * 10.0;
-    int q = (int) floor(n / 3.0) * 3;
-    int level = base + q;
+    double n = sampleDoublePerlin(&p->noises[OTP_AQUIFER_FLUID_LEVEL_SPREAD], (double) fx, (double) fy * (5.0 / 7.0), (double) fz) * 10.0;
+    int level = base + ((int) floor(n / 3.0)) * 3;
     return level < minCellTopY ? level : minCellTopY;
 }
 
@@ -1270,26 +1200,25 @@ static int aqComputeSurfaceLevel(TerrainNoise *p, int x, int y, int z, int globa
         return AQ_NO_FLUID_Y;
     }
     int d = (minCellTopY + 8) - y;
-    double f = hasAbove ? aqClampedLerp(1.0, 0.0, (double) d / 64.0) : 0.0;
+    double f = hasAbove ? clampedLerp((double) d / 64.0, 1.0, 0.0) : 0.0;
     double high = lerp(inverseLerp(f, 1.0, 0.0), -0.3, 0.8);
     double low = lerp(inverseLerp(f, 1.0, 0.0), -0.8, 0.4);
 
     double floodedness = clamp(sampleDoublePerlin(&p->noises[OTP_AQUIFER_FLUID_LEVEL_FLOODEDNESS], (double) x, (double) y * 0.67, (double) z), -1.0, 1.0);
-    if (floodedness - high > 0.0) return globalLevel;
-    if (floodedness - low > 0.0) return aqRandomizedFluidSurfaceLevel(p, x, y, z, minCellTopY);
+    if (floodedness > high) return globalLevel;
+    if (floodedness > low) return aqRandomizedFluidSurfaceLevel(p, x, y, z, minCellTopY);
     return AQ_NO_FLUID_Y;
 }
 
 static uint8_t aqComputeFluidType(TerrainNoise *p, int x, int y, int z, uint8_t globalType, int level) {
-    uint8_t t = globalType;
     if (level <= -10 && level != AQ_NO_FLUID_Y && globalType != AQUIFER_BLOCK_LAVA) {
-        int bx = floorDivInt(x, 64);
-        int by = floorDivInt(y, 40);
-        int bz = floorDivInt(z, 64);
+        int bx = floordiv(x, 64);
+        int by = floordiv(y, 40);
+        int bz = floordiv(z, 64);
         double n = sampleDoublePerlin(&p->noises[OTP_AQUIFER_LAVA], (double) bx, (double) by, (double) bz);
-        if (fabs(n) > 0.3) t = AQUIFER_BLOCK_LAVA;
+        if (fabs(n) > 0.3) return AQUIFER_BLOCK_LAVA;
     }
-    return t;
+    return globalType;
 }
 
 static void aqComputeFluid(TerrainNoise *p, AquiferChunkCache *st, int idx, int x, int y, int z) {
@@ -1315,9 +1244,9 @@ static void aqComputeFluid(TerrainNoise *p, AquiferChunkCache *st, int idx, int 
         int isCenter = i == 0;
 
         if (isCenter && yMinus12 > topAdj) {
-            st->fluidLevel[idx] = globalLevel;
-            st->fluidType[idx] = globalType;
-            st->cacheValid[idx] = 1;
+            st->cells[idx].fluidLevel = globalLevel;
+            st->cells[idx].fluidType = globalType;
+            st->cells[idx].statusValid = 1;
             return;
         }
         int above = yPlus12 > topAdj;
@@ -1327,9 +1256,9 @@ static void aqComputeFluid(TerrainNoise *p, AquiferChunkCache *st, int idx, int 
             if (aqLevelBlockAt(lvl, typ, topAdj) != AQUIFER_BLOCK_AIR) {
                 if (isCenter) hasAbove = 1;
                 if (above) {
-                    st->fluidLevel[idx] = lvl;
-                    st->fluidType[idx] = typ;
-                    st->cacheValid[idx] = 1;
+                    st->cells[idx].fluidLevel = lvl;
+                    st->cells[idx].fluidType = typ;
+                    st->cells[idx].statusValid = 1;
                     return;
                 }
             }
@@ -1337,17 +1266,15 @@ static void aqComputeFluid(TerrainNoise *p, AquiferChunkCache *st, int idx, int 
         if (top < minCellTopY) minCellTopY = top;
     }
 
-    int level = aqComputeSurfaceLevel(p, x, y, z, globalLevel, minCellTopY, hasAbove);
-    uint8_t type = aqComputeFluidType(p, x, y, z, globalType, level);
-    st->fluidLevel[idx] = level;
-    st->fluidType[idx] = type;
-    st->cacheValid[idx] = 1;
+    st->cells[idx].fluidLevel = aqComputeSurfaceLevel(p, x, y, z, globalLevel, minCellTopY, hasAbove);
+    st->cells[idx].fluidType = aqComputeFluidType(p, x, y, z, globalType, st->cells[idx].fluidLevel);
+    st->cells[idx].statusValid = 1;
 }
 
 static inline void aqEnsureStatus(TerrainNoise *p, AquiferChunkCache *st, int idx) {
-    if (st->cacheValid[idx]) return;
-    int64_t pos = st->location[idx];
-    aqComputeFluid(p, st, idx, aqPosX(pos), aqPosY(pos), aqPosZ(pos));
+    if (st->cells[idx].statusValid) return;
+    AquiferCell *c = &st->cells[idx];
+    aqComputeFluid(p, st, idx, c->px, c->py, c->pz);
 }
 
 static double aqCalculatePressure(TerrainNoise *p, int x, int y, int z, double *barrierAcc,
@@ -1364,42 +1291,27 @@ static double aqCalculatePressure(TerrainNoise *p, int x, int y, int z, double *
 
     double mid = 0.5 * ((double) aLevel + (double) bLevel);
     double f = ((double) y + 0.5) - mid;
-    double half = (double) dy / 2.0;
+    double half = (double) dy * 0.5;
     double n = half - fabs(f);
 
     double o;
     if (f > 0.0) {
-        double q = 0.0 + n;
-        o = q > 0.0 ? q / 1.5 : q / 2.5;
+        o = n > 0.0 ? n / 1.5 : n / 2.5;
     } else {
         double q = 3.0 + n;
         o = q > 0.0 ? q / 3.0 : q / 10.0;
     }
 
-    double inner;
     if (o < -2.0 || o > 2.0) {
-        inner = 0.0;
-    } else if (isnan(*barrierAcc)) {
-        double q = sampleDoublePerlin(&p->noises[OTP_AQUIFER_BARRIER], (double) x, (double) y * 0.5, (double) z);
-        *barrierAcc = q;
-        inner = q;
-    } else {
-        inner = *barrierAcc;
+        return 2.0 * o;
     }
-    return 2.0 * (inner + o);
+    if (isnan(*barrierAcc)) {
+        *barrierAcc = sampleDoublePerlin(&p->noises[OTP_AQUIFER_BARRIER], (double) x, (double) y * 0.5, (double) z);
+    }
+    return 2.0 * (*barrierAcc + o);
 }
 
-/**
- * 1.18+ NoiseBasedAquifer substance calculation (Vanilla `NoiseBasedAquifer.computeSubstance`).
- *
- * Determines whether carved space (density <= 0) is air, water, or lava:
- * 1. Fast checks: positive density is solid stone; Y above maximum preliminary surface level or below
- *    deep lava cutoff defaults to global fluid levels.
- * 2. Samples the nearest jittered 3D grid points (spacing 16x12x16) using aquiferPositional PRNG.
- * 3. Evaluates barrier noise pressure between neighboring fluid levels. If barrier pressure
- *    pushes (density + pressure) > 0, carving is blocked (returns AQUIFER_BLOCK_SOLID) to
- *    form a watertight/lavatight barrier preventing fluid leaks into caves.
- */
+/* Evaluates whether carved cave space contains air, water, or lava, accounting for fluid barrier pressure. */
 uint8_t computeAquiferSubstance(TerrainNoise *params, int x, int y, int z, double density) {
     if (density > 0.0) {
         return AQUIFER_BLOCK_SOLID;
@@ -1417,9 +1329,9 @@ uint8_t computeAquiferSubstance(TerrainNoise *params, int x, int y, int z, doubl
         return AQUIFER_BLOCK_LAVA;
     }
 
-    const int gx = floorDivInt(x - 5, 16);
-    const int gy = floorDivInt(y + 1, 12);
-    const int gz = floorDivInt(z - 5, 16);
+    const int gx = floordiv(x - 5, 16);
+    const int gy = floordiv(y + 1, 12);
+    const int gz = floordiv(z - 5, 16);
 
     int d0 = INT_MAX, d1 = INT_MAX, d2 = INT_MAX, d3 = INT_MAX;
     int s0 = 0, s1 = 0, s2 = 0, s3 = 0;
@@ -1431,19 +1343,18 @@ uint8_t computeAquiferSubstance(TerrainNoise *params, int x, int y, int z, doubl
                 int idx = aqIndex(st, cx, cy, cz);
                 if (idx < 0) continue;
 
-                int64_t packed = st->location[idx];
-                if (packed == INT64_MAX) {
+                AquiferCell *cell = &st->cells[idx];
+                if (!cell->posValid) {
                     Xoroshiro rnd = {(uint64_t) aqHashCode(cx, cy, cz) ^ params->aquiferPositional.lo, params->aquiferPositional.hi};
-                    int px = cx * 16 + xNextInt(&rnd, 10);
-                    int py = cy * 12 + xNextInt(&rnd, 9);
-                    int pz = cz * 16 + xNextInt(&rnd, 10);
-                    packed = aqPackPos(px, py, pz);
-                    st->location[idx] = packed;
+                    cell->px = cx * 16 + xNextInt(&rnd, 10);
+                    cell->py = cy * 12 + xNextInt(&rnd, 9);
+                    cell->pz = cz * 16 + xNextInt(&rnd, 10);
+                    cell->posValid = 1;
                 }
 
-                int dx = aqPosX(packed) - x;
-                int dy = aqPosY(packed) - y;
-                int dz = aqPosZ(packed) - z;
+                int dx = cell->px - x;
+                int dy = cell->py - y;
+                int dz = cell->pz - z;
                 int dist = dx * dx + dy * dy + dz * dz;
 
                 if (dist <= d0) {
@@ -1463,13 +1374,13 @@ uint8_t computeAquiferSubstance(TerrainNoise *params, int x, int y, int z, doubl
     }
 
     aqEnsureStatus(params, st, s0);
-    const int l0 = st->fluidLevel[s0];
-    const uint8_t t0 = st->fluidType[s0];
+    const int l0 = st->cells[s0].fluidLevel;
+    const uint8_t t0 = st->cells[s0].fluidType;
     const double s01 = aqSimilarity(d0, d1);
     const uint8_t result = aqLevelBlockAt(l0, t0, y);
 
-    if (!(s01 > 0.0)) {
-        if (s01 >= AQ_FLOWING_UPDATE_SIMULARITY) {
+    if (s01 <= 0.0) {
+        if (s01 >= AQ_FLOWING_UPDATE_SIMILARITY) {
             aqEnsureStatus(params, st, s1);
         }
         return result;
@@ -1484,16 +1395,16 @@ uint8_t computeAquiferSubstance(TerrainNoise *params, int x, int y, int z, doubl
     double barrierAcc = NAN;
 
     aqEnsureStatus(params, st, s1);
-    const int l1 = st->fluidLevel[s1];
-    const uint8_t t1 = st->fluidType[s1];
+    const int l1 = st->cells[s1].fluidLevel;
+    const uint8_t t1 = st->cells[s1].fluidType;
     double p1 = s01 * aqCalculatePressure(params, x, y, z, &barrierAcc, l0, t0, l1, t1);
     if (density + p1 > 0.0) {
         return AQUIFER_BLOCK_SOLID;
     }
 
     aqEnsureStatus(params, st, s2);
-    const int l2 = st->fluidLevel[s2];
-    const uint8_t t2 = st->fluidType[s2];
+    const int l2 = st->cells[s2].fluidLevel;
+    const uint8_t t2 = st->cells[s2].fluidType;
     const double s02 = aqSimilarity(d0, d2);
     if (s02 > 0.0) {
         double p2 = s01 * s02 * aqCalculatePressure(params, x, y, z, &barrierAcc, l0, t0, l2, t2);
@@ -1511,21 +1422,15 @@ uint8_t computeAquiferSubstance(TerrainNoise *params, int x, int y, int z, doubl
     }
 
     int b0 = !(l0 == l1 && t0 == t1);
-    int b1 = (s12 >= AQ_FLOWING_UPDATE_SIMULARITY) && !(l1 == l2 && t1 == t2);
-    int b2 = (s02 >= AQ_FLOWING_UPDATE_SIMULARITY) && !(l0 == l2 && t0 == t2);
-    if (!(b0 || b1 || b2)) {
+    int b1 = (s12 >= AQ_FLOWING_UPDATE_SIMILARITY) && !(l1 == l2 && t1 == t2);
+    int b2 = (s02 >= AQ_FLOWING_UPDATE_SIMILARITY) && !(l0 == l2 && t0 == t2);
+    if (!b0 && !b1 && !b2) {
         aqEnsureStatus(params, st, s3);
     }
     return result;
 }
 
-/**
- * Exact WORLD_SURFACE_WG surface height.
- * For >=1.18, scans downward from y = 319 to bedrock at exact block coordinates (x, z),
- * evaluating 3D cell interpolation, noodle caves, and NoiseBasedAquifer fluids.
- * For <1.18, samples the 4 neighboring noise columns and performs pre-1.18 cell interpolation.
- * Returns y + 1 of the highest non-air block (or worldMinY if none).
- */
+/* Exact WORLD_SURFACE_WG surface height at block coordinates (x, z). */
 int getExactSurfaceHeight(TerrainNoise *params, int x, int z) {
     if (params->g.mc < MC_1_18) {
         if (params->g.dim != DIM_OVERWORLD) return 0;
@@ -1536,19 +1441,15 @@ int getExactSurfaceHeight(TerrainNoise *params, int x, int z) {
         sampleOWNoiseColumnOld(params, cellX, cellZ + 1, 0, 32, ds01);
         sampleOWNoiseColumnOld(params, cellX + 1, cellZ, 0, 32, ds10);
         sampleOWNoiseColumnOld(params, cellX + 1, cellZ + 1, 0, 32, ds11);
-        double px = (x & 3) / 4.0;
-        double pz = (z & 3) / 4.0;
-        return generateColumn(NULL, ds00, ds01, ds10, ds11, 0, 32, 8, px, pz, INTERP_PRE_1_18, 0, 1);
+        return generateColumn(NULL, ds00, ds01, ds10, ds11, 0, 32, 8, (x & 3) / 4.0, (z & 3) / 4.0, INTERP_PRE_1_18, 0, 1);
     }
 
-    for (int i = EW_CELLS_Y - 1; i >= 0; i--) {
-        for (int j = 7; j >= 0; j--) {
-            int y = (-8 + i) * 8 + j;
-            double density = sampleInterpolatedDensity18(params, x, y, z);
-            if (computeAquiferSubstance(params, x, y, z, density) != AQUIFER_BLOCK_AIR) {
-                return y + 1;
-            }
+    for (int y = EW_MIN_Y + EW_HEIGHT - 1; y >= EW_MIN_Y; y--) {
+        double density = sampleInterpolatedDensity18(params, x, y, z);
+        if (computeAquiferSubstance(params, x, y, z, density) != AQUIFER_BLOCK_AIR) {
+            return y + 1;
         }
     }
     return EW_MIN_Y;
 }
+

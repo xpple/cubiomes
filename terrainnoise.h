@@ -46,6 +46,15 @@ enum
 #define AQUIFER_MAX_CELLS (3 * 35 * 3)
 #define AQUIFER_PSL_CACHE_SIZE 256
 
+typedef struct
+{
+    int px, py, pz;
+    int fluidLevel;
+    uint8_t fluidType;
+    uint8_t statusValid;
+    uint8_t posValid;
+} AquiferCell;
+
 /**
  * Cache for 1.18+ NoiseBasedAquifer fluid levels and fluid types within a chunk column.
  * Grid coordinates are at 16x12x16 cell spacing with randomized (jittered) sample points.
@@ -56,10 +65,7 @@ STRUCT(AquiferChunkCache)
     int minGridX, minGridY, minGridZ;
     int gridSizeX, gridSizeY, gridSizeZ;
     int skipSamplingAboveY;
-    int fluidLevel[AQUIFER_MAX_CELLS];
-    uint8_t fluidType[AQUIFER_MAX_CELLS];
-    uint8_t cacheValid[AQUIFER_MAX_CELLS];
-    int64_t location[AQUIFER_MAX_CELLS];
+    AquiferCell cells[AQUIFER_MAX_CELLS];
 };
 
 /**
