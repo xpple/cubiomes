@@ -31,7 +31,7 @@
 /// EXAMPLES
 /// Area at normal biome scale (1:4):
 ///  Range r_2d = {4, x,z, sx,sz};
-/// (C99 syntax allows ommission of the trailing zero-initialization.)
+/// (C99 syntax allows omission of the trailing zero-initialization.)
 ///
 /// Area at block scale (1:1) at sea level:
 ///  Range r_surf = {1, x,z, sx,sz, 63};
