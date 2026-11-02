@@ -3,58 +3,17 @@
 
 #include <math.h>
 #include <stdio.h>
-#include <string.h>
 
-// grad()
-#if 0
-static double indexedLerp(int idx, double d1, double d2, double d3)
+ATTR(hot, const)
+static inline double indexedLerp(int idx, double d1, double d2, double d3)
 {
-    const double cEdgeX[] = { 1.0,-1.0, 1.0,-1.0, 1.0,-1.0, 1.0,-1.0,
-                              0.0, 0.0, 0.0, 0.0, 1.0, 0.0,-1.0, 0.0 };
-    const double cEdgeY[] = { 1.0, 1.0,-1.0,-1.0, 0.0, 0.0, 0.0, 0.0,
-                              1.0,-1.0, 1.0,-1.0, 1.0,-1.0, 1.0,-1.0 };
-    const double cEdgeZ[] = { 0.0, 0.0, 0.0, 0.0, 1.0, 1.0,-1.0,-1.0,
-                              1.0, 1.0,-1.0,-1.0, 0.0, 1.0, 0.0,-1.0 };
+    static const double cEdgeX[] = {1.0,-1.0, 1.0,-1.0, 1.0,-1.0, 1.0,-1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0,-1.0, 0.0};
+    static const double cEdgeY[] = {1.0, 1.0,-1.0,-1.0, 0.0, 0.0, 0.0, 0.0, 1.0,-1.0, 1.0,-1.0, 1.0,-1.0, 1.0,-1.0};
+    static const double cEdgeZ[] = {0.0, 0.0, 0.0, 0.0, 1.0, 1.0,-1.0,-1.0, 1.0, 1.0,-1.0,-1.0, 0.0, 1.0, 0.0,-1.0};
 
     idx &= 0xf;
     return cEdgeX[idx] * d1 + cEdgeY[idx] * d2 + cEdgeZ[idx] * d3;
 }
-#else
-ATTR(hot, const)
-static inline double indexedLerp(uint8_t idx, double a, double b, double c)
-{
-    // Type-punning to reinterpret IEEE-754 double bits as uint64_t
-    uint64_t abits, bbits, cbits;
-    memcpy(&abits, &a, sizeof(abits));
-    memcpy(&bbits, &b, sizeof(bbits));
-    memcpy(&cbits, &c, sizeof(cbits));
-
-    uint8_t h = idx & 0xf;
-
-    // u = select(h < 8, abits, bbits)
-    uint64_t mask = -(uint64_t)(h < 8);
-    uint64_t u = bbits ^ ((abits ^ bbits) & mask);
-
-    // v = select(h == 12 || h == 14, abits, cbits)
-    mask = -(uint64_t)((h & 13) == 12);
-    uint64_t v = cbits ^ ((abits ^ cbits) & mask);
-    
-    // v = select(h < 4, bbits, v)
-    mask = -(uint64_t)(h < 4);
-    v ^= ((bbits ^ v) & mask);
-
-    // u = select(h & 1, -u, u)
-    // v = select(h & 2, -v, v)
-    u ^= (uint64_t)(h & 1) << 63;
-    v ^= (uint64_t)(h & 2) << 62;
-
-    double du, dv;
-    memcpy(&du, &u, sizeof(du));
-    memcpy(&dv, &v, sizeof(dv));
-
-    return du + dv;
-}
-#endif
 
 void perlinInit(PerlinNoise *__restrict noise, uint64_t *__restrict seed)
 {
