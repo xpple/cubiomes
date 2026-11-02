@@ -147,7 +147,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * void perlinInit(PerlinNoise *noise, uint64_t *seed)
+     * void perlinInit(PerlinNoise *restrict noise, uint64_t *restrict seed)
      * }
      */
     public static FunctionDescriptor perlinInit$descriptor() {
@@ -157,7 +157,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * void perlinInit(PerlinNoise *noise, uint64_t *seed)
+     * void perlinInit(PerlinNoise *restrict noise, uint64_t *restrict seed)
      * }
      */
     public static MethodHandle perlinInit$handle() {
@@ -167,7 +167,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * void perlinInit(PerlinNoise *noise, uint64_t *seed)
+     * void perlinInit(PerlinNoise *restrict noise, uint64_t *restrict seed)
      * }
      */
     public static MemorySegment perlinInit$address() {
@@ -176,7 +176,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * void perlinInit(PerlinNoise *noise, uint64_t *seed)
+     * void perlinInit(PerlinNoise *restrict noise, uint64_t *restrict seed)
      * }
      */
     public static void perlinInit(MemorySegment noise, MemorySegment seed) {
@@ -207,7 +207,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * void xPerlinInit(PerlinNoise *noise, Xoroshiro *xr)
+     * void xPerlinInit(PerlinNoise *restrict noise, Xoroshiro *restrict xr)
      * }
      */
     public static FunctionDescriptor xPerlinInit$descriptor() {
@@ -217,7 +217,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * void xPerlinInit(PerlinNoise *noise, Xoroshiro *xr)
+     * void xPerlinInit(PerlinNoise *restrict noise, Xoroshiro *restrict xr)
      * }
      */
     public static MethodHandle xPerlinInit$handle() {
@@ -227,7 +227,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * void xPerlinInit(PerlinNoise *noise, Xoroshiro *xr)
+     * void xPerlinInit(PerlinNoise *restrict noise, Xoroshiro *restrict xr)
      * }
      */
     public static MemorySegment xPerlinInit$address() {
@@ -236,7 +236,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * void xPerlinInit(PerlinNoise *noise, Xoroshiro *xr)
+     * void xPerlinInit(PerlinNoise *restrict noise, Xoroshiro *restrict xr)
      * }
      */
     public static void xPerlinInit(MemorySegment noise, MemorySegment xr) {
