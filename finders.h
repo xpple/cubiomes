@@ -17,7 +17,7 @@ extern "C"
 
 enum StructureType
 {
-    Feature, // for locations of temple generation attempts pre 1.13
+    Feature, ///< for locations of temple generation attempts pre 1.13
     Desert_Pyramid,
     Jungle_Temple, Jungle_Pyramid = Jungle_Temple,
     Swamp_Hut,
@@ -44,12 +44,13 @@ enum StructureType
     Trail_Ruins,
     Trial_Chambers,
     Abandoned_Camp,
-    Stronghold, // not like the other structures, but nice to have a constant for it
+    Stronghold, ///< not like the other structures, but nice to have a constant for it
     FEATURE_NUM
 };
 
 
-// use getStructureConfig() for the version specific structure configuration
+/// \struct StructureConfig
+/// use getStructureConfig() for the version specific structure configuration
 STRUCT(StructureConfig)
 {
     int32_t salt;
@@ -118,31 +119,31 @@ void freePos3List(Pos3List* list);
 
 STRUCT(StrongholdIter)
 {
-    Pos pos;        // accurate location of current stronghold
-    Pos nextapprox; // approxmimate location (+/-112 blocks) of next stronghold
-    int index;      // stronghold index counter
-    int ringnum;    // ring number for index
-    int ringmax;    // max index within ring
-    int ringidx;    // index within ring
-    double angle;   // next angle within ring
-    double dist;    // next distance from origin (in chunks)
-    uint64_t rnds;  // random number seed (48 bit)
-    int mc;         // minecraft version
+    Pos pos;        ///< accurate location of current stronghold
+    Pos nextapprox; ///< approxmimate location (+/-112 blocks) of next stronghold
+    int index;      ///< stronghold index counter
+    int ringnum;    ///< ring number for index
+    int ringmax;    ///< max index within ring
+    int ringidx;    ///< index within ring
+    double angle;   ///< next angle within ring
+    double dist;    ///< next distance from origin (in chunks)
+    uint64_t rnds;  ///< random number seed (48 bit)
+    int mc;         ///< minecraft version
 };
 
 
 STRUCT(StructureVariant)
 {
-    uint8_t abandoned;      // is zombie village
-    uint8_t giant;          // giant portal variant
-    uint8_t underground;    // underground portal
-    uint8_t airpocket;      // portal with air pocket
-    uint8_t basement;       // igloo with basement
-    uint8_t cracked;        // geode with crack
-    uint8_t size;           // geode size | igloo middel pieces
-    uint8_t start;          // starting piece index
-    short   biome;          // biome variant
-    uint8_t rotation;       // 0:0, 1:cw90, 2:cw180, 3:cw270=ccw90
+    uint8_t abandoned;      ///< is zombie village
+    uint8_t giant;          ///< giant portal variant
+    uint8_t underground;    ///< underground portal
+    uint8_t airpocket;      ///< portal with air pocket
+    uint8_t basement;       ///< igloo with basement
+    uint8_t cracked;        ///< geode with crack
+    uint8_t size;           ///< geode size | igloo middel pieces
+    uint8_t start;          ///< starting piece index
+    short   biome;          ///< biome variant
+    uint8_t rotation;       ///< 0:0, 1:cw90, 2:cw180, 3:cw270=ccw90
     uint8_t mirror;
     int16_t x, y, z;
     int16_t sx, sy, sz;
@@ -150,13 +151,13 @@ STRUCT(StructureVariant)
 
 STRUCT(Piece)
 {
-    const char *name;         // structure piece name
-    Pos3 pos, bb0, bb1;       // position and bounding box limits
-    uint8_t rot;              // rotation
+    const char *name;         ///< structure piece name
+    Pos3 pos, bb0, bb1;       ///< position and bounding box limits
+    uint8_t rot;              ///< rotation
     int8_t depth;
     int8_t type;
     int chestCount;
-    Pos chestPoses[4];        // assume a maximum of four chests
+    Pos chestPoses[4];        ///< assume a maximum of four chests
     uint64_t lootSeeds[4];
     const char* lootTables[4];
     int additionalData;
@@ -171,24 +172,24 @@ STRUCT(EndIsland)
 
 enum
 {
-    BF_APPROX       = 0x01, // enabled aggresive filtering, trading accuracy
+    BF_APPROX       = 0x01, ///< enabled aggresive filtering, trading accuracy
     BF_FORCED_OCEAN = FORCE_OCEAN_VARIANTS,
 };
 STRUCT(BiomeFilter)
 {
     // bitfields for biomes required at their respecive layers
-    uint64_t tempsToFind; // Special (1:1024)
-    uint64_t otempToFind; // OceanTemp (1:256)
-    uint64_t majorToFind; // Biome (1:256)
-    uint64_t edgesToFind; // Edge (1:64) [mod64: as special case for bamboo]
+    uint64_t tempsToFind; ///< Special (1:1024)
+    uint64_t otempToFind; ///< OceanTemp (1:256)
+    uint64_t majorToFind; ///< Biome (1:256)
+    uint64_t edgesToFind; ///< Edge (1:64) [mod64: as special case for bamboo]
     // bitfields for biomes to find at RareBiome(1:64), Shore(1:16) and Mix(1:4)
     // layers for (biomeID < 64) and modified (biomeID >= 128 && biomeID < 192)
     uint64_t raresToFind, raresToFindM;
     uint64_t shoreToFind, shoreToFindM;
     uint64_t riverToFind, riverToFindM;
-    uint64_t oceanToFind; // all required ocean types
+    uint64_t oceanToFind; ///< all required ocean types
 
-    int specialCnt; // number of special temperature categories required
+    int specialCnt; ///< number of special temperature categories required
 
     uint32_t flags;
 
@@ -232,9 +233,8 @@ STRUCT(BiomeFilter)
 // Moving Structures
 //==============================================================================
 
-/* Transposes a base seed such that structures are moved by the specified region
- * vector, (regX, regZ).
- */
+/// Transposes a base seed such that structures are moved by the specified region
+/// vector, (regX, regZ).
 static inline uint64_t moveStructure(uint64_t baseSeed, int regX, int regZ)
 {
     return (baseSeed - regX*341873128712 - regZ*132897987541) & 0xffffffffffff;
@@ -245,60 +245,55 @@ static inline uint64_t moveStructure(uint64_t baseSeed, int regX, int regZ)
 // Finding Structure Positions
 //==============================================================================
 
-/* Always returns vanilla structure config. Use setStructureConfigProvider
- * and getStructureConfig for customisability.
- */
+/// Always returns vanilla structure config. Use setStructureConfigProvider
+/// and getStructureConfig for customisability.
 int getStructureConfig_default(int structureType, int mc, StructureConfig *sconf);
 
 typedef int (*StructureConfigProvider)(int structureType, int mc, StructureConfig *sconf);
 
-/* The library can be configured to use a custom internal getter for structure
- * configurations. However, note this is experimental and not all structure
- * configs may work. (Ideally only change structure salts.)
- *
- * Passing NULL resets the provider.
- */
+/// The library can be configured to use a custom internal getter for structure
+/// configurations. However, note this is experimental and not all structure
+/// configs may work. (Ideally only change structure salts.)
+///
+/// Passing NULL resets the provider.
 void setStructureConfigProvider(StructureConfigProvider fn);
 
-/* Selects the structure configuration for a given version. Returns zero upon
- * failure (e.g. version does not support structure type).
- */
+/// Selects the structure configuration for a given version.
+///
+/// \return zero upon failure (e.g. version does not support structure type).
 int getStructureConfig(int structureType, int mc, StructureConfig *sconf);
 
-/**
- * Get the structure salt config (step and index) for a given feature. Currently
- * only supports those features for which loot is supported. Returns zero upon
- * failure (version is below 1.13, or structure does not exist in that version).
- *
- * @param structureType the structure type to get the config for
- * @param mc the Minecraft version
- * @param biome the biome variant as returned by getVariant, or in <1.18 the biome itself
- * @param ssconf the output config
- * @return zero upon failure
- */
+/// Get the structure salt config (step and index) for a given feature. Currently
+/// only supports those features for which loot is supported.
+///
+/// \return zero upon failure (version is below 1.13, or structure does not exist in that version).
+///
+/// \param structureType the structure type to get the config for
+/// \param mc the Minecraft version
+/// \param biome the biome variant as returned by getVariant, or in <1.18 the biome itself
+/// \param ssconf the output config
+/// \return zero upon failure
 int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltConfig *ssconf);
 
-/* Finds the block position of the structure generation attempt in a given
- * region. You can use isViableStructurePos() to test if the necessary biome
- * requirements are met for the structure to actually generate at that position.
- * Some structure types may fail to produce a valid position in the given
- * region regardless of biomes, in which case the function returns zero.
- *
- * @structureType   : structure type
- * @mc              : minecraft version
- * @seed            : world seed (only the lower 48-bits are relevant)
- * @regX,regZ       : region coordinates (the region size depends on type)
- * @pos             : output block position
- *
- * Returns zero if the position is invalid, or non-zero otherwise.
- */
+/// Finds the block position of the structure generation attempt in a given
+/// region. You can use isViableStructurePos() to test if the necessary biome
+/// requirements are met for the structure to actually generate at that position.
+/// Some structure types may fail to produce a valid position in the given
+/// region regardless of biomes, in which case the function returns zero.
+///
+/// \param structureType structure type
+/// \param mc minecraft version
+/// \param seed world seed (only the lower 48-bits are relevant)
+/// \param regX,regZ region coordinates (the region size depends on type)
+/// \param pos output block position
+///
+/// \return zero if the position is invalid, or non-zero otherwise.
 int getStructurePos(int structureType, int mc, uint64_t seed, int regX, int regZ, Pos *pos);
 
-/* The inline functions below get the generation attempt position given a
- * structure configuration. Most small structures use the getFeature..
- * variants, which have a uniform distribution, while large structures
- * (monuments and mansions) have a triangular distribution.
- */
+/// The inline functions below get the generation attempt position given a
+/// structure configuration. Most small structures use the getFeature..
+/// variants, which have a uniform distribution, while large structures
+/// (monuments and mansions) have a triangular distribution.
 static inline ATTR(const)
 Pos getFeaturePos(StructureConfig config, uint64_t seed, int regX, int regZ);
 
@@ -311,11 +306,10 @@ Pos getLargeStructurePos(StructureConfig config, uint64_t seed, int regX, int re
 static inline ATTR(const)
 Pos getLargeStructureChunkInRegion(StructureConfig config, uint64_t seed, int regX, int regZ);
 
-/* Checks a chunk area, starting at (chunkX, chunkZ) with size (chunkW, chunkH)
- * for Mineshaft positions. If not NULL, positions are written to the buffer
- * 'out' up to a maximum number of 'nout'. The return value is the number of
- * chunks with Mineshafts in the area.
- */
+/// Checks a chunk area, starting at (chunkX, chunkZ) with size (chunkW, chunkH)
+/// for Mineshaft positions. If not NULL, positions are written to the buffer
+/// 'out' up to a maximum number of 'nout'. The return value is the number of
+/// chunks with Mineshafts in the area.
 int getMineshafts(int mc, uint64_t seed, int chunkX, int chunkZ,
         int chunkW, int chunkH, Pos *out, int nout);
 
@@ -323,25 +317,22 @@ void setAttemptSeed(uint64_t *s, int cx, int cz);
 
 uint64_t getPopulationSeed(int mc, uint64_t ws, int x, int z);
 
-// not exactly a structure
+/// not exactly a structure
 ATTR(const)
 int isSlimeChunk(uint64_t seed, int chunkX, int chunkZ);
 
-/* Finds the position and size of the small end islands in a given chunk.
- * Returns the number of end islands found.
- */
+/// Finds the position and size of the small end islands in a given chunk.
+/// \return the number of end islands found.
 int getEndIslands(EndIsland islands[2], int mc, uint64_t seed, int chunkX, int chunkZ);
 
-/* Finds the small end islands in the given area and updates the existing
- * height map, y, accordingly. Note that values in the y-map can only increase
- * using this.
- */
+/// Finds the small end islands in the given area and updates the existing
+/// height map, y, accordingly. Note that values in the y-map can only increase
+/// using this.
 int mapEndIslandHeight(float *y, const EndNoise *en, uint64_t seed,
     int x, int z, int w, int h, int scale);
 
-/* Checks if the given chunk contains no blocks. This included a check for
- * small end islands.
- */
+/// Checks if the given chunk contains no blocks. This included a check for
+/// small end islands.
 int isEndChunkEmpty(const EndNoise *en, const SurfaceNoise *sn, uint64_t seed,
     int chunkX, int chunkZ);
 
@@ -349,42 +340,38 @@ int isEndChunkEmpty(const EndNoise *en, const SurfaceNoise *sn, uint64_t seed,
 // Finding Strongholds and Spawn
 //==============================================================================
 
-/* Finds the approximate location of the first stronghold (+/-112 blocks),
- * which can be determined from the lower 48 bits of the world seed without
- * biome checks. If 'sh' is not NULL, it will be initialized for iteration
- * using nextStronghold() to get the accurate stronghold locations, as well as
- * the subsequent approximate stronghold positions.
- *
- * @sh      : stronghold iterator to be initialized (nullable)
- * @mc      : minecraft version
- * @s48     : world seed (only 48-bit are relevant)
- *
- * Returns the approximate block position of the first stronghold.
- */
+/// Finds the approximate location of the first stronghold (+/-112 blocks),
+/// which can be determined from the lower 48 bits of the world seed without
+/// biome checks. If 'sh' is not NULL, it will be initialized for iteration
+/// using nextStronghold() to get the accurate stronghold locations, as well as
+/// the subsequent approximate stronghold positions.
+///
+/// \param sh stronghold iterator to be initialized (nullable)
+/// \param mc minecraft version
+/// \param s48 world seed (only 48-bit are relevant)
+///
+/// \return the approximate block position of the first stronghold.
 Pos initFirstStronghold(StrongholdIter *sh, int mc, uint64_t s48);
 
-/* Performs the biome checks for the stronghold iterator and finds its accurate
- * location, as well as the approximate location of the next stronghold.
- *
- * @sh      : stronghold iteration state, holding position info
- * @g       : generator, should be initialized for Overworld generation,
- *            for version 1.19.3+ the generator may be left NULL to iterate
- *            over the approximate locations without biome check
- *
- * Returns the number of further strongholds after this one.
- */
+/// Performs the biome checks for the stronghold iterator and finds its accurate
+/// location, as well as the approximate location of the next stronghold.
+///
+/// \param sh stronghold iteration state, holding position info
+/// \param g generator, should be initialized for Overworld generation,
+///          for version 1.19.3+ the generator may be left NULL to iterate
+///          over the approximate locations without biome check
+///
+/// \return the number of further strongholds after this one.
 int nextStronghold(StrongholdIter *sh, const Generator *g);
 
 
-/* Finds the approximate spawn point in the world.
- * The random state 'rng' output can be NULL to ignore.
- */
+/// Finds the approximate spawn point in the world.
+/// The random state 'rng' output can be NULL to ignore.
 Pos estimateSpawn(const Generator *g, uint64_t *rng);
 
-/* Finds the spawn point in the world.
- * Warning: Slow, and may be inaccurate because the world spawn depends on
- * grass blocks!
- */
+/// Finds the spawn point in the world.
+/// Warning: Slow, and may be inaccurate because the world spawn depends on
+/// grass blocks!
 Pos getSpawn(const Generator *g);
 
 
@@ -487,24 +474,22 @@ static inline float providerTrapezoidFloatBetween(uint64_t* rnd, float min, floa
     return min + a * h + b * g;
 }
 
-/* Finds a suitable pseudo-random location in the specified area.
- * This function is used to determine the positions of spawn and strongholds.
- * Warning: accurate, but slow!
- *
- * @g           : generator for Overworld biomes
- * @x,y,z       : origin for the search
- * @radius      : square 'radius' of the search
- * validB       : valid biomes, as a bitset for biomes with 0 <= id < 64
- * validM       : valid biomes, as a bitset for biomes with 192 <= id < 256
- * @rnd         : random obj, initialise using setSeed(rnd, world_seed)
- * @passes      : (output) number of valid biomes passed, NULL to ignore
- */
+/// Finds a suitable pseudo-random location in the specified area.
+/// This function is used to determine the positions of spawn and strongholds.
+/// Warning: accurate, but slow!
+///
+/// \param g generator for Overworld biomes
+/// \param x,y,z origin for the search
+/// \param radius square 'radius' of the search
+/// \param validB valid biomes, as a bitset for biomes with 0 <= id < 64
+/// \param validM valid biomes, as a bitset for biomes with 192 <= id < 256
+/// \param rng random obj, initialise using setSeed(rnd, world_seed)
+/// \param passes (output) number of valid biomes passed, NULL to ignore
 Pos locateBiome(
         const Generator *g, int x, int y, int z, int radius,
         uint64_t validB, uint64_t validM, uint64_t *rng, int *passes);
 
-/* Get the shadow seed.
- */
+/// Get the shadow seed.
 static inline uint64_t getShadow(uint64_t seed)
 {
     return -7379792620528906219LL - seed;
@@ -516,62 +501,54 @@ static inline uint64_t getShadow(uint64_t seed)
 // Validating Structure Positions
 //==============================================================================
 
-/* Performs a biome check near the specified block coordinates to determine
- * whether a structure of the given type could spawn there. You can get the
- * block positions using getStructurePos().
- * The generator, 'g', should be initialized for the correct MC version,
- * dimension and seed. The generator may be temporarily modified during the
- * function call, but will be restored upon return.
- * The 'flags' argument is optional structure specific information, such as the
- * biome variant for villages.
- */
+/// Performs a biome check near the specified block coordinates to determine
+/// whether a structure of the given type could spawn there. You can get the
+/// block positions using getStructurePos().
+/// The generator, 'g', should be initialized for the correct MC version,
+/// dimension and seed. The generator may be temporarily modified during the
+/// function call, but will be restored upon return.
+/// The 'flags' argument is optional structure specific information, such as the
+/// biome variant for villages.
 int isViableStructurePos(int structType, Generator *g, int blockX, int blockZ, uint32_t flags);
 
-/* Checks if the specified structure type could generate in the given biome.
- */
+/// Checks if the specified structure type could generate in the given biome.
 int isViableFeatureBiome(int mc, int structureType, int biomeID);
 
-/* Some structures in 1.18 now only spawn if the surface is sufficiently high
- * at all four bounding box corners. This affects primarily Desert_Pyramids,
- * Jungle_Temples and Mansions.
- * Currently cubiomes does not provide overworld surface height and cannot
- * check it, but we can rule out some unlikely positions based biomes.
- *
- * This function is meant only for the 1.18 Overworld and is subject to change.
- */
+/// Some structures in 1.18 now only spawn if the surface is sufficiently high
+/// at all four bounding box corners. This affects primarily Desert_Pyramids,
+/// Jungle_Temples and Mansions.
+/// Currently cubiomes does not provide overworld surface height and cannot
+/// check it, but we can rule out some unlikely positions based biomes.
+///
+/// This function is meant only for the 1.18 Overworld and is subject to change.
 int isViableStructureTerrain(int structType, Generator *g, int blockX, int blockZ);
 
-/* End Cities require a sufficiently high surface in addition to a biome check.
- * The world seed should be applied to the EndNoise and SurfaceNoise before
- * calling this function. (Use initSurfaceNoiseEnd() for initialization.)
- */
+/// End Cities require a sufficiently high surface in addition to a biome check.
+/// The world seed should be applied to the EndNoise and SurfaceNoise before
+/// calling this function. (Use initSurfaceNoiseEnd() for initialization.)
 int isViableEndCityTerrain(const Generator *g, const SurfaceNoise *sn,
         int blockX, int blockZ);
 
-/**
- * Verifies whether the terrain is viable for the nether fossil to generate.
- *
- * Populates sv.y with the accurate y coordinate.
- *
- * @param cx the chunk X coordinate
- * @param cz the chunk Z coordinate
- * @param sv the structure variant info
- * @param base3dNoise the nether terrain noise
- * @param mc
- * @return 1 if viable
- */
+/// Verifies whether the terrain is viable for the nether fossil to generate.
+///
+/// Populates sv.y with the accurate y coordinate.
+///
+/// \param cx the chunk X coordinate
+/// \param cz the chunk Z coordinate
+/// \param sv the structure variant info
+/// \param base3dNoise the nether terrain noise
+/// \param mc
+/// \return 1 if viable
 int isViableNetherFossilTerrain(int cx, int cz, StructureVariant *sv, BlendedNoise *base3dNoise, int mc);
 
-/**
- * Checks whether the nether fossil has a dried ghast. Before calling this function,
- * call isViableNetherFossilTerrain first.
- *
- * @param cx the chunk X coordinate
- * @param cz the chunk Z coordinate
- * @param seed the world seed
- * @param sv the structure variant info
- * @return 1 if the nether fossil has a dried ghast
- */
+/// Checks whether the nether fossil has a dried ghast. Before calling this function,
+/// call isViableNetherFossilTerrain first.
+///
+/// \param cx the chunk X coordinate
+/// \param cz the chunk Z coordinate
+/// \param seed the world seed
+/// \param sv the structure variant info
+/// \return 1 if the nether fossil has a dried ghast
 int netherFossilHasGhast(int cx, int cz, uint64_t seed, StructureVariant* sv);
 
 
@@ -579,10 +556,9 @@ int netherFossilHasGhast(int cx, int cz, uint64_t seed, StructureVariant* sv);
 // Finding Properties of Structures
 //==============================================================================
 
-/* Initialises and returns a random seed used in the (16x16) chunk generation.
- * This random object is used for recursiveGenerate() which is responsible for
- * generating caves, ravines, mineshafts, and virtually all other structures.
- */
+/// Initialises and returns a random seed used in the (16x16) chunk generation.
+/// This random object is used for recursiveGenerate() which is responsible for
+/// generating caves, ravines, mineshafts, and virtually all other structures.
 inline static
 uint64_t chunkGenerateRnd(uint64_t worldSeed, int chunkX, int chunkZ)
 {
@@ -593,67 +569,59 @@ uint64_t chunkGenerateRnd(uint64_t worldSeed, int chunkX, int chunkZ)
     return rnd;
 }
 
-/* Get data, such as rotation and bounding box of a structure instance.
- * (Supports only some structure types.)
- */
+/// Get data, such as rotation and bounding box of a structure instance.
+/// (Supports only some structure types.)
 int getVariant(StructureVariant *sv, int structType, int mc, uint64_t seed,
         int blockX, int blockZ, int biomeID);
 
-/**
- * Get the distinct loot table count for chests in the structure.
- *
- * @param structure the structure type
- * @param mc the Minecraft version
- * @return the distinct count
- */
+/// Get the distinct loot table count for chests in the structure.
+///
+/// \param structure the structure type
+/// \param mc the Minecraft version
+/// \return the distinct count
 int getLootTableCountForStructure(int structure, int mc);
 
-/**
- * Get a list of structure pieces for the given structure. Not all structures are supported.
- * For the supported structures, each structure piece has information about the name, (basic)
- * position, chest count, and loot table and seeds for each chest. The number of pieces is returned.
- *
- * @param list the output list of pieces
- * @param n either for fortresses the maximum size of the output list, or for end cities a value at least END_CITY_PIECES_MAX
- * @param stype the structure type
- * @param ssconf the structure salt config from getStructureSaltConfig
- * @param sv the structure variant (if available)
- * @param mc the Minecraft version
- * @param seed the world seed
- * @param posX the block X-coordinate as yielded by getStructurePos
- * @param posZ the block Z-coordinate as yielded by getStructurePos
- * @return the number of pieces
- */
+/// Get a list of structure pieces for the given structure. Not all structures are supported.
+/// For the supported structures, each structure piece has information about the name, (basic)
+/// position, chest count, and loot table and seeds for each chest. The number of pieces is returned.
+///
+/// \param list the output list of pieces
+/// \param n either for fortresses the maximum size of the output list, or for end cities a value at least END_CITY_PIECES_MAX
+/// \param stype the structure type
+/// \param ssconf the structure salt config from getStructureSaltConfig
+/// \param sv the structure variant (if available)
+/// \param mc the Minecraft version
+/// \param seed the world seed
+/// \param posX the block X-coordinate as yielded by getStructurePos
+/// \param posZ the block Z-coordinate as yielded by getStructurePos
+/// \return the number of pieces
 int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf, StructureVariant *sv, int mc, uint64_t seed, int posX, int posZ);
 
-/* Find the 20 fixed inner positions where End Gateways generate upon defeating
- * the Dragon. The positions are written to 'src' in generation order.
- */
+/// Find the 20 fixed inner positions where End Gateways generate upon defeating
+/// the Dragon. The positions are written to 'src' in generation order.
 void getFixedEndGateways(int mc, uint64_t seed, Pos src[20]);
 
-/* Get the outer linked Gateway destination for an inner source Gateway.
- * (mc > MC_1_12)
- */
+/// Get the outer linked Gateway destination for an inner source Gateway.
+/// (mc > MC_1_12)
 Pos getLinkedGatewayChunk(const EndNoise *en, const SurfaceNoise *sn,
     uint64_t seed, Pos src, Pos *dst);
 Pos getLinkedGatewayPos(const EndNoise *en, const SurfaceNoise *sn,
     uint64_t seed, Pos src);
 
 
-/* Find the number of each type of house that generate in a village
- * (mc < MC_1_14)
- * @housesOut       : output number of houses for each entry in the house type
- *                    enum (i.e this should be an array of length HOUSE_NUM)
- * @seed            : world seed
- * @chunkX, chunkZ  : 16x16 chunk position of the village origin
- *
- * Returns the random object seed after finding these numbers.
- */
 enum
 {
     HouseSmall, Church, Library, WoodHut, Butcher, FarmLarge, FarmSmall,
     Blacksmith, HouseLarge, HOUSE_NUM
 };
+/// Find the number of each type of house that generate in a village
+/// (mc < MC_1_14)
+/// \param houses output number of houses for each entry in the house type
+///               enum (i.e this should be an array of length HOUSE_NUM)
+/// \param seed world seed
+/// \param chunkX,chunkZ 16x16 chunk position of the village origin
+///
+/// \return the random object seed after finding these numbers.
 uint64_t getHouseList(int *houses, uint64_t seed, int chunkX, int chunkZ);
 
 
@@ -663,9 +631,8 @@ uint64_t getHouseList(int *houses, uint64_t seed, int chunkX, int chunkZ);
 //==============================================================================
 
 
-/* Add the given biome 'id' to a biome set which is represented by the
- * bitfields mL and mM for ids 0-63 and 128-191, respectively.
- */
+/// Add the given biome 'id' to a biome set which is represented by the
+/// bitfields mL and mM for ids 0-63 and 128-191, respectively.
 static inline void idSetAdd(uint64_t *mL, uint64_t *mM, int id)
 {
     switch (id & ~0x3f) {
@@ -683,20 +650,19 @@ static inline int idSetTest(uint64_t mL, uint64_t mM, int id)
     return 0;
 }
 
-/* Samples biomes within the specified range and checks that at least a given
- * proportion of the biomes in that area evaluate as successes.
- *
- * @g           : biome generator
- * @r           : range to be checked
- * @rng         : random number seed for the sampling positions
- * @coverage    : minimum coverage of successful evaluations, [0,1]
- * @confidence  : confidence level, (0,1), e.g. 0.95 for a 95% confidence
- * @eval        : evaluation function - 0:fail, 1:success, -1:skip, else:abort
- * @data        : data argument for eval()
- *
- * Returns non-zero if a sufficient proportion of the sampled positions
- * evaluted as successes.
- */
+/// Samples biomes within the specified range and checks that at least a given
+/// proportion of the biomes in that area evaluate as successes.
+///
+/// \param g biome generator
+/// \param r range to be checked
+/// \param rng random number seed for the sampling positions
+/// \param coverage minimum coverage of successful evaluations, [0,1]
+/// \param confidence confidence level, (0,1), e.g. 0.95 for a 95% confidence
+/// \param eval evaluation function - 0:fail, 1:success, -1:skip, else:abort
+/// \param data data argument for eval()
+///
+/// \return non-zero if a sufficient proportion of the sampled positions
+/// evaluted as successes.
 int monteCarloBiomes(
         Generator         * g,
         Range               r,
@@ -713,10 +679,9 @@ int monteCarloBiomes(
 //==============================================================================
 
 
-/* Creates a biome filter configuration from a given list of required and
- * excluded biomes. Biomes should not appear in both lists. Lists of length
- * zero may be passed as null.
- */
+/// Creates a biome filter configuration from a given list of required and
+/// excluded biomes. Biomes should not appear in both lists. Lists of length
+/// zero may be passed as null.
 void setupBiomeFilter(
     BiomeFilter *bf,
     int mc, uint32_t flags,
@@ -724,31 +689,29 @@ void setupBiomeFilter(
     const int *excluded, int excludedLen,
     const int *matchany, int matchanyLen);
 
-/* Starts to generate the specified range and checks if the biomes meet the
- * requirements of the biome filter, returning either:
- * 0 (failed),
- * 1 (okay, area is fully generated), or
- * 2 (okay, incomplete generation).
- *
- * The area will be generated inside the cache (if != NULL) but is only
- * defined if the generation was fully completed (check return value).
- * More aggressive filtering can be enabled with the flags which may yield
- * some false negatives in exchange for speed.
- *
- * The generator should be set up for the correct version, however the
- * dimension and seed will be applied internally. This will modify the
- * generator into a partially initialized state that is not valid to use
- * outside this function without re-applying a seed.
- *
- * @g           : biome generator
- * @cache       : working buffer and output (nullable)
- * @r           : range to be checked
- * @dim         : dimension (0:Overworld, -1:Nether, +1:End)
- * @seed        : world seed
- * @filter      : biome requirements to be met
- * @flags       : enables features (see below)
- * @stop        : occasional check for abort (nullable)
- */
+/// Starts to generate the specified range and checks if the biomes meet the
+/// requirements of the biome filter, returning either:
+/// 0 (failed),
+/// 1 (okay, area is fully generated), or
+/// 2 (okay, incomplete generation).
+///
+/// The area will be generated inside the cache (if != NULL) but is only
+/// defined if the generation was fully completed (check return value).
+/// More aggressive filtering can be enabled with the flags which may yield
+/// some false negatives in exchange for speed.
+///
+/// The generator should be set up for the correct version, however the
+/// dimension and seed will be applied internally. This will modify the
+/// generator into a partially initialized state that is not valid to use
+/// outside this function without re-applying a seed.
+///
+/// \param g biome generator
+/// \param cache working buffer and output (nullable)
+/// \param r range to be checked
+/// \param dim dimension (0:Overworld, -1:Nether, +1:End)
+/// \param seed world seed
+/// \param filter biome requirements to be met
+/// \param stop occasional check for abort (nullable)
 int checkForBiomes(
         Generator         * g,
         int               * cache,
@@ -759,16 +722,15 @@ int checkForBiomes(
         volatile char     * stop // should be atomic, but is fine as stop flag
         );
 
-/* Specialization of checkForBiomes() for a LayerStack, i.e. the Overworld up
- * to 1.17.
- *
- * @ls          : layered generator (will be modified!)
- * @entry       : generation entry point (setLayerSeed() may be applied here)
- * @cache       : working buffer, and output (if != NULL)
- * @seed        : world seed
- * @x,z,w,h     : requested area
- * @filter      : biomes to be checked for
- */
+/// Specialization of checkForBiomes() for a LayerStack, i.e. the Overworld up
+/// to 1.17.
+///
+/// \param ls layered generator (will be modified!)
+/// \param entry generation entry point (setLayerSeed() may be applied here)
+/// \param cache working buffer, and output (if != NULL)
+/// \param seed world seed
+/// \param x,z,w,h requested area
+/// \param filter biomes to be checked for
 int checkForBiomesAtLayer(
         LayerStack        * ls,
         Layer             * entry,
@@ -781,28 +743,26 @@ int checkForBiomesAtLayer(
         const BiomeFilter * filter
         );
 
-/* Checks that the area (x,z,w,h) at layer Special, scale 1:1024 contains the
- * temperature category requirements defined by 'tc' as:
- * if (tc[TEMP_CAT] >= 0) require at least this many entries of this category
- * if (tc[TEMP_CAT] <  0) avoid, there shall be no entries of this category
- * TEMP_CAT is any of:
- * Oceanic, Warm, Lush, Cold, Freeing, Special+Warm, Special+Lush, Special+Cold
- * For 1.7-1.17 only.
- */
+/// Checks that the area (x,z,w,h) at layer Special, scale 1:1024 contains the
+/// temperature category requirements defined by 'tc' as:
+/// if (tc[TEMP_CAT] >= 0) require at least this many entries of this category
+/// if (tc[TEMP_CAT] <  0) avoid, there shall be no entries of this category
+/// TEMP_CAT is any of:
+/// Oceanic, Warm, Lush, Cold, Freeing, Special+Warm, Special+Lush, Special+Cold
+/// For 1.7-1.17 only.
 int checkForTemps(LayerStack *g, uint64_t seed, int x, int z, int w, int h, const int tc[9]);
 
-/* Find the center positions for a given biome id.
- * @pos     : output biome center positions
- * @siz     : output size of biomes (nullable)
- * @nmax    : maximum number of output entries
- * @g       : generator, should be initialized for overworld generation
- * @r       : area to examine, requires: scale = 4, sy = 1
- * @match   : biome id to find
- * @minsiz  : minimum size of output biomes
- * @tol     : border tolerance
- * @stop    : stopping flag (nullable)
- * Returns the number of entries written to pos and siz.
- */
+/// Find the center positions for a given biome id.
+/// \param pos output biome center positions
+/// \param siz output size of biomes (nullable)
+/// \param nmax maximum number of output entries
+/// \param g generator, should be initialized for overworld generation
+/// \param r area to examine, requires: scale = 4, sy = 1
+/// \param match biome id to find
+/// \param minsiz minimum size of output biomes
+/// \param tol border tolerance
+/// \param stop stopping flag (nullable)
+/// \return the number of entries written to pos and siz.
 int getBiomeCenters(
         Pos           * pos,
         int           * siz,
@@ -815,91 +775,76 @@ int getBiomeCenters(
         volatile char * stop
         );
 
-/* Checks if a biome may generate given a version and layer ID as entry point.
- * The supported layers are:
- * L_BIOME_256, L_BAMBOO_256, L_BIOME_EDGE_64, L_HILLS_64, L_SUNFLOWER_64,
- * L_SHORE_16, L_RIVER_MIX_4, L_OCEAN_MIX_4, L_VORONOI_1
- * (provided the version matches)
- */
+/// Checks if a biome may generate given a version and layer ID as entry point.
+/// The supported layers are:
+/// L_BIOME_256, L_BAMBOO_256, L_BIOME_EDGE_64, L_HILLS_64, L_SUNFLOWER_64,
+/// L_SHORE_16, L_RIVER_MIX_4, L_OCEAN_MIX_4, L_VORONOI_1
+/// (provided the version matches)
 int canBiomeGenerate(int layerId, int mc, uint32_t flags, int biomeID);
 
-/* Given a 'biomeID' at a generation 'layerId', this functions finds which
- * biomes may generate from it. The result is stored in the bitfields:
- * mL : for ids 0-63
- * mM : for ids 128-191
- */
+/// Given a 'biomeID' at a generation 'layerId', this functions finds which
+/// biomes may generate from it. The result is stored in the bitfields:
+/// \param mL for ids 0-63
+/// \param mM for ids 128-191
 void genPotential(uint64_t *mL, uint64_t *mM, int layerId, int mc, uint32_t flags, int biomeID);
 
-/* Gets the biomes that can generate in the given version and layer ID.
- * In contrast to canBiomeGenerate() and genPotential() it also supports
- * L_OCEAN_TEMP_256 and 1.18+, where the layerId is ignored.
- * mL : for ids 0-63
- * mM : for ids 128-191
- */
+/// Gets the biomes that can generate in the given version and layer ID.
+/// In contrast to canBiomeGenerate() and genPotential() it also supports
+/// L_OCEAN_TEMP_256 and 1.18+, where the layerId is ignored.
+/// \param mL for ids 0-63
+/// \param mM for ids 128-191
 void getAvailableBiomes(uint64_t *mL, uint64_t *mM, int layerId, int mc, uint32_t flags);
 
 //==============================================================================
 // Biome Noise Finders (for 1.18+)
 //==============================================================================
 
-/**
- * Runs a gradient descent towards the minimum of the noise parameter times a
- * given factor. The algorithm is restricted to the area (x,z,w,h) and starts
- * at (i0,j0) relative to (x,z). The iteration is terminated when either
- * 1) a fix point has been reached,
- * 2) maxiter iterations have been completed,
- * 3) or the sampling position has moved more than maxrad away from (i0,j0).
- *
- * Alpha is an optimization argument that is used to determine the length of
- * large steps based on the current gradient.
- *
- * Optionally, the iteration can also call the custom function:
- *  func(data, x, z, factor*para_noise(x,z));
- *
- * The return value is the minimum value reached.
- */
+/// Runs a gradient descent towards the minimum of the noise parameter times a
+/// given factor. The algorithm is restricted to the area (x,z,w,h) and starts
+/// at (i0,j0) relative to (x,z). The iteration is terminated when either
+/// 1) a fix point has been reached,
+/// 2) maxiter iterations have been completed,
+/// 3) or the sampling position has moved more than maxrad away from (i0,j0).
+///
+/// Alpha is an optimization argument that is used to determine the length of
+/// large steps based on the current gradient.
+///
+/// Optionally, the iteration can also call the custom function:
+///  func(data, x, z, factor*para_noise(x,z));
+///
+/// The return value is the minimum value reached.
 double getParaDescent(const DoublePerlinNoise *para, double factor,
     int x, int z, int w, int h, int i0, int j0, int maxrad,
     int maxiter, double alpha, void *data, int (*func)(void*,int,int,double));
 
-/**
- * Determines the value range of a climate noise parameter over the given area.
- * The sampling has scale 1:4 and sampling shift is not considered, so biomes
- * could potentially *leak* in at the boarders.
- * An optional function:
- *  func(data, x, z, climate_noise(x,z))
- * is called in each gradient descent iteration. If this function returns
- * non-zero the search is aborted, the results are undefined and a non-zero
- * error is returned.
- *
- * The results are written to pmin and pmax (which would be cast to an integer
- * during boime mapping). Nullable, to look for minima and maxima separately.
- */
+/// Determines the value range of a climate noise parameter over the given area.
+/// The sampling has scale 1:4 and sampling shift is not considered, so biomes
+/// could potentially *leak* in at the boarders.
+/// An optional function:
+///  func(data, x, z, climate_noise(x,z))
+/// is called in each gradient descent iteration. If this function returns
+/// non-zero the search is aborted, the results are undefined and a non-zero
+/// error is returned.
+///
+/// The results are written to pmin and pmax (which would be cast to an integer
+/// during boime mapping). Nullable, to look for minima and maxima separately.
 int getParaRange(const DoublePerlinNoise *para, double *pmin, double *pmax,
     int x, int z, int w, int h, void *data, int (*func)(void*,int,int,double));
 
-/**
- * Gets the min/max parameter values within which a biome change can occur.
- */
+/// Gets the min/max parameter values within which a biome change can occur.
 const int *getBiomeParaExtremes(int mc);
 
-/**
- * Gets the min/max possible noise parameter values at which the given biome
- * can generate. The values are in min/max pairs in order of:
- * temperature, humidity, continentalness, erosion, depth, weirdness.
- */
+/// Gets the min/max possible noise parameter values at which the given biome
+/// can generate. The values are in min/max pairs in order of:
+/// temperature, humidity, continentalness, erosion, depth, weirdness.
 const int *getBiomeParaLimits(int mc, int id);
 
-/**
- * Determines which biomes are able to generate given a set of climate
- * parameter limits. Possible biomes are marked non-zero in the 'ids'.
- */
+/// Determines which biomes are able to generate given a set of climate
+/// parameter limits. Possible biomes are marked non-zero in the 'ids'.
 void getPossibleBiomesForLimits(char ids[256], int mc, int limits[6][2]);
 
-/**
- * Find the largest rectangle in ids[sx][sz] which consists only of 'match'.
- * The limit corners are written to p0 and p1. Returned is the rectangle's area.
- */
+/// Find the largest rectangle in ids[sx][sz] which consists only of 'match'.
+/// The limit corners are written to p0 and p1. Returned is the rectangle's area.
 int getLargestRec(int match, const int *ids, int sx, int sz, Pos *p0, Pos *p1);
 
 //==============================================================================

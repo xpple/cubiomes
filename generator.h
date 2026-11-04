@@ -4,7 +4,7 @@
 #include "layers.h"
 #include "biomenoise.h"
 
-// generator flags
+/// generator flags
 enum
 {
     LARGE_BIOMES            = 0x1,
@@ -21,21 +21,24 @@ STRUCT(Generator)
     uint64_t sha;
 
     union {
-        struct { // MC 1.0 - 1.17
+        /// MC 1.0 - 1.17
+        struct {
             LayerStack ls;
-            Layer xlayer[5]; // buffer for custom entry layers @{1,4,16,64,256}
+            Layer xlayer[5]; ///< buffer for custom entry layers \@{1,4,16,64,256}
             Layer *entry;
         };
-        struct { // MC 1.18
+        /// MC 1.18
+        struct {
             BiomeNoise bn;
         };
-        struct { // MC A1.2 - B1.7
+        /// MC A1.2 - B1.7
+        struct {
             BiomeNoiseBeta bnb;
             //SurfaceNoiseBeta snb;
         };
     };
-    NetherNoise nn; // MC 1.16
-    EndNoise en; // MC 1.9
+    NetherNoise nn; ///< MC 1.16
+    EndNoise en; ///< MC 1.9
 };
 
 
@@ -48,58 +51,46 @@ extern "C"
 /// Biome Generation
 ///=============================================================================
 
-/**
- * Sets up a biome generator for a given MC version. The 'flags' can be used to
- * control LARGE_BIOMES or to FORCE_OCEAN_VARIANTS to enable ocean variants at
- * scales higher than normal.
- */
+/// Sets up a biome generator for a given MC version. The 'flags' can be used to
+/// control LARGE_BIOMES or to FORCE_OCEAN_VARIANTS to enable ocean variants at
+/// scales higher than normal.
 void setupGenerator(Generator *g, int mc, uint32_t flags);
 
-/**
- * Initializes the generator for a given dimension and seed.
- * dim=0:   Overworld
- * dim=-1:  Nether
- * dim=+1:  End
- */
+/// Initializes the generator for a given dimension and seed.
+/// dim=0:   Overworld
+/// dim=-1:  Nether
+/// dim=+1:  End
 void applySeed(Generator *g, int dim, uint64_t seed);
 
-/**
- * Calculates the buffer size (number of ints) required to generate a cuboidal
- * volume of size (sx, sy, sz). If 'sy' is zero the buffer is calculated for a
- * 2D plane (which is equivalent to sy=1 here).
- * The function allocCache() can be used to allocate the corresponding int
- * buffer using malloc().
- */
+/// Calculates the buffer size (number of ints) required to generate a cuboidal
+/// volume of size (sx, sy, sz). If 'sy' is zero the buffer is calculated for a
+/// 2D plane (which is equivalent to sy=1 here).
+/// The function allocCache() can be used to allocate the corresponding int
+/// buffer using malloc().
 size_t getMinCacheSize(const Generator *g, int scale, int sx, int sy, int sz);
 int *allocCache(const Generator *g, Range r);
 
-/**
- * Generates the biomes for a cuboidal scaled range given by 'r'.
- * (See description of Range for more detail.)
- *
- * The output is generated inside the cache. Upon success the biome ids can be
- * accessed by indexing as:
- *  cache[ y*r.sx*r.sz + z*r.sx + x ]
- * where (x,y,z) is an relative position inside the range cuboid.
- *
- * The required length of the cache can be determined with getMinCacheSize().
- *
- * The return value is zero upon success.
- */
+/// Generates the biomes for a cuboidal scaled range given by 'r'.
+/// (See description of Range for more detail.)
+///
+/// The output is generated inside the cache. Upon success the biome ids can be
+/// accessed by indexing as:
+///  cache[ y*r.sx*r.sz + z*r.sx + x ]
+/// where (x,y,z) is an relative position inside the range cuboid.
+///
+/// The required length of the cache can be determined with getMinCacheSize().
+///
+/// The return value is zero upon success.
 int genBiomes(const Generator *g, int *cache, Range r);
-/**
- * Gets the biome for a specified scaled position. Note that the scale should
- * be either 1 or 4, for block or biome coordinates respectively.
- * Returns none (-1) upon failure.
- */
+/// Gets the biome for a specified scaled position. Note that the scale should
+/// be either 1 or 4, for block or biome coordinates respectively.
+/// \return none (-1) upon failure.
 int getBiomeAt(const Generator *g, int scale, int x, int y, int z);
 
-/**
- * Returns the default layer that corresponds to the given scale.
- * Supported scales are {0, 1, 4, 16, 64, 256}. A scale of zero indicates the
- * custom entry layer 'g->entry'.
- * (Overworld, MC <= 1.17)
- */
+/// Supported scales are {0, 1, 4, 16, 64, 256}. A scale of zero indicates the
+/// custom entry layer 'g->entry'.
+/// (Overworld, MC <= 1.17)
+/// \return the default layer that corresponds to the given scale.
 const Layer *getLayerForScale(const Generator *g, int scale);
 
 
@@ -107,33 +98,29 @@ const Layer *getLayerForScale(const Generator *g, int scale);
 /// Layered Biome Generation (old interface up to 1.17)
 ///=============================================================================
 
-/* Initialize an instance of a layered generator. */
+/// Initialize an instance of a layered generator.
 void setupLayerStack(LayerStack *g, int mc, int largeBiomes);
 
-/* Calculates the minimum size of the buffers required to generate an area of
- * dimensions 'sizeX' by 'sizeZ' at the specified layer.
- */
+/// Calculates the minimum size of the buffers required to generate an area of
+/// dimensions 'sizeX' by 'sizeZ' at the specified layer.
 size_t getMinLayerCacheSize(const Layer *layer, int sizeX, int sizeZ);
 
-/* Set up custom layers. */
+/// Set up custom layers.
 Layer *setupLayer(Layer *l, mapfunc_t *map, int mc,
     int8_t zoom, int8_t edge, uint64_t saltbase, Layer *p, Layer *p2);
 
-/* Generates the specified area using the current generator settings and stores
- * the biomeIDs in 'out'.
- * The biomeIDs will be indexed in the form: out[x + z*areaWidth]
- * It is recommended that 'out' is allocated using allocCache() for the correct
- * buffer size.
- */
+/// Generates the specified area using the current generator settings and stores
+/// the biomeIDs in 'out'.
+/// The biomeIDs will be indexed in the form: out[x + z*areaWidth]
+/// It is recommended that 'out' is allocated using allocCache() for the correct
+/// buffer size.
 int genArea(const Layer *layer, int *out, int areaX, int areaZ, int areaWidth, int areaHeight);
 
-/**
- * Map an approximation of the Overworld surface height.
- * The horizontal scaling is 1:4. If non-null, the ids are filled with the
- * biomes of the area. The height (written to y[w*h]) is in blocks.
- * If the Generator's dimension is Overworld and version before Beta 1.8
- * or after 1.18, SurfaceNoise is not needed.
- */
+/// Map an approximation of the Overworld surface height.
+/// The horizontal scaling is 1:4. If non-null, the ids are filled with the
+/// biomes of the area. The height (written to y[w*h]) is in blocks.
+/// If the Generator's dimension is Overworld and version before Beta 1.8
+/// or after 1.18, SurfaceNoise is not needed.
 int mapApproxHeight(float *y, int *ids, const Generator *g,
     const SurfaceNoise *sn, int x, int z, int w, int h);
 

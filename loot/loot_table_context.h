@@ -23,25 +23,26 @@ struct LootPool {
     int pool_condition_count;
     LootItemCondition* conditions;
 
-    // roll count choice function
     int min_rolls;
     int max_rolls;
+    /// roll count choice function
     RollCountFunction roll_count_function;
 
-    // precomputed loot array, which maps possible rng ouputs
-    // to indices of loot entries they correspond to
+    /// combined weight of the entries
     int total_weight;
+    /// precomputed loot array, which maps possible rng ouputs
+    /// to indices of loot entries they correspond to
     int* precomputed_loot;
 
     // loot entry arrays
     int entry_count;
-    int* entry_to_item;          // entryID -> context itemID
-    int* entry_conditions_index; // entryID -> ID of first loot condition in conditions array
-    int* entry_conditions_count; // entryID -> number of conditions applied to the item
-    int* entry_functions_index;  // entryID -> ID of first loot function in functions array
-    int* entry_functions_count;  // entryID -> number of functions applied to the item
+    int* entry_to_item;          ///< entryID -> context itemID
+    int* entry_conditions_index; ///< entryID -> ID of first loot condition in conditions array
+    int* entry_conditions_count; ///< entryID -> number of conditions applied to the item
+    int* entry_functions_index;  ///< entryID -> ID of first loot function in functions array
+    int* entry_functions_count;  ///< entryID -> number of functions applied to the item
 
-    // loot function array, containing all the extra processors that get applied to the item
+    /// loot function array, containing all the extra processors that get applied to the item
     LootFunction* loot_functions;
 };
 
@@ -49,19 +50,19 @@ typedef struct LootTableContext LootTableContext;
 struct LootTableContext {
     // "constants" defining the loot table
     int version;
-    int item_count;    // how many different items can this loot table generate
-    char** item_names; // names of the different items
-    int* global_item_ids; // consistent item ids
+    int item_count;    ///< how many different items can this loot table generate
+    char** item_names; ///< names of the different items
+    int* global_item_ids; ///< consistent item ids
 
     int pool_count;
     LootPool* loot_pools;
 
-    int unresolved_subtable_count;      // how many subtables are missing
-    char* unresolved_subtable_names[8]; // names of the unresolved subtables (future-safe max size)
+    int unresolved_subtable_count;      ///< how many subtables are missing
+    char* unresolved_subtable_names[8]; ///< names of the unresolved subtables (future-safe max size)
 
-    int subtable_count;        // how many subtables the loot table has
-    int* subtable_pool_offset; // subtable index to index of first loot pool
-    int* subtable_pool_count;  // subtable index to how many pools it has
+    int subtable_count;        ///< how many subtables the loot table has
+    int* subtable_pool_offset; ///< subtable index to index of first loot pool
+    int* subtable_pool_count;  ///< subtable index to how many pools it has
 
     // holding data related with generating the loot table within the context is a debatable idea
     RandomSource prng_state;
