@@ -50,6 +50,8 @@ void xPerlinInit(PerlinNoise *__restrict noise, Xoroshiro *__restrict xr);
 
 double samplePerlin(const PerlinNoise *noise, double x, double y, double z,
         double yamp, double ymax);
+double samplePerlin117(const PerlinNoise *noise, double x, double y, double z,
+        double yamp, double ymax);
 double sampleSimplex2D(const PerlinNoise *noise, double x, double y);
 
 /// Perlin Octaves
