@@ -75,8 +75,9 @@ void xPerlinInit(PerlinNoise *__restrict noise, Xoroshiro *__restrict xr)
     noise->t2 = d2*d2*d2 * (d2 * (d2*6.0-15.0) + 10.0);
 }
 
-double samplePerlin(const PerlinNoise *noise, double d1, double d2, double d3,
-        double yamp, double ymax)
+ATTR(hot, always_inline)
+static inline double samplePerlinInternal(const PerlinNoise *noise, double d1, double d2, double d3,
+        double yamp, double ymax, double yshift)
 {
     uint8_t h1, h2, h3;
     double t1, t2, t3;
@@ -113,7 +114,7 @@ double samplePerlin(const PerlinNoise *noise, double d1, double d2, double d3,
     if (yamp)
     {
         double yclamp = ymax >= 0.0 && ymax < d2 ? ymax : d2;
-        d2 -= floor(yclamp / yamp) * yamp;
+        d2 -= floor(yclamp / yamp + yshift) * yamp;
     }
 
     const uint8_t *idx = noise->d;
@@ -174,6 +175,18 @@ double samplePerlin(const PerlinNoise *noise, double d1, double d2, double d3,
     l5 = lerp(t2, l5, l7);
 
     return lerp(t3, l1, l5);
+}
+
+double samplePerlin(const PerlinNoise *noise, double d1, double d2, double d3,
+        double yamp, double ymax)
+{
+    return samplePerlinInternal(noise, d1, d2, d3, yamp, ymax, 0.0);
+}
+
+double samplePerlin117(const PerlinNoise *noise, double d1, double d2, double d3,
+        double yamp, double ymax)
+{
+    return samplePerlinInternal(noise, d1, d2, d3, yamp, ymax, (double)1.0e-7f);
 }
 
 static

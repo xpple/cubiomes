@@ -2093,7 +2093,7 @@ double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z)
     double o = 1.0;
 
     for (int octaveIdx = 0; octaveIdx < 8; octaveIdx++) {
-        mainSampleTotal += samplePerlin(&bn->octmain.octaves[octaveIdx], maintainPrecision(factoredX * o), maintainPrecision(factoredY * o), maintainPrecision(factoredZ * o), bn->factoredSmearedYScale * o, factoredY * o) / o;
+        mainSampleTotal += samplePerlin117(&bn->octmain.octaves[octaveIdx], maintainPrecision(factoredX * o), maintainPrecision(factoredY * o), maintainPrecision(factoredZ * o), bn->factoredSmearedYScale * o, factoredY * o) / o;
         o /= 2.0;
     }
 
@@ -2107,11 +2107,11 @@ double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z)
         double yamp = bn->smearedYScale * o;
         double ymax = scaledY * o;
         if (q < 1.0) {
-            minSampleTotal += samplePerlin(&bn->octmin.octaves[octaveIdx], sampleX, sampleY, sampleZ, yamp, ymax) / o;
+            minSampleTotal += samplePerlin117(&bn->octmin.octaves[octaveIdx], sampleX, sampleY, sampleZ, yamp, ymax) / o;
         }
 
         if (q > 0.0) {
-            maxSampleTotal += samplePerlin(&bn->octmax.octaves[octaveIdx], sampleX, sampleY, sampleZ, yamp, ymax) / o;
+            maxSampleTotal += samplePerlin117(&bn->octmax.octaves[octaveIdx], sampleX, sampleY, sampleZ, yamp, ymax) / o;
         }
 
         o /= 2.0;
