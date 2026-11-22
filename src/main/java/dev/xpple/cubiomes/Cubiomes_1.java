@@ -9369,7 +9369,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * void copyGenerator(const Generator *src, Generator *dst)
+     * void copyGenerator(const Generator *restrict src, Generator *restrict dst)
      * }
      */
     public static FunctionDescriptor copyGenerator$descriptor() {
@@ -9379,7 +9379,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * void copyGenerator(const Generator *src, Generator *dst)
+     * void copyGenerator(const Generator *restrict src, Generator *restrict dst)
      * }
      */
     public static MethodHandle copyGenerator$handle() {
@@ -9389,7 +9389,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * void copyGenerator(const Generator *src, Generator *dst)
+     * void copyGenerator(const Generator *restrict src, Generator *restrict dst)
      * }
      */
     public static MemorySegment copyGenerator$address() {
@@ -9398,7 +9398,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * void copyGenerator(const Generator *src, Generator *dst)
+     * void copyGenerator(const Generator *restrict src, Generator *restrict dst)
      * }
      */
     public static void copyGenerator(MemorySegment src, MemorySegment dst) {
