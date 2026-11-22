@@ -17,6 +17,15 @@ public class Cubiomes extends Cubiomes_1 {
     Cubiomes() {
         // Should not be called directly
     }
+    private static final int FLAME = (int)27L;
+    /**
+     * {@snippet lang=c :
+     * enum Enchantment.FLAME = 27
+     * }
+     */
+    public static int FLAME() {
+        return FLAME;
+    }
     private static final int INFINITY_ENCHANTMENT = (int)28L;
     /**
      * {@snippet lang=c :

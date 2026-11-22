@@ -9355,6 +9355,66 @@ class Cubiomes_1 extends Cubiomes$shared {
         }
     }
 
+    private static class copyGenerator {
+        public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
+            Cubiomes.C_POINTER,
+            Cubiomes.C_POINTER
+        );
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("copyGenerator");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    /**
+     * Function descriptor for:
+     * {@snippet lang=c :
+     * void copyGenerator(const Generator *src, Generator *dst)
+     * }
+     */
+    public static FunctionDescriptor copyGenerator$descriptor() {
+        return copyGenerator.DESC;
+    }
+
+    /**
+     * Downcall method handle for:
+     * {@snippet lang=c :
+     * void copyGenerator(const Generator *src, Generator *dst)
+     * }
+     */
+    public static MethodHandle copyGenerator$handle() {
+        return copyGenerator.HANDLE;
+    }
+
+    /**
+     * Address for:
+     * {@snippet lang=c :
+     * void copyGenerator(const Generator *src, Generator *dst)
+     * }
+     */
+    public static MemorySegment copyGenerator$address() {
+        return copyGenerator.ADDR;
+    }
+
+    /**
+     * {@snippet lang=c :
+     * void copyGenerator(const Generator *src, Generator *dst)
+     * }
+     */
+    public static void copyGenerator(MemorySegment src, MemorySegment dst) {
+        var mh$ = copyGenerator.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("copyGenerator", src, dst);
+            }
+            mh$.invokeExact(src, dst);
+        } catch (Error | RuntimeException ex) {
+           throw ex;
+        } catch (Throwable ex$) {
+           throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
     private static class getMinCacheSize {
         public static final FunctionDescriptor DESC = FunctionDescriptor.of(
             Cubiomes.C_LONG,
@@ -21175,15 +21235,6 @@ class Cubiomes_1 extends Cubiomes$shared {
      */
     public static int PUNCH() {
         return PUNCH;
-    }
-    private static final int FLAME = (int)27L;
-    /**
-     * {@snippet lang=c :
-     * enum Enchantment.FLAME = 27
-     * }
-     */
-    public static int FLAME() {
-        return FLAME;
     }
 }
 
