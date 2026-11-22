@@ -371,20 +371,24 @@ static void init_rolls(const cJSON* pool_data, LootPool* pool)
     }
 }
 
-static void init_conditions(const cJSON* conditions, LootPool* pool) {
+static int init_conditions(const cJSON* conditions, LootItemCondition* output) {
     cJSON* condition = NULL;
     int idx = 0;
     cJSON_ArrayForEach(condition, conditions) {
         char *condition_string = cJSON_GetObjectItem(condition, "condition")->valuestring;
-        if (strcmp(condition_string, "minecraft:random_chance") != 0) {
+        if (strcmp(condition_string, "minecraft:random_chance") == 0) {
+            float chance = (float) cJSON_GetObjectItem(condition, "chance")->valuedouble;
+            create_random_chance(&output[idx], chance);
+        } else if (strcmp(condition_string, "minecraft:location_check") == 0 && cJSON_GetObjectItem(cJSON_GetObjectItem(condition, "predicate"), "biomes") != NULL) {
+            create_location_predicate(&output[idx], NULL, 0);
+        } else {
             LOG_ERROR("unsupported loot item condition");
             fprintf(stderr, "condition_string: %s\n", condition_string);
-            return;
+            return -1;
         }
-        float chance = (float) cJSON_GetObjectItem(condition, "chance")->valuedouble;
-        create_random_chance(&pool->conditions[idx], chance);
         idx++;
     }
+    return 0;
 }
 
 static void map_entry_to_item(const cJSON* entry_data, LootTableContext* ctx, int* item_id)
@@ -414,6 +418,14 @@ static int get_subtable_entry_id(int index)
 
 static void init_entry(const cJSON* entry_data, LootPool* pool, const int entry_id, LootTableContext* ctx)
 {
+    const cJSON* conditions = cJSON_GetObjectItem(entry_data, "conditions");
+    pool->entry_conditions_count[entry_id] = cJSON_GetArraySize(conditions);
+    if (entry_id == 0) {
+        pool->entry_conditions_index[entry_id] = pool->pool_condition_count;
+    } else {
+        pool->entry_conditions_index[entry_id] = pool->entry_conditions_index[entry_id - 1] + pool->entry_conditions_count[entry_id - 1];
+    }
+
     cJSON* weight_element = cJSON_GetObjectItem(entry_data, "weight");
     pool->total_weight += weight_element == NULL ? 1 : weight_element->valueint;
 
@@ -570,13 +582,7 @@ static int init_loot_pool(const cJSON* pool_data, const int pool_id, LootTableCo
     init_rolls(pool_data, pool);
 
     cJSON* conditions = cJSON_GetObjectItem(pool_data, "conditions");
-    if (conditions == NULL) {
-        pool->condition_count = 0;
-    } else {
-        pool->condition_count = cJSON_GetArraySize(conditions);
-        pool->conditions = malloc(pool->condition_count * sizeof(LootItemCondition));
-        init_conditions(conditions, pool);
-    }
+    pool->pool_condition_count = cJSON_GetArraySize(conditions);
 
     // count entries
     cJSON* entries = cJSON_GetObjectItem(pool_data, "entries");
@@ -584,10 +590,16 @@ static int init_loot_pool(const cJSON* pool_data, const int pool_id, LootTableCo
 
     // allocate memory for entry data
     pool->entry_to_item = (int*)malloc(pool->entry_count * sizeof(int));
+    pool->entry_conditions_index = (int*)calloc(pool->entry_count, sizeof(int));
+    pool->entry_conditions_count = (int*)calloc(pool->entry_count, sizeof(int));
     pool->entry_functions_index = (int*)malloc(pool->entry_count * sizeof(int));
     pool->entry_functions_count = (int*)malloc(pool->entry_count * sizeof(int));
-    if (pool->entry_to_item == NULL || pool->entry_functions_index == NULL || pool->entry_functions_count == NULL)
-        return -1;
+    if (pool->entry_count > 0) {
+        if (pool->entry_to_item == NULL || pool->entry_conditions_index == NULL || pool->entry_conditions_count == NULL
+            || pool->entry_functions_index == NULL || pool->entry_functions_count == NULL) {
+            return -1;
+        }
+    }
 
     // first pass: count total loot functions and create simple entry mappings
     for (int i = 0; i < pool->entry_count; i++) {
@@ -595,11 +607,30 @@ static int init_loot_pool(const cJSON* pool_data, const int pool_id, LootTableCo
         init_entry(entry, pool, i, ctx);
     }
 
-    // second pass: initialize loot functions
+    // init pool and entry conditions
     int last_ix = pool->entry_count - 1;
-    int function_count = pool->entry_functions_index[last_ix] + pool->entry_functions_count[last_ix];
+    int condition_count = pool->pool_condition_count;
+    if (last_ix >= 0) {
+        condition_count = pool->entry_conditions_index[last_ix] + pool->entry_conditions_count[last_ix];
+    }
+    pool->conditions = malloc(condition_count * sizeof(LootItemCondition));
+    if (condition_count > 0 && pool->conditions == NULL) {
+        return -1;
+    }
+    if (init_conditions(conditions, pool->conditions) != 0) {
+        return -1;
+    }
+    for (int i = 0; i < pool->entry_count; i++) {
+        const cJSON* entry_conditions = cJSON_GetObjectItem(cJSON_GetArrayItem(entries, i), "conditions");
+        if (pool->entry_conditions_count[i] > 0 && init_conditions(entry_conditions, pool->conditions + pool->entry_conditions_index[i]) != 0) {
+            return -1;
+        }
+    }
+
+    // second pass: initialize loot functions
+    int function_count = last_ix < 0 ? 0 : pool->entry_functions_index[last_ix] + pool->entry_functions_count[last_ix];
     pool->loot_functions = (LootFunction*)malloc(function_count * sizeof(LootFunction));
-    if (pool->loot_functions == NULL)
+    if (function_count > 0 && pool->loot_functions == NULL)
         return -1; // FIXME add logging
 
     for (int i = 0; i < pool->entry_count; i++) {
@@ -609,7 +640,7 @@ static int init_loot_pool(const cJSON* pool_data, const int pool_id, LootTableCo
 
     // final pass: precompute loot table
     pool->precomputed_loot = (int*)malloc(pool->total_weight * sizeof(int));
-    if (pool->precomputed_loot == NULL)
+    if (pool->total_weight > 0 && pool->precomputed_loot == NULL)
         return -1; // FIXME add logging
 
     precompute_loot_pool(pool, entries);
@@ -636,12 +667,15 @@ void free_loot_function(LootFunction* lf)
 
 static void free_loot_pool(LootPool* pool)
 {
+    free(pool->conditions);
+    free(pool->entry_conditions_index);
+    free(pool->entry_conditions_count);
     free(pool->precomputed_loot);
 
     free(pool->entry_to_item);
 
     int last = pool->entry_count - 1;
-    int functionCount = pool->entry_functions_index[last] + pool->entry_functions_count[last];
+    int functionCount = last < 0 || pool->loot_functions == NULL ? 0 : pool->entry_functions_index[last] + pool->entry_functions_count[last];
     free(pool->entry_functions_index);
     free(pool->entry_functions_count);
 
@@ -699,7 +733,7 @@ int init_loot_table(const char* loot_table_string, LootTableContext* context, co
     context->pool_count = cJSON_GetArraySize(pools);
 
     // allocate memory for loot pools
-    context->loot_pools = (LootPool*)malloc(context->pool_count * sizeof(LootPool));
+    context->loot_pools = (LootPool*)calloc(context->pool_count, sizeof(LootPool));
     if (context->loot_pools == NULL) {
         cJSON_Delete(loot_table);
         return -1;

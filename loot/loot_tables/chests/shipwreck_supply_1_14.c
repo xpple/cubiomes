@@ -15,11 +15,13 @@ static int global_item_ids[16] = {ITEM_PAPER, ITEM_POTATO, ITEM_POISONOUS_POTATO
 static LootItemCondition conditions__0[0];
 static int precomputed_loot__0[77] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 9, 9, 10, 10, 10, 11, 12, 12, 12, 13, 13, 13, 14, 14, 14, 15, 15, 15};
 static int entry_to_item__0[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+static int entry_conditions_count__0[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static int entry_conditions_index__0[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static int entry_functions_count__0[16] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 static int entry_functions_index__0[16] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
 static LootFunction loot_functions__0[16];
 static const LootPool shipwreck_supply_1_14__0 = {
-    .condition_count = 0,
+    .pool_condition_count = 0,
     .conditions = conditions__0,
     .min_rolls = 3,
     .max_rolls = 10,
@@ -28,6 +30,8 @@ static const LootPool shipwreck_supply_1_14__0 = {
     .total_weight = 77,
     .precomputed_loot = precomputed_loot__0,
     .entry_to_item = entry_to_item__0,
+    .entry_conditions_index = entry_conditions_index__0,
+    .entry_conditions_count = entry_conditions_count__0,
     .entry_functions_count = entry_functions_count__0,
     .entry_functions_index = entry_functions_index__0,
     .loot_functions = loot_functions__0,

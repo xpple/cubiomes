@@ -4,47 +4,16 @@
 #include <math.h>
 #include <stdio.h>
 
-// grad()
-#if 0
-static double indexedLerp(int idx, double d1, double d2, double d3)
+ATTR(hot, const)
+static inline double indexedLerp(int idx, double d1, double d2, double d3)
 {
-    const double cEdgeX[] = { 1.0,-1.0, 1.0,-1.0, 1.0,-1.0, 1.0,-1.0,
-                              0.0, 0.0, 0.0, 0.0, 1.0, 0.0,-1.0, 0.0 };
-    const double cEdgeY[] = { 1.0, 1.0,-1.0,-1.0, 0.0, 0.0, 0.0, 0.0,
-                              1.0,-1.0, 1.0,-1.0, 1.0,-1.0, 1.0,-1.0 };
-    const double cEdgeZ[] = { 0.0, 0.0, 0.0, 0.0, 1.0, 1.0,-1.0,-1.0,
-                              1.0, 1.0,-1.0,-1.0, 0.0, 1.0, 0.0,-1.0 };
+    static const double cEdgeX[] = {1.0,-1.0, 1.0,-1.0, 1.0,-1.0, 1.0,-1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0,-1.0, 0.0};
+    static const double cEdgeY[] = {1.0, 1.0,-1.0,-1.0, 0.0, 0.0, 0.0, 0.0, 1.0,-1.0, 1.0,-1.0, 1.0,-1.0, 1.0,-1.0};
+    static const double cEdgeZ[] = {0.0, 0.0, 0.0, 0.0, 1.0, 1.0,-1.0,-1.0, 1.0, 1.0,-1.0,-1.0, 0.0, 1.0, 0.0,-1.0};
 
     idx &= 0xf;
     return cEdgeX[idx] * d1 + cEdgeY[idx] * d2 + cEdgeZ[idx] * d3;
 }
-#else
-ATTR(hot, const)
-static inline double indexedLerp(uint8_t idx, double a, double b, double c)
-{
-   switch (idx & 0xf)
-   {
-   case 0:  return  a + b;
-   case 1:  return -a + b;
-   case 2:  return  a - b;
-   case 3:  return -a - b;
-   case 4:  return  a + c;
-   case 5:  return -a + c;
-   case 6:  return  a - c;
-   case 7:  return -a - c;
-   case 8:  return  b + c;
-   case 9:  return -b + c;
-   case 10: return  b - c;
-   case 11: return -b - c;
-   case 12: return  a + b;
-   case 13: return -b + c;
-   case 14: return -a + b;
-   case 15: return -b - c;
-   }
-   UNREACHABLE();
-   return 0;
-}
-#endif
 
 void perlinInit(PerlinNoise *__restrict noise, uint64_t *__restrict seed)
 {

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 from pathlib import Path
 
@@ -154,18 +156,20 @@ class PoolEntry:
     name: str | None
     weight: int
     functions: list[LootFunction]
+    conditions: list[LootItemCondition]
 
-    def __init__(self, name: str | None, weight: int, functions: list[LootFunction]):
+    def __init__(self, name: str | None, weight: int, functions: list[LootFunction], conditions: list[LootItemCondition]):
         self.name = name
         self.weight = weight
         self.functions = functions
+        self.conditions = conditions
 
 
 class NestedLootTable(PoolEntry):
     loot_table: str
 
-    def __init__(self, loot_table: str, weight: int):
-        super().__init__(None, weight, [])
+    def __init__(self, loot_table: str, weight: int, conditions: list[LootItemCondition]):
+        super().__init__(None, weight, [], conditions)
         self.loot_table = loot_table
 
 
@@ -189,12 +193,24 @@ class RandomChanceCondition(LootItemCondition):
         return f"create_random_chance({arg}, {self.chance}f)"
 
 
+class LocationCheckCondition(LootItemCondition):
+    biomes: list[str]
+
+    def __init__(self, biomes: list[str]):
+        super().__init__()
+        self.biomes = biomes
+
+    def to_function_call(self, arg: str, version: str):
+        biomes_str = ", ".join([biome.removeprefix("minecraft:") for biome in self.biomes])
+        return f"create_location_predicate({arg}, (int[]){{{biomes_str}}}, {len(self.biomes)})"
+
+
 class NoOpCondition(LootItemCondition):
     def __init__(self):
         super().__init__()
 
     def to_function_call(self, arg: str, version: str):
-        pass
+        return f"create_no_op_condition({arg})"
 
 
 class LootPool:
@@ -257,6 +273,7 @@ def parse_loot_table(version: str, json_pools) -> LootTableContext:
 
         pool_entries: list[PoolEntry] = []
         for entry_idx, json_entry in enumerate(json_pool["entries"]):
+            entry_loot_conditions = [parse_item_condition(condition) for condition in json_entry.get("conditions", [])]
             entry_type = json_entry["type"]
             if entry_type.startswith('minecraft:'):
                 entry_type = entry_type[len('minecraft:'):]
@@ -265,7 +282,7 @@ def parse_loot_table(version: str, json_pools) -> LootTableContext:
                 if loot_table.startswith('minecraft:'):
                     loot_table = loot_table[len('minecraft:'):]
                 entry_weight = json_entry.get("weight", 1)
-                pool_entries.append(NestedLootTable(loot_table, entry_weight))
+                pool_entries.append(NestedLootTable(loot_table, entry_weight, entry_loot_conditions))
                 continue
             if entry_type != "item" and entry_type != "empty":
                 warn(f"Unsupported entry type '{entry_type}'")
@@ -276,16 +293,16 @@ def parse_loot_table(version: str, json_pools) -> LootTableContext:
                 item_names.append(entry_name)
             entry_weight = json_entry.get("weight", 1)
 
-            loot_functions: list[LootFunction] = []
+            entry_loot_functions: list[LootFunction] = []
             json_functions = json_entry.get("functions", json_entry.get("modifier", []))
             if isinstance(json_functions, dict):
                 json_functions = [json_functions]
             for json_function_entry in json_functions:
                 loot_function = parse_loot_function(json_function_entry, entry_name)
-                loot_functions.append(loot_function)
-            loot_functions.extend(pool_loot_functions)
+                entry_loot_functions.append(loot_function)
+            entry_loot_functions.extend(pool_loot_functions)
 
-            pool_entries.append(PoolEntry(entry_name, entry_weight, loot_functions))
+            pool_entries.append(PoolEntry(entry_name, entry_weight, entry_loot_functions, entry_loot_conditions))
 
         loot_pools.append(LootPool(min_rolls, max_rolls, roll_count_function, pool_entries, conditions))
 
@@ -298,11 +315,21 @@ def parse_item_condition(json_condition_entry) -> LootItemCondition:
         json_condition = json_condition[len('minecraft:'):]
     if json_condition == 'random_chance':
         chance = json_condition_entry["chance"]
-        if not isinstance(chance, float):
+        if not isinstance(chance, (int, float)):
             warn(f"Unsupported item condition chance '{chance}'")
             return NoOpCondition()
 
-        return RandomChanceCondition(chance)
+        return RandomChanceCondition(float(chance))
+    if json_condition == 'location_check':
+        predicate = json_condition_entry["predicate"]
+        biome_predicate = predicate.get("biomes", None)
+        if biome_predicate is None:
+            warn(f"Unsupported item condition location predicate '{predicate}'")
+            return NoOpCondition()
+        if isinstance(biome_predicate, str):
+            biome_predicate = [biome_predicate]
+        return LocationCheckCondition(biome_predicate)
+
 
     warn(f"Unsupported loot condition '{json_condition}'")
     return NoOpCondition()
@@ -408,8 +435,11 @@ def gen_c_loot_table(c_file_path: Path, context: LootTableContext) -> str:
 
         precomputed_loot: list[str] = []
         entry_to_item: list[str] = []
+        entry_conditions_count: list[str] = []
+        entry_conditions_index: list[str] = []
         entry_functions_count: list[str] = []
         entry_functions_index: list[str] = []
+        condition_index = len(loot_pool.conditions)
         function_index = 0
         for entry_idx, entry in enumerate(loot_pool.entries):
             weight = entry.weight
@@ -424,12 +454,16 @@ def gen_c_loot_table(c_file_path: Path, context: LootTableContext) -> str:
                     subtable_index -= 1
                 else:
                     entry_to_item.append(str(idx))
-                continue
-
-            if entry.name is None:
+            elif entry.name is None:
                 entry_to_item.append(str(-1))
             else:
                 entry_to_item.append(str(context.item_names.index(entry.name)))
+
+            conditions = entry.conditions
+            entry_conditions_count.append(str(len(conditions)))
+
+            entry_conditions_index.append(str(condition_index))
+            condition_index += len(conditions)
 
             functions = entry.functions
             entry_functions_count.append(str(len(functions)))
@@ -437,16 +471,18 @@ def gen_c_loot_table(c_file_path: Path, context: LootTableContext) -> str:
             entry_functions_index.append(str(function_index))
             function_index += len(functions)
 
-        loot_pools_str += f"static LootItemCondition conditions__{pool_idx}[{len(loot_pool.conditions)}];\n"
+        loot_pools_str += f"static LootItemCondition conditions__{pool_idx}[{condition_index}];\n"
         loot_pools_str += f"static int precomputed_loot__{pool_idx}[{total_weight}] = {{{", ".join(precomputed_loot)}}};\n"
         loot_pools_str += f"static int entry_to_item__{pool_idx}[{entries_len}] = {{{", ".join(entry_to_item)}}};\n"
+        loot_pools_str += f"static int entry_conditions_count__{pool_idx}[{entries_len}] = {{{", ".join(entry_conditions_count)}}};\n"
+        loot_pools_str += f"static int entry_conditions_index__{pool_idx}[{entries_len}] = {{{", ".join(entry_conditions_index)}}};\n"
         loot_pools_str += f"static int entry_functions_count__{pool_idx}[{entries_len}] = {{{", ".join(entry_functions_count)}}};\n"
         loot_pools_str += f"static int entry_functions_index__{pool_idx}[{entries_len}] = {{{", ".join(entry_functions_index)}}};\n"
         loot_pools_str += f"static LootFunction loot_functions__{pool_idx}[{function_index}];\n"
 
         loot_pools_str += dedent(f"""\
             static const LootPool {c_file_name}__{pool_idx} = {{
-                .condition_count = {len(loot_pool.conditions)},
+                .pool_condition_count = {len(loot_pool.conditions)},
                 .conditions = conditions__{pool_idx},
                 .min_rolls = {loot_pool.min_rolls},
                 .max_rolls = {loot_pool.max_rolls},
@@ -455,6 +491,8 @@ def gen_c_loot_table(c_file_path: Path, context: LootTableContext) -> str:
                 .total_weight = {total_weight},
                 .precomputed_loot = precomputed_loot__{pool_idx},
                 .entry_to_item = entry_to_item__{pool_idx},
+                .entry_conditions_index = entry_conditions_index__{pool_idx},
+                .entry_conditions_count = entry_conditions_count__{pool_idx},
                 .entry_functions_count = entry_functions_count__{pool_idx},
                 .entry_functions_index = entry_functions_index__{pool_idx},
                 .loot_functions = loot_functions__{pool_idx},
@@ -499,11 +537,16 @@ def gen_c_loot_table(c_file_path: Path, context: LootTableContext) -> str:
         """)
 
     for pool_idx, loot_pool in enumerate(context.loot_pools):
+        conditions = [condition for entry in loot_pool.entries for condition in entry.conditions]
         functions = [function for entry in loot_pool.entries for function in entry.functions]
-        if loot_pool.conditions or functions:
+        if loot_pool.conditions or conditions or functions:
             file_content += f"    LootPool* loot_pool__{pool_idx} = &(context.loot_pools[{pool_idx}]);\n"
         for condition_idx, condition in enumerate(loot_pool.conditions):
-            file_content += f"    {condition.to_function_call(f"&(loot_pool__{pool_idx}->conditions[{condition_idx}])", context.version)};\n"
+            condition_str = f"&(loot_pool__{pool_idx}->conditions[{condition_idx}])"
+            file_content += f"    {condition.to_function_call(condition_str, context.version)};\n"
+        for i, condition in enumerate(conditions, start=len(loot_pool.conditions)):
+            condition_str = f"&(loot_pool__{pool_idx}->conditions[{i}])"
+            file_content += f"    {condition.to_function_call(condition_str, context.version)};\n"
         for i, function in enumerate(functions):
             function_str = f"&(loot_pool__{pool_idx}->loot_functions[{i}])"
             file_content += f"    {function.to_function_call(function_str, context.version)};\n"

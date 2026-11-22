@@ -6,6 +6,7 @@
 
 int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:abandoned_camp_map") == 0) return ITEM_ABANDONED_CAMP_MAP;
+    if (strcmp(name, "minecraft:activator_rail") == 0) return ITEM_ACTIVATOR_RAIL;
     if (strcmp(name, "minecraft:ancient_debris") == 0) return ITEM_ANCIENT_DEBRIS;
     if (strcmp(name, "minecraft:apple") == 0) return ITEM_APPLE;
     if (strcmp(name, "minecraft:arrow") == 0) return ITEM_ARROW;
@@ -48,6 +49,7 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:crying_obsidian") == 0) return ITEM_CRYING_OBSIDIAN;
     if (strcmp(name, "minecraft:dark_oak_log") == 0) return ITEM_DARK_OAK_LOG;
     if (strcmp(name, "minecraft:desert_pyramid_map") == 0) return ITEM_DESERT_PYRAMID_MAP;
+    if (strcmp(name, "minecraft:detector_rail") == 0) return ITEM_DETECTOR_RAIL;
     if (strcmp(name, "minecraft:diamond") == 0) return ITEM_DIAMOND;
     if (strcmp(name, "minecraft:diamond_axe") == 0) return ITEM_DIAMOND_AXE;
     if (strcmp(name, "minecraft:diamond_block") == 0) return ITEM_DIAMOND_BLOCK;
@@ -79,6 +81,7 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:gilded_blackstone") == 0) return ITEM_GILDED_BLACKSTONE;
     if (strcmp(name, "minecraft:glass_bottle") == 0) return ITEM_GLASS_BOTTLE;
     if (strcmp(name, "minecraft:glistering_melon_slice") == 0) return ITEM_GLISTERING_MELON_SLICE;
+    if (strcmp(name, "minecraft:glow_berries") == 0) return ITEM_GLOW_BERRIES;
     if (strcmp(name, "minecraft:goat_horn") == 0) return ITEM_GOAT_HORN;
     if (strcmp(name, "minecraft:golden_apple") == 0) return ITEM_GOLDEN_APPLE;
     if (strcmp(name, "minecraft:golden_axe") == 0) return ITEM_GOLDEN_AXE;
@@ -128,11 +131,14 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:lodestone") == 0) return ITEM_LODESTONE;
     if (strcmp(name, "minecraft:magma_cream") == 0) return ITEM_MAGMA_CREAM;
     if (strcmp(name, "minecraft:map") == 0) return ITEM_MAP;
+    if (strcmp(name, "minecraft:melon_seeds") == 0) return ITEM_MELON_SEEDS;
     if (strcmp(name, "minecraft:moss_block") == 0) return ITEM_MOSS_BLOCK;
+    if (strcmp(name, "minecraft:music_disc_bounce") == 0) return ITEM_MUSIC_DISC_BOUNCE;
     if (strcmp(name, "minecraft:music_disc_creator") == 0) return ITEM_MUSIC_DISC_CREATOR;
     if (strcmp(name, "minecraft:music_disc_otherside") == 0) return ITEM_MUSIC_DISC_OTHERSIDE;
     if (strcmp(name, "minecraft:music_disc_pigstep") == 0) return ITEM_MUSIC_DISC_PIGSTEP;
     if (strcmp(name, "minecraft:music_disc_precipice") == 0) return ITEM_MUSIC_DISC_PRECIPICE;
+    if (strcmp(name, "minecraft:name_tag") == 0) return ITEM_NAME_TAG;
     if (strcmp(name, "minecraft:netherite_scrap") == 0) return ITEM_NETHERITE_SCRAP;
     if (strcmp(name, "minecraft:netherite_upgrade_smithing_template") == 0) return ITEM_NETHERITE_UPGRADE_SMITHING_TEMPLATE;
     if (strcmp(name, "minecraft:nether_wart") == 0) return ITEM_NETHER_WART;
@@ -143,9 +149,12 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:poisonous_potato") == 0) return ITEM_POISONOUS_POTATO;
     if (strcmp(name, "minecraft:potato") == 0) return ITEM_POTATO;
     if (strcmp(name, "minecraft:potion") == 0) return ITEM_POTION;
+    if (strcmp(name, "minecraft:powered_rail") == 0) return ITEM_POWERED_RAIL;
     if (strcmp(name, "minecraft:prismarine_crystals") == 0) return ITEM_PRISMARINE_CRYSTALS;
     if (strcmp(name, "minecraft:pumpkin") == 0) return ITEM_PUMPKIN;
+    if (strcmp(name, "minecraft:pumpkin_seeds") == 0) return ITEM_PUMPKIN_SEEDS;
     if (strcmp(name, "minecraft:rabbit_hide") == 0) return ITEM_RABBIT_HIDE;
+    if (strcmp(name, "minecraft:rail") == 0) return ITEM_RAIL;
     if (strcmp(name, "minecraft:redstone") == 0) return ITEM_REDSTONE;
     if (strcmp(name, "minecraft:rib_armor_trim_smithing_template") == 0) return ITEM_RIB_ARMOR_TRIM_SMITHING_TEMPLATE;
     if (strcmp(name, "minecraft:rotten_flesh") == 0) return ITEM_ROTTEN_FLESH;
@@ -165,6 +174,7 @@ int item_name2global_id(const char* name) {
     if (strcmp(name, "minecraft:suspicious_stew") == 0) return ITEM_SUSPICIOUS_STEW;
     if (strcmp(name, "minecraft:tipped_arrow") == 0) return ITEM_TIPPED_ARROW;
     if (strcmp(name, "minecraft:tnt") == 0) return ITEM_TNT;
+    if (strcmp(name, "minecraft:torch") == 0) return ITEM_TORCH;
     if (strcmp(name, "minecraft:trident") == 0) return ITEM_TRIDENT;
     if (strcmp(name, "minecraft:tripwire_hook") == 0) return ITEM_TRIPWIRE_HOOK;
     if (strcmp(name, "minecraft:warm_ocean_ruins_map") == 0) return ITEM_WARM_OCEAN_RUINS_MAP;
@@ -185,6 +195,7 @@ const char* global_id2item_name(int global_id, int mc) {
     }
     switch (global_id) {
     case ITEM_ABANDONED_CAMP_MAP: return "minecraft:abandoned_camp_map";
+    case ITEM_ACTIVATOR_RAIL: return "minecraft:activator_rail";
     case ITEM_ANCIENT_DEBRIS: return "minecraft:ancient_debris";
     case ITEM_APPLE: return "minecraft:apple";
     case ITEM_ARROW: return "minecraft:arrow";
@@ -226,6 +237,7 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_CRYING_OBSIDIAN: return "minecraft:crying_obsidian";
     case ITEM_DARK_OAK_LOG: return "minecraft:dark_oak_log";
     case ITEM_DESERT_PYRAMID_MAP: return "minecraft:desert_pyramid_map";
+    case ITEM_DETECTOR_RAIL: return "minecraft:detector_rail";
     case ITEM_DIAMOND: return "minecraft:diamond";
     case ITEM_DIAMOND_AXE: return "minecraft:diamond_axe";
     case ITEM_DIAMOND_BLOCK: return "minecraft:diamond_block";
@@ -257,6 +269,7 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_GILDED_BLACKSTONE: return "minecraft:gilded_blackstone";
     case ITEM_GLASS_BOTTLE: return "minecraft:glass_bottle";
     case ITEM_GLISTERING_MELON_SLICE: return "minecraft:glistering_melon_slice";
+    case ITEM_GLOW_BERRIES: return "minecraft:glow_berries";
     case ITEM_GOAT_HORN: return "minecraft:goat_horn";
     case ITEM_GOLDEN_APPLE: return "minecraft:golden_apple";
     case ITEM_GOLDEN_AXE: return "minecraft:golden_axe";
@@ -305,11 +318,14 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_LODESTONE: return "minecraft:lodestone";
     case ITEM_MAGMA_CREAM: return "minecraft:magma_cream";
     case ITEM_MAP: return "minecraft:map";
+    case ITEM_MELON_SEEDS: return "minecraft:melon_seeds";
     case ITEM_MOSS_BLOCK: return "minecraft:moss_block";
+    case ITEM_MUSIC_DISC_BOUNCE: return "minecraft:music_disc_bounce";
     case ITEM_MUSIC_DISC_CREATOR: return "minecraft:music_disc_creator";
     case ITEM_MUSIC_DISC_OTHERSIDE: return "minecraft:music_disc_otherside";
     case ITEM_MUSIC_DISC_PIGSTEP: return "minecraft:music_disc_pigstep";
     case ITEM_MUSIC_DISC_PRECIPICE: return "minecraft:music_disc_precipice";
+    case ITEM_NAME_TAG: return "minecraft:name_tag";
     case ITEM_NETHERITE_SCRAP: return "minecraft:netherite_scrap";
     case ITEM_NETHERITE_UPGRADE_SMITHING_TEMPLATE: return "minecraft:netherite_upgrade_smithing_template";
     case ITEM_NETHER_WART: return "minecraft:nether_wart";
@@ -320,9 +336,12 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_POISONOUS_POTATO: return "minecraft:poisonous_potato";
     case ITEM_POTATO: return "minecraft:potato";
     case ITEM_POTION: return "minecraft:potion";
+    case ITEM_POWERED_RAIL: return "minecraft:powered_rail";
     case ITEM_PRISMARINE_CRYSTALS: return "minecraft:prismarine_crystals";
     case ITEM_PUMPKIN: return "minecraft:pumpkin";
+    case ITEM_PUMPKIN_SEEDS: return "minecraft:pumpkin_seeds";
     case ITEM_RABBIT_HIDE: return "minecraft:rabbit_hide";
+    case ITEM_RAIL: return "minecraft:rail";
     case ITEM_REDSTONE: return "minecraft:redstone";
     case ITEM_RIB_ARMOR_TRIM_SMITHING_TEMPLATE: return "minecraft:rib_armor_trim_smithing_template";
     case ITEM_ROTTEN_FLESH: return "minecraft:rotten_flesh";
@@ -342,6 +361,7 @@ const char* global_id2item_name(int global_id, int mc) {
     case ITEM_SUSPICIOUS_STEW: return "minecraft:suspicious_stew";
     case ITEM_TIPPED_ARROW: return "minecraft:tipped_arrow";
     case ITEM_TNT: return "minecraft:tnt";
+    case ITEM_TORCH: return "minecraft:torch";
     case ITEM_TRIDENT: return "minecraft:trident";
     case ITEM_TRIPWIRE_HOOK: return "minecraft:tripwire_hook";
     case ITEM_WARM_OCEAN_RUINS_MAP: return "minecraft:warm_ocean_ruins_map";

@@ -89,10 +89,6 @@ static inline uint32_t BSWAP32(uint32_t x) {
 
 #endif
 
-#ifndef __restrict
-#define __restrict
-#endif
-
 /// imitate amd64/x64 rotate instructions
 
 static inline ATTR(const, always_inline, artificial)
@@ -160,6 +156,11 @@ static inline int nextInt(uint64_t *seed, const int n)
     }
     while ((int32_t)((uint32_t)bits - val + m) < 0);
     return val;
+}
+
+static inline int nextBoolean(uint64_t *seed)
+{
+    return next(seed, 1);
 }
 
 static inline uint64_t nextLong(uint64_t *seed)
@@ -293,6 +294,11 @@ static inline int xNextInt(Xoroshiro *xr, uint32_t n)
     return r >> 32;
 }
 
+static inline int xNextBoolean(Xoroshiro *xr)
+{
+    return xNextLong(xr) & 1ULL;
+}
+
 static inline double xNextDouble(Xoroshiro *xr)
 {
     return (xNextLong(xr) >> (64-53)) * 1.1102230246251565E-16;
@@ -328,6 +334,12 @@ static inline void calcVecMul(const uint64_t m[128][2], Xoroshiro* xr) {
 
 static inline void xSkipN(Xoroshiro *xr, uint64_t count)
 {
+    if (count < 100ULL * __builtin_popcountll(count)) {
+        while (count-- > 0) {
+            xNextLong(xr);
+        }
+        return;
+    }
     int pow = 0;
     while (count > 0) {
         if (count & 1) {
@@ -366,6 +378,10 @@ static inline int xNextIntJ(Xoroshiro *xr, uint32_t n)
     }
     while ((int32_t)((uint32_t)bits - val + m) < 0);
     return val;
+}
+
+static inline int xNextBooleanJ(Xoroshiro *xr) {
+    return xNextLong(xr) >> (64-1);
 }
 
 static inline double xNextDoubleJ(Xoroshiro *xr)
@@ -441,6 +457,15 @@ static inline int absNextInt(RandomSource *rnd, int n) {
         case XOROSHIRO: return xNextInt(&rnd->xr, n);
         case XOROSHIRO_J: return xNextIntJ(&rnd->xr, n);
         default: UNREACHABLE();
+    }
+}
+
+static inline int absNextBoolean(RandomSource *rnd) {
+    switch (rnd->type) {
+    case JAVA_RANDOM: return nextBoolean(&rnd->jr);
+    case XOROSHIRO: return xNextBoolean(&rnd->xr);
+    case XOROSHIRO_J: return xNextBooleanJ(&rnd->xr);
+    default: UNREACHABLE();
     }
 }
 

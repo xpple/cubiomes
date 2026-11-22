@@ -15,11 +15,13 @@ static int global_item_ids[23] = {ITEM_DIAMOND, ITEM_IRON_INGOT, ITEM_GOLD_INGOT
 static LootItemCondition conditions__0[0];
 static int precomputed_loot__0[85] = {0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 6, 7, 8, 9, 9, 9, 10, 10, 10, 11, 11, 11, 12, 12, 12, 13, 13, 13, 14, 14, 14, 15, 15, 15, 16, 16, 16, 17, 17, 17, 18, 18, 18, 19, 19, 19, 20, 20, 20, 21, 21, 21, 22, 22, 22};
 static int entry_to_item__0[23] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22};
+static int entry_conditions_count__0[23] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static int entry_conditions_index__0[23] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static int entry_functions_count__0[23] = {1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 static int entry_functions_index__0[23] = {0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18};
 static LootFunction loot_functions__0[19];
 static const LootPool end_city_treasure_1_13__0 = {
-    .condition_count = 0,
+    .pool_condition_count = 0,
     .conditions = conditions__0,
     .min_rolls = 2,
     .max_rolls = 6,
@@ -28,6 +30,8 @@ static const LootPool end_city_treasure_1_13__0 = {
     .total_weight = 85,
     .precomputed_loot = precomputed_loot__0,
     .entry_to_item = entry_to_item__0,
+    .entry_conditions_index = entry_conditions_index__0,
+    .entry_conditions_count = entry_conditions_count__0,
     .entry_functions_count = entry_functions_count__0,
     .entry_functions_index = entry_functions_index__0,
     .loot_functions = loot_functions__0,

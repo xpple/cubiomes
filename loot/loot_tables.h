@@ -8,6 +8,7 @@ int init_loot_table_name(LootTableContext** context, const char* loot_table, int
 int init_abandoned_camp_barrel(LootTableContext** context, int version);
 int init_abandoned_camp_common_chest(LootTableContext** context, int version);
 int init_abandoned_camp_secret_chest(LootTableContext** context, int version);
+int init_abandoned_mineshaft(LootTableContext** context, int version);
 int init_bastion_bridge(LootTableContext** context, int version);
 int init_bastion_other(LootTableContext** context, int version);
 int init_buried_treasure(LootTableContext** context, int version);

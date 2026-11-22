@@ -15,11 +15,13 @@ static int global_item_ids[1] = {ITEM_ARROW};
 static LootItemCondition conditions__0[0];
 static int precomputed_loot__0[30] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static int entry_to_item__0[1] = {0};
+static int entry_conditions_count__0[1] = {0};
+static int entry_conditions_index__0[1] = {0};
 static int entry_functions_count__0[1] = {1};
 static int entry_functions_index__0[1] = {0};
 static LootFunction loot_functions__0[1];
 static const LootPool jungle_temple_dispenser_1_13__0 = {
-    .condition_count = 0,
+    .pool_condition_count = 0,
     .conditions = conditions__0,
     .min_rolls = 1,
     .max_rolls = 2,
@@ -28,6 +30,8 @@ static const LootPool jungle_temple_dispenser_1_13__0 = {
     .total_weight = 30,
     .precomputed_loot = precomputed_loot__0,
     .entry_to_item = entry_to_item__0,
+    .entry_conditions_index = entry_conditions_index__0,
+    .entry_conditions_count = entry_conditions_count__0,
     .entry_functions_count = entry_functions_count__0,
     .entry_functions_index = entry_functions_index__0,
     .loot_functions = loot_functions__0,

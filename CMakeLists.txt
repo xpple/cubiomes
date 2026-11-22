@@ -48,7 +48,9 @@ set(HEADERS
     features/abandoned_camp.h
 	features/end_city.h
 	features/fortress.h
+    features/mineshaft.h
 	features/ore.h
+	features/piece.h
 	features/stronghold.h
 	loot/items.h
 	loot/logging.h
@@ -60,6 +62,10 @@ set(HEADERS
 	loot/loot_tables/barrels/abandoned_camp_barrel_26_3.h
 	loot/loot_tables/chests/abandoned_camp_common_chest_26_3.h
 	loot/loot_tables/chests/abandoned_camp_secret_chest_26_3.h
+	loot/loot_tables/chests/abandoned_mineshaft_1_13.h
+	loot/loot_tables/chests/abandoned_mineshaft_1_17.h
+	loot/loot_tables/chests/abandoned_mineshaft_1_21_1.h
+	loot/loot_tables/chests/abandoned_mineshaft_26_2.h
 	loot/loot_tables/chests/bastion_bridge_1_16_1.h
 	loot/loot_tables/chests/bastion_bridge_1_16_5.h
 	loot/loot_tables/chests/bastion_bridge_1_20.h
@@ -142,6 +148,7 @@ set(SOURCES
 	features/abandoned_camp.c
 	features/end_city.c
 	features/fortress.c
+    features/mineshaft.c
 	features/ore.c
 	features/stronghold.c
 	loot/items.c
@@ -152,6 +159,10 @@ set(SOURCES
 	loot/loot_tables/barrels/abandoned_camp_barrel_26_3.c
 	loot/loot_tables/chests/abandoned_camp_common_chest_26_3.c
 	loot/loot_tables/chests/abandoned_camp_secret_chest_26_3.c
+	loot/loot_tables/chests/abandoned_mineshaft_1_13.c
+	loot/loot_tables/chests/abandoned_mineshaft_1_17.c
+	loot/loot_tables/chests/abandoned_mineshaft_1_21_1.c
+	loot/loot_tables/chests/abandoned_mineshaft_26_2.c
 	loot/loot_tables/chests/bastion_bridge_1_16_1.c
 	loot/loot_tables/chests/bastion_bridge_1_16_5.c
 	loot/loot_tables/chests/bastion_bridge_1_20.c

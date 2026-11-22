@@ -8,6 +8,10 @@
 #include "loot_tables/barrels/abandoned_camp_barrel_26_3.h"
 #include "loot_tables/chests/abandoned_camp_common_chest_26_3.h"
 #include "loot_tables/chests/abandoned_camp_secret_chest_26_3.h"
+#include "loot_tables/chests/abandoned_mineshaft_1_13.h"
+#include "loot_tables/chests/abandoned_mineshaft_1_17.h"
+#include "loot_tables/chests/abandoned_mineshaft_1_21_1.h"
+#include "loot_tables/chests/abandoned_mineshaft_26_2.h"
 #include "loot_tables/chests/bastion_bridge_1_16_1.h"
 #include "loot_tables/chests/bastion_bridge_1_16_5.h"
 #include "loot_tables/chests/bastion_bridge_1_20.h"
@@ -83,6 +87,9 @@ int init_loot_table_name(LootTableContext** context, const char* loot_table, int
     }
     if (strcmp(loot_table, "chests/abandoned_camp_secret_chest") == 0) {
         return init_abandoned_camp_secret_chest(context, version);
+    }
+    if (strcmp(loot_table, "chests/abandoned_mineshaft") == 0) {
+        return init_abandoned_mineshaft(context, version);
     }
     if (strcmp(loot_table, "chests/bastion_bridge") == 0) {
         return init_bastion_bridge(context, version);
@@ -177,6 +184,14 @@ int init_abandoned_camp_common_chest(LootTableContext** context, int version) {
 int init_abandoned_camp_secret_chest(LootTableContext** context, int version) {
     *context = init_abandoned_camp_secret_chest_26_3();
     return version >= MC_26_3;
+}
+
+int init_abandoned_mineshaft(LootTableContext** context, int version) {
+    if (version < MC_1_17) *context = init_abandoned_mineshaft_1_13();
+    else if (version < MC_1_21_1) *context = init_abandoned_mineshaft_1_17();
+    else if (version < MC_26_2) *context = init_abandoned_mineshaft_1_21_1();
+    else *context = init_abandoned_mineshaft_26_2();
+    return version > MC_1_12;
 }
 
 int init_bastion_bridge(LootTableContext** context, int version) {
