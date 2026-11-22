@@ -70,7 +70,7 @@ void applySeed(Generator *g, int dim, uint64_t seed);
 /// For modern generators, this is significantly faster than reinitializing the
 /// generator. For some older generators, e.g. Overworld 1.0.0, reinitializing
 /// is faster.
-void copyGenerator(const Generator *src, Generator *dst);
+void copyGenerator(const Generator *__restrict src, Generator *__restrict dst);
 
 /**
  * Calculates the buffer size (number of ints) required to generate a cuboidal

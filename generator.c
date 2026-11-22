@@ -136,7 +136,7 @@ void applySeed(Generator *g, int dim, uint64_t seed)
     }
 }
 
-void copyGenerator(const Generator *src, Generator *dst) {
+void copyGenerator(const Generator *__restrict src, Generator *__restrict dst) {
     memcpy(dst, src, sizeof(*dst));
 
     #define REBASE(p)                                                                         \
