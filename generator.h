@@ -62,6 +62,15 @@ void setupGenerator(Generator *g, int mc, uint32_t flags);
 /// dim=+1:  End
 void applySeed(Generator *g, int dim, uint64_t seed);
 
+/// Performs a deep copy of a freshly initialized generator to another
+/// generator. The function is not guaranteed to work for generators that have
+/// already been used.
+///
+/// For modern generators, this is significantly faster than reinitializing the
+/// generator. For some older generators, e.g. Overworld 1.0.0, reinitializing
+/// is faster.
+void copyGenerator(const Generator *__restrict src, Generator *__restrict dst);
+
 /// Calculates the buffer size (number of ints) required to generate a cuboidal
 /// volume of size (sx, sy, sz). If 'sy' is zero the buffer is calculated for a
 /// 2D plane (which is equivalent to sy=1 here).

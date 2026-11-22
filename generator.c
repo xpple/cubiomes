@@ -136,6 +136,71 @@ void applySeed(Generator *g, int dim, uint64_t seed)
     }
 }
 
+void copyGenerator(const Generator *__restrict src, Generator *__restrict dst) {
+    memcpy(dst, src, sizeof(*dst));
+
+    #define REBASE(p)                                                                         \
+        do {                                                                                  \
+            if (p) {                                                                          \
+                (p) = (void *) ((unsigned char *) dst + ((uintptr_t) (p) - (uintptr_t) src)); \
+            }                                                                                 \
+        } while (0)
+    #define REBASE_LAYER(l)    \
+        do {                   \
+            REBASE((l).p);     \
+            REBASE((l).p2);    \
+            REBASE((l).noise); \
+        } while (0)
+    #define REBASE_NOISE(n)           \
+        do {                          \
+            REBASE((n).octA.octaves); \
+            REBASE((n).octB.octaves); \
+        } while (0)
+
+    if (src->mc >= MC_B1_8 && src->mc <= MC_1_17) {
+        for (int i = 0; i < L_NUM; i++) {
+            REBASE_LAYER(dst->ls.layers[i]);
+        }
+
+        if (src->mc >= MC_1_13 && (src->flags & FORCE_OCEAN_VARIANTS)) {
+            for (int i = 2; i < 5; i++) {
+                REBASE_LAYER(dst->xlayer[i]);
+            }
+        }
+
+        REBASE(dst->ls.entry_1);
+        REBASE(dst->ls.entry_4);
+        REBASE(dst->ls.entry_16);
+        REBASE(dst->ls.entry_64);
+        REBASE(dst->ls.entry_256);
+    } else if (src->mc >= MC_1_18) {
+        REBASE(dst->bn.sp);
+        for (int i = 0; i < dst->bn.ss.len; i++) {
+            for (int j = 0; j < dst->bn.ss.stack[i].len; j++) {
+                REBASE(dst->bn.ss.stack[i].val[j]);
+            }
+        }
+
+        if (src->dim == DIM_OVERWORLD) {
+            for (int i = 0; i < NP_MAX; i++) {
+                REBASE_NOISE(dst->bn.climate[i]);
+            }
+        }
+    } else if (src->dim == DIM_OVERWORLD) {
+        for (int i = 0; i < 3; i++) {
+            REBASE(dst->bnb.climate[i].octaves);
+        }
+    }
+
+    if (src->dim == DIM_NETHER && src->mc >= MC_1_16_1) {
+        REBASE_NOISE(dst->nn.temperature);
+        REBASE_NOISE(dst->nn.humidity);
+    }
+
+    #undef REBASE_NOISE
+    #undef REBASE_LAYER
+    #undef REBASE
+}
 
 size_t getMinCacheSize(const Generator *g, int scale, int sx, int sy, int sz)
 {

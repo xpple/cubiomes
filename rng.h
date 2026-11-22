@@ -89,10 +89,6 @@ static inline uint32_t BSWAP32(uint32_t x) {
 
 #endif
 
-#ifndef __restrict
-#define __restrict
-#endif
-
 /// imitate amd64/x64 rotate instructions
 
 static inline ATTR(const, always_inline, artificial)
