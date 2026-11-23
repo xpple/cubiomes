@@ -561,26 +561,26 @@ int getBiomeForOreGen(const Generator *g, int chunkX, int chunkZ, int y)
     return getBiomeAt(g, 4, (chunkX << 2) + 2, y >> 2, (chunkZ << 2) + 2);
 }
 
-Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig config, int chunkX, int chunkZ)
+Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, const OreConfig *config, int chunkX, int chunkZ)
 {
     uint64_t populationSeed = getPopulationSeed(g->mc, g->seed, chunkX << 4, chunkZ << 4);
     RandomSource rnd = {.type = g->mc <= MC_1_17 ? JAVA_RANDOM : XOROSHIRO_J};
     // set decorator seed
-    absSetSeed(&rnd, populationSeed + config.index + 10000 * config.step);
+    absSetSeed(&rnd, populationSeed + config->index + 10000 * config->step);
 
-    int oreType = config.oreType;
+    int oreType = config->oreType;
     int repeatCount;
     // rareOrePlacement check
     if (oreType == LargeDiamondOre || oreType == UpperAndesiteOre ||
         oreType == UpperDioriteOre || oreType == UpperGraniteOre) {
-        repeatCount = absNextFloat(&rnd) < 1.0F / config.repeatCount;
+        repeatCount = absNextFloat(&rnd) < 1.0F / config->repeatCount;
     } else {
-        repeatCount = config.repeatCount;
+        repeatCount = config->repeatCount;
     }
 
     Pos3List pos3s;
     // x^2/4 is an approx that works for sizes <= 64, but only works for ores that use this config
-    const int approxSize = repeatCount * ((config.size * config.size) >> 2);
+    const int approxSize = repeatCount * ((config->size * config->size) >> 2);
     createPos3List(&pos3s, MAX(8, approxSize));
 
     for (int i = 0; i < repeatCount; i++) {
@@ -593,30 +593,30 @@ Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig conf
     return pos3s;
 }
 
-Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource *rnd)
+Pos3 generateBaseOrePosition(int mc, const OreConfig *config, int chunkX, int chunkZ, RandomSource *rnd)
 {
-    if ((mc <= MC_1_17 && config.oreType == EmeraldOre) || (mc <= MC_NEWEST && config.oreType == LowerGoldOre)) {
+    if ((mc <= MC_1_17 && config->oreType == EmeraldOre) || (mc <= MC_NEWEST && config->oreType == LowerGoldOre)) {
         return (Pos3) {chunkX << 4, 0, chunkZ << 4};
     }
     if (mc <= MC_1_14) {
         int blockX = (chunkX << 4) + absNextInt(rnd, 16);
-        int blockY = config.heightProvider(rnd, config.h1, config.h2, config.h3);
+        int blockY = config->heightProvider(rnd, config->h1, config->h2, config->h3);
         int blockZ = (chunkZ << 4) + absNextInt(rnd, 16);
         return (Pos3) {blockX, blockY, blockZ};
     } else {
         int blockX = (chunkX << 4) + absNextInt(rnd, 16);
         int blockZ = (chunkZ << 4) + absNextInt(rnd, 16);
-        int blockY = config.heightProvider(rnd, config.h1, config.h2, config.h3);
+        int blockY = config->heightProvider(rnd, config->h1, config->h2, config->h3);
         return (Pos3) {blockX, blockY, blockZ};
     }
 }
 
-void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource *rnd, Pos3List* pos3s)
+void generateOrePositions(const Generator *g, const SurfaceNoise *sn, const OreConfig *config, Pos3 pos, RandomSource *rnd, Pos3List* pos3s)
 {
     int mc = g->mc;
-    if ((mc <= MC_1_17 && config.oreType == EmeraldOre) || (mc <= MC_NEWEST && config.oreType == LowerGoldOre)) {
+    if ((mc <= MC_1_17 && config->oreType == EmeraldOre) || (mc <= MC_NEWEST && config->oreType == LowerGoldOre)) {
         int count;
-        if (config.oreType == EmeraldOre) {
+        if (config->oreType == EmeraldOre) {
             if (mc <= MC_1_16) {
                 count = 3 + absNextInt(rnd, 6);
             } else {
@@ -629,13 +629,13 @@ void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig 
         for (int i = 0; i < count; i++) {
             if (mc <= MC_1_14) {
                 int x = pos.x + absNextInt(rnd, 16);
-                int y = config.heightProvider(rnd, config.h1, config.h2, config.h3);
+                int y = config->heightProvider(rnd, config->h1, config->h2, config->h3);
                 int z = pos.z + absNextInt(rnd, 16);
                 appendPos3List(pos3s, (Pos3) {x, y, z});
             } else {
                 int x = pos.x + absNextInt(rnd, 16);
                 int z = pos.z + absNextInt(rnd, 16);
-                int y = config.heightProvider(rnd, config.h1, config.h2, config.h3);
+                int y = config->heightProvider(rnd, config->h1, config->h2, config->h3);
                 appendPos3List(pos3s, (Pos3) {x, y, z});
             }
         }
@@ -643,8 +643,8 @@ void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig 
     }
 
     // scatter
-    if (config.oreType == LargeDebrisOre || config.oreType == SmallDebrisOre) {
-        int count = absNextInt(rnd, config.size + 1);
+    if (config->oreType == LargeDebrisOre || config->oreType == SmallDebrisOre) {
+        int count = absNextInt(rnd, config->size + 1);
         for (int i = 0; i < count; ++i) {
             int size = MIN(i, 7);
             float a, b;
@@ -671,8 +671,8 @@ void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig 
 
     // regular
     float angle = absNextFloat(rnd) * (float)PI;
-    float size = (float)config.size / 8.0F;
-    int amortizedSize = ceil(((float)config.size / 16.0F * 2.0F + 1.0F) / 2.0F);
+    float size = (float)config->size / 8.0F;
+    int amortizedSize = ceil(((float)config->size / 16.0F * 2.0F + 1.0F) / 2.0F);
     double offsetXPos = (double)pos.x + sin(angle) * (double)size;
     double offsetXNeg = (double)pos.x - sin(angle) * (double)size;
     double offsetZPos = (double)pos.z + cos(angle) * (double)size;
@@ -697,14 +697,14 @@ void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig 
     }
 }
 
-void generateVeinPart(int mc, OreConfig config, RandomSource *rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List* pos3s)
+void generateVeinPart(int mc, const OreConfig *config, RandomSource *rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List* pos3s)
 {
     const int minBuildHeight = mc <= MC_1_17 ? 0 : -64;
     const int maxBuildHeight = mc <= MC_1_17 ? 256 : 320;
     int slots = BITNSLOTS(oreSize * radius * oreSize);
     char bitSet[slots];
     memset(bitSet, 0, slots);
-    int size = config.size;
+    int size = config->size;
     double store[4 * size];
 
     for (int i = 0; i < size; ++i) {
@@ -774,7 +774,7 @@ void generateVeinPart(int mc, OreConfig config, RandomSource *rnd, double offset
                     Pos3 pos = {X, Y, Z};
                     // TODO: check if the block at pos is contained in config.replaceBlocks
                     if (1) {
-                        float chance = config.discardChanceOnAirExposure;
+                        float chance = config->discardChanceOnAirExposure;
                         int skipAirCheck;
                         if (chance <= 0.0F) {
                             skipAirCheck = 1;

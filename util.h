@@ -61,8 +61,8 @@ int parseBiomeColors(unsigned char biomeColors[256][3], const char *buf);
 /// \return nonzero if the input contains biome ids outside [0,256).
 int biomesToImage(unsigned char *pixels,
         unsigned char biomeColors[256][3], const int *biomes,
-        const unsigned int sx, const unsigned int sy,
-        const unsigned int pixscale, const int flip);
+        unsigned int sx, unsigned int sy,
+        unsigned int pixscale, int flip);
 
 /// Save the pixel buffer (e.g. from biomesToImage) to the given path as an PPM
 /// image file.
@@ -70,7 +70,7 @@ int biomesToImage(unsigned char *pixels,
 /// \return 0 if successful, or -1 if the file could not be opened,
 /// or 1 if not all the pixel data could be written to the file.
 int savePPM(const char* path, const unsigned char *pixels,
-        const unsigned int sx, const unsigned int sy);
+        unsigned int sx, unsigned int sy);
 
 #ifdef __cplusplus
 }

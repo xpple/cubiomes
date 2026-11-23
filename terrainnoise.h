@@ -64,7 +64,7 @@ enum {
 /// Set up terrain noise for a given version and the specified biome generator flags.
 /// It is required to zero-initialize the object.
 ///
-/// \param params the terrain noise parameters
+/// \param[out] params the terrain noise parameters
 /// \param mc the Minecraft version
 /// \param flags the biome generator flags
 void setupTerrainNoise(TerrainNoise *params, int mc, int flags);
@@ -78,72 +78,72 @@ void initTerrainNoise(TerrainNoise *params, uint64_t ws, int dim);
 
 /// Sample `overworld/caves/spaghetti_roughness_function`.
 ///
-/// \param params the terrain noise parameters
+/// \param[in] params the terrain noise parameters
 /// \param x the world X-coordinate
 /// \param y the world Y-coordinate
 /// \param z the world Z-coordinate
 /// \return the sampled value
-double sampleSpaghettiRoughness(TerrainNoise *params, int x, int y, int z);
+double sampleSpaghettiRoughness(const TerrainNoise *params, int x, int y, int z);
 
 /// Sample `overworld/caves/spaghetti_2d_thickness_modulator`.
 ///
-/// \param params the terrain noise parameters
+/// \param[in] params the terrain noise parameters
 /// \param x the world X-coordinate
 /// \param y the world Y-coordinate
 /// \param z the world Z-coordinate
 /// \return the sampled value
-double sampleSpaghetti2dThicknessModulator(TerrainNoise *params, int x, int y, int z);
+double sampleSpaghetti2dThicknessModulator(const TerrainNoise *params, int x, int y, int z);
 
 /// Sample `overworld/caves/spaghetti_2d`.
 ///
-/// \param params the terrain noise parameters
+/// \param[in] params the terrain noise parameters
 /// \param x the world X-coordinate
 /// \param y the world Y-coordinate
 /// \param z the world Z-coordinate
 /// \return the sampled value
-double sampleSpaghetti2d(TerrainNoise *params, int x, int y, int z);
+double sampleSpaghetti2d(const TerrainNoise *params, int x, int y, int z);
 
 /// Sample `spaghetti_3d`.
 ///
-/// \param params the terrain noise parameters
+/// \param[in] params the terrain noise parameters
 /// \param x the world X-coordinate
 /// \param y the world Y-coordinate
 /// \param z the world Z-coordinate
 /// \return the sampled value
-double sampleSpaghetti3d(TerrainNoise *params, int x, int y, int z);
+double sampleSpaghetti3d(const TerrainNoise *params, int x, int y, int z);
 
 /// Sample `cave_entrance`.
 ///
-/// \param params the terrain noise parameters
+/// \param[in] params the terrain noise parameters
 /// \param x the world X-coordinate
 /// \param y the world Y-coordinate
 /// \param z the world Z-coordinate
 /// \return the sampled value
-double sampleCaveEntrance(TerrainNoise *params, int x, int y, int z);
+double sampleCaveEntrance(const TerrainNoise *params, int x, int y, int z);
 
 /// Sample `overworld/caves/entrances`.
 ///
-/// \param params the terrain noise parameters
+/// \param[in] params the terrain noise parameters
 /// \param x the world X-coordinate
 /// \param y the world Y-coordinate
 /// \param z the world Z-coordinate
 /// \param spaghettiRoughness the value of `overworld/caves/spaghetti_roughness_function`
 /// at the same location
 /// \return the sampled value
-double sampleEntrances(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness);
+double sampleEntrances(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness);
 
 /// Sample `cave_layer`.
 ///
-/// \param params the terrain noise parameters
+/// \param[in] params the terrain noise parameters
 /// \param x the world X-coordinate
 /// \param y the world Y-coordinate
 /// \param z the world Z-coordinate
 /// \return the sampled value
-double sampleCaveLayer(TerrainNoise *params, int x, int y, int z);
+double sampleCaveLayer(const TerrainNoise *params, int x, int y, int z);
 
 /// Sample `overworld/sloped_cheese`. Use sampleNoiseParameters to for the spline inputs, see sampleNoiseColumn.
 ///
-/// \param params the terrain noise parameters
+/// \param[in] params the terrain noise parameters
 /// \param x the world X-coordinate
 /// \param y the world Y-coordinate
 /// \param z the world Z-coordinate
@@ -151,74 +151,74 @@ double sampleCaveLayer(TerrainNoise *params, int x, int y, int z);
 /// \param factor the value of the factor spline
 /// \param jagged the value of the jagged spline
 /// \return the sampled value
-double sampleSlopedCheese(TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged);
+double sampleSlopedCheese(const TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged);
 
 /// Sample `cave_cheese`.
 ///
-/// \param params the terrain noise parameters
+/// \param[in] params the terrain noise parameters
 /// \param x the world X-coordinate
 /// \param y the world Y-coordinate
 /// \param z the world Z-coordinate
 /// \param slopedCheese the value of `overworld/sloped_cheese` at the same location
 /// \return the sampled value
-double sampleCaveCheese(TerrainNoise *params, int x, int y, int z, double slopedCheese);
+double sampleCaveCheese(const TerrainNoise *params, int x, int y, int z, double slopedCheese);
 
 /// Sample `overworld/caves/pillars`.
 ///
-/// \param params the terrain noise parameters
+/// \param[in] params the terrain noise parameters
 /// \param x the world X-coordinate
 /// \param y the world Y-coordinate
 /// \param z the world Z-coordinate
 /// \return the sampled value
-double samplePillars(TerrainNoise *params, int x, int y, int z);
+double samplePillars(const TerrainNoise *params, int x, int y, int z);
 
 /// Sample `overworld/caves/noodle`.
 ///
-/// \param params the terrain noise parameters
+/// \param[in] params the terrain noise parameters
 /// \param x the world X-coordinate
 /// \param y the world Y-coordinate
 /// \param z the world Z-coordinate
 /// \return the sampled value
-double sampleNoodle(TerrainNoise *params, int x, int y, int z);
+double sampleNoodle(const TerrainNoise *params, int x, int y, int z);
 
 /// Sample `underground`.
 ///
-/// \param params the terrain noise parameters
+/// \param[in] params the terrain noise parameters
 /// \param x the world X-coordinate
 /// \param y the world Y-coordinate
 /// \param z the world Z-coordinate
 /// \param spaghettiRoughness,entrances,slopedCheese the values of `overworld/caves/spaghetti_roughness_function`,
 /// `overworld/caves/entrances` and `overworld/sloped_cheese` at the same location
 /// \return the sampled value
-double sampleUnderground(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese);
+double sampleUnderground(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese);
 
 /// Sample `final_density`.
 ///
-/// \param params the terrain noise parameters
+/// \param[in] params the terrain noise parameters
 /// \param x the world X-coordinate
 /// \param y the world Y-coordinate
 /// \param z the world Z-coordinate
 /// \param spaghettiRoughness,entrances,slopedCheese the values of `overworld/caves/spaghetti_roughness_function`,
 /// `overworld/caves/entrances` and `overworld/sloped_cheese` at the same location
 /// \return the sampled value
-double sampleFinalDensity(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese);
+double sampleFinalDensity(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese);
 
 /// Sample `final_density`.
 ///
-/// \param base3dNoise the nether terrain noise
+/// \param[in] base3dNoise the nether terrain noise
 /// \param x the world X-coordinate
 /// \param y the world Y-coordinate
 /// \param z the world Z-coordinate
 /// \return the sampled value
-double sampleNetherFinalDensity(BlendedNoise* base3dNoise, int x, int y, int z);
+double sampleNetherFinalDensity(const BlendedNoise* base3dNoise, int x, int y, int z);
 
 /// Sample `preliminary_surface_level`.
 ///
-/// \param params the terrain noise parameters
+/// \param[in] params the terrain noise parameters
 /// \param x the world X-coordinate
 /// \param z the world Z-coordinate
 /// \return the preliminary surface Y-level
-int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z);
+int samplePreliminarySurfaceLevel(const TerrainNoise *params, int x, int z);
 
 /// Sample the terrain noise column at the given cell coordinates. This function is for <1.18 overworld.
 ///
@@ -226,13 +226,13 @@ int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z);
 ///
 /// See sampleNoiseColumn for more information.
 ///
-/// \param params the terrain noise parameters
+/// \param[in] params the terrain noise parameters
 /// \param cellX the cell X-coordinate
 /// \param cellZ the cell Z-coordinate
 /// \param colYMin the minimum Y column (nonnegative)
 /// \param colYMax the maximum Y column (nonnegative)
-/// \param column the Y column
-void sampleOWNoiseColumnOld(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[]);
+/// \param[out] column the Y column
+void sampleOWNoiseColumnOld(const TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[]);
 
 /// Sample the terrain noise column at the given cell coordinates. This function works for all
 /// (supported) versions and dimensions.
@@ -248,24 +248,24 @@ void sampleOWNoiseColumnOld(TerrainNoise *params, int cellX, int cellZ, int colY
 /// generate a full column for the 1.18+ overworld, the array size must be 49. To generate a
 /// full column for the end, the array size must be 33.
 ///
-/// \param params the terrain noise parameters
+/// \param[in] params the terrain noise parameters
 /// \param cellX the cell X-coordinate
 /// \param cellZ the cell Z-coordinate
 /// \param colYMin the minimum Y column (nonnegative)
 /// \param colYMax the maximum Y column (nonnegative)
-/// \param column the Y column
-void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[]);
+/// \param[out] column the Y column
+void sampleNoiseColumn(const TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[]);
 
 /// Sample the nether terrain noise column at the given cell coordinates. See
 /// sampleNoiseColumn for more info.
 ///
-/// \param base3dNoise the terrain noise
+/// \param[in] base3dNoise the terrain noise
 /// \param cellX the cell X-coordinate
 /// \param cellZ the cell Z-coordinate
 /// \param colYMin the minimum Y column (nonnegative)
 /// \param colYMax the maximum Y column (nonnegative)
-/// \param column the Y column
-void sampleNetherNoiseColumn(BlendedNoise* base3dNoise, int cellX, int cellZ, int colYMin, int colYMax, double column[]);
+/// \param[out] column the Y column
+void sampleNetherNoiseColumn(const BlendedNoise* base3dNoise, int cellX, int cellZ, int colYMin, int colYMax, double column[]);
 
 /// Generate a terrain column at the given block coordinates. If not NULL, the result will
 /// be written to blocks. The dsxz buffers can be obtained through sampleNoiseColumn. See
@@ -327,7 +327,7 @@ int generateColumn(uint8_t blocks[], const double *ds00, const double *ds01, con
 /// \param colYMax the maximum Y column (nonnegative)
 /// \param[out] ys the target Y coordinates
 /// \param flag the boolean flag for the stop condition
-void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, uint8_t (*blocks)[], int colYMin, int colYMax, int* ys, int flag);
+void generateRegion(const TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, uint8_t (*blocks)[], int colYMin, int colYMax, int* ys, int flag);
 
 #ifdef __cplusplus
 }

@@ -143,7 +143,7 @@ static inline int providerTriangleRange(RandomSource *rnd, const int minOffset, 
 /// \param oreType the ore type as listed in Ores.
 /// \param mc the Minecraft version as listed in MCVersion
 /// \param biomeID the biome ID as listed in BiomeID, unused for >=1.18
-/// \param oconf the target config
+/// \param[out] oconf the target config
 /// \return 0 on failure
 int getOreConfig(int oreType, int mc, int biomeID, OreConfig *oconf);
 
@@ -171,13 +171,13 @@ int isViableOreBiome(int mc, int oreType, int biomeID);
 /// \param chunkX the chunk X-coordinate
 /// \param chunkZ the chunk Z-coordinate
 /// \return a sized array of ore positions
-Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig config, int chunkX, int chunkZ);
+Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, const OreConfig *config, int chunkX, int chunkZ);
 
-Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource *rnd);
+Pos3 generateBaseOrePosition(int mc, const OreConfig *config, int chunkX, int chunkZ, RandomSource *rnd);
 
-void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource *rnd, Pos3List* pos3s);
+void generateOrePositions(const Generator *g, const SurfaceNoise *sn, const OreConfig *config, Pos3 pos, RandomSource *rnd, Pos3List* pos3s);
 
-void generateVeinPart(int mc, OreConfig config, RandomSource *rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List* pos3s);
+void generateVeinPart(int mc, const OreConfig *config, RandomSource *rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List* pos3s);
 
 #ifdef __cplusplus
 }

@@ -12,7 +12,7 @@ static int test_carvers_1_21_11() {
     int cx = 2720 >> 4;
     int cz = 96 >> 4;
     uint64_t rnd; // unused
-    ASSERT_NONZERO(ret, checkCanyonStart(seed, cx, cz, canyonCarverConfig, &rnd));
+    ASSERT_NONZERO(ret, checkCanyonStart(seed, cx, cz, &canyonCarverConfig, &rnd));
 
     return ret;
 }

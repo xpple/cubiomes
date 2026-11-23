@@ -297,7 +297,7 @@ int sampleBiomeNoise(const BiomeNoise *bn, int64_t *np, int x, int y, int z,
     uint64_t *dat, uint32_t sample_flags);
 /// Samples the terrain spline inputs at scale 1:4. The output order is
 /// continentalness, erosion, ridges, weirdness.
-void sampleNoiseParameters(BiomeNoise *bn, int x, int z, float np_param[4]);
+void sampleNoiseParameters(const BiomeNoise *bn, int x, int z, float np_param[4]);
 int sampleBiomeNoiseBeta(const BiomeNoiseBeta *bnb, int64_t *np, double *nv,
     int x, int z);
 /// doesn't really work yet
@@ -360,7 +360,7 @@ void initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim);
 /// \param y the world Y-coordinate
 /// \param z the world Z-coordinate
 /// \return the sampled value
-double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z);
+double sampleBase3dNoise(const BlendedNoise *bn, int x, int y, int z);
 
 #ifdef __cplusplus
 }
