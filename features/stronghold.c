@@ -65,7 +65,7 @@ static inline void updateGenerationStatus(StrongholdPieceEnv *env) {
     env->generationStopped = 1;
 }
 
-static inline Piece* hasCollision(StrongholdPieceEnv *env, Pos3 b0, Pos3 b1) {
+static inline Piece* hasCollision(const StrongholdPieceEnv *env, Pos3 b0, Pos3 b1) {
     int i, n = *env->n;
     for (i = 0; i < n; i++) {
         Piece *q = env->list + i;
@@ -199,7 +199,7 @@ L_box_end:;
     return 1;
 }
 
-static void extendStronghold(StrongholdPieceEnv *env, Piece *piece, int x, int y, int z, int facing) {
+static void extendStronghold(StrongholdPieceEnv *env, const Piece *piece, int x, int y, int z, int facing) {
     if (piece->depth > 50) {
         return;
     }
@@ -248,7 +248,7 @@ static void extendStronghold(StrongholdPieceEnv *env, Piece *piece, int x, int y
     addStrongholdPiece(env, SH_FILLER_CORRIDOR, x, y, z, depth, facing);
 }
 
-static void generateSmallDoorChildForward(StrongholdPieceEnv *env, Piece *piece, int offx, int offy) {
+static void generateSmallDoorChildForward(StrongholdPieceEnv *env, const Piece *piece, int offx, int offy) {
     // WEST and EAST are swapped on old versions
     switch (piece->rot) {
     case 0: // facing 2
@@ -267,7 +267,7 @@ static void generateSmallDoorChildForward(StrongholdPieceEnv *env, Piece *piece,
     }
 }
 
-static void generateSmallDoorChildLeft(StrongholdPieceEnv *env, Piece *piece, int offy, int offz) {
+static void generateSmallDoorChildLeft(StrongholdPieceEnv *env, const Piece *piece, int offy, int offz) {
     switch (piece->rot) {
     case 0:
     case 2:
@@ -281,7 +281,7 @@ static void generateSmallDoorChildLeft(StrongholdPieceEnv *env, Piece *piece, in
     }
 }
 
-static void generateSmallDoorChildRight(StrongholdPieceEnv *env, Piece *piece, int offy, int offz) {
+static void generateSmallDoorChildRight(StrongholdPieceEnv *env, const Piece *piece, int offy, int offz) {
     switch (piece->rot) {
     case 0:
     case 2:
@@ -295,7 +295,7 @@ static void generateSmallDoorChildRight(StrongholdPieceEnv *env, Piece *piece, i
     }
 }
 
-static void extendStrongholdPiece(StrongholdPieceEnv *env, Piece *piece) {
+static void extendStrongholdPiece(StrongholdPieceEnv *env, const Piece *piece) {
     switch (piece->type) {
     case SH_STRAIGHT:
         generateSmallDoorChildForward(env, piece, 1, 1);
@@ -645,6 +645,7 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                     // generateBox(p, cx, cz, 4, 2, 6, 6, 2, 7, 0, rnd);
                     // generateBox(p, cx, cz, 4, 3, 7, 6, 3, 7, 0, rnd);
 
+                    int twelveEyes = 1;
                     for (int j = 0; j < 12; j++) {
                         if (absNextFloat(&rnd) > 0.9F) {
                             Pos relPos = eye_positions[j];
@@ -652,6 +653,21 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                             rotPos(p->bb0, p->bb1, &eyePosX, &eyePosZ, p->rot);
                             if (eyePosX >= cx && eyePosX < cx + 16 && eyePosZ >= cz && eyePosZ < cz + 16) {
                                 p->additionalData |= (1 << j);
+                            }
+                        } else {
+                            twelveEyes = 0;
+                        }
+                    }
+                    if (twelveEyes) {
+                        #pragma GCC unroll 2
+                        for (int lx = 4; lx <= 6; lx += 2) {
+                            #pragma GCC unroll 2
+                            for (int lz = 9; lz <= 11; lz += 2) {
+                                int eyePosX = lx, eyePosZ = lz;
+                                rotPos(p->bb0, p->bb1, &eyePosX, &eyePosZ, p->rot);
+                                if (eyePosX >= cx && eyePosX < cx + 16 && eyePosZ >= cz && eyePosZ < cz + 16) {
+                                    p->additionalData |= (1 << 12);
+                                }
                             }
                         }
                     }

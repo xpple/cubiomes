@@ -19,7 +19,7 @@ static inline void rotPos(Pos3 bb0, Pos3 bb1, int *x, int *z, int rot) {
     *x = posX, *z = posZ;
 }
 
-static void generateBox(Piece *p, int cx, int cz, int x0, int y0, int z0, int x1, int y1, int z1, int skipAir, RandomSource *rnd) {
+static void generateBox(const Piece *p, int cx, int cz, int x0, int y0, int z0, int x1, int y1, int z1, int skipAir, RandomSource *rnd) {
     if (!skipAir) {
         int w = x1 - x0 + 1;
         int d = z1 - z0 + 1;

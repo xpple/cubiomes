@@ -225,7 +225,7 @@ STRUCT(Potion) {
     const char *potion_name;
     const int potion;
     const int mob_effect_count;
-    const MobEffectInstance mob_effects[2]; // 2 is the max currently
+    const MobEffectInstance mob_effects[2]; ///< 2 is the max currently
 };
 
 extern const struct Potion POTIONS[POTION_NUM];
@@ -242,7 +242,7 @@ struct ItemStack {
     int count;
 
     int enchantment_count;
-    EnchantInstance enchantments[16]; // 12 is the theoretical maximum for 1.17 and below, 16 should be safe for all versions
+    EnchantInstance enchantments[16]; ///< 12 is the theoretical maximum for 1.17 and below, 16 should be safe for all versions
 
     MobEffectInstance mob_effect;
 };
@@ -250,11 +250,11 @@ struct ItemStack {
 // ----------------------------------------------------------------------------------------
 
 STRUCT(LootItemCondition) {
-    // condition function
+    /// condition function
     int (*fun)(RandomSource* rand, const void* params);
-    // pointer to the param array used by the function
+    /// pointer to the param array used by the function
     const void* params;
-    // predefined params
+    /// predefined params
     float params_float[1];
 };
 
@@ -265,16 +265,16 @@ void create_no_op_condition(LootItemCondition* lic);
 typedef int (*RollCountFunction)(RandomSource*, const int, const int);
 
 STRUCT(LootFunction) {
-    // actual function pointer
+    /// actual function pointer
     void (*fun)(RandomSource* rand, ItemStack* is, const void* params);
-    // pointer to the param array used by the function
+    /// pointer to the param array used by the function
     const void* params;
 
     // predefined function parameter arrays
-    int params_int[2];          // for simple functions
-    int* varparams_int;         // for enchantRandomly
-    int** varparams_int_arr;    // for enchantWithLevels
-    int varparams_int_arr_size; // for cleaning up after enchantWithLevels
+    int params_int[2];          ///< for simple functions
+    int* varparams_int;         ///< for enchantRandomly
+    int** varparams_int_arr;    ///< for enchantWithLevels
+    int varparams_int_arr_size; ///< for cleaning up after enchantWithLevels
 };
 
 // ----------------------------------------------------------------------------------------

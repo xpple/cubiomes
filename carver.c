@@ -156,16 +156,14 @@ static int canReach(int chunkX, int chunkZ, double x, double z, int branchIndex,
     return f * f + g * g - h * h <= i * i;
 }
 
-int checkCanyonStart(uint64_t seed, int chunkX, int chunkZ, CanyonCarverConfig ccc, uint64_t* rnd)
-{
-    *rnd = chunkGenerateRnd(seed + ccc.carverIndex, chunkX, chunkZ);
-    return nextFloat(rnd) <= ccc.probability;
+int checkCanyonStart(uint64_t seed, int chunkX, int chunkZ, const CanyonCarverConfig *ccc, uint64_t* rnd) {
+    *rnd = chunkGenerateRnd(seed + ccc->carverIndex, chunkX, chunkZ);
+    return nextFloat(rnd) <= ccc->probability;
 }
 
-int checkCaveStart(uint64_t seed, int chunkX, int chunkZ, CaveCarverConfig ccc, uint64_t* rnd)
-{
-    *rnd = chunkGenerateRnd(seed + ccc.carverIndex, chunkX, chunkZ);
-    return nextFloat(rnd) <= ccc.probability;
+int checkCaveStart(uint64_t seed, int chunkX, int chunkZ, const CaveCarverConfig *ccc, uint64_t* rnd) {
+    *rnd = chunkGenerateRnd(seed + ccc->carverIndex, chunkX, chunkZ);
+    return nextFloat(rnd) <= ccc->probability;
 }
 
 static inline int shouldSkipCanyonCarve(double relativeX, double relativeY, double relativeZ, int y, int worldMinY, /* float* */ void* widthFactors) {
@@ -181,9 +179,9 @@ static inline int shouldSkipCaveCarve(double relativeX, double relativeY, double
 
 static void carveEllipsoid(int chunkX, int chunkZ, double x, double y, double z, double horizontalRadius, double verticalRadius, int worldMinY, int worldHeight, char carvingMask[], int (*shouldSkip)(double, double, double, int, int, void*), void* arg, Pos3List* poses);
 
-static void carveCanyonInner(CanyonCarverConfig ccc, int mc, uint64_t *rnd, int sourceChunkX, int sourceChunkZ, int offsetChunkX, int offsetChunkZ, char carvingMask[], Pos3List* poses);
+static void carveCanyonInner(const CanyonCarverConfig *ccc, int mc, uint64_t *rnd, int sourceChunkX, int sourceChunkZ, int offsetChunkX, int offsetChunkZ, char carvingMask[], Pos3List* poses);
 
-void carveCanyon(uint64_t seed, int mc, int chunkX, int chunkZ, CanyonCarverConfig ccc, int canyonCarverType, int biomes[17][17], Pos3List* poses) {
+void carveCanyon(uint64_t seed, int mc, int chunkX, int chunkZ, const CanyonCarverConfig *ccc, int canyonCarverType, int biomes[17][17], Pos3List* poses) {
     const int worldHeight = mc > MC_1_17_1 ? 384 : 256;
     int slots = BITNSLOTS(256 * worldHeight);
     char carvingMask[slots];
@@ -207,8 +205,8 @@ void carveCanyon(uint64_t seed, int mc, int chunkX, int chunkZ, CanyonCarverConf
     }
 }
 
-static void initWidthFactors(uint64_t* rnd, int worldHeight, float widthFactors[], CanyonCarverConfig ccc) {
-    float f = 1.0F;
+static void initWidthFactors(uint64_t* rnd, int worldHeight, float widthFactors[], const CanyonCarverConfig *ccc) {
+    float f;
 
     // j == 0
     {
@@ -218,7 +216,7 @@ static void initWidthFactors(uint64_t* rnd, int worldHeight, float widthFactors[
         widthFactors[0] = f * f;
     }
     for (int j = 1; j < worldHeight; j++) {
-        if (nextInt(rnd, ccc.widthSmoothness) == 0) {
+        if (nextInt(rnd, ccc->widthSmoothness) == 0) {
             float a = nextFloat(rnd);
             float b = nextFloat(rnd);
             f = 1.0F + a * b;
@@ -228,27 +226,27 @@ static void initWidthFactors(uint64_t* rnd, int worldHeight, float widthFactors[
     }
 }
 
-static double updateVerticalRadius(CanyonCarverConfig ccc, uint64_t* rnd, double verticalRadius, float branchCount, float currentBranch) {
+static double updateVerticalRadius(const CanyonCarverConfig *ccc, uint64_t* rnd, double verticalRadius, float branchCount, float currentBranch) {
     float f = 1.0F - fabs(0.5F - currentBranch / branchCount) * 2.0F;
-    float g = ccc.verticalRadiusDefaultFactor + ccc.verticalRadiusCenterFactor * f;
+    float g = ccc->verticalRadiusDefaultFactor + ccc->verticalRadiusCenterFactor * f;
     return g * verticalRadius * nextFloatBetween(rnd, 0.75F, 1.0F);
 }
 
-static void carveCanyonInner(CanyonCarverConfig ccc, int mc, uint64_t *rnd, int sourceChunkX, int sourceChunkZ, int offsetChunkX, int offsetChunkZ, char carvingMask[], Pos3List* poses) {
-    int range = (ccc.range * 2 - 1) * 16;
+static void carveCanyonInner(const CanyonCarverConfig *ccc, int mc, uint64_t *rnd, int sourceChunkX, int sourceChunkZ, int offsetChunkX, int offsetChunkZ, char carvingMask[], Pos3List* poses) {
+    int range = (ccc->range * 2 - 1) * 16;
     double x = (offsetChunkX << 4) + nextInt(rnd, 16);
-    double y = ccc.y(rnd, ccc.minY, ccc.maxY, ccc.innerY);
+    double y = ccc->y(rnd, ccc->minY, ccc->maxY, ccc->innerY);
     double z = (offsetChunkZ << 4) + nextInt(rnd, 16);
     float yaw = nextFloat(rnd) * (float) (PI * 2);
-    float pitch = ccc.verticalRotation(rnd, ccc.minVerRot, ccc.maxVerRot);
-    double horizontalVerticalRatio = ccc.yScale;
-    float thickness = ccc.thickness(rnd, ccc.minThickness, ccc.maxThickness, ccc.plateauThickness);
+    float pitch = ccc->verticalRotation(rnd, ccc->minVerRot, ccc->maxVerRot);
+    double horizontalVerticalRatio = ccc->yScale;
+    float thickness = ccc->thickness(rnd, ccc->minThickness, ccc->maxThickness, ccc->plateauThickness);
     int branchCount;
     // one could reuse `distanceFactor` for this and interpret the float bits as int bits, decided against it
     if (mc <= MC_1_16_5) {
         branchCount = range - nextInt(rnd, range / 4);
     } else {
-        branchCount = (int)(range * ccc.distanceFactor(rnd, ccc.minDistance, ccc.maxDistance));
+        branchCount = (int)(range * ccc->distanceFactor(rnd, ccc->minDistance, ccc->maxDistance));
     }
     uint64_t seed = nextLong(rnd);
     setSeed(rnd, seed);
@@ -269,7 +267,7 @@ static void carveCanyonInner(CanyonCarverConfig ccc, int mc, uint64_t *rnd, int 
     for (int branchIndex = 0; branchIndex < branchCount; branchIndex++) {
         double horizontalRadius = 1.5 + sin(branchIndex * (float) PI / branchCount) * thickness;
         double verticalRadius = horizontalRadius * horizontalVerticalRatio;
-        horizontalRadius *= ccc.horizontalRadiusFactor(rnd, ccc.minHorRadius, ccc.maxHorRadius);
+        horizontalRadius *= ccc->horizontalRadiusFactor(rnd, ccc->minHorRadius, ccc->maxHorRadius);
         verticalRadius = updateVerticalRadius(ccc, rnd, verticalRadius, branchCount, branchIndex);
         float h = cos(pitch);
         float j = sin(pitch);
@@ -296,14 +294,14 @@ static void carveCanyonInner(CanyonCarverConfig ccc, int mc, uint64_t *rnd, int 
     }
 }
 
-static void carveCaveInner(CaveCarverConfig ccc, uint64_t* rnd, int sourceChunkX, int sourceChunkZ, int chunkX, int chunkZ, int mc, char carvingMask[], Pos3List* poses);
+static void carveCaveInner(const CaveCarverConfig *ccc, uint64_t* rnd, int sourceChunkX, int sourceChunkZ, int chunkX, int chunkZ, int mc, char carvingMask[], Pos3List* poses);
 
-void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, CaveCarverConfig ccc, int caveCarverType, int biomes[17][17], Pos3List* poses) {
+void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, const CaveCarverConfig *ccc, int caveCarverType, int biomes[17][17], Pos3List* poses) {
     int worldHeight;
     if (mc > MC_1_17_1) {
-        worldHeight = ccc.dim == DIM_OVERWORLD ? 384 : 128;
+        worldHeight = ccc->dim == DIM_OVERWORLD ? 384 : 128;
     } else {
-        worldHeight = ccc.dim == DIM_OVERWORLD ? 256 : 128;
+        worldHeight = ccc->dim == DIM_OVERWORLD ? 256 : 128;
     }
     int slots = BITNSLOTS(256 * worldHeight);
     char carvingMask[slots];
@@ -328,35 +326,35 @@ void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, CaveCarverConfig c
 
 static void createRoom(int sourceChunkX, int sourceChunkZ, double x, double y, double z, float radius, double horizontalVerticalRatio, int worldMinY, int worldHeight, char carvingMask[], double floorLevel, Pos3List* poses);
 
-static void createTunnel(CaveCarverConfig ccc, int sourceChunkX, int sourceChunkZ, uint64_t seed, double x, double y, double z, double horizontalRadiusMultiplier, double verticalRadiusMultiplier, float thickness, float yaw, float pitch, int branchIndex, int branchCount, double horizontalVerticalRatio, int worldMinY, int worldHeight, char carvingMask[], double floorLevel, Pos3List* poses);
+static void createTunnel(const CaveCarverConfig *ccc, int sourceChunkX, int sourceChunkZ, uint64_t seed, double x, double y, double z, double horizontalRadiusMultiplier, double verticalRadiusMultiplier, float thickness, float yaw, float pitch, int branchIndex, int branchCount, double horizontalVerticalRatio, int worldMinY, int worldHeight, char carvingMask[], double floorLevel, Pos3List* poses);
 
-static void carveCaveInner(CaveCarverConfig ccc, uint64_t* rnd, int sourceChunkX, int sourceChunkZ, int chunkX, int chunkZ, int mc, char carvingMask[], Pos3List* poses) {
+static void carveCaveInner(const CaveCarverConfig *ccc, uint64_t* rnd, int sourceChunkX, int sourceChunkZ, int chunkX, int chunkZ, int mc, char carvingMask[], Pos3List* poses) {
     int worldMinY;
     int worldHeight;
     if (mc > MC_1_17_1) {
-        worldMinY = ccc.dim == DIM_OVERWORLD ? -64 : 0;
-        worldHeight = ccc.dim == DIM_OVERWORLD ? 384 : 128;
+        worldMinY = ccc->dim == DIM_OVERWORLD ? -64 : 0;
+        worldHeight = ccc->dim == DIM_OVERWORLD ? 384 : 128;
     } else {
         worldMinY = 0;
-        worldHeight = ccc.dim == DIM_OVERWORLD ? 256 : 128;
+        worldHeight = ccc->dim == DIM_OVERWORLD ? 256 : 128;
     }
 
-    int range = (ccc.range * 2 - 1) << 4;
+    int range = (ccc->range * 2 - 1) << 4;
 
-    int r1 = nextInt(rnd, ccc.caveBound);
+    int r1 = nextInt(rnd, ccc->caveBound);
     int r2 = nextInt(rnd, r1 + 1);
     int caveCount = nextInt(rnd, r2 + 1);
 
     for (int k = 0; k < caveCount; k++) {
         double x = (chunkX << 4) + nextInt(rnd, 16);
-        double y = ccc.y(rnd, ccc.minY, ccc.maxY, ccc.innerY);
+        double y = ccc->y(rnd, ccc->minY, ccc->maxY, ccc->innerY);
         double z = (chunkZ << 4) + nextInt(rnd, 16);
-        double horizontalRadius = ccc.horizontalRadiusMultiplier(rnd, ccc.minHorRadius, ccc.maxHorRadius);
-        double verticalRadius = ccc.verticalRadiusMultiplier(rnd, ccc.minVerRadius, ccc.maxVerRadius);
-        double floorLevel = ccc.floorLevel(rnd, ccc.minFloorLevel, ccc.maxFloorLevel);
+        double horizontalRadius = ccc->horizontalRadiusMultiplier(rnd, ccc->minHorRadius, ccc->maxHorRadius);
+        double verticalRadius = ccc->verticalRadiusMultiplier(rnd, ccc->minVerRadius, ccc->maxVerRadius);
+        double floorLevel = ccc->floorLevel(rnd, ccc->minFloorLevel, ccc->maxFloorLevel);
         int m = 1;
         if (nextInt(rnd, 4) == 0) {
-            double yScale = ccc.yScale(rnd, ccc.minYScale, ccc.maxYScale);
+            double yScale = ccc->yScale(rnd, ccc->minYScale, ccc->maxYScale);
             float radius = 1.0F + nextFloat(rnd) * 6.0F;
             if (mc <= MC_1_17_1) {
                 nextLong(rnd);
@@ -368,9 +366,9 @@ static void carveCaveInner(CaveCarverConfig ccc, uint64_t* rnd, int sourceChunkX
         for (int p = 0; p < m; p++) {
             float q = nextFloat(rnd) * (float) (PI * 2);
             float o = (nextFloat(rnd) - 0.5F) / 4.0F;
-            float r = ccc.thickness(rnd);
+            float r = ccc->thickness(rnd);
             int s = range - nextInt(rnd, range / 4);
-            createTunnel(ccc, sourceChunkX, sourceChunkZ, nextLong(rnd), x, y, z, horizontalRadius, verticalRadius, r, q, o, 0, s, ccc.tunnelYScale, worldMinY, worldHeight, carvingMask, floorLevel, poses);
+            createTunnel(ccc, sourceChunkX, sourceChunkZ, nextLong(rnd), x, y, z, horizontalRadius, verticalRadius, r, q, o, 0, s, ccc->tunnelYScale, worldMinY, worldHeight, carvingMask, floorLevel, poses);
         }
     }
 }
@@ -381,7 +379,7 @@ static void createRoom(int sourceChunkX, int sourceChunkZ, double x, double y, d
     carveEllipsoid(sourceChunkX, sourceChunkZ, x + 1.0, y, z, horizontalRadius, verticalRadius, worldMinY, worldHeight, carvingMask, shouldSkipCaveCarve, &floorLevel, poses);
 }
 
-static void createTunnel(CaveCarverConfig ccc, int sourceChunkX, int sourceChunkZ, uint64_t seed, double x, double y, double z, double horizontalRadiusMultiplier, double verticalRadiusMultiplier, float thickness, float yaw, float pitch, int branchIndex, int branchCount, double horizontalVerticalRatio, int worldMinY, int worldHeight, char carvingMask[], double floorLevel, Pos3List* poses) {
+static void createTunnel(const CaveCarverConfig *ccc, int sourceChunkX, int sourceChunkZ, uint64_t seed, double x, double y, double z, double horizontalRadiusMultiplier, double verticalRadiusMultiplier, float thickness, float yaw, float pitch, int branchIndex, int branchCount, double horizontalVerticalRatio, int worldMinY, int worldHeight, char carvingMask[], double floorLevel, Pos3List* poses) {
     uint64_t rnd;
     setSeed(&rnd, seed);
     int i = nextInt(&rnd, branchCount / 2) + branchCount / 4;

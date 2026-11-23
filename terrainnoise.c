@@ -320,16 +320,16 @@ static inline double noiseGradientDensity(double min, double max) {
     return f > 0. ? f * 4. : f;
 }
 
-double sampleSpaghettiRoughness(TerrainNoise *params, int x, int y, int z) {
+double sampleSpaghettiRoughness(const TerrainNoise *params, int x, int y, int z) {
     double spaghettiRoughnessModulator = map(sampleDoublePerlin(&params->noises[OTP_SPAGHETTI_ROUGHNESS_MODULATOR], x, y, z), -1.0, 1.0, 0.0, 0.1);
     return (0.4 - fabs(sampleDoublePerlin(&params->noises[OTP_SPAGHETTI_ROUGHNESS], x, y, z))) * spaghettiRoughnessModulator;
 }
 
-double sampleSpaghetti2dThicknessModulator(TerrainNoise *params, int x, int y, int z) {
+double sampleSpaghetti2dThicknessModulator(const TerrainNoise *params, int x, int y, int z) {
     return map(sampleDoublePerlin(&params->noises[OTP_SPAGHETTI_2D_THICKNESS], x * 2, y, z * 2), -1.0, 1.0, -0.6, -1.3);
 }
 
-double sampleSpaghetti2d(TerrainNoise *params, int x, int y, int z) {
+double sampleSpaghetti2d(const TerrainNoise *params, int x, int y, int z) {
     double spaghetti2dModulator = sampleDoublePerlin(&params->noises[OTP_SPAGHETTI_2D_MODULATOR], x * 2, y, z * 2);
     double rarity = getSpaghettiRarity2d(spaghetti2dModulator);
     double spaghetti2dThickness = map(sampleDoublePerlin(&params->noises[OTP_SPAGHETTI_2D_THICKNESS], x * 2, y, z * 2), -1.0, 1.0, 0.6, 1.3);
@@ -340,7 +340,7 @@ double sampleSpaghetti2d(TerrainNoise *params, int x, int y, int z) {
     return clamp(fmax(b * b * b, a), -1.0, 1.0);
 }
 
-double sampleSpaghetti3d(TerrainNoise *params, int x, int y, int z) {
+double sampleSpaghetti3d(const TerrainNoise *params, int x, int y, int z) {
     double spaghetti3dRarity = sampleDoublePerlin(&params->noises[OTP_SPAGHETTI_3D_RARITY], x * 2, y, z * 2);
     double spaghetti3dThickness = mapFromUnitTo(sampleDoublePerlin(&params->noises[OTP_SPAGHETTI_3D_THICKNESS], x, y, z), -0.065, -0.088);
     double rarity = getSpaghettiRarity3d(spaghetti3dRarity);
@@ -349,41 +349,41 @@ double sampleSpaghetti3d(TerrainNoise *params, int x, int y, int z) {
     return clamp(fmax(spaghetti3d1, spaghetti3d2) + spaghetti3dThickness, -1.0, 1.0);
 }
 
-double sampleCaveEntrance(TerrainNoise *params, int x, int y, int z) {
+double sampleCaveEntrance(const TerrainNoise *params, int x, int y, int z) {
     double caveEntrance = sampleDoublePerlin(&params->noises[OTP_CAVE_ENTRANCE], x * 0.75, y * 0.5, z * 0.75);
     return caveEntrance + 0.37 + yClampedGradient(y, -10, 30, 0.3, 0.0);
 }
 
-double sampleEntrances(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness) {
+double sampleEntrances(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness) {
     double spaghetti3d = sampleSpaghetti3d(params, x, y, z);
     double caveEntrance = sampleCaveEntrance(params, x, y, z);
     return fmin(caveEntrance, spaghettiRoughness + spaghetti3d);
 }
 
-double sampleCaveLayer(TerrainNoise *params, int x, int y, int z) {
+double sampleCaveLayer(const TerrainNoise *params, int x, int y, int z) {
     double caveLayer = sampleDoublePerlin(&params->noises[OTP_CAVE_LAYER], x, y * 8, z);
     return caveLayer * caveLayer * 4.0;
 }
 
-double sampleSlopedCheese(TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged) {
+double sampleSlopedCheese(const TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged) {
     depth = depth + clampedMap(y, -64, 320, 1.5, -1.5);
     double density = noiseGradientDensity(factor, depth + jagged);
     return density + sampleBase3dNoise(&params->base3dNoise, x, y, z);
 }
 
-double sampleCaveCheese(TerrainNoise *params, int x, int y, int z, double slopedCheese) {
+double sampleCaveCheese(const TerrainNoise *params, int x, int y, int z, double slopedCheese) {
     double caveCheese = sampleDoublePerlin(&params->noises[OTP_CAVE_CHEESE], x, y * 0.6666666666666666, z);
     return clamp(0.27 + caveCheese, -1.0, 1.0) + clamp(1.5 + (-0.64 * slopedCheese), 0.0, 0.5);
 }
 
-double samplePillars(TerrainNoise *params, int x, int y, int z) {
+double samplePillars(const TerrainNoise *params, int x, int y, int z) {
     double pillar = sampleDoublePerlin(&params->noises[OTP_PILLAR], x * 25, y * 0.3, z * 25);
     double pillarRareness = map(sampleDoublePerlin(&params->noises[OTP_PILLAR_RARENESS], x, y, z), -1.0, 1.0, 0.0, -2.0);
     double pillarThickness = map(sampleDoublePerlin(&params->noises[OTP_PILLAR_THICKNESS], x, y, z), -1.0, 1.0, 0.0, 1.1);
     return (pillar * 2.0 + pillarRareness) * pillarThickness * pillarThickness * pillarThickness;
 }
 
-double sampleNoodle(TerrainNoise *params, int x, int y, int z) {
+double sampleNoodle(const TerrainNoise *params, int x, int y, int z) {
     double noodle = yLimitedInterpolatable(y, sampleDoublePerlin(&params->noises[OTP_NOODLE], x, y, z), -60, 320, -1);
     double noodleThickness = yLimitedInterpolatable(y, map(sampleDoublePerlin(&params->noises[OTP_NOODLE_THICKNESS], x, y, z), -1.0, 1.0, -0.05, -0.1), -60, 320, 0);
     double noodleRidgeA = yLimitedInterpolatable(y, sampleDoublePerlin(&params->noises[OTP_NOODLE_RIDGE_A], x * 2.6666666666666665, y * 2.6666666666666665, z * 2.6666666666666665), -60, 320, 0);
@@ -392,7 +392,7 @@ double sampleNoodle(TerrainNoise *params, int x, int y, int z) {
     return rangeChoice(noodle, -1000000.0, 0.0, 64.0, noodleThickness + scaledMax);
 }
 
-double sampleUnderground(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese) {
+double sampleUnderground(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese) {
     double spaghetti2d = sampleSpaghetti2d(params, x, y, z);
     double caveLayer = sampleCaveLayer(params, x, y, z);
     double a = fmin(caveLayer + sampleCaveCheese(params, x, y, z, slopedCheese), entrances);
@@ -402,13 +402,13 @@ double sampleUnderground(TerrainNoise *params, int x, int y, int z, double spagh
     return fmax(b, c);
 }
 
-double sampleFinalDensity(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese) {
+double sampleFinalDensity(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese) {
     double a = fmin(slopedCheese, 5.0 * entrances);
     double b = rangeChoice(slopedCheese, -1000000.0, 1.5625, a, sampleUnderground(params, x, y, z, spaghettiRoughness, entrances, slopedCheese));
     return fmin(postProcess(slideOverworld(b, y)), sampleNoodle(params, x, y, z));
 }
 
-int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z) {
+int samplePreliminarySurfaceLevel(const TerrainNoise *params, int x, int z) {
     double px = x * 0.25 + sampleDoublePerlin(&params->g.bn.climate[NP_SHIFT], x * 0.25, 0, z * 0.25) * 4.0;
     double pz = z * 0.25 + sampleDoublePerlin(&params->g.bn.climate[NP_SHIFT], z * 0.25, x * 0.25, 0) * 4.0;
 
@@ -485,7 +485,7 @@ static inline double sampleDepthNoise(const OctaveNoise *on, int x, int z, int m
     return fmin(noise, 1.0) / 40.0;
 }
 
-static inline void getWeightedDepthAndScale(Generator *g, OctaveNoise *on, int cellX, int cellZ, double *depth, double *scale) {
+static inline void getWeightedDepthAndScale(const Generator *g, const OctaveNoise *on, int cellX, int cellZ, double *depth, double *scale) {
     // 10 / sqrt(i**2 + j**2 + 0.2)
     static const float BIOME_KERNEL[25] = {
         3.492151499f, 4.385290146f, 4.879500389f, 4.385290146f, 3.492151499f,
@@ -551,7 +551,7 @@ static inline double computeNoiseFalloff(double depth, double scale, int y) {
     return fallOff;
 }
 
-void sampleOWNoiseColumnOld(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[]) {
+void sampleOWNoiseColumnOld(const TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[]) {
     const int worldHeight = 256;
     const int cellHeight = 2 << 2;
     const int noiseSizeY = floordiv(worldHeight, cellHeight);
@@ -612,7 +612,7 @@ void sampleOWNoiseColumnOld(TerrainNoise *params, int cellX, int cellZ, int colY
     }
 }
 
-void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[]) {
+void sampleNoiseColumn(const TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[]) {
     switch (params->g.dim) {
     case DIM_NETHER:
         sampleNetherNoiseColumn(&params->base3dNoise, cellX, cellZ, colYMin, colYMax, column);
@@ -689,7 +689,7 @@ int generateColumn(uint8_t blocks[], const double *ds00, const double *ds01, con
     return worldMinY;
 }
 
-void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, uint8_t (*blocks)[], int colYMin, int colYMax, int* ys, int flag) {
+void generateRegion(const TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, uint8_t (*blocks)[], int colYMin, int colYMax, int* ys, int flag) {
     const int blockH = chunkH << 4;
 
     int cellWidth, cellHeight;
@@ -755,14 +755,14 @@ void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, in
     free(ds);
 }
 
-double sampleNetherFinalDensity(BlendedNoise* base3dNoise, int x, int y, int z) {
+double sampleNetherFinalDensity(const BlendedNoise* base3dNoise, int x, int y, int z) {
     double sample = sampleBase3dNoise(base3dNoise, x, y, z);
     sample = slideNetherLike(sample, 0, 128, y);
     sample = postProcess(sample);
     return sample; 
 }
 
-void sampleNetherNoiseColumn(BlendedNoise* base3dNoise, int cellX, int cellZ, int colYMin, int colYMax, double column[]) {
+void sampleNetherNoiseColumn(const BlendedNoise* base3dNoise, int cellX, int cellZ, int colYMin, int colYMax, double column[]) {
     const int minY = 0;
     const int cellWidth = 1 << 2;
     const int cellHeight = 2 << 2;

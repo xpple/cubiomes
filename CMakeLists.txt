@@ -144,7 +144,6 @@ set(SOURCES
 	terrainnoise.c
 	util.c
 	quadbase.c
-	xradv.c
 	features/abandoned_camp.c
 	features/end_city.c
 	features/fortress.c

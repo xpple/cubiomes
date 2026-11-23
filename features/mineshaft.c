@@ -16,7 +16,7 @@ STRUCT(MineshaftPieceEnv) {
     int nmax;
 };
 
-static inline Piece* hasCollision(MineshaftPieceEnv *env, Pos3 b0, Pos3 b1) {
+static inline Piece* hasCollision(const MineshaftPieceEnv *env, Pos3 b0, Pos3 b1) {
     int i, n = *env->n;
     for (i = 0; i < n; i++) {
         Piece *q = env->list + i;
@@ -27,7 +27,7 @@ static inline Piece* hasCollision(MineshaftPieceEnv *env, Pos3 b0, Pos3 b1) {
     return NULL;
 }
 
-static void extendMineshaftPiece(MineshaftPieceEnv *env, Piece *piece);
+static void extendMineshaftPiece(MineshaftPieceEnv *env, const Piece *piece);
 
 static void extendMineshaft(MineshaftPieceEnv *env, int x, int y, int z, int facing, int depth) {
     if (*env->n >= env->nmax || depth > env->maxDepth) {
@@ -120,7 +120,7 @@ static void extendMineshaft(MineshaftPieceEnv *env, int x, int y, int z, int fac
     }
 }
 
-static void extendMineshaftPiece(MineshaftPieceEnv *env, Piece *piece) {
+static void extendMineshaftPiece(MineshaftPieceEnv *env, const Piece *piece) {
     if (*env->n >= env->nmax) {
         return;
     }

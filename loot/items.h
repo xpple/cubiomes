@@ -185,8 +185,10 @@ enum Item {
     NUM_ITEMS
 };
 
+/// Gets the global `Item` id for a namespaced item name, or ITEM_UNKNOWN.
 int item_name2global_id(const char* name);
 
+/// Gets the namespaced item name for the given version, or NULL for an unknown id.
 const char* global_id2item_name(int global_id, int mc);
 
 #endif //ITEMS_H
