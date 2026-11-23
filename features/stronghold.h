@@ -50,7 +50,7 @@ enum {
 /// First generates the Stronghold's pieces using getStrongholdPieces. Then
 /// for each pieces with chests, the chest's position, loot table and loot
 /// seed is written. For the portal room, the eye final eye count is written
-/// to p.additionalData using a bit array (e.g. 0b101011011100 would mean
+/// to p.additionalData using a bit array (e.g. 0b_101011011100 would mean
 /// 7 eyes are generated). The bit array represents the actual eyes visible
 /// in the world. The 13th lower bit represents whether any part of the
 /// portal is lit. This is the case if any of the chunks that collide with
