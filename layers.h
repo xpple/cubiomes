@@ -185,6 +185,7 @@ void voronoiAccess3D(uint64_t sha, int x, int y, int z, int *x4, int *y4, int *z
 
 /// Applies a 2D voronoi mapping at height 'y' to a 'src' plane, where
 /// src_range [px,pz,pw,ph] -> out_range [x,z,w,h] have to match the scaling.
+/// x, y and z must already include the -2 block Voronoi offset.
 void mapVoronoiPlane(uint64_t sha, int *out, int *src,
     int x, int z, int w, int h, int y, int px, int pz, int pw, int ph);
 

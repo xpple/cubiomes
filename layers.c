@@ -1761,9 +1761,8 @@ static inline void getVoronoiCell(uint64_t sha, int a, int b, int c,
 void mapVoronoiPlane(uint64_t sha, int *out, int *src,
     int x, int z, int w, int h, int y, int px, int pz, int pw, int ph)
 {
-    x -= 2;
-    y -= 2;
-    z -= 2;
+    int dy = (y & 3) * 10*1024;
+    y = (y >> 2) + 1;
     int x000, x001, x010, x011, x100, x101, x110, x111;
     int y000, y001, y010, y011, y100, y101, y110, y111;
     int z000, z001, z010, z011, z100, z101, z110, z111;
@@ -1834,7 +1833,6 @@ void mapVoronoiPlane(uint64_t sha, int *out, int *src,
                     if (i < 0 || i >= w) continue;
 
                     const int A = 40*1024;
-                    const int B = 20*1024;
                     dx = ii * 10*1024;
                     dz = jj * 10*1024;
                     dmin = (uint64_t)-1;
@@ -1842,45 +1840,45 @@ void mapVoronoiPlane(uint64_t sha, int *out, int *src,
                     v = v00;
                     d = 0;
                     r = x000 - 0 + dx;  d += r*r;
-                    r = y000 + B;       d += r*r;
+                    r = y000 - 0 + dy;  d += r*r;
                     r = z000 - 0 + dz;  d += r*r;
                     if (d < dmin) { dmin = d; }
                     d = 0;
                     r = x001 - 0 + dx;  d += r*r;
-                    r = y001 - B;       d += r*r;
+                    r = y001 - A + dy;  d += r*r;
                     r = z001 - 0 + dz;  d += r*r;
                     if (d < dmin) { dmin = d; }
 
                     d = 0;
                     r = x010 - A + dx;  d += r*r;
-                    r = y010 + B;       d += r*r;
+                    r = y010 - 0 + dy;  d += r*r;
                     r = z010 - 0 + dz;  d += r*r;
                     if (d < dmin) { dmin = d; v = v01; }
                     d = 0;
                     r = x011 - A + dx;  d += r*r;
-                    r = y011 - B;       d += r*r;
+                    r = y011 - A + dy;  d += r*r;
                     r = z011 - 0 + dz;  d += r*r;
                     if (d < dmin) { dmin = d; v = v01; }
 
                     d = 0;
                     r = x100 - 0 + dx;  d += r*r;
-                    r = y100 + B;       d += r*r;
+                    r = y100 - 0 + dy;  d += r*r;
                     r = z100 - A + dz;  d += r*r;
                     if (d < dmin) { dmin = d; v = v10; }
                     d = 0;
                     r = x101 - 0 + dx;  d += r*r;
-                    r = y101 - B;       d += r*r;
+                    r = y101 - A + dy;  d += r*r;
                     r = z101 - A + dz;  d += r*r;
                     if (d < dmin) { dmin = d; v = v10; }
 
                     d = 0;
                     r = x110 - A + dx;  d += r*r;
-                    r = y110 + B;       d += r*r;
+                    r = y110 - 0 + dy;  d += r*r;
                     r = z110 - A + dz;  d += r*r;
                     if (d < dmin) { dmin = d; v = v11; }
                     d = 0;
                     r = x111 - A + dx;  d += r*r;
-                    r = y111 - B;       d += r*r;
+                    r = y111 - A + dy;  d += r*r;
                     r = z111 - A + dz;  d += r*r;
                     if (d < dmin) { dmin = d; v = v11; }
 
@@ -1924,7 +1922,7 @@ int mapVoronoi(const Layer * l, int * out, int x, int z, int w, int h)
 
     int *src = out + (int64_t)w*h;
     memmove(src, out, sizeof(int)*pw*ph);
-    mapVoronoiPlane(l->startSalt, out, src, x,z,w,h, 0, px,pz,pw,ph);
+    mapVoronoiPlane(l->startSalt, out, src, x,z,w,h, -2, px,pz,pw,ph);
 
     return 0;
 }

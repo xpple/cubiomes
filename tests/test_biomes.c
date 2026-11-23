@@ -14,6 +14,8 @@ static int test_biomes_1_16_5() {
     ASSERT_EQ(ret, getBiomeAt(&g, 4, 186 >> 2, 0, 249 >> 2), frozen_ocean);
     ASSERT_EQ(ret, getBiomeAt(&g, 4, 3256313 >> 2, 0, -3265404 >> 2), forest);
 
+    ASSERT_EQ(ret, getBiomeAt(&g, 1, -47, 0, -64), mushroom_field_shore);
+
     applySeed(&g, DIM_NETHER, 1551515151585454ULL);
     ASSERT_EQ(ret, getBiomeAt(&g, 4, 181 >> 2, 0, 209 >> 2), crimson_forest);
     ASSERT_EQ(ret, getBiomeAt(&g, 4, 404 >> 2, 0, 416 >> 2), soul_sand_valley);
@@ -21,6 +23,9 @@ static int test_biomes_1_16_5() {
 
     applySeed(&g, DIM_END, 1551515151585454ULL);
     ASSERT_EQ(ret, getBiomeAt(&g, 1, 10000, 0, 10000), end_barrens);
+    ASSERT_EQ(ret, getBiomeAt(&g, 1, 10000, 0, 10009), small_end_islands);
+    ASSERT_EQ(ret, getBiomeAt(&g, 1, 10000, 2, 10009), end_barrens);
+    ASSERT_EQ(ret, getBiomeAt(&g, 1, 10000, 64, 10009), small_end_islands);
 
     return ret;
 }

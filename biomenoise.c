@@ -778,7 +778,7 @@ int genEndScaled(const EndNoise *en, int *out, Range r, int mc, uint64_t sha)
             {
                 mapVoronoiPlane(
                     sha, out+r.sx*r.sz*iy, src,
-                    r.x,r.z,r.sx,r.sz, r.y+iy,
+                    r.x-2,r.z-2,r.sx,r.sz, r.y+iy-2,
                     s.x,s.z,s.sx,s.sz);
             }
             return 0; // 3D expansion is done => return
