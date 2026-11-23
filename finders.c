@@ -1431,7 +1431,7 @@ Pos getSpawn(const Generator *g)
         return spawn;
 
     SurfaceNoise sn;
-    initSurfaceNoise(&sn, DIM_OVERWORLD, g->seed);
+    initSurfaceNoise(&sn, DIM_OVERWORLD, g->seed, g->mc);
 
     if (g->mc <= MC_1_12)
     {

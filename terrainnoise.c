@@ -173,10 +173,10 @@ void initTerrainNoise(TerrainNoise *params, uint64_t ws, int dim) {
 
     applySeed(&params->g, dim, ws);
 
-    initBlendedNoise(&params->base3dNoise, ws, dim);
+    initBlendedNoise(&params->base3dNoise, ws, dim, params->g.mc);
 
     if (dim != DIM_NETHER && (params->g.mc < MC_1_18 || dim == DIM_END)) {
-        initSurfaceNoise(&params->sn, dim, ws);
+        initSurfaceNoise(&params->sn, dim, ws, params->g.mc);
     }
 
     if (params->g.mc >= MC_1_18 && dim == DIM_OVERWORLD) {
