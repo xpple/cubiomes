@@ -1199,7 +1199,7 @@ int sampleBiomeNoise(const BiomeNoise *bn, int64_t *np, int x, int y, int z,
     return id;
 }
 
-void sampleNoiseParameters(BiomeNoise *bn, int x, int z, float np_param[4]) {
+void sampleNoiseParameters(const BiomeNoise *bn, int x, int z, float np_param[4]) {
     double px = x + sampleDoublePerlin(&bn->climate[NP_SHIFT], x, 0, z) * 4.0;
     double pz = z + sampleDoublePerlin(&bn->climate[NP_SHIFT], z, x, 0) * 4.0;
 
@@ -2084,7 +2084,7 @@ void initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim, int mc)
     }
 }
 
-double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z)
+double sampleBase3dNoise(const BlendedNoise *bn, int x, int y, int z)
 {
     const double scaledX = x * bn->xzMultiplier;
     const double scaledY = y * bn->yMultiplier;

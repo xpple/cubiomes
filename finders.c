@@ -6309,7 +6309,7 @@ const int *getBiomeParaExtremes(int mc)
     static const int extremes[] = {
         -4501, 5500,
         -3500, 6999,
-        -10500, 300,
+        -10500, 3001,
         -7799, 5500,
         1000, 10500, // depth has more dependencies
         -9333, 9333,

@@ -7,14 +7,22 @@
 extern "C" {
 #endif
 
-/* Generate the structure pieces of a Nether Fortress. The maximum number of
- * pieces that are generated is limited to 'n'. A buffer length of around 400
- * should be sufficient in practice, but a fortress can in theory contain many
- * more than that. The number of generated pieces is given by the return value.
- */
+/// Generate the structure pieces of a Nether Fortress. The maximum number of
+/// pieces that are generated is limited to 'n'. A buffer length of around 400
+/// should be sufficient in practice, but a fortress can in theory contain many
+/// more than that. The number of generated pieces is given by the return value.
+///
+/// Use `getStructurePieces` for chest loot information.
+///
+/// \param[out] list piece buffer
+/// \param n maximum number of pieces, including the starting piece
+/// \param mc Minecraft version
+/// \param seed world seed (structure seed suffices)
+/// \param chunkX,chunkZ structure origin
 int getFortressPieces(Piece *list, int n, int mc, uint64_t seed, int chunkX, int chunkZ);
+/// Fortress piece types
 enum
-{   // Fortress piece types
+{
     FORTRESS_START,
     BRIDGE_STRAIGHT,
     BRIDGE_CROSSING,

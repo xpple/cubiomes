@@ -1,11 +1,12 @@
 #ifndef BIOMES_H_
 #define BIOMES_H_
 
-/* Minecraft versions */
+/// Minecraft versions
+/// MC_1_X refers to the latest patch of the respective 1.X release.
+/// NOTE: Development effort focuses on just the newest patch for each major
+/// release. Minor releases and major versions <= 1.0 are experimental.
 enum MCVersion
-{   // MC_1_X refers to the latest patch of the respective 1.X release.
-    // NOTE: Development effort focuses on just the newest patch for each major
-    // release. Minor releases and major versions <= 1.0 are experimental.
+{
     MC_UNDEF,
     MC_B1_7,
     MC_B1_8,
@@ -196,10 +197,13 @@ extern "C"
 // BiomeID Helper Functions
 //==============================================================================
 
+/// Checks if the biome id exists in the given Minecraft version.
 int biomeExists(int mc, int id);
-int isOverworld(int mc, int id); // false for biomes that don't generate
+/// false for biomes that don't generate
+int isOverworld(int mc, int id);
 int getDimension(int id);
 int getMutated(int mc, int id);
+/// Gets the biome category as a base biome id, or none if not mapped.
 int getCategory(int mc, int id);
 int areSimilar(int mc, int id1, int id2);
 int isMesa(int id);
