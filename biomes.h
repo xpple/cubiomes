@@ -197,11 +197,13 @@ extern "C"
 // BiomeID Helper Functions
 //==============================================================================
 
+/// Checks if the biome id exists in the given Minecraft version.
 int biomeExists(int mc, int id);
 /// false for biomes that don't generate
 int isOverworld(int mc, int id);
 int getDimension(int id);
 int getMutated(int mc, int id);
+/// Gets the biome category as a base biome id, or none if not mapped.
 int getCategory(int mc, int id);
 int areSimilar(int mc, int id1, int id2);
 int isMesa(int id);

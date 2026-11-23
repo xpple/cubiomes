@@ -52,6 +52,10 @@ void initBiomeTypeColors(unsigned char biomeColors[256][3]);
 /// \return the number of successfully mapped biome ids
 int parseBiomeColors(unsigned char biomeColors[256][3], const char *buf);
 
+/// Maps an sx*sy biome plane to RGB pixels, using pixscale*pixscale pixels per
+/// biome. The output buffer needs 3*sx*sy*pixscale*pixscale bytes. A non-zero
+/// `flip` preserves row order; zero reverses it.
+/// \return nonzero if the input contains biome ids outside [0,256).
 int biomesToImage(unsigned char *pixels,
         unsigned char biomeColors[256][3], const int *biomes,
         const unsigned int sx, const unsigned int sy,

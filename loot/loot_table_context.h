@@ -95,6 +95,9 @@ int get_global_item_id(LootTableContext* context, int item_id);
 const char* get_item_name(LootTableContext* context, int item_id);
 int has_item(LootTableContext* context, int global_item_id);
 
+/// Generates loot using the context's current random state, replacing the
+/// previous output in generated_items and generated_item_count. Initialize
+/// the random type and seed before generation. Item ids are local to the context.
 void generate_loot(LootTableContext* context);
 
 #endif // _LOOT_TABLE_CONTEXT_H

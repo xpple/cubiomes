@@ -315,6 +315,8 @@ int getMineshafts(int mc, uint64_t seed, int chunkX, int chunkZ,
 
 void setAttemptSeed(uint64_t *s, int cx, int cz);
 
+/// Gets the population seed for a chunk. The position (x, z) is the chunk
+/// origin in block coordinates: (chunkX << 4, chunkZ << 4).
 uint64_t getPopulationSeed(int mc, uint64_t ws, int x, int z);
 
 /// not exactly a structure
@@ -431,8 +433,13 @@ STRUCT(OreVeinParameters)
     Xoroshiro         posRandom;
 };
 
+/// Initializes noise for the large copper and iron veins using the world seed.
+/// \return zero if the version is older than 1.18, or 1 upon success
 int initOreVeinNoise(OreVeinParameters *params, uint64_t ws, int mc);
 
+/// Gets the ore vein block at the given block coordinates. Initialize `params`
+/// with `initOreVeinNoise`.
+/// \return a `Blocks` id (ore, raw ore, or filler), or -1 for no vein block
 int32_t getOreVeinBlockAt(int x, int y, int z, OreVeinParameters* params);
 
 //==============================================================================

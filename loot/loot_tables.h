@@ -3,6 +3,10 @@
 
 #include "loot_table_context.h"
 
+/// Selects a built-in loot table by name, e.g. "chests/buried_treasure", for
+/// the given Minecraft version. The returned context is shared static storage
+/// and must not be passed to `free_loot_table`. Set its seed before generation.
+/// \return non-zero if the table and version are supported
 int init_loot_table_name(LootTableContext** context, const char* loot_table, int version);
 
 int init_abandoned_camp_barrel(LootTableContext** context, int version);

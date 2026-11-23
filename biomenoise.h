@@ -189,6 +189,7 @@ extern "C"
 // Noise
 //==============================================================================
 
+/// Initializes surface noise for the End or the pre-1.18 Overworld.
 void initSurfaceNoise(SurfaceNoise *sn, int dim, uint64_t seed);
 void initSurfaceNoiseBeta(SurfaceNoiseBeta *snb, uint64_t seed);
 double sampleSurfaceNoise(const SurfaceNoise *sn, int x, int y, int z);
@@ -245,7 +246,14 @@ int getSurfaceHeight(
 
 void sampleNoiseColumnEnd(double column[], const SurfaceNoise *sn,
         const EndNoise *en, int x, int z, int colymin, int colymax);
+/// Gets the End surface block height at the given block coordinates.
+/// Small end islands are not included. Returns zero if no surface is found.
 int getEndSurfaceHeight(int mc, uint64_t seed, int x, int z);
+/// Maps End surface heights to y[j*w+i] for the area defined by the starting
+/// point (x, z), and the dimensions (w, h). Supports scales 1, 2, 4 and 8.
+/// `ymin` is the minimum Y coordinate to consider, terrain below it will not
+/// be generated. Small end islands are not included.
+/// \return zero upon success, or 1 for an unsupported scale
 int mapEndSurfaceHeight(float *y, const EndNoise *en, const SurfaceNoise *sn,
     int x, int z, int w, int h, int scale, int ymin);
 
@@ -271,11 +279,24 @@ enum { SP_CONTINENTALNESS, SP_EROSION, SP_RIDGES, SP_WEIRDNESS };
 void addSplineVal(Spline *rsp, float loc, Spline *val, float der);
 Spline *createFixSpline(SplineStack *ss, float val);
 float getSpline(const Spline *sp, const float *vals);
+/// Sets up Overworld biome noise for 1.18+. Apply a seed with `setBiomeSeed`.
 void initBiomeNoise(BiomeNoise *bn, int mc);
+/// Applies the world seed to biome noise. Set `large` for large biomes.
 void setBiomeSeed(BiomeNoise *bn, uint64_t seed, int large);
 void setBetaBiomeSeed(BiomeNoiseBeta *bnb, uint64_t seed);
+/// Samples the Overworld biome at scale 1:4. Optional np[6] receives temperature,
+/// humidity, continentalness, erosion, depth and weirdness, multiplied by 10000.
+///
+/// The `dat` search state can be NULL, or initialized to zero and reused.
+///
+/// Use SAMPLE_NO_* flags to skip steps.
+///
+/// \return the biome id, or none when SAMPLE_NO_BIOME is set. For noise set up
+/// with `setClimateParaSeed`, returns the climate parameter times 10000 instead.
 int sampleBiomeNoise(const BiomeNoise *bn, int64_t *np, int x, int y, int z,
     uint64_t *dat, uint32_t sample_flags);
+/// Samples the terrain spline inputs at scale 1:4. The output order is
+/// continentalness, erosion, ridges, weirdness.
 void sampleNoiseParameters(BiomeNoise *bn, int x, int z, float np_param[4]);
 int sampleBiomeNoiseBeta(const BiomeNoiseBeta *bnb, int64_t *np, double *nv,
     int x, int z);
