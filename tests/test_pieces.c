@@ -14,8 +14,8 @@ static int test_stronghold_pieces_1_16() {
     ASSERT_NONZERO(ret, getStructureSaltConfig(Stronghold, version, -1, &ssconf));
 
     const struct { const Pos chunk; const int numPieces, portalIndex, portalData; } test_data[2] = {
-        {{-5512 >> 4, -10424 >> 4}, 137, 16, 0b1'000111111111},
-        {{-20008 >> 4, -6424 >> 4}, 139, 21, 0b1'111111111111},
+        {{-5512 >> 4, -10424 >> 4}, 137, 16, 0b1000111111111},
+        {{-20008 >> 4, -6424 >> 4}, 139, 21, 0b1111111111111},
     };
 
     for (int i = 0; i < 2; ++i) {
