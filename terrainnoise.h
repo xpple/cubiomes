@@ -62,15 +62,16 @@ enum {
 };
 
 /// Set up terrain noise for a given version and the specified biome generator flags.
+/// It is recommended to zero-initialize the object.
 ///
 /// \param params the terrain noise parameters
 /// \param mc the Minecraft version
 /// \param flags the biome generator flags
 void setupTerrainNoise(TerrainNoise *params, int mc, int flags);
 
-/// Initialise terrain noise parameters with the world seed.
+/// Initialize terrain noise parameters with the world seed.
 ///
-/// \param params the terrain noise parameters
+/// \param[in,out] params the terrain noise parameters
 /// \param ws the world seed
 /// \param dim the dimension
 void initTerrainNoise(TerrainNoise *params, uint64_t ws, int dim);
@@ -285,11 +286,11 @@ void sampleNetherNoiseColumn(BlendedNoise* base3dNoise, int cellX, int cellZ, in
 /// and will return the Y-coordinate of the above air block. Note that if blocks is NULL and
 /// the flag is not set, the function is essentially useless.
 ///
-/// \param blocks the target blocks, can be NULL
-/// \param ds00 the (0, 0) noise column
-/// \param ds01 the (0, 1) noise column
-/// \param ds10 the (1, 0) noise column
-/// \param ds11 the (1, 1) noise column
+/// \param[out] blocks the target blocks, can be NULL
+/// \param[in] ds00 the (0, 0) noise column
+/// \param[in] ds01 the (0, 1) noise column
+/// \param[in] ds10 the (1, 0) noise column
+/// \param[in] ds11 the (1, 1) noise column
 /// \param colYMin the minimum Y column (nonnegative)
 /// \param colYMax the maximum Y column (nonnegative)
 /// \param cellHeight the vertical (Y) cell size
@@ -316,15 +317,15 @@ int generateColumn(uint8_t blocks[], const double *ds00, const double *ds01, con
 /// Both the blocks array and the ys array can be NULL. Setting both to NULL renders the function
 /// useless.
 ///
-/// \param params the terrain noise parameters
+/// \param[in] params the terrain noise parameters
 /// \param chunkX the chunk X-coordinate
 /// \param chunkZ the chunk Z-coordinate
 /// \param chunkW the chunk width
 /// \param chunkH the chunk height
-/// \param blocks the target blocks, can be NULL
+/// \param[out] blocks the target blocks, can be NULL
 /// \param colYMin the minimum Y column (nonnegative)
 /// \param colYMax the maximum Y column (nonnegative)
-/// \param ys the target Y coordinates
+/// \param[out] ys the target Y coordinates
 /// \param flag the boolean flag for the stop condition
 void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, uint8_t (*blocks)[], int colYMin, int colYMax, int* ys, int flag);
 

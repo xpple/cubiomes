@@ -163,12 +163,13 @@ int getBiomeForOreGen(const Generator *g, int chunkX, int chunkZ, int y);
 /// \return 0 if the ore does not generate in this biome
 int isViableOreBiome(int mc, int oreType, int biomeID);
 
-/// Generate the ores of the given type in the chunk.
-/// \param g the generator
-/// \param sn the surface noise
+/// Generate the ores of the given type in the chunk. These are candidate ore
+/// positions; replacement blocks and air exposure are not checked.
+/// \param[in] g the biome generator
+/// \param[in] sn the surface noise, may be NULL for Overworld versions where `mapApproxHeight` does not need it
 /// \param config the ore config
 /// \param chunkX the chunk X-coordinate
-/// \param chunkZ the chunk Y-coordinate
+/// \param chunkZ the chunk Z-coordinate
 /// \return a sized array of ore positions
 Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig config, int chunkX, int chunkZ);
 

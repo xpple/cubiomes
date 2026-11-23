@@ -58,6 +58,8 @@ enum {
 /// portal is lit. Note that it is possible for the 13th lower bit to be 0,
 /// while the lower 12 bits are all 1.
 ///
+/// Read chest arrays only up to chestCount.
+///
 /// \param list the pieces list
 /// \param n the maximum number of pieces to generate
 /// \param ssconf the salt config, use getStructureSaltConfig to obtain it

@@ -9,6 +9,10 @@ extern "C" {
 
 /// Generate the structure pieces of an End City. This pieces buffer should be
 /// large enough to hold END_CITY_PIECES_MAX elements.
+///
+/// The starting piece uses Y=0, without terrain height adjustment. Use
+/// `getStructurePieces` for chest loot information.
+///
 /// \param pieces output buffer
 /// \param seed world seed
 /// \param chunkX,chunkZ 16x16 chunk position

@@ -69,6 +69,8 @@ void applySeed(Generator *g, int dim, uint64_t seed);
 /// For modern generators, this is significantly faster than reinitializing the
 /// generator. For some older generators, e.g. Overworld 1.0.0, reinitializing
 /// is faster.
+/// \param[in] src the source generator initialized with `setupGenerator` and `applySeed`
+/// \param[out] dst the destination generator
 void copyGenerator(const Generator *__restrict src, Generator *__restrict dst);
 
 /// Calculates the buffer size (number of ints) required to generate a cuboidal
@@ -77,6 +79,14 @@ void copyGenerator(const Generator *__restrict src, Generator *__restrict dst);
 /// The function allocCache() can be used to allocate the corresponding int
 /// buffer using malloc().
 size_t getMinCacheSize(const Generator *g, int scale, int sx, int sy, int sz);
+/// Allocates a zero-initialized buffer for genBiomes(g, ..., r).
+///
+/// The allocation can exceed r.sx*r.sy*r.sz ints because older generators need
+/// additional working space. The caller must release the buffer with `free`.
+///
+/// \param[in] g biome generator
+/// \param r biome generation range
+/// \return the allocated buffer, or NULL on failure
 int *allocCache(const Generator *g, Range r);
 
 /// Generates the biomes for a cuboidal scaled range given by 'r'.
@@ -139,4 +149,3 @@ int mapApproxHeight(float *y, int *ids, const Generator *g,
 #endif
 
 #endif /* GENERATOR_H_ */
-

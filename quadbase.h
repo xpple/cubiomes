@@ -146,8 +146,8 @@ float isQuadBaseLarge (const StructureConfig sconf, uint64_t seed,
 /// \param buflen length of output buffer (nullable)
 /// \param path output file path (nullable, also toggles temporary files)
 /// \param threads number of threads to use
-/// \param lowBits lower bit subset (nullable)
-/// \param lowBitN number of bits in the subset values
+/// \param lowBits sorted, zero-terminated lower bit subset (nullable)
+/// \param lowBitN number of bits in the subset values (1..48 when lowBits is supplied)
 /// \param check the testing function, should return non-zero for desired seeds
 /// \param data custom data argument passed to 'check'
 /// \param stop occasional check for abort (nullable)
@@ -513,5 +513,3 @@ float isQuadBaseLarge(const StructureConfig sconf, uint64_t seed,
 #endif
 
 #endif // QUADBASE_H_
-
-

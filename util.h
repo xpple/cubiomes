@@ -11,11 +11,14 @@ extern "C"
 
 /// Loads a list of seeds from a file. The seeds should be written as decimal
 /// ASCII numbers separated by newlines.
+///
+/// The returned buffer should be freed by the caller.
+///
 /// \param fnam file path
 /// \param scnt number of valid seeds found in the file, which is also the number of
 ///        elements in the returned buffer
 ///
-/// \return a pointer to a dynamically allocated seed list.
+/// \return a pointer to a dynamically allocated seed list, or NULL on failure
 uint64_t *loadSavedSeeds(const char *fnam, uint64_t *scnt);
 
 

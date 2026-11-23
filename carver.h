@@ -107,7 +107,8 @@ int checkCaveStart(uint64_t seed, int chunkX, int chunkZ, CaveCarverConfig ccc, 
 /// Carve out a canyon at the given chunk. An initial size of 1024 should be sufficient for the positions.
 /// Check the docs of isViableCanyonBiome to determine whether the biomes array must be populated. If so,
 /// note that the scheme is biomes[z][x]. The biomes array can be populated by calling genBiomes with
-/// allocCache(g, r), where Range r = {16, cx - 8, cz - 8, 17, 17, 0, 0};.
+/// allocCache(g, r), where Range r = {16, cx - 8, cz - 8, 17, 17, 0, 0};. Even when biome populating is
+/// unnecessary, ensure `biomes` is allocated.
 /// \param seed the world seed (structure seed suffices)
 /// \param mc the Minecraft version
 /// \param chunkX the chunk X-coordinate
@@ -115,13 +116,14 @@ int checkCaveStart(uint64_t seed, int chunkX, int chunkZ, CaveCarverConfig ccc, 
 /// \param ccc the canyon carver config
 /// \param canyonCarverType the canyon carver type
 /// \param biomes a grid of biomes[z][x] in biome scale around the central chunk with offset -8 to 8
-/// \param poses list to which positions will be written
+/// \param poses list to which positions will be appended
 void carveCanyon(uint64_t seed, int mc, int chunkX, int chunkZ, CanyonCarverConfig ccc, int canyonCarverType, int biomes[17][17], Pos3List* poses);
 
 /// Carve out a cave at the given chunk. An initial size of 1024 should be sufficient for the positions.
 /// Check the docs of isViableCaveBiome to determine whether the biomes array must be populated. If so,
 /// note that the scheme is biomes[z][x]. The biomes array can be populated by calling genBiomes with
-/// allocCache(g, r), where Range r = {16, cx - 8, cz - 8, 17, 17, 0, 0};.
+/// allocCache(g, r), where Range r = {16, cx - 8, cz - 8, 17, 17, 0, 0};. Even when biome populating is
+/// unnecessary, ensure `biomes` is allocated.
 /// \param seed the world seed (structure seed suffices)
 /// \param mc the Minecraft version
 /// \param chunkX the chunk X-coordinate
@@ -129,7 +131,7 @@ void carveCanyon(uint64_t seed, int mc, int chunkX, int chunkZ, CanyonCarverConf
 /// \param ccc the cave carver config
 /// \param caveCarverType the cave carver type
 /// \param biomes a grid of biomes[z][x] in biome scale around the central chunk with offset -8 to 8
-/// \param poses list to which positions will be written
+/// \param poses list to which positions will be appended
 void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, CaveCarverConfig ccc, int caveCarverType, int biomes[17][17], Pos3List* poses);
 
 #ifdef __cplusplus

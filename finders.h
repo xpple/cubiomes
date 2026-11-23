@@ -111,10 +111,17 @@ STRUCT(Pos3List)
     int size;
 };
 
+/// Initializes a caller-owned list and allocates its backing array. Release the
+/// backing array with `freePos3List`.
+///
+/// \param[out] list list struct to initialize
+/// \param initialCapacity initial number of Pos3 slots
 void createPos3List(Pos3List* list, int initialCapacity);
 
+/// Appends to a list, growing its backing array as needed.
 void appendPos3List(Pos3List* list, Pos3 pos3);
 
+/// Frees a list's backing array and resets its fields to zero/NULL.
 void freePos3List(Pos3List* list);
 
 STRUCT(StrongholdIter)
@@ -578,6 +585,15 @@ uint64_t chunkGenerateRnd(uint64_t worldSeed, int chunkX, int chunkZ)
 
 /// Get data, such as rotation and bounding box of a structure instance.
 /// (Supports only some structure types.)
+///
+/// \param[out] sv structure variant
+/// \param structType structure type
+/// \param mc Minecraft version
+/// \param seed world seed
+/// \param blockX,blockZ structure origin
+/// \param biomeID biome at the structure, used by biome-dependent variants
+/// such as villages and abandoned camps, otherwise may be -1
+/// \return zero on failure
 int getVariant(StructureVariant *sv, int structType, int mc, uint64_t seed,
         int blockX, int blockZ, int biomeID);
 
@@ -590,28 +606,48 @@ int getLootTableCountForStructure(int structure, int mc);
 
 /// Get a list of structure pieces for the given structure. Not all structures are supported.
 /// For the supported structures, each structure piece has information about the name, (basic)
-/// position, chest count, and loot table and seeds for each chest. The number of pieces is returned.
+/// position, chest count, and loot table and seeds for each chest. The number of pieces is
+/// returned.
 ///
-/// \param list the output list of pieces
-/// \param n either for fortresses the maximum size of the output list, or for end cities a value at least END_CITY_PIECES_MAX
+/// The buffer must hold at least `n` pieces for Fortress, Stronghold and Mineshaft, where
+/// `n` limits generation and may stop it early. End_City requires at least END_CITY_PIECES_MAX
+/// slots. Igloo requires sv->size+2 slots when it has a basement, otherwise one;
+/// Abandoned_Camp requires two; other supported types require one. For these fixed-size cases
+/// `n` is not checked against the buffer.
+///
+/// Read chest arrays only up to each piece's `chestCount`. Only fields provided by the
+/// particular structure are meaningful; not every type fills bounding boxes or accurate Y
+/// coordinates.
+///
+/// \param[out] list output buffer
+/// \param n generation limit for Fortress, Stronghold and Mineshaft (see above)
 /// \param stype the structure type
-/// \param ssconf the structure salt config from getStructureSaltConfig
-/// \param sv the structure variant (if available)
+/// \param ssconf the structure salt config
+/// \param[in] sv structure variant, may not be required, see the implementation
 /// \param mc the Minecraft version
 /// \param seed the world seed
 /// \param posX the block X-coordinate as yielded by getStructurePos
 /// \param posZ the block Z-coordinate as yielded by getStructurePos
-/// \return the number of pieces
+/// \return the number of pieces written, or -1 for an unsupported structure type
 int getStructurePieces(Piece *list, int n, int stype, StructureSaltConfig ssconf, StructureVariant *sv, int mc, uint64_t seed, int posX, int posZ);
 
 /// Find the 20 fixed inner positions where End Gateways generate upon defeating
 /// the Dragon. The positions are written to 'src' in generation order.
 void getFixedEndGateways(int mc, uint64_t seed, Pos src[20]);
 
-/// Get the outer linked Gateway destination for an inner source Gateway.
+/// Get initial destination of the outer linked Gateway for an inner source Gateway.
 /// (mc > MC_1_12)
+///
+/// \param src inner Gateway position in block coordinates
+/// \param[out] dst optional search position in block coordinates before the
+/// final surface search
+/// \return the selected chunk coordinates
 Pos getLinkedGatewayChunk(const EndNoise *en, const SurfaceNoise *sn,
     uint64_t seed, Pos src, Pos *dst);
+/// Completes the outer Gateway destination search, accounting for terrain.
+///
+/// \param src inner Gateway position in block coordinates
+/// \return the final outer Gateway in block coordinates
 Pos getLinkedGatewayPos(const EndNoise *en, const SurfaceNoise *sn,
     uint64_t seed, Pos src);
 
@@ -955,4 +991,3 @@ Pos getLargeStructurePos(StructureConfig config, uint64_t seed, int regX, int re
 #endif
 
 #endif // FINDERS_H_
-
