@@ -645,6 +645,7 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                     // generateBox(p, cx, cz, 4, 2, 6, 6, 2, 7, 0, rnd);
                     // generateBox(p, cx, cz, 4, 3, 7, 6, 3, 7, 0, rnd);
 
+                    int twelveEyes = 1;
                     for (int j = 0; j < 12; j++) {
                         if (absNextFloat(&rnd) > 0.9F) {
                             Pos relPos = eye_positions[j];
@@ -652,6 +653,21 @@ int getStrongholdLoot(Piece *list, int n, StructureSaltConfig ssconf, int mc, ui
                             rotPos(p->bb0, p->bb1, &eyePosX, &eyePosZ, p->rot);
                             if (eyePosX >= cx && eyePosX < cx + 16 && eyePosZ >= cz && eyePosZ < cz + 16) {
                                 p->additionalData |= (1 << j);
+                            }
+                        } else {
+                            twelveEyes = 0;
+                        }
+                    }
+                    if (twelveEyes) {
+                        #pragma GCC unroll 2
+                        for (int lx = 4; lx <= 6; lx += 2) {
+                            #pragma GCC unroll 2
+                            for (int lz = 9; lz <= 11; lz += 2) {
+                                int eyePosX = lx, eyePosZ = lz;
+                                rotPos(p->bb0, p->bb1, &eyePosX, &eyePosZ, p->rot);
+                                if (eyePosX >= cx && eyePosX < cx + 16 && eyePosZ >= cz && eyePosZ < cz + 16) {
+                                    p->additionalData |= (1 << 12);
+                                }
                             }
                         }
                     }

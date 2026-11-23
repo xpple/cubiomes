@@ -8,7 +8,7 @@ extern "C" {
 #endif
 
 /// Generate the structure pieces of a Stronghold. The maximum number of pieces
-/// that are generated is limited to 'n'. A buffer length of around 400 should
+/// that are generated is limited to `n`. A buffer length of around 400 should
 /// be sufficient in practice, but a stronghold can in theory contain many more
 /// than that. The number of generated pieces is given by the return value.
 ///
@@ -51,13 +51,18 @@ enum {
 /// for each pieces with chests, the chest's position, loot table and loot
 /// seed is written. For the portal room, the eye final eye count is written
 /// to p.additionalData using a bit array (e.g. 0b101011011100 would mean
-/// 7 eyes are generated).
+/// 7 eyes are generated). The bit array represents the actual eyes visible
+/// in the world. The 13th lower bit represents whether any part of the
+/// portal is lit. This is the case if any of the chunks that collide with
+/// the portal pass the 12-eye check. Thus, 0b1____________ would mean the
+/// portal is lit. Note that it is possible for the 13th lower bit to be 0,
+/// while the lower 12 bits are all 1.
 ///
 /// \param list the pieces list
 /// \param n the maximum number of pieces to generate
 /// \param ssconf the salt config, use getStructureSaltConfig to obtain it
 /// \param mc the Minecraft version
-/// \param seed the world seed (lower 48 bits suffice)
+/// \param seed the world seed
 /// \param chunkX the chunk X-coordinate
 /// \param chunkZ the chunk Z-coordinate
 /// \return the number of pieces that were generated
