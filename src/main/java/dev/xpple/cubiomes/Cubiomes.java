@@ -5016,7 +5016,7 @@ public class Cubiomes extends Cubiomes_1 {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * int init_loot_table(const char *loot_table_string, LootTableContext *context, const int version)
+     * int init_loot_table(const char *loot_table_string, LootTableContext *context, int version)
      * }
      */
     public static FunctionDescriptor init_loot_table$descriptor() {
@@ -5026,7 +5026,7 @@ public class Cubiomes extends Cubiomes_1 {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * int init_loot_table(const char *loot_table_string, LootTableContext *context, const int version)
+     * int init_loot_table(const char *loot_table_string, LootTableContext *context, int version)
      * }
      */
     public static MethodHandle init_loot_table$handle() {
@@ -5036,7 +5036,7 @@ public class Cubiomes extends Cubiomes_1 {
     /**
      * Address for:
      * {@snippet lang=c :
-     * int init_loot_table(const char *loot_table_string, LootTableContext *context, const int version)
+     * int init_loot_table(const char *loot_table_string, LootTableContext *context, int version)
      * }
      */
     public static MemorySegment init_loot_table$address() {
@@ -5045,7 +5045,7 @@ public class Cubiomes extends Cubiomes_1 {
 
     /**
      * {@snippet lang=c :
-     * int init_loot_table(const char *loot_table_string, LootTableContext *context, const int version)
+     * int init_loot_table(const char *loot_table_string, LootTableContext *context, int version)
      * }
      */
     public static int init_loot_table(MemorySegment loot_table_string, MemorySegment context, int version) {
@@ -5078,7 +5078,7 @@ public class Cubiomes extends Cubiomes_1 {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * int init_loot_table_file(FILE *file, LootTableContext *context, const int version)
+     * int init_loot_table_file(FILE *file, LootTableContext *context, int version)
      * }
      */
     public static FunctionDescriptor init_loot_table_file$descriptor() {
@@ -5088,7 +5088,7 @@ public class Cubiomes extends Cubiomes_1 {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * int init_loot_table_file(FILE *file, LootTableContext *context, const int version)
+     * int init_loot_table_file(FILE *file, LootTableContext *context, int version)
      * }
      */
     public static MethodHandle init_loot_table_file$handle() {
@@ -5098,7 +5098,7 @@ public class Cubiomes extends Cubiomes_1 {
     /**
      * Address for:
      * {@snippet lang=c :
-     * int init_loot_table_file(FILE *file, LootTableContext *context, const int version)
+     * int init_loot_table_file(FILE *file, LootTableContext *context, int version)
      * }
      */
     public static MemorySegment init_loot_table_file$address() {
@@ -5107,7 +5107,7 @@ public class Cubiomes extends Cubiomes_1 {
 
     /**
      * {@snippet lang=c :
-     * int init_loot_table_file(FILE *file, LootTableContext *context, const int version)
+     * int init_loot_table_file(FILE *file, LootTableContext *context, int version)
      * }
      */
     public static int init_loot_table_file(MemorySegment file, MemorySegment context, int version) {

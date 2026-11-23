@@ -8347,7 +8347,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * void sampleNoiseParameters(BiomeNoise *bn, int x, int z, float np_param[4])
+     * void sampleNoiseParameters(const BiomeNoise *bn, int x, int z, float np_param[4])
      * }
      */
     public static FunctionDescriptor sampleNoiseParameters$descriptor() {
@@ -8357,7 +8357,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * void sampleNoiseParameters(BiomeNoise *bn, int x, int z, float np_param[4])
+     * void sampleNoiseParameters(const BiomeNoise *bn, int x, int z, float np_param[4])
      * }
      */
     public static MethodHandle sampleNoiseParameters$handle() {
@@ -8367,7 +8367,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * void sampleNoiseParameters(BiomeNoise *bn, int x, int z, float np_param[4])
+     * void sampleNoiseParameters(const BiomeNoise *bn, int x, int z, float np_param[4])
      * }
      */
     public static MemorySegment sampleNoiseParameters$address() {
@@ -8376,7 +8376,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * void sampleNoiseParameters(BiomeNoise *bn, int x, int z, float np_param[4])
+     * void sampleNoiseParameters(const BiomeNoise *bn, int x, int z, float np_param[4])
      * }
      */
     public static void sampleNoiseParameters(MemorySegment bn, int x, int z, MemorySegment np_param) {
@@ -9160,7 +9160,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z)
+     * double sampleBase3dNoise(const BlendedNoise *bn, int x, int y, int z)
      * }
      */
     public static FunctionDescriptor sampleBase3dNoise$descriptor() {
@@ -9170,7 +9170,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z)
+     * double sampleBase3dNoise(const BlendedNoise *bn, int x, int y, int z)
      * }
      */
     public static MethodHandle sampleBase3dNoise$handle() {
@@ -9180,7 +9180,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z)
+     * double sampleBase3dNoise(const BlendedNoise *bn, int x, int y, int z)
      * }
      */
     public static MemorySegment sampleBase3dNoise$address() {
@@ -9189,7 +9189,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * double sampleBase3dNoise(BlendedNoise *bn, int x, int y, int z)
+     * double sampleBase3dNoise(const BlendedNoise *bn, int x, int y, int z)
      * }
      */
     public static double sampleBase3dNoise(MemorySegment bn, int x, int y, int z) {
@@ -10404,7 +10404,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * double sampleSpaghettiRoughness(TerrainNoise *params, int x, int y, int z)
+     * double sampleSpaghettiRoughness(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static FunctionDescriptor sampleSpaghettiRoughness$descriptor() {
@@ -10414,7 +10414,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * double sampleSpaghettiRoughness(TerrainNoise *params, int x, int y, int z)
+     * double sampleSpaghettiRoughness(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static MethodHandle sampleSpaghettiRoughness$handle() {
@@ -10424,7 +10424,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * double sampleSpaghettiRoughness(TerrainNoise *params, int x, int y, int z)
+     * double sampleSpaghettiRoughness(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static MemorySegment sampleSpaghettiRoughness$address() {
@@ -10433,7 +10433,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * double sampleSpaghettiRoughness(TerrainNoise *params, int x, int y, int z)
+     * double sampleSpaghettiRoughness(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static double sampleSpaghettiRoughness(MemorySegment params, int x, int y, int z) {
@@ -10467,7 +10467,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * double sampleSpaghetti2dThicknessModulator(TerrainNoise *params, int x, int y, int z)
+     * double sampleSpaghetti2dThicknessModulator(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static FunctionDescriptor sampleSpaghetti2dThicknessModulator$descriptor() {
@@ -10477,7 +10477,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * double sampleSpaghetti2dThicknessModulator(TerrainNoise *params, int x, int y, int z)
+     * double sampleSpaghetti2dThicknessModulator(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static MethodHandle sampleSpaghetti2dThicknessModulator$handle() {
@@ -10487,7 +10487,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * double sampleSpaghetti2dThicknessModulator(TerrainNoise *params, int x, int y, int z)
+     * double sampleSpaghetti2dThicknessModulator(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static MemorySegment sampleSpaghetti2dThicknessModulator$address() {
@@ -10496,7 +10496,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * double sampleSpaghetti2dThicknessModulator(TerrainNoise *params, int x, int y, int z)
+     * double sampleSpaghetti2dThicknessModulator(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static double sampleSpaghetti2dThicknessModulator(MemorySegment params, int x, int y, int z) {
@@ -10530,7 +10530,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * double sampleSpaghetti2d(TerrainNoise *params, int x, int y, int z)
+     * double sampleSpaghetti2d(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static FunctionDescriptor sampleSpaghetti2d$descriptor() {
@@ -10540,7 +10540,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * double sampleSpaghetti2d(TerrainNoise *params, int x, int y, int z)
+     * double sampleSpaghetti2d(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static MethodHandle sampleSpaghetti2d$handle() {
@@ -10550,7 +10550,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * double sampleSpaghetti2d(TerrainNoise *params, int x, int y, int z)
+     * double sampleSpaghetti2d(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static MemorySegment sampleSpaghetti2d$address() {
@@ -10559,7 +10559,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * double sampleSpaghetti2d(TerrainNoise *params, int x, int y, int z)
+     * double sampleSpaghetti2d(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static double sampleSpaghetti2d(MemorySegment params, int x, int y, int z) {
@@ -10593,7 +10593,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * double sampleSpaghetti3d(TerrainNoise *params, int x, int y, int z)
+     * double sampleSpaghetti3d(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static FunctionDescriptor sampleSpaghetti3d$descriptor() {
@@ -10603,7 +10603,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * double sampleSpaghetti3d(TerrainNoise *params, int x, int y, int z)
+     * double sampleSpaghetti3d(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static MethodHandle sampleSpaghetti3d$handle() {
@@ -10613,7 +10613,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * double sampleSpaghetti3d(TerrainNoise *params, int x, int y, int z)
+     * double sampleSpaghetti3d(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static MemorySegment sampleSpaghetti3d$address() {
@@ -10622,7 +10622,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * double sampleSpaghetti3d(TerrainNoise *params, int x, int y, int z)
+     * double sampleSpaghetti3d(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static double sampleSpaghetti3d(MemorySegment params, int x, int y, int z) {
@@ -10656,7 +10656,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * double sampleCaveEntrance(TerrainNoise *params, int x, int y, int z)
+     * double sampleCaveEntrance(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static FunctionDescriptor sampleCaveEntrance$descriptor() {
@@ -10666,7 +10666,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * double sampleCaveEntrance(TerrainNoise *params, int x, int y, int z)
+     * double sampleCaveEntrance(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static MethodHandle sampleCaveEntrance$handle() {
@@ -10676,7 +10676,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * double sampleCaveEntrance(TerrainNoise *params, int x, int y, int z)
+     * double sampleCaveEntrance(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static MemorySegment sampleCaveEntrance$address() {
@@ -10685,7 +10685,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * double sampleCaveEntrance(TerrainNoise *params, int x, int y, int z)
+     * double sampleCaveEntrance(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static double sampleCaveEntrance(MemorySegment params, int x, int y, int z) {
@@ -10720,7 +10720,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * double sampleEntrances(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness)
+     * double sampleEntrances(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness)
      * }
      */
     public static FunctionDescriptor sampleEntrances$descriptor() {
@@ -10730,7 +10730,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * double sampleEntrances(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness)
+     * double sampleEntrances(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness)
      * }
      */
     public static MethodHandle sampleEntrances$handle() {
@@ -10740,7 +10740,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * double sampleEntrances(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness)
+     * double sampleEntrances(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness)
      * }
      */
     public static MemorySegment sampleEntrances$address() {
@@ -10749,7 +10749,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * double sampleEntrances(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness)
+     * double sampleEntrances(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness)
      * }
      */
     public static double sampleEntrances(MemorySegment params, int x, int y, int z, double spaghettiRoughness) {
@@ -10783,7 +10783,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * double sampleCaveLayer(TerrainNoise *params, int x, int y, int z)
+     * double sampleCaveLayer(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static FunctionDescriptor sampleCaveLayer$descriptor() {
@@ -10793,7 +10793,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * double sampleCaveLayer(TerrainNoise *params, int x, int y, int z)
+     * double sampleCaveLayer(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static MethodHandle sampleCaveLayer$handle() {
@@ -10803,7 +10803,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * double sampleCaveLayer(TerrainNoise *params, int x, int y, int z)
+     * double sampleCaveLayer(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static MemorySegment sampleCaveLayer$address() {
@@ -10812,7 +10812,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * double sampleCaveLayer(TerrainNoise *params, int x, int y, int z)
+     * double sampleCaveLayer(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static double sampleCaveLayer(MemorySegment params, int x, int y, int z) {
@@ -10849,7 +10849,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * double sampleSlopedCheese(TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged)
+     * double sampleSlopedCheese(const TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged)
      * }
      */
     public static FunctionDescriptor sampleSlopedCheese$descriptor() {
@@ -10859,7 +10859,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * double sampleSlopedCheese(TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged)
+     * double sampleSlopedCheese(const TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged)
      * }
      */
     public static MethodHandle sampleSlopedCheese$handle() {
@@ -10869,7 +10869,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * double sampleSlopedCheese(TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged)
+     * double sampleSlopedCheese(const TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged)
      * }
      */
     public static MemorySegment sampleSlopedCheese$address() {
@@ -10878,7 +10878,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * double sampleSlopedCheese(TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged)
+     * double sampleSlopedCheese(const TerrainNoise *params, int x, int y, int z, double depth, double factor, double jagged)
      * }
      */
     public static double sampleSlopedCheese(MemorySegment params, int x, int y, int z, double depth, double factor, double jagged) {
@@ -10913,7 +10913,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * double sampleCaveCheese(TerrainNoise *params, int x, int y, int z, double slopedCheese)
+     * double sampleCaveCheese(const TerrainNoise *params, int x, int y, int z, double slopedCheese)
      * }
      */
     public static FunctionDescriptor sampleCaveCheese$descriptor() {
@@ -10923,7 +10923,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * double sampleCaveCheese(TerrainNoise *params, int x, int y, int z, double slopedCheese)
+     * double sampleCaveCheese(const TerrainNoise *params, int x, int y, int z, double slopedCheese)
      * }
      */
     public static MethodHandle sampleCaveCheese$handle() {
@@ -10933,7 +10933,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * double sampleCaveCheese(TerrainNoise *params, int x, int y, int z, double slopedCheese)
+     * double sampleCaveCheese(const TerrainNoise *params, int x, int y, int z, double slopedCheese)
      * }
      */
     public static MemorySegment sampleCaveCheese$address() {
@@ -10942,7 +10942,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * double sampleCaveCheese(TerrainNoise *params, int x, int y, int z, double slopedCheese)
+     * double sampleCaveCheese(const TerrainNoise *params, int x, int y, int z, double slopedCheese)
      * }
      */
     public static double sampleCaveCheese(MemorySegment params, int x, int y, int z, double slopedCheese) {
@@ -10976,7 +10976,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * double samplePillars(TerrainNoise *params, int x, int y, int z)
+     * double samplePillars(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static FunctionDescriptor samplePillars$descriptor() {
@@ -10986,7 +10986,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * double samplePillars(TerrainNoise *params, int x, int y, int z)
+     * double samplePillars(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static MethodHandle samplePillars$handle() {
@@ -10996,7 +10996,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * double samplePillars(TerrainNoise *params, int x, int y, int z)
+     * double samplePillars(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static MemorySegment samplePillars$address() {
@@ -11005,7 +11005,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * double samplePillars(TerrainNoise *params, int x, int y, int z)
+     * double samplePillars(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static double samplePillars(MemorySegment params, int x, int y, int z) {
@@ -11039,7 +11039,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * double sampleNoodle(TerrainNoise *params, int x, int y, int z)
+     * double sampleNoodle(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static FunctionDescriptor sampleNoodle$descriptor() {
@@ -11049,7 +11049,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * double sampleNoodle(TerrainNoise *params, int x, int y, int z)
+     * double sampleNoodle(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static MethodHandle sampleNoodle$handle() {
@@ -11059,7 +11059,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * double sampleNoodle(TerrainNoise *params, int x, int y, int z)
+     * double sampleNoodle(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static MemorySegment sampleNoodle$address() {
@@ -11068,7 +11068,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * double sampleNoodle(TerrainNoise *params, int x, int y, int z)
+     * double sampleNoodle(const TerrainNoise *params, int x, int y, int z)
      * }
      */
     public static double sampleNoodle(MemorySegment params, int x, int y, int z) {
@@ -11105,7 +11105,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * double sampleUnderground(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
+     * double sampleUnderground(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
      * }
      */
     public static FunctionDescriptor sampleUnderground$descriptor() {
@@ -11115,7 +11115,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * double sampleUnderground(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
+     * double sampleUnderground(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
      * }
      */
     public static MethodHandle sampleUnderground$handle() {
@@ -11125,7 +11125,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * double sampleUnderground(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
+     * double sampleUnderground(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
      * }
      */
     public static MemorySegment sampleUnderground$address() {
@@ -11134,7 +11134,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * double sampleUnderground(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
+     * double sampleUnderground(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
      * }
      */
     public static double sampleUnderground(MemorySegment params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese) {
@@ -11171,7 +11171,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * double sampleFinalDensity(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
+     * double sampleFinalDensity(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
      * }
      */
     public static FunctionDescriptor sampleFinalDensity$descriptor() {
@@ -11181,7 +11181,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * double sampleFinalDensity(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
+     * double sampleFinalDensity(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
      * }
      */
     public static MethodHandle sampleFinalDensity$handle() {
@@ -11191,7 +11191,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * double sampleFinalDensity(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
+     * double sampleFinalDensity(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
      * }
      */
     public static MemorySegment sampleFinalDensity$address() {
@@ -11200,7 +11200,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * double sampleFinalDensity(TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
+     * double sampleFinalDensity(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese)
      * }
      */
     public static double sampleFinalDensity(MemorySegment params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese) {
@@ -11234,7 +11234,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * double sampleNetherFinalDensity(BlendedNoise *base3dNoise, int x, int y, int z)
+     * double sampleNetherFinalDensity(const BlendedNoise *base3dNoise, int x, int y, int z)
      * }
      */
     public static FunctionDescriptor sampleNetherFinalDensity$descriptor() {
@@ -11244,7 +11244,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * double sampleNetherFinalDensity(BlendedNoise *base3dNoise, int x, int y, int z)
+     * double sampleNetherFinalDensity(const BlendedNoise *base3dNoise, int x, int y, int z)
      * }
      */
     public static MethodHandle sampleNetherFinalDensity$handle() {
@@ -11254,7 +11254,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * double sampleNetherFinalDensity(BlendedNoise *base3dNoise, int x, int y, int z)
+     * double sampleNetherFinalDensity(const BlendedNoise *base3dNoise, int x, int y, int z)
      * }
      */
     public static MemorySegment sampleNetherFinalDensity$address() {
@@ -11263,7 +11263,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * double sampleNetherFinalDensity(BlendedNoise *base3dNoise, int x, int y, int z)
+     * double sampleNetherFinalDensity(const BlendedNoise *base3dNoise, int x, int y, int z)
      * }
      */
     public static double sampleNetherFinalDensity(MemorySegment base3dNoise, int x, int y, int z) {
@@ -11296,7 +11296,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z)
+     * int samplePreliminarySurfaceLevel(const TerrainNoise *params, int x, int z)
      * }
      */
     public static FunctionDescriptor samplePreliminarySurfaceLevel$descriptor() {
@@ -11306,7 +11306,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z)
+     * int samplePreliminarySurfaceLevel(const TerrainNoise *params, int x, int z)
      * }
      */
     public static MethodHandle samplePreliminarySurfaceLevel$handle() {
@@ -11316,7 +11316,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z)
+     * int samplePreliminarySurfaceLevel(const TerrainNoise *params, int x, int z)
      * }
      */
     public static MemorySegment samplePreliminarySurfaceLevel$address() {
@@ -11325,7 +11325,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * int samplePreliminarySurfaceLevel(TerrainNoise *params, int x, int z)
+     * int samplePreliminarySurfaceLevel(const TerrainNoise *params, int x, int z)
      * }
      */
     public static int samplePreliminarySurfaceLevel(MemorySegment params, int x, int z) {
@@ -11360,7 +11360,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * void sampleOWNoiseColumnOld(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * void sampleOWNoiseColumnOld(const TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
      * }
      */
     public static FunctionDescriptor sampleOWNoiseColumnOld$descriptor() {
@@ -11370,7 +11370,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * void sampleOWNoiseColumnOld(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * void sampleOWNoiseColumnOld(const TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
      * }
      */
     public static MethodHandle sampleOWNoiseColumnOld$handle() {
@@ -11380,7 +11380,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * void sampleOWNoiseColumnOld(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * void sampleOWNoiseColumnOld(const TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
      * }
      */
     public static MemorySegment sampleOWNoiseColumnOld$address() {
@@ -11389,7 +11389,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * void sampleOWNoiseColumnOld(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * void sampleOWNoiseColumnOld(const TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
      * }
      */
     public static void sampleOWNoiseColumnOld(MemorySegment params, int cellX, int cellZ, int colYMin, int colYMax, MemorySegment column) {
@@ -11424,7 +11424,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * void sampleNoiseColumn(const TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
      * }
      */
     public static FunctionDescriptor sampleNoiseColumn$descriptor() {
@@ -11434,7 +11434,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * void sampleNoiseColumn(const TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
      * }
      */
     public static MethodHandle sampleNoiseColumn$handle() {
@@ -11444,7 +11444,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * void sampleNoiseColumn(const TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
      * }
      */
     public static MemorySegment sampleNoiseColumn$address() {
@@ -11453,7 +11453,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * void sampleNoiseColumn(TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * void sampleNoiseColumn(const TerrainNoise *params, int cellX, int cellZ, int colYMin, int colYMax, double column[])
      * }
      */
     public static void sampleNoiseColumn(MemorySegment params, int cellX, int cellZ, int colYMin, int colYMax, MemorySegment column) {
@@ -11488,7 +11488,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * void sampleNetherNoiseColumn(BlendedNoise *base3dNoise, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * void sampleNetherNoiseColumn(const BlendedNoise *base3dNoise, int cellX, int cellZ, int colYMin, int colYMax, double column[])
      * }
      */
     public static FunctionDescriptor sampleNetherNoiseColumn$descriptor() {
@@ -11498,7 +11498,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * void sampleNetherNoiseColumn(BlendedNoise *base3dNoise, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * void sampleNetherNoiseColumn(const BlendedNoise *base3dNoise, int cellX, int cellZ, int colYMin, int colYMax, double column[])
      * }
      */
     public static MethodHandle sampleNetherNoiseColumn$handle() {
@@ -11508,7 +11508,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * void sampleNetherNoiseColumn(BlendedNoise *base3dNoise, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * void sampleNetherNoiseColumn(const BlendedNoise *base3dNoise, int cellX, int cellZ, int colYMin, int colYMax, double column[])
      * }
      */
     public static MemorySegment sampleNetherNoiseColumn$address() {
@@ -11517,7 +11517,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * void sampleNetherNoiseColumn(BlendedNoise *base3dNoise, int cellX, int cellZ, int colYMin, int colYMax, double column[])
+     * void sampleNetherNoiseColumn(const BlendedNoise *base3dNoise, int cellX, int cellZ, int colYMin, int colYMax, double column[])
      * }
      */
     public static void sampleNetherNoiseColumn(MemorySegment base3dNoise, int cellX, int cellZ, int colYMin, int colYMax, MemorySegment column) {
@@ -11628,7 +11628,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, uint8_t (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
+     * void generateRegion(const TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, uint8_t (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
      * }
      */
     public static FunctionDescriptor generateRegion$descriptor() {
@@ -11638,7 +11638,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, uint8_t (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
+     * void generateRegion(const TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, uint8_t (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
      * }
      */
     public static MethodHandle generateRegion$handle() {
@@ -11648,7 +11648,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, uint8_t (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
+     * void generateRegion(const TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, uint8_t (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
      * }
      */
     public static MemorySegment generateRegion$address() {
@@ -11657,7 +11657,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * void generateRegion(TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, uint8_t (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
+     * void generateRegion(const TerrainNoise *params, int chunkX, int chunkZ, int chunkW, int chunkH, uint8_t (*blocks)[], int colYMin, int colYMax, int *ys, int flag)
      * }
      */
     public static void generateRegion(MemorySegment params, int chunkX, int chunkZ, int chunkW, int chunkH, MemorySegment blocks, int colYMin, int colYMax, MemorySegment ys, int flag) {
@@ -12473,7 +12473,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * int getMineshafts(int mc, uint64_t seed, int chunkX, int chunkZ, int chunkW, int chunkH, Pos *out, int nout)
+     * int getMineshafts(int mc, uint64_t seed, int cx0, int cz0, int cx1, int cz1, Pos *out, int nout)
      * }
      */
     public static FunctionDescriptor getMineshafts$descriptor() {
@@ -12483,7 +12483,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * int getMineshafts(int mc, uint64_t seed, int chunkX, int chunkZ, int chunkW, int chunkH, Pos *out, int nout)
+     * int getMineshafts(int mc, uint64_t seed, int cx0, int cz0, int cx1, int cz1, Pos *out, int nout)
      * }
      */
     public static MethodHandle getMineshafts$handle() {
@@ -12493,7 +12493,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * int getMineshafts(int mc, uint64_t seed, int chunkX, int chunkZ, int chunkW, int chunkH, Pos *out, int nout)
+     * int getMineshafts(int mc, uint64_t seed, int cx0, int cz0, int cx1, int cz1, Pos *out, int nout)
      * }
      */
     public static MemorySegment getMineshafts$address() {
@@ -12502,16 +12502,16 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * int getMineshafts(int mc, uint64_t seed, int chunkX, int chunkZ, int chunkW, int chunkH, Pos *out, int nout)
+     * int getMineshafts(int mc, uint64_t seed, int cx0, int cz0, int cx1, int cz1, Pos *out, int nout)
      * }
      */
-    public static int getMineshafts(int mc, long seed, int chunkX, int chunkZ, int chunkW, int chunkH, MemorySegment out, int nout) {
+    public static int getMineshafts(int mc, long seed, int cx0, int cz0, int cx1, int cz1, MemorySegment out, int nout) {
         var mh$ = getMineshafts.HANDLE;
         try {
             if (TRACE_DOWNCALLS) {
-                traceDowncall("getMineshafts", mc, seed, chunkX, chunkZ, chunkW, chunkH, out, nout);
+                traceDowncall("getMineshafts", mc, seed, cx0, cz0, cx1, cz1, out, nout);
             }
-            return (int)mh$.invokeExact(mc, seed, chunkX, chunkZ, chunkW, chunkH, out, nout);
+            return (int)mh$.invokeExact(mc, seed, cx0, cz0, cx1, cz1, out, nout);
         } catch (Error | RuntimeException ex) {
            throw ex;
         } catch (Throwable ex$) {
@@ -15843,7 +15843,7 @@ class Cubiomes_1 extends Cubiomes$shared {
             Cubiomes.C_LONG,
             Cubiomes.C_INT,
             Cubiomes.C_INT,
-            CanyonCarverConfig.layout(),
+            Cubiomes.C_POINTER,
             Cubiomes.C_POINTER
         );
 
@@ -15855,7 +15855,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * int checkCanyonStart(uint64_t seed, int chunkX, int chunkZ, CanyonCarverConfig ccc, uint64_t *rnd)
+     * int checkCanyonStart(uint64_t seed, int chunkX, int chunkZ, const CanyonCarverConfig *ccc, uint64_t *rnd)
      * }
      */
     public static FunctionDescriptor checkCanyonStart$descriptor() {
@@ -15865,7 +15865,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * int checkCanyonStart(uint64_t seed, int chunkX, int chunkZ, CanyonCarverConfig ccc, uint64_t *rnd)
+     * int checkCanyonStart(uint64_t seed, int chunkX, int chunkZ, const CanyonCarverConfig *ccc, uint64_t *rnd)
      * }
      */
     public static MethodHandle checkCanyonStart$handle() {
@@ -15875,7 +15875,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * int checkCanyonStart(uint64_t seed, int chunkX, int chunkZ, CanyonCarverConfig ccc, uint64_t *rnd)
+     * int checkCanyonStart(uint64_t seed, int chunkX, int chunkZ, const CanyonCarverConfig *ccc, uint64_t *rnd)
      * }
      */
     public static MemorySegment checkCanyonStart$address() {
@@ -15884,7 +15884,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * int checkCanyonStart(uint64_t seed, int chunkX, int chunkZ, CanyonCarverConfig ccc, uint64_t *rnd)
+     * int checkCanyonStart(uint64_t seed, int chunkX, int chunkZ, const CanyonCarverConfig *ccc, uint64_t *rnd)
      * }
      */
     public static int checkCanyonStart(long seed, int chunkX, int chunkZ, MemorySegment ccc, MemorySegment rnd) {
@@ -15907,7 +15907,7 @@ class Cubiomes_1 extends Cubiomes$shared {
             Cubiomes.C_LONG,
             Cubiomes.C_INT,
             Cubiomes.C_INT,
-            CaveCarverConfig.layout(),
+            Cubiomes.C_POINTER,
             Cubiomes.C_POINTER
         );
 
@@ -15919,7 +15919,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * int checkCaveStart(uint64_t seed, int chunkX, int chunkZ, CaveCarverConfig ccc, uint64_t *rnd)
+     * int checkCaveStart(uint64_t seed, int chunkX, int chunkZ, const CaveCarverConfig *ccc, uint64_t *rnd)
      * }
      */
     public static FunctionDescriptor checkCaveStart$descriptor() {
@@ -15929,7 +15929,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * int checkCaveStart(uint64_t seed, int chunkX, int chunkZ, CaveCarverConfig ccc, uint64_t *rnd)
+     * int checkCaveStart(uint64_t seed, int chunkX, int chunkZ, const CaveCarverConfig *ccc, uint64_t *rnd)
      * }
      */
     public static MethodHandle checkCaveStart$handle() {
@@ -15939,7 +15939,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * int checkCaveStart(uint64_t seed, int chunkX, int chunkZ, CaveCarverConfig ccc, uint64_t *rnd)
+     * int checkCaveStart(uint64_t seed, int chunkX, int chunkZ, const CaveCarverConfig *ccc, uint64_t *rnd)
      * }
      */
     public static MemorySegment checkCaveStart$address() {
@@ -15948,7 +15948,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * int checkCaveStart(uint64_t seed, int chunkX, int chunkZ, CaveCarverConfig ccc, uint64_t *rnd)
+     * int checkCaveStart(uint64_t seed, int chunkX, int chunkZ, const CaveCarverConfig *ccc, uint64_t *rnd)
      * }
      */
     public static int checkCaveStart(long seed, int chunkX, int chunkZ, MemorySegment ccc, MemorySegment rnd) {
@@ -15971,7 +15971,7 @@ class Cubiomes_1 extends Cubiomes$shared {
             Cubiomes.C_INT,
             Cubiomes.C_INT,
             Cubiomes.C_INT,
-            CanyonCarverConfig.layout(),
+            Cubiomes.C_POINTER,
             Cubiomes.C_INT,
             Cubiomes.C_POINTER,
             Cubiomes.C_POINTER
@@ -15985,7 +15985,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * void carveCanyon(uint64_t seed, int mc, int chunkX, int chunkZ, CanyonCarverConfig ccc, int canyonCarverType, int biomes[17][17], Pos3List *poses)
+     * void carveCanyon(uint64_t seed, int mc, int chunkX, int chunkZ, const CanyonCarverConfig *ccc, int canyonCarverType, int biomes[17][17], Pos3List *poses)
      * }
      */
     public static FunctionDescriptor carveCanyon$descriptor() {
@@ -15995,7 +15995,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * void carveCanyon(uint64_t seed, int mc, int chunkX, int chunkZ, CanyonCarverConfig ccc, int canyonCarverType, int biomes[17][17], Pos3List *poses)
+     * void carveCanyon(uint64_t seed, int mc, int chunkX, int chunkZ, const CanyonCarverConfig *ccc, int canyonCarverType, int biomes[17][17], Pos3List *poses)
      * }
      */
     public static MethodHandle carveCanyon$handle() {
@@ -16005,7 +16005,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * void carveCanyon(uint64_t seed, int mc, int chunkX, int chunkZ, CanyonCarverConfig ccc, int canyonCarverType, int biomes[17][17], Pos3List *poses)
+     * void carveCanyon(uint64_t seed, int mc, int chunkX, int chunkZ, const CanyonCarverConfig *ccc, int canyonCarverType, int biomes[17][17], Pos3List *poses)
      * }
      */
     public static MemorySegment carveCanyon$address() {
@@ -16014,7 +16014,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * void carveCanyon(uint64_t seed, int mc, int chunkX, int chunkZ, CanyonCarverConfig ccc, int canyonCarverType, int biomes[17][17], Pos3List *poses)
+     * void carveCanyon(uint64_t seed, int mc, int chunkX, int chunkZ, const CanyonCarverConfig *ccc, int canyonCarverType, int biomes[17][17], Pos3List *poses)
      * }
      */
     public static void carveCanyon(long seed, int mc, int chunkX, int chunkZ, MemorySegment ccc, int canyonCarverType, MemorySegment biomes, MemorySegment poses) {
@@ -16037,7 +16037,7 @@ class Cubiomes_1 extends Cubiomes$shared {
             Cubiomes.C_INT,
             Cubiomes.C_INT,
             Cubiomes.C_INT,
-            CaveCarverConfig.layout(),
+            Cubiomes.C_POINTER,
             Cubiomes.C_INT,
             Cubiomes.C_POINTER,
             Cubiomes.C_POINTER
@@ -16051,7 +16051,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, CaveCarverConfig ccc, int caveCarverType, int biomes[17][17], Pos3List *poses)
+     * void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, const CaveCarverConfig *ccc, int caveCarverType, int biomes[17][17], Pos3List *poses)
      * }
      */
     public static FunctionDescriptor carveCave$descriptor() {
@@ -16061,7 +16061,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, CaveCarverConfig ccc, int caveCarverType, int biomes[17][17], Pos3List *poses)
+     * void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, const CaveCarverConfig *ccc, int caveCarverType, int biomes[17][17], Pos3List *poses)
      * }
      */
     public static MethodHandle carveCave$handle() {
@@ -16071,7 +16071,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, CaveCarverConfig ccc, int caveCarverType, int biomes[17][17], Pos3List *poses)
+     * void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, const CaveCarverConfig *ccc, int caveCarverType, int biomes[17][17], Pos3List *poses)
      * }
      */
     public static MemorySegment carveCave$address() {
@@ -16080,7 +16080,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, CaveCarverConfig ccc, int caveCarverType, int biomes[17][17], Pos3List *poses)
+     * void carveCave(uint64_t seed, int mc, int chunkX, int chunkZ, const CaveCarverConfig *ccc, int caveCarverType, int biomes[17][17], Pos3List *poses)
      * }
      */
     public static void carveCave(long seed, int mc, int chunkX, int chunkZ, MemorySegment ccc, int caveCarverType, MemorySegment biomes, MemorySegment poses) {
@@ -16838,7 +16838,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * int biomesToImage(unsigned char *pixels, unsigned char biomeColors[256][3], const int *biomes, const unsigned int sx, const unsigned int sy, const unsigned int pixscale, const int flip)
+     * int biomesToImage(unsigned char *pixels, unsigned char biomeColors[256][3], const int *biomes, unsigned int sx, unsigned int sy, unsigned int pixscale, int flip)
      * }
      */
     public static FunctionDescriptor biomesToImage$descriptor() {
@@ -16848,7 +16848,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * int biomesToImage(unsigned char *pixels, unsigned char biomeColors[256][3], const int *biomes, const unsigned int sx, const unsigned int sy, const unsigned int pixscale, const int flip)
+     * int biomesToImage(unsigned char *pixels, unsigned char biomeColors[256][3], const int *biomes, unsigned int sx, unsigned int sy, unsigned int pixscale, int flip)
      * }
      */
     public static MethodHandle biomesToImage$handle() {
@@ -16858,7 +16858,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * int biomesToImage(unsigned char *pixels, unsigned char biomeColors[256][3], const int *biomes, const unsigned int sx, const unsigned int sy, const unsigned int pixscale, const int flip)
+     * int biomesToImage(unsigned char *pixels, unsigned char biomeColors[256][3], const int *biomes, unsigned int sx, unsigned int sy, unsigned int pixscale, int flip)
      * }
      */
     public static MemorySegment biomesToImage$address() {
@@ -16867,7 +16867,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * int biomesToImage(unsigned char *pixels, unsigned char biomeColors[256][3], const int *biomes, const unsigned int sx, const unsigned int sy, const unsigned int pixscale, const int flip)
+     * int biomesToImage(unsigned char *pixels, unsigned char biomeColors[256][3], const int *biomes, unsigned int sx, unsigned int sy, unsigned int pixscale, int flip)
      * }
      */
     public static int biomesToImage(MemorySegment pixels, MemorySegment biomeColors, MemorySegment biomes, int sx, int sy, int pixscale, int flip) {
@@ -16901,7 +16901,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * int savePPM(const char *path, const unsigned char *pixels, const unsigned int sx, const unsigned int sy)
+     * int savePPM(const char *path, const unsigned char *pixels, unsigned int sx, unsigned int sy)
      * }
      */
     public static FunctionDescriptor savePPM$descriptor() {
@@ -16911,7 +16911,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * int savePPM(const char *path, const unsigned char *pixels, const unsigned int sx, const unsigned int sy)
+     * int savePPM(const char *path, const unsigned char *pixels, unsigned int sx, unsigned int sy)
      * }
      */
     public static MethodHandle savePPM$handle() {
@@ -16921,7 +16921,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * int savePPM(const char *path, const unsigned char *pixels, const unsigned int sx, const unsigned int sy)
+     * int savePPM(const char *path, const unsigned char *pixels, unsigned int sx, unsigned int sy)
      * }
      */
     public static MemorySegment savePPM$address() {
@@ -16930,7 +16930,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * int savePPM(const char *path, const unsigned char *pixels, const unsigned int sx, const unsigned int sy)
+     * int savePPM(const char *path, const unsigned char *pixels, unsigned int sx, unsigned int sy)
      * }
      */
     public static int savePPM(MemorySegment path, MemorySegment pixels, int sx, int sy) {
@@ -18583,7 +18583,7 @@ class Cubiomes_1 extends Cubiomes$shared {
             Pos3List.layout(),
             Cubiomes.C_POINTER,
             Cubiomes.C_POINTER,
-            OreConfig.layout(),
+            Cubiomes.C_POINTER,
             Cubiomes.C_INT,
             Cubiomes.C_INT
         );
@@ -18596,7 +18596,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig config, int chunkX, int chunkZ)
+     * Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, const OreConfig *config, int chunkX, int chunkZ)
      * }
      */
     public static FunctionDescriptor generateOres$descriptor() {
@@ -18606,7 +18606,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig config, int chunkX, int chunkZ)
+     * Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, const OreConfig *config, int chunkX, int chunkZ)
      * }
      */
     public static MethodHandle generateOres$handle() {
@@ -18616,7 +18616,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig config, int chunkX, int chunkZ)
+     * Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, const OreConfig *config, int chunkX, int chunkZ)
      * }
      */
     public static MemorySegment generateOres$address() {
@@ -18625,7 +18625,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, OreConfig config, int chunkX, int chunkZ)
+     * Pos3List generateOres(const Generator *g, const SurfaceNoise *sn, const OreConfig *config, int chunkX, int chunkZ)
      * }
      */
     public static MemorySegment generateOres(SegmentAllocator allocator, MemorySegment g, MemorySegment sn, MemorySegment config, int chunkX, int chunkZ) {
@@ -18646,7 +18646,7 @@ class Cubiomes_1 extends Cubiomes$shared {
         public static final FunctionDescriptor DESC = FunctionDescriptor.of(
             Pos3.layout(),
             Cubiomes.C_INT,
-            OreConfig.layout(),
+            Cubiomes.C_POINTER,
             Cubiomes.C_INT,
             Cubiomes.C_INT,
             Cubiomes.C_POINTER
@@ -18660,7 +18660,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource *rnd)
+     * Pos3 generateBaseOrePosition(int mc, const OreConfig *config, int chunkX, int chunkZ, RandomSource *rnd)
      * }
      */
     public static FunctionDescriptor generateBaseOrePosition$descriptor() {
@@ -18670,7 +18670,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource *rnd)
+     * Pos3 generateBaseOrePosition(int mc, const OreConfig *config, int chunkX, int chunkZ, RandomSource *rnd)
      * }
      */
     public static MethodHandle generateBaseOrePosition$handle() {
@@ -18680,7 +18680,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource *rnd)
+     * Pos3 generateBaseOrePosition(int mc, const OreConfig *config, int chunkX, int chunkZ, RandomSource *rnd)
      * }
      */
     public static MemorySegment generateBaseOrePosition$address() {
@@ -18689,7 +18689,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * Pos3 generateBaseOrePosition(int mc, OreConfig config, int chunkX, int chunkZ, RandomSource *rnd)
+     * Pos3 generateBaseOrePosition(int mc, const OreConfig *config, int chunkX, int chunkZ, RandomSource *rnd)
      * }
      */
     public static MemorySegment generateBaseOrePosition(SegmentAllocator allocator, int mc, MemorySegment config, int chunkX, int chunkZ, MemorySegment rnd) {
@@ -18710,7 +18710,7 @@ class Cubiomes_1 extends Cubiomes$shared {
         public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
             Cubiomes.C_POINTER,
             Cubiomes.C_POINTER,
-            OreConfig.layout(),
+            Cubiomes.C_POINTER,
             Pos3.layout(),
             Cubiomes.C_POINTER,
             Cubiomes.C_POINTER
@@ -18724,7 +18724,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource *rnd, Pos3List *pos3s)
+     * void generateOrePositions(const Generator *g, const SurfaceNoise *sn, const OreConfig *config, Pos3 pos, RandomSource *rnd, Pos3List *pos3s)
      * }
      */
     public static FunctionDescriptor generateOrePositions$descriptor() {
@@ -18734,7 +18734,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource *rnd, Pos3List *pos3s)
+     * void generateOrePositions(const Generator *g, const SurfaceNoise *sn, const OreConfig *config, Pos3 pos, RandomSource *rnd, Pos3List *pos3s)
      * }
      */
     public static MethodHandle generateOrePositions$handle() {
@@ -18744,7 +18744,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource *rnd, Pos3List *pos3s)
+     * void generateOrePositions(const Generator *g, const SurfaceNoise *sn, const OreConfig *config, Pos3 pos, RandomSource *rnd, Pos3List *pos3s)
      * }
      */
     public static MemorySegment generateOrePositions$address() {
@@ -18753,7 +18753,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * void generateOrePositions(const Generator *g, const SurfaceNoise *sn, OreConfig config, Pos3 pos, RandomSource *rnd, Pos3List *pos3s)
+     * void generateOrePositions(const Generator *g, const SurfaceNoise *sn, const OreConfig *config, Pos3 pos, RandomSource *rnd, Pos3List *pos3s)
      * }
      */
     public static void generateOrePositions(MemorySegment g, MemorySegment sn, MemorySegment config, MemorySegment pos, MemorySegment rnd, MemorySegment pos3s) {
@@ -18773,7 +18773,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     private static class generateVeinPart {
         public static final FunctionDescriptor DESC = FunctionDescriptor.ofVoid(
             Cubiomes.C_INT,
-            OreConfig.layout(),
+            Cubiomes.C_POINTER,
             Cubiomes.C_POINTER,
             Cubiomes.C_DOUBLE,
             Cubiomes.C_DOUBLE,
@@ -18797,7 +18797,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Function descriptor for:
      * {@snippet lang=c :
-     * void generateVeinPart(int mc, OreConfig config, RandomSource *rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List *pos3s)
+     * void generateVeinPart(int mc, const OreConfig *config, RandomSource *rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List *pos3s)
      * }
      */
     public static FunctionDescriptor generateVeinPart$descriptor() {
@@ -18807,7 +18807,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Downcall method handle for:
      * {@snippet lang=c :
-     * void generateVeinPart(int mc, OreConfig config, RandomSource *rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List *pos3s)
+     * void generateVeinPart(int mc, const OreConfig *config, RandomSource *rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List *pos3s)
      * }
      */
     public static MethodHandle generateVeinPart$handle() {
@@ -18817,7 +18817,7 @@ class Cubiomes_1 extends Cubiomes$shared {
     /**
      * Address for:
      * {@snippet lang=c :
-     * void generateVeinPart(int mc, OreConfig config, RandomSource *rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List *pos3s)
+     * void generateVeinPart(int mc, const OreConfig *config, RandomSource *rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List *pos3s)
      * }
      */
     public static MemorySegment generateVeinPart$address() {
@@ -18826,7 +18826,7 @@ class Cubiomes_1 extends Cubiomes$shared {
 
     /**
      * {@snippet lang=c :
-     * void generateVeinPart(int mc, OreConfig config, RandomSource *rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List *pos3s)
+     * void generateVeinPart(int mc, const OreConfig *config, RandomSource *rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, Pos3List *pos3s)
      * }
      */
     public static void generateVeinPart(int mc, MemorySegment config, MemorySegment rnd, double offsetXPos, double offsetXNeg, double offsetZPos, double offsetZNeg, double offsetYPos, double offsetYNeg, int startX, int startY, int startZ, int oreSize, int radius, MemorySegment pos3s) {
