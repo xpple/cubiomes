@@ -13,21 +13,21 @@ extern "C"
 {
 #endif
 
-/** Quad-Witch-Huts
- *
- *  For a quad-structure, we mainly care about relative positioning, so we can
- *  get away with just checking the regions near the origin: (0,0),(0,1),(1,0)
- *  and (1,1) and then move the structures to the desired position.
- *
- *  Futhermore, the PRNG that determines the chunk positions inside each region,
- *  performs some modular arithmatic on the 48-bit numbers which causes some
- *  restrictions on the lower bits when looking for near perfect structure
- *  positions. This is difficult to prove, but can be used to reduce the number
- *  of free bits to 28 which can be comfortably brute-forced to get the entire
- *  set of quad-structure candidates. Each of the seeds found this way
- *  describes entire set of possible quad-witch-huts (with degrees of freedom
- *  for region-transposition, as well as the top 16-bit bits).
- */
+/// \file
+/// Quad-Witch-Huts
+///
+/// For a quad-structure, we mainly care about relative positioning, so we can
+/// get away with just checking the regions near the origin: (0,0),(0,1),(1,0)
+/// and (1,1) and then move the structures to the desired position.
+///
+/// Furthermore, the PRNG that determines the chunk positions inside each region,
+/// performs some modular arithmatic on the 48-bit numbers which causes some
+/// restrictions on the lower bits when looking for near perfect structure
+/// positions. This is difficult to prove, but can be used to reduce the number
+/// of free bits to 28 which can be comfortably brute-forced to get the entire
+/// set of quad-structure candidates. Each of the seeds found this way
+/// describes entire set of possible quad-witch-huts (with degrees of freedom
+/// for region-transposition, as well as the top 16-bit bits).
 
 
 /// lower 20 bits, only the very best constellations

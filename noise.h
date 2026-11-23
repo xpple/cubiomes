@@ -56,14 +56,14 @@ double sampleSimplex2D(const PerlinNoise *noise, double x, double y);
 /// \param[out] noise output object
 /// \param[in,out] seed Java Random state
 /// \param omin first octave
-/// \param len octave count, less than 64
+/// \param len octave count, less than 63
 void octaveInit(OctaveNoise *noise, uint64_t *seed, PerlinNoise *octaves,
         int omin, int len);
 /// Initializes legacy octave noise using Xoroshiro.
 /// \param[out] noise output object
 /// \param[in,out] xr Xoroshiro state
 /// \param omin first octave
-/// \param len octave count, less than 64
+/// \param len octave count, less than 63
 void xOctaveLegacyInit(OctaveNoise *noise, Xoroshiro *xr, PerlinNoise *octaves,
         int omin, int len);
 /// Initializes Beta octave noise with explicit frequency/amplitude progression.
@@ -103,7 +103,7 @@ void sampleOctaveBeta17Terrain(const OctaveNoise *noise, double *v,
 /// \param[in,out] seed Java Random state
 /// \param[out] octavesA,octavesB distinct buffers of at least `len` PerlinNoise elements each
 /// \param omin first octave
-/// \param len octave count, less than 64
+/// \param len octave count, less than 63
 void doublePerlinInit(DoublePerlinNoise *noise, uint64_t *seed,
         PerlinNoise *octavesA, PerlinNoise *octavesB, int omin, int len);
 /// Initializes a 1.18+ DoublePerlinNoise generator.

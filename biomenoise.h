@@ -22,7 +22,7 @@
 /// \par y
 /// Vertical position, 1:1 iff scale==1, 1:4 otherwise.
 /// \par sy
-/// Vertical size. Values <= 0 are treated equivalent to 1.
+/// Vertical size. Zero is treated equivalent to 1.
 ///
 /// Volumes generated with a range are generally indexed as:
 ///  out [ i_y*sx*sz + i_z*sx + i_x ]

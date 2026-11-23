@@ -136,10 +136,11 @@ Layer *setupLayer(Layer *l, mapfunc_t *map, int mc,
 int genArea(const Layer *layer, int *out, int areaX, int areaZ, int areaWidth, int areaHeight);
 
 /// Map an approximation of the Overworld surface height.
-/// The horizontal scaling is 1:4. If non-null, the ids are filled with the
-/// biomes of the area. The height (written to y[w*h]) is in blocks.
-/// If the Generator's dimension is Overworld and version before Beta 1.8
-/// or after 1.18, SurfaceNoise is not needed.
+/// The horizontal scaling is 1:4. If non-null, the ids are filled with
+/// the biomes of the area (unless the return value is nonzero). The
+/// height (written to y[w*h]) is in blocks. If the Generator's dimension
+/// is Overworld and version before Beta 1.8 or after 1.18, SurfaceNoise
+/// is not needed.
 int mapApproxHeight(float *y, int *ids, const Generator *g,
     const SurfaceNoise *sn, int x, int z, int w, int h);
 

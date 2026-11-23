@@ -62,7 +62,7 @@ enum {
 };
 
 /// Set up terrain noise for a given version and the specified biome generator flags.
-/// It is recommended to zero-initialize the object.
+/// It is required to zero-initialize the object.
 ///
 /// \param params the terrain noise parameters
 /// \param mc the Minecraft version
@@ -141,7 +141,7 @@ double sampleEntrances(TerrainNoise *params, int x, int y, int z, double spaghet
 /// \return the sampled value
 double sampleCaveLayer(TerrainNoise *params, int x, int y, int z);
 
-/// Sample `overworld/sloped_cheese`. Use sampleNoiseParameters to sample the splines.
+/// Sample `overworld/sloped_cheese`. Use sampleNoiseParameters to for the spline inputs, see sampleNoiseColumn.
 ///
 /// \param params the terrain noise parameters
 /// \param x the world X-coordinate
@@ -275,9 +275,9 @@ void sampleNetherNoiseColumn(BlendedNoise* base3dNoise, int cellX, int cellZ, in
 /// The cell height is 8 for the overworld and nether, and 4 for the end. The blocks array
 /// must therefore be of the form uint8_t blocks[(colYMax - colYMin) * cellHeight].
 ///
-/// The parameters percentX and percentZ can be computed as (block % cellWidth) / (double)
-/// cellWidth, where block is the block coordinate, and cellWidth is the width of a noise
-/// cell. For the overworld and nether, that is 4. For the end, that is 8.
+/// The parameters percentX and percentZ can be computed as floormod(block, cellWidth) /
+/// (double) cellWidth, where block is the block coordinate, and cellWidth is the width of a
+/// noise cell. For the overworld and nether, that is 4. For the end, that is 8.
 ///
 /// The interpFunc parameter determines the interpolation function used to combine the
 /// cell columns. For >=1.18 that is INTERP_1_18, for <1.18 that is INTERP_PRE_1_18.

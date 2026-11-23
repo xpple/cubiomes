@@ -290,7 +290,7 @@ int getStructureSaltConfig(int structureType, int mc, int biome, StructureSaltCo
 ///
 /// \param structureType structure type
 /// \param mc minecraft version
-/// \param seed world seed (only the lower 48-bits are relevant)
+/// \param seed world seed (only the lower 48-bits are relevant, except for 1.18+ decorators)
 /// \param regX,regZ region coordinates (the region size depends on type)
 /// \param pos output block position
 ///
@@ -313,12 +313,11 @@ Pos getLargeStructurePos(StructureConfig config, uint64_t seed, int regX, int re
 static inline ATTR(const)
 Pos getLargeStructureChunkInRegion(StructureConfig config, uint64_t seed, int regX, int regZ);
 
-/// Checks a chunk area, starting at (chunkX, chunkZ) with size (chunkW, chunkH)
-/// for Mineshaft positions. If not NULL, positions are written to the buffer
+/// Checks a chunk area, starting at (cx0, cz0) and ending at (cx1, cz1) for
+/// Mineshaft positions. If not NULL, positions are written to the buffer
 /// 'out' up to a maximum number of 'nout'. The return value is the number of
 /// chunks with Mineshafts in the area.
-int getMineshafts(int mc, uint64_t seed, int chunkX, int chunkZ,
-        int chunkW, int chunkH, Pos *out, int nout);
+int getMineshafts(int mc, uint64_t seed, int cx0, int cz0, int cx1, int cz1, Pos *out, int nout);
 
 void setAttemptSeed(uint64_t *s, int cx, int cz);
 
@@ -539,7 +538,7 @@ int isViableStructureTerrain(int structType, Generator *g, int blockX, int block
 
 /// End Cities require a sufficiently high surface in addition to a biome check.
 /// The world seed should be applied to the EndNoise and SurfaceNoise before
-/// calling this function. (Use initSurfaceNoiseEnd() for initialization.)
+/// calling this function. (Use `initSurfaceNoise` for initialization.)
 int isViableEndCityTerrain(const Generator *g, const SurfaceNoise *sn,
         int blockX, int blockZ);
 
@@ -886,7 +885,7 @@ const int *getBiomeParaLimits(int mc, int id);
 /// parameter limits. Possible biomes are marked non-zero in the 'ids'.
 void getPossibleBiomesForLimits(char ids[256], int mc, int limits[6][2]);
 
-/// Find the largest rectangle in ids[sx][sz] which consists only of 'match'.
+/// Find the largest rectangle in ids[sz][sx] which consists only of 'match'.
 /// The limit corners are written to p0 and p1. Returned is the rectangle's area.
 int getLargestRec(int match, const int *ids, int sx, int sz, Pos *p0, Pos *p1);
 
