@@ -1741,7 +1741,7 @@ int mapOceanMix(const Layer * l, int * out, int x, int z, int w, int h)
 
 
 static inline void getVoronoiCell(uint64_t sha, int a, int b, int c,
-        int *x, int *y, int *z)
+        int *x, int *y, int *z, int scale)
 {
     uint64_t s = sha;
     s = mcStepSeed(s, a);
@@ -1751,11 +1751,11 @@ static inline void getVoronoiCell(uint64_t sha, int a, int b, int c,
     s = mcStepSeed(s, b);
     s = mcStepSeed(s, c);
 
-    *x = (((s >> 24) & 1023) - 512) * 36;
+    *x = (((s >> 24) & 1023) - 512) * scale;
     s = mcStepSeed(s, sha);
-    *y = (((s >> 24) & 1023) - 512) * 36;
+    *y = (((s >> 24) & 1023) - 512) * scale;
     s = mcStepSeed(s, sha);
-    *z = (((s >> 24) & 1023) - 512) * 36;
+    *z = (((s >> 24) & 1023) - 512) * scale;
 }
 
 void mapVoronoiPlane(uint64_t sha, int *out, int *src,
@@ -1811,16 +1811,16 @@ void mapVoronoiPlane(uint64_t sha, int *out, int *src,
             }
             if (prev_skip)
             {
-                getVoronoiCell(sha, pix, y-1, pjz+0, &x000, &y000, &z000);
-                getVoronoiCell(sha, pix, y+0, pjz+0, &x001, &y001, &z001);
-                getVoronoiCell(sha, pix, y-1, pjz+1, &x100, &y100, &z100);
-                getVoronoiCell(sha, pix, y+0, pjz+1, &x101, &y101, &z101);
+                getVoronoiCell(sha, pix, y-1, pjz+0, &x000, &y000, &z000, 36);
+                getVoronoiCell(sha, pix, y+0, pjz+0, &x001, &y001, &z001, 36);
+                getVoronoiCell(sha, pix, y-1, pjz+1, &x100, &y100, &z100, 36);
+                getVoronoiCell(sha, pix, y+0, pjz+1, &x101, &y101, &z101, 36);
                 prev_skip = 0;
             }
-            getVoronoiCell(sha, pix+1, y-1, pjz+0, &x010, &y010, &z010);
-            getVoronoiCell(sha, pix+1, y+0, pjz+0, &x011, &y011, &z011);
-            getVoronoiCell(sha, pix+1, y-1, pjz+1, &x110, &y110, &z110);
-            getVoronoiCell(sha, pix+1, y+0, pjz+1, &x111, &y111, &z111);
+            getVoronoiCell(sha, pix+1, y-1, pjz+0, &x010, &y010, &z010, 36);
+            getVoronoiCell(sha, pix+1, y+0, pjz+0, &x011, &y011, &z011, 36);
+            getVoronoiCell(sha, pix+1, y-1, pjz+1, &x110, &y110, &z110, 36);
+            getVoronoiCell(sha, pix+1, y+0, pjz+1, &x111, &y111, &z111, 36);
 
 
             for (jj = 0; jj < 4; jj++)
@@ -2085,10 +2085,12 @@ uint64_t getVoronoiSHA(uint64_t seed)
     m[0] = BSWAP32((uint32_t)(seed));
     m[1] = BSWAP32((uint32_t)(seed >> 32));
     m[2] = 0x80000000;
+    #pragma GCC unroll 12
     for (i = 3; i < 15; i++)
         m[i] = 0;
     m[15] = 0x00000040;
 
+    #pragma GCC unroll 48
     for (i = 16; i < 64; ++i)
     {
         m[i] = m[i - 7] + m[i - 16];
@@ -2107,6 +2109,7 @@ uint64_t getVoronoiSHA(uint64_t seed)
     a6 = B[6];
     a7 = B[7];
 
+    #pragma GCC unroll 64
     for (i = 0; i < 64; i++)
     {
         x = a7 + K[i] + m[i];
@@ -2140,11 +2143,11 @@ void voronoiAccess3D(uint64_t sha, int x, int y, int z, int *x4, int *y4, int *z
     int pX = x >> 2;
     int pY = y >> 2;
     int pZ = z >> 2;
-    int dx = (x & 3) * 10240;
-    int dy = (y & 3) * 10240;
-    int dz = (z & 3) * 10240;
+    int dx = (x & 3) * 2560;
+    int dy = (y & 3) * 2560;
+    int dz = (z & 3) * 2560;
     int ax = 0, ay = 0, az = 0;
-    uint64_t dmin = (uint64_t)-1;
+    int32_t dmin = INT32_MAX;
     int i;
 
     for (i = 0; i < 8; i++)
@@ -2157,13 +2160,14 @@ void voronoiAccess3D(uint64_t sha, int x, int y, int z, int *x4, int *y4, int *z
         int cz = pZ + bz;
         int rx, ry, rz;
 
-        getVoronoiCell(sha, cx, cy, cz, &rx, &ry, &rz);
+        getVoronoiCell(sha, cx, cy, cz, &rx, &ry, &rz, 9);
 
-        rx += dx - 40*1024*bx;
-        ry += dy - 40*1024*by;
-        rz += dz - 40*1024*bz;
+        rx += dx - 10*1024*bx;
+        ry += dy - 10*1024*by;
+        rz += dz - 10*1024*bz;
 
-        uint64_t d = rx*(uint64_t)rx + ry*(uint64_t)ry + rz*(uint64_t)rz;
+        // |rx|, |ry|, |rz| <= 14848, so d <= 661389312 < 2^30
+        int32_t d = rx*rx + ry*ry + rz*rz;
         if (d < dmin)
         {
             dmin = d;
@@ -2177,6 +2181,3 @@ void voronoiAccess3D(uint64_t sha, int x, int y, int z, int *x4, int *y4, int *z
     if (y4) *y4 = ay;
     if (z4) *z4 = az;
 }
-
-
-
