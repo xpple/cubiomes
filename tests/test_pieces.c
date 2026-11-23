@@ -1,13 +1,44 @@
 #include "testing.h"
 #include "../finders.h"
 #include "../features/end_city.h"
+#include "../features/stronghold.h"
+
+static int test_stronghold_pieces_1_16() {
+    int ret = 0;
+
+    // famous double 12-eye seed
+    uint64_t seed = 3973602863870306476ULL;
+    int version = MC_1_16_5;
+
+    StructureSaltConfig ssconf;
+    ASSERT_NONZERO(ret, getStructureSaltConfig(Stronghold, version, -1, &ssconf));
+
+    const struct { const Pos chunk; const int numPieces, portalIndex, portalData; } test_data[2] = {
+        {{-5512 >> 4, -10424 >> 4}, 137, 16, 0b1'000111111111},
+        {{-20008 >> 4, -6424 >> 4}, 139, 21, 0b1'111111111111},
+    };
+
+    for (int i = 0; i < 2; ++i) {
+        Pos chunk = test_data[i].chunk;
+
+        int n = 1000;
+        Piece *pieces = calloc(n, sizeof(Piece));
+        int numPieces = getStrongholdLoot(pieces, n, ssconf, version, seed, chunk.x, chunk.z);
+        ASSERT_EQ(ret, numPieces, test_data[i].numPieces);
+        Piece *piece = &pieces[test_data[i].portalIndex];
+        ASSERT_EQ(ret, piece->type, SH_PORTAL_ROOM);
+        ASSERT_EQ(ret, piece->additionalData, test_data[i].portalData);
+        free(pieces);
+    }
+    return ret;
+}
 
 static int test_end_city_pieces_1_21_11() {
     int ret = 0;
 
     uint64_t seed = 12345;
     int version = MC_1_21_11;
-    Generator generator;;
+    Generator generator;
     setupGenerator(&generator, version, 0);
     applySeed(&generator, DIM_END, seed);
 
@@ -76,6 +107,7 @@ static int test_igloo_pieces_1_21_11() {
 int main() {
     int ret = 0;
 
+    ret += test_stronghold_pieces_1_16();
     ret += test_end_city_pieces_1_21_11();
     ret += test_igloo_pieces_1_21_11();
 
