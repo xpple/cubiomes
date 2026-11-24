@@ -58,10 +58,25 @@
         }                                           \
     } while (0)
 
+#define ASSERT_LT(ret, LHS, RHS)               \
+    do {                                       \
+        __typeof__(LHS) lhs = (LHS);           \
+        __typeof__(RHS) rhs = (RHS);           \
+        if (lhs >= rhs) {                      \
+            ASSERTION_FAILED;                  \
+            printf("Expected \"");             \
+            printf(PRINTF_FMT(lhs), lhs);      \
+            printf("\" to be larger than \""); \
+            printf(PRINTF_FMT(rhs), rhs);      \
+            printf("\"\n");                    \
+            (ret)++;                           \
+        }                                      \
+    } while (0)
+
 #define ASSERT_STR_EQ(ret, ACTUAL, EXPECTED)                           \
     do {                                                               \
         const char *actual = (ACTUAL);                                 \
-        const char *expected = (ACTUAL);                               \
+        const char *expected = (EXPECTED);                             \
         if (strcmp(actual, expected) != 0) {                           \
             ASSERTION_FAILED;                                          \
             printf("Expected \"%s\", got \"%s\"\n", expected, actual); \

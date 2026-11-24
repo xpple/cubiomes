@@ -5,186 +5,200 @@
 #include "items.h"
 
 int item_name2global_id(const char* name) {
-    if (strcmp(name, "minecraft:abandoned_camp_map") == 0) return ITEM_ABANDONED_CAMP_MAP;
-    if (strcmp(name, "minecraft:activator_rail") == 0) return ITEM_ACTIVATOR_RAIL;
-    if (strcmp(name, "minecraft:ancient_debris") == 0) return ITEM_ANCIENT_DEBRIS;
-    if (strcmp(name, "minecraft:apple") == 0) return ITEM_APPLE;
-    if (strcmp(name, "minecraft:arrow") == 0) return ITEM_ARROW;
-    if (strcmp(name, "minecraft:bamboo") == 0) return ITEM_BAMBOO;
-    if (strcmp(name, "minecraft:beetroot_seeds") == 0) return ITEM_BEETROOT_SEEDS;
-    if (strcmp(name, "minecraft:bell") == 0) return ITEM_BELL;
-    if (strcmp(name, "minecraft:bolt_armor_trim_smithing_template") == 0) return ITEM_BOLT_ARMOR_TRIM_SMITHING_TEMPLATE;
-    if (strcmp(name, "minecraft:bone") == 0) return ITEM_BONE;
-    if (strcmp(name, "minecraft:bone_block") == 0) return ITEM_BONE_BLOCK;
-    if (strcmp(name, "minecraft:book") == 0) return ITEM_BOOK;
-    if (strcmp(name, "minecraft:bow") == 0) return ITEM_BOW;
-    if (strcmp(name, "minecraft:bowl") == 0) return ITEM_BOWL;
-    if (strcmp(name, "minecraft:bread") == 0) return ITEM_BREAD;
-    if (strcmp(name, "minecraft:bucket") == 0) return ITEM_BUCKET;
-    if (strcmp(name, "minecraft:bundle") == 0) return ITEM_BUNDLE;
-    if (strcmp(name, "minecraft:buried_ancient_city_map") == 0) return ITEM_BURIED_ANCIENT_CITY_MAP;
-    if (strcmp(name, "minecraft:buried_mineshaft_map") == 0) return ITEM_BURIED_MINESHAFT_MAP;
-    if (strcmp(name, "minecraft:buried_trial_chambers_map") == 0) return ITEM_BURIED_TRIAL_CHAMBERS_MAP;
-    if (strcmp(name, "minecraft:carrot") == 0) return ITEM_CARROT;
-    if (strcmp(name, "minecraft:chain") == 0) return ITEM_CHAIN;
-    if (strcmp(name, "minecraft:iron_chain") == 0) return ITEM_IRON_CHAIN;
-    if (strcmp(name, "minecraft:clock") == 0) return ITEM_CLOCK;
-    if (strcmp(name, "minecraft:coal") == 0) return ITEM_COAL;
-    if (strcmp(name, "minecraft:coast_armor_trim_smithing_template") == 0) return ITEM_COAST_ARMOR_TRIM_SMITHING_TEMPLATE;
-    if (strcmp(name, "minecraft:cobweb") == 0) return ITEM_COBWEB;
-    if (strcmp(name, "minecraft:compass") == 0) return ITEM_COMPASS;
-    if (strcmp(name, "minecraft:cooked_cod") == 0) return ITEM_COOKED_COD;
-    if (strcmp(name, "minecraft:cooked_porkchop") == 0) return ITEM_COOKED_PORKCHOP;
-    if (strcmp(name, "minecraft:cooked_salmon") == 0) return ITEM_COOKED_SALMON;
-    if (strcmp(name, "minecraft:copper_axe") == 0) return ITEM_COPPER_AXE;
-    if (strcmp(name, "minecraft:copper_boots") == 0) return ITEM_COPPER_BOOTS;
-    if (strcmp(name, "minecraft:copper_chestplate") == 0) return ITEM_COPPER_CHESTPLATE;
-    if (strcmp(name, "minecraft:copper_horse_armor") == 0) return ITEM_COPPER_HORSE_ARMOR;
-    if (strcmp(name, "minecraft:copper_ingot") == 0) return ITEM_COPPER_INGOT;
-    if (strcmp(name, "minecraft:copper_leggings") == 0) return ITEM_COPPER_LEGGINGS;
-    if (strcmp(name, "minecraft:copper_nautilus_armor") == 0) return ITEM_COPPER_NAUTILUS_ARMOR;
-    if (strcmp(name, "minecraft:copper_spear") == 0) return ITEM_COPPER_SPEAR;
-    if (strcmp(name, "minecraft:copper_sword") == 0) return ITEM_COPPER_SWORD;
-    if (strcmp(name, "minecraft:crossbow") == 0) return ITEM_CROSSBOW;
-    if (strcmp(name, "minecraft:crying_obsidian") == 0) return ITEM_CRYING_OBSIDIAN;
-    if (strcmp(name, "minecraft:dark_oak_log") == 0) return ITEM_DARK_OAK_LOG;
-    if (strcmp(name, "minecraft:desert_pyramid_map") == 0) return ITEM_DESERT_PYRAMID_MAP;
-    if (strcmp(name, "minecraft:detector_rail") == 0) return ITEM_DETECTOR_RAIL;
-    if (strcmp(name, "minecraft:diamond") == 0) return ITEM_DIAMOND;
-    if (strcmp(name, "minecraft:diamond_axe") == 0) return ITEM_DIAMOND_AXE;
-    if (strcmp(name, "minecraft:diamond_block") == 0) return ITEM_DIAMOND_BLOCK;
-    if (strcmp(name, "minecraft:diamond_boots") == 0) return ITEM_DIAMOND_BOOTS;
-    if (strcmp(name, "minecraft:diamond_chestplate") == 0) return ITEM_DIAMOND_CHESTPLATE;
-    if (strcmp(name, "minecraft:diamond_helmet") == 0) return ITEM_DIAMOND_HELMET;
-    if (strcmp(name, "minecraft:diamond_horse_armor") == 0) return ITEM_DIAMOND_HORSE_ARMOR;
-    if (strcmp(name, "minecraft:diamond_leggings") == 0) return ITEM_DIAMOND_LEGGINGS;
-    if (strcmp(name, "minecraft:diamond_nautilus_armor") == 0) return ITEM_DIAMOND_NAUTILUS_ARMOR;
-    if (strcmp(name, "minecraft:diamond_pickaxe") == 0) return ITEM_DIAMOND_PICKAXE;
-    if (strcmp(name, "minecraft:diamond_shovel") == 0) return ITEM_DIAMOND_SHOVEL;
-    if (strcmp(name, "minecraft:diamond_spear") == 0) return ITEM_DIAMOND_SPEAR;
-    if (strcmp(name, "minecraft:diamond_sword") == 0) return ITEM_DIAMOND_SWORD;
-    if (strcmp(name, "minecraft:dune_armor_trim_smithing_template") == 0) return ITEM_DUNE_ARMOR_TRIM_SMITHING_TEMPLATE;
-    if (strcmp(name, "minecraft:emerald") == 0) return ITEM_EMERALD;
-    if (strcmp(name, "minecraft:emerald_block") == 0) return ITEM_EMERALD_BLOCK;
-    if (strcmp(name, "minecraft:enchanted_golden_apple") == 0) return ITEM_ENCHANTED_GOLDEN_APPLE;
-    if (strcmp(name, "minecraft:ender_pearl") == 0) return ITEM_ENDER_PEARL;
-    if (strcmp(name, "minecraft:experience_bottle") == 0) return ITEM_EXPERIENCE_BOTTLE;
-    if (strcmp(name, "minecraft:eye_armor_trim_smithing_template") == 0) return ITEM_EYE_ARMOR_TRIM_SMITHING_TEMPLATE;
-    if (strcmp(name, "minecraft:feather") == 0) return ITEM_FEATHER;
-    if (strcmp(name, "minecraft:fire_charge") == 0) return ITEM_FIRE_CHARGE;
-    if (strcmp(name, "minecraft:firework_rocket") == 0) return ITEM_FIREWORK_ROCKET;
-    if (strcmp(name, "minecraft:fishing_rod") == 0) return ITEM_FISHING_ROD;
-    if (strcmp(name, "minecraft:flint") == 0) return ITEM_FLINT;
-    if (strcmp(name, "minecraft:flint_and_steel") == 0) return ITEM_FLINT_AND_STEEL;
-    if (strcmp(name, "minecraft:flow_armor_trim_smithing_template") == 0) return ITEM_FLOW_ARMOR_TRIM_SMITHING_TEMPLATE;
-    if (strcmp(name, "minecraft:flow_banner_pattern") == 0) return ITEM_FLOW_BANNER_PATTERN;
-    if (strcmp(name, "minecraft:gilded_blackstone") == 0) return ITEM_GILDED_BLACKSTONE;
-    if (strcmp(name, "minecraft:glass_bottle") == 0) return ITEM_GLASS_BOTTLE;
-    if (strcmp(name, "minecraft:glistering_melon_slice") == 0) return ITEM_GLISTERING_MELON_SLICE;
-    if (strcmp(name, "minecraft:glow_berries") == 0) return ITEM_GLOW_BERRIES;
-    if (strcmp(name, "minecraft:goat_horn") == 0) return ITEM_GOAT_HORN;
-    if (strcmp(name, "minecraft:golden_apple") == 0) return ITEM_GOLDEN_APPLE;
-    if (strcmp(name, "minecraft:golden_axe") == 0) return ITEM_GOLDEN_AXE;
-    if (strcmp(name, "minecraft:golden_boots") == 0) return ITEM_GOLDEN_BOOTS;
-    if (strcmp(name, "minecraft:golden_carrot") == 0) return ITEM_GOLDEN_CARROT;
-    if (strcmp(name, "minecraft:golden_chestplate") == 0) return ITEM_GOLDEN_CHESTPLATE;
-    if (strcmp(name, "minecraft:golden_helmet") == 0) return ITEM_GOLDEN_HELMET;
-    if (strcmp(name, "minecraft:golden_hoe") == 0) return ITEM_GOLDEN_HOE;
-    if (strcmp(name, "minecraft:golden_horse_armor") == 0) return ITEM_GOLDEN_HORSE_ARMOR;
-    if (strcmp(name, "minecraft:golden_leggings") == 0) return ITEM_GOLDEN_LEGGINGS;
-    if (strcmp(name, "minecraft:golden_nautilus_armor") == 0) return ITEM_GOLDEN_NAUTILUS_ARMOR;
-    if (strcmp(name, "minecraft:golden_pickaxe") == 0) return ITEM_GOLDEN_PICKAXE;
-    if (strcmp(name, "minecraft:golden_shovel") == 0) return ITEM_GOLDEN_SHOVEL;
-    if (strcmp(name, "minecraft:golden_sword") == 0) return ITEM_GOLDEN_SWORD;
-    if (strcmp(name, "minecraft:gold_block") == 0) return ITEM_GOLD_BLOCK;
-    if (strcmp(name, "minecraft:gold_ingot") == 0) return ITEM_GOLD_INGOT;
-    if (strcmp(name, "minecraft:gold_nugget") == 0) return ITEM_GOLD_NUGGET;
-    if (strcmp(name, "minecraft:gunpowder") == 0) return ITEM_GUNPOWDER;
-    if (strcmp(name, "minecraft:guster_banner_pattern") == 0) return ITEM_GUSTER_BANNER_PATTERN;
-    if (strcmp(name, "minecraft:heart_of_the_sea") == 0) return ITEM_HEART_OF_THE_SEA;
-    if (strcmp(name, "minecraft:heavy_core") == 0) return ITEM_HEAVY_CORE;
-    if (strcmp(name, "minecraft:honey_bottle") == 0) return ITEM_HONEY_BOTTLE;
-    if (strcmp(name, "minecraft:iron_axe") == 0) return ITEM_IRON_AXE;
-    if (strcmp(name, "minecraft:iron_block") == 0) return ITEM_IRON_BLOCK;
-    if (strcmp(name, "minecraft:iron_boots") == 0) return ITEM_IRON_BOOTS;
-    if (strcmp(name, "minecraft:iron_chain") == 0) return ITEM_IRON_CHAIN;
-    if (strcmp(name, "minecraft:iron_chestplate") == 0) return ITEM_IRON_CHESTPLATE;
-    if (strcmp(name, "minecraft:iron_helmet") == 0) return ITEM_IRON_HELMET;
-    if (strcmp(name, "minecraft:iron_horse_armor") == 0) return ITEM_IRON_HORSE_ARMOR;
-    if (strcmp(name, "minecraft:iron_ingot") == 0) return ITEM_IRON_INGOT;
-    if (strcmp(name, "minecraft:iron_leggings") == 0) return ITEM_IRON_LEGGINGS;
-    if (strcmp(name, "minecraft:iron_nautilus_armor") == 0) return ITEM_IRON_NAUTILUS_ARMOR;
-    if (strcmp(name, "minecraft:iron_nugget") == 0) return ITEM_IRON_NUGGET;
-    if (strcmp(name, "minecraft:iron_pickaxe") == 0) return ITEM_IRON_PICKAXE;
-    if (strcmp(name, "minecraft:iron_shovel") == 0) return ITEM_IRON_SHOVEL;
-    if (strcmp(name, "minecraft:iron_spear") == 0) return ITEM_IRON_SPEAR;
-    if (strcmp(name, "minecraft:iron_sword") == 0) return ITEM_IRON_SWORD;
-    if (strcmp(name, "minecraft:jungle_pyramid_map") == 0) return ITEM_JUNGLE_PYRAMID_MAP;
-    if (strcmp(name, "minecraft:lapis_lazuli") == 0) return ITEM_LAPIS_LAZULI;
-    if (strcmp(name, "minecraft:lead") == 0) return ITEM_LEAD;
-    if (strcmp(name, "minecraft:leather") == 0) return ITEM_LEATHER;
-    if (strcmp(name, "minecraft:leather_boots") == 0) return ITEM_LEATHER_BOOTS;
-    if (strcmp(name, "minecraft:leather_chestplate") == 0) return ITEM_LEATHER_CHESTPLATE;
-    if (strcmp(name, "minecraft:leather_helmet") == 0) return ITEM_LEATHER_HELMET;
-    if (strcmp(name, "minecraft:leather_leggings") == 0) return ITEM_LEATHER_LEGGINGS;
-    if (strcmp(name, "minecraft:light_weighted_pressure_plate") == 0) return ITEM_LIGHT_WEIGHTED_PRESSURE_PLATE;
-    if (strcmp(name, "minecraft:lodestone") == 0) return ITEM_LODESTONE;
-    if (strcmp(name, "minecraft:magma_cream") == 0) return ITEM_MAGMA_CREAM;
-    if (strcmp(name, "minecraft:map") == 0) return ITEM_MAP;
-    if (strcmp(name, "minecraft:melon_seeds") == 0) return ITEM_MELON_SEEDS;
-    if (strcmp(name, "minecraft:moss_block") == 0) return ITEM_MOSS_BLOCK;
-    if (strcmp(name, "minecraft:music_disc_bounce") == 0) return ITEM_MUSIC_DISC_BOUNCE;
-    if (strcmp(name, "minecraft:music_disc_creator") == 0) return ITEM_MUSIC_DISC_CREATOR;
-    if (strcmp(name, "minecraft:music_disc_otherside") == 0) return ITEM_MUSIC_DISC_OTHERSIDE;
-    if (strcmp(name, "minecraft:music_disc_pigstep") == 0) return ITEM_MUSIC_DISC_PIGSTEP;
-    if (strcmp(name, "minecraft:music_disc_precipice") == 0) return ITEM_MUSIC_DISC_PRECIPICE;
-    if (strcmp(name, "minecraft:name_tag") == 0) return ITEM_NAME_TAG;
-    if (strcmp(name, "minecraft:netherite_scrap") == 0) return ITEM_NETHERITE_SCRAP;
-    if (strcmp(name, "minecraft:netherite_upgrade_smithing_template") == 0) return ITEM_NETHERITE_UPGRADE_SMITHING_TEMPLATE;
-    if (strcmp(name, "minecraft:nether_wart") == 0) return ITEM_NETHER_WART;
-    if (strcmp(name, "minecraft:obsidian") == 0) return ITEM_OBSIDIAN;
-    if (strcmp(name, "minecraft:ominous_bottle") == 0) return ITEM_OMINOUS_BOTTLE;
-    if (strcmp(name, "minecraft:paper") == 0) return ITEM_PAPER;
-    if (strcmp(name, "minecraft:piglin_banner_pattern") == 0) return ITEM_PIGLIN_BANNER_PATTERN;
-    if (strcmp(name, "minecraft:poisonous_potato") == 0) return ITEM_POISONOUS_POTATO;
-    if (strcmp(name, "minecraft:potato") == 0) return ITEM_POTATO;
-    if (strcmp(name, "minecraft:potion") == 0) return ITEM_POTION;
-    if (strcmp(name, "minecraft:powered_rail") == 0) return ITEM_POWERED_RAIL;
-    if (strcmp(name, "minecraft:prismarine_crystals") == 0) return ITEM_PRISMARINE_CRYSTALS;
-    if (strcmp(name, "minecraft:pumpkin") == 0) return ITEM_PUMPKIN;
-    if (strcmp(name, "minecraft:pumpkin_seeds") == 0) return ITEM_PUMPKIN_SEEDS;
-    if (strcmp(name, "minecraft:rabbit_hide") == 0) return ITEM_RABBIT_HIDE;
-    if (strcmp(name, "minecraft:rail") == 0) return ITEM_RAIL;
-    if (strcmp(name, "minecraft:redstone") == 0) return ITEM_REDSTONE;
-    if (strcmp(name, "minecraft:rib_armor_trim_smithing_template") == 0) return ITEM_RIB_ARMOR_TRIM_SMITHING_TEMPLATE;
-    if (strcmp(name, "minecraft:rotten_flesh") == 0) return ITEM_ROTTEN_FLESH;
-    if (strcmp(name, "minecraft:saddle") == 0) return ITEM_SADDLE;
-    if (strcmp(name, "minecraft:sand") == 0) return ITEM_SAND;
-    if (strcmp(name, "minecraft:sentry_armor_trim_smithing_template") == 0) return ITEM_SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE;
-    if (strcmp(name, "minecraft:shears") == 0) return ITEM_SHEARS;
-    if (strcmp(name, "minecraft:shield") == 0) return ITEM_SHIELD;
-    if (strcmp(name, "minecraft:snout_armor_trim_smithing_template") == 0) return ITEM_SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE;
-    if (strcmp(name, "minecraft:spectral_arrow") == 0) return ITEM_SPECTRAL_ARROW;
-    if (strcmp(name, "minecraft:spider_eye") == 0) return ITEM_SPIDER_EYE;
-    if (strcmp(name, "minecraft:spire_armor_trim_smithing_template") == 0) return ITEM_SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE;
-    if (strcmp(name, "minecraft:spyglass") == 0) return ITEM_SPYGLASS;
-    if (strcmp(name, "minecraft:stone_axe") == 0) return ITEM_STONE_AXE;
-    if (strcmp(name, "minecraft:straw_bed") == 0) return ITEM_STRAW_BED;
-    if (strcmp(name, "minecraft:string") == 0) return ITEM_STRING;
-    if (strcmp(name, "minecraft:suspicious_stew") == 0) return ITEM_SUSPICIOUS_STEW;
-    if (strcmp(name, "minecraft:tipped_arrow") == 0) return ITEM_TIPPED_ARROW;
-    if (strcmp(name, "minecraft:tnt") == 0) return ITEM_TNT;
-    if (strcmp(name, "minecraft:torch") == 0) return ITEM_TORCH;
-    if (strcmp(name, "minecraft:trident") == 0) return ITEM_TRIDENT;
-    if (strcmp(name, "minecraft:tripwire_hook") == 0) return ITEM_TRIPWIRE_HOOK;
-    if (strcmp(name, "minecraft:warm_ocean_ruins_map") == 0) return ITEM_WARM_OCEAN_RUINS_MAP;
-    if (strcmp(name, "minecraft:wheat") == 0) return ITEM_WHEAT;
-    if (strcmp(name, "minecraft:white_candle") == 0) return ITEM_WHITE_CANDLE;
-    if (strcmp(name, "minecraft:white_cushion") == 0) return ITEM_WHITE_CUSHION;
-    if (strcmp(name, "minecraft:wild_armor_trim_smithing_template") == 0) return ITEM_WILD_ARMOR_TRIM_SMITHING_TEMPLATE;
-    if (strcmp(name, "minecraft:wind_charge") == 0) return ITEM_WIND_CHARGE;
-    if (strcmp(name, "minecraft:wooden_axe") == 0) return ITEM_WOODEN_AXE;
-    if (strcmp(name, "minecraft:woodland_mansion_map") == 0) return ITEM_WOODLAND_MANSION_MAP;
+    static const struct { const char *name; int id; } items[] = {
+        {"minecraft:abandoned_camp_map", ITEM_ABANDONED_CAMP_MAP},
+        {"minecraft:activator_rail", ITEM_ACTIVATOR_RAIL},
+        {"minecraft:ancient_debris", ITEM_ANCIENT_DEBRIS},
+        {"minecraft:apple", ITEM_APPLE},
+        {"minecraft:arrow", ITEM_ARROW},
+        {"minecraft:bamboo", ITEM_BAMBOO},
+        {"minecraft:beetroot_seeds", ITEM_BEETROOT_SEEDS},
+        {"minecraft:bell", ITEM_BELL},
+        {"minecraft:bolt_armor_trim_smithing_template", ITEM_BOLT_ARMOR_TRIM_SMITHING_TEMPLATE},
+        {"minecraft:bone", ITEM_BONE},
+        {"minecraft:bone_block", ITEM_BONE_BLOCK},
+        {"minecraft:book", ITEM_BOOK},
+        {"minecraft:bow", ITEM_BOW},
+        {"minecraft:bowl", ITEM_BOWL},
+        {"minecraft:bread", ITEM_BREAD},
+        {"minecraft:bucket", ITEM_BUCKET},
+        {"minecraft:bundle", ITEM_BUNDLE},
+        {"minecraft:buried_ancient_city_map", ITEM_BURIED_ANCIENT_CITY_MAP},
+        {"minecraft:buried_mineshaft_map", ITEM_BURIED_MINESHAFT_MAP},
+        {"minecraft:buried_trial_chambers_map", ITEM_BURIED_TRIAL_CHAMBERS_MAP},
+        {"minecraft:carrot", ITEM_CARROT},
+        {"minecraft:chain", ITEM_CHAIN},
+        {"minecraft:clock", ITEM_CLOCK},
+        {"minecraft:coal", ITEM_COAL},
+        {"minecraft:coast_armor_trim_smithing_template", ITEM_COAST_ARMOR_TRIM_SMITHING_TEMPLATE},
+        {"minecraft:cobweb", ITEM_COBWEB},
+        {"minecraft:compass", ITEM_COMPASS},
+        {"minecraft:cooked_cod", ITEM_COOKED_COD},
+        {"minecraft:cooked_porkchop", ITEM_COOKED_PORKCHOP},
+        {"minecraft:cooked_salmon", ITEM_COOKED_SALMON},
+        {"minecraft:copper_axe", ITEM_COPPER_AXE},
+        {"minecraft:copper_boots", ITEM_COPPER_BOOTS},
+        {"minecraft:copper_chestplate", ITEM_COPPER_CHESTPLATE},
+        {"minecraft:copper_horse_armor", ITEM_COPPER_HORSE_ARMOR},
+        {"minecraft:copper_ingot", ITEM_COPPER_INGOT},
+        {"minecraft:copper_leggings", ITEM_COPPER_LEGGINGS},
+        {"minecraft:copper_nautilus_armor", ITEM_COPPER_NAUTILUS_ARMOR},
+        {"minecraft:copper_spear", ITEM_COPPER_SPEAR},
+        {"minecraft:copper_sword", ITEM_COPPER_SWORD},
+        {"minecraft:crossbow", ITEM_CROSSBOW},
+        {"minecraft:crying_obsidian", ITEM_CRYING_OBSIDIAN},
+        {"minecraft:dark_oak_log", ITEM_DARK_OAK_LOG},
+        {"minecraft:desert_pyramid_map", ITEM_DESERT_PYRAMID_MAP},
+        {"minecraft:detector_rail", ITEM_DETECTOR_RAIL},
+        {"minecraft:diamond", ITEM_DIAMOND},
+        {"minecraft:diamond_axe", ITEM_DIAMOND_AXE},
+        {"minecraft:diamond_block", ITEM_DIAMOND_BLOCK},
+        {"minecraft:diamond_boots", ITEM_DIAMOND_BOOTS},
+        {"minecraft:diamond_chestplate", ITEM_DIAMOND_CHESTPLATE},
+        {"minecraft:diamond_helmet", ITEM_DIAMOND_HELMET},
+        {"minecraft:diamond_horse_armor", ITEM_DIAMOND_HORSE_ARMOR},
+        {"minecraft:diamond_leggings", ITEM_DIAMOND_LEGGINGS},
+        {"minecraft:diamond_nautilus_armor", ITEM_DIAMOND_NAUTILUS_ARMOR},
+        {"minecraft:diamond_pickaxe", ITEM_DIAMOND_PICKAXE},
+        {"minecraft:diamond_shovel", ITEM_DIAMOND_SHOVEL},
+        {"minecraft:diamond_spear", ITEM_DIAMOND_SPEAR},
+        {"minecraft:diamond_sword", ITEM_DIAMOND_SWORD},
+        {"minecraft:dune_armor_trim_smithing_template", ITEM_DUNE_ARMOR_TRIM_SMITHING_TEMPLATE},
+        {"minecraft:emerald", ITEM_EMERALD},
+        {"minecraft:emerald_block", ITEM_EMERALD_BLOCK},
+        {"minecraft:enchanted_golden_apple", ITEM_ENCHANTED_GOLDEN_APPLE},
+        {"minecraft:ender_pearl", ITEM_ENDER_PEARL},
+        {"minecraft:experience_bottle", ITEM_EXPERIENCE_BOTTLE},
+        {"minecraft:eye_armor_trim_smithing_template", ITEM_EYE_ARMOR_TRIM_SMITHING_TEMPLATE},
+        {"minecraft:feather", ITEM_FEATHER},
+        {"minecraft:fire_charge", ITEM_FIRE_CHARGE},
+        {"minecraft:firework_rocket", ITEM_FIREWORK_ROCKET},
+        {"minecraft:fishing_rod", ITEM_FISHING_ROD},
+        {"minecraft:flint", ITEM_FLINT},
+        {"minecraft:flint_and_steel", ITEM_FLINT_AND_STEEL},
+        {"minecraft:flow_armor_trim_smithing_template", ITEM_FLOW_ARMOR_TRIM_SMITHING_TEMPLATE},
+        {"minecraft:flow_banner_pattern", ITEM_FLOW_BANNER_PATTERN},
+        {"minecraft:gilded_blackstone", ITEM_GILDED_BLACKSTONE},
+        {"minecraft:glass_bottle", ITEM_GLASS_BOTTLE},
+        {"minecraft:glistering_melon_slice", ITEM_GLISTERING_MELON_SLICE},
+        {"minecraft:glow_berries", ITEM_GLOW_BERRIES},
+        {"minecraft:goat_horn", ITEM_GOAT_HORN},
+        {"minecraft:gold_block", ITEM_GOLD_BLOCK},
+        {"minecraft:gold_ingot", ITEM_GOLD_INGOT},
+        {"minecraft:gold_nugget", ITEM_GOLD_NUGGET},
+        {"minecraft:golden_apple", ITEM_GOLDEN_APPLE},
+        {"minecraft:golden_axe", ITEM_GOLDEN_AXE},
+        {"minecraft:golden_boots", ITEM_GOLDEN_BOOTS},
+        {"minecraft:golden_carrot", ITEM_GOLDEN_CARROT},
+        {"minecraft:golden_chestplate", ITEM_GOLDEN_CHESTPLATE},
+        {"minecraft:golden_helmet", ITEM_GOLDEN_HELMET},
+        {"minecraft:golden_hoe", ITEM_GOLDEN_HOE},
+        {"minecraft:golden_horse_armor", ITEM_GOLDEN_HORSE_ARMOR},
+        {"minecraft:golden_leggings", ITEM_GOLDEN_LEGGINGS},
+        {"minecraft:golden_nautilus_armor", ITEM_GOLDEN_NAUTILUS_ARMOR},
+        {"minecraft:golden_pickaxe", ITEM_GOLDEN_PICKAXE},
+        {"minecraft:golden_shovel", ITEM_GOLDEN_SHOVEL},
+        {"minecraft:golden_sword", ITEM_GOLDEN_SWORD},
+        {"minecraft:gunpowder", ITEM_GUNPOWDER},
+        {"minecraft:guster_banner_pattern", ITEM_GUSTER_BANNER_PATTERN},
+        {"minecraft:heart_of_the_sea", ITEM_HEART_OF_THE_SEA},
+        {"minecraft:heavy_core", ITEM_HEAVY_CORE},
+        {"minecraft:honey_bottle", ITEM_HONEY_BOTTLE},
+        {"minecraft:iron_axe", ITEM_IRON_AXE},
+        {"minecraft:iron_block", ITEM_IRON_BLOCK},
+        {"minecraft:iron_boots", ITEM_IRON_BOOTS},
+        {"minecraft:iron_chain", ITEM_IRON_CHAIN},
+        {"minecraft:iron_chestplate", ITEM_IRON_CHESTPLATE},
+        {"minecraft:iron_helmet", ITEM_IRON_HELMET},
+        {"minecraft:iron_horse_armor", ITEM_IRON_HORSE_ARMOR},
+        {"minecraft:iron_ingot", ITEM_IRON_INGOT},
+        {"minecraft:iron_leggings", ITEM_IRON_LEGGINGS},
+        {"minecraft:iron_nautilus_armor", ITEM_IRON_NAUTILUS_ARMOR},
+        {"minecraft:iron_nugget", ITEM_IRON_NUGGET},
+        {"minecraft:iron_pickaxe", ITEM_IRON_PICKAXE},
+        {"minecraft:iron_shovel", ITEM_IRON_SHOVEL},
+        {"minecraft:iron_spear", ITEM_IRON_SPEAR},
+        {"minecraft:iron_sword", ITEM_IRON_SWORD},
+        {"minecraft:jungle_pyramid_map", ITEM_JUNGLE_PYRAMID_MAP},
+        {"minecraft:lapis_lazuli", ITEM_LAPIS_LAZULI},
+        {"minecraft:lead", ITEM_LEAD},
+        {"minecraft:leather", ITEM_LEATHER},
+        {"minecraft:leather_boots", ITEM_LEATHER_BOOTS},
+        {"minecraft:leather_chestplate", ITEM_LEATHER_CHESTPLATE},
+        {"minecraft:leather_helmet", ITEM_LEATHER_HELMET},
+        {"minecraft:leather_leggings", ITEM_LEATHER_LEGGINGS},
+        {"minecraft:light_weighted_pressure_plate", ITEM_LIGHT_WEIGHTED_PRESSURE_PLATE},
+        {"minecraft:lodestone", ITEM_LODESTONE},
+        {"minecraft:magma_cream", ITEM_MAGMA_CREAM},
+        {"minecraft:map", ITEM_MAP},
+        {"minecraft:melon_seeds", ITEM_MELON_SEEDS},
+        {"minecraft:moss_block", ITEM_MOSS_BLOCK},
+        {"minecraft:music_disc_bounce", ITEM_MUSIC_DISC_BOUNCE},
+        {"minecraft:music_disc_creator", ITEM_MUSIC_DISC_CREATOR},
+        {"minecraft:music_disc_otherside", ITEM_MUSIC_DISC_OTHERSIDE},
+        {"minecraft:music_disc_pigstep", ITEM_MUSIC_DISC_PIGSTEP},
+        {"minecraft:music_disc_precipice", ITEM_MUSIC_DISC_PRECIPICE},
+        {"minecraft:name_tag", ITEM_NAME_TAG},
+        {"minecraft:nether_wart", ITEM_NETHER_WART},
+        {"minecraft:netherite_scrap", ITEM_NETHERITE_SCRAP},
+        {"minecraft:netherite_upgrade_smithing_template", ITEM_NETHERITE_UPGRADE_SMITHING_TEMPLATE},
+        {"minecraft:obsidian", ITEM_OBSIDIAN},
+        {"minecraft:ominous_bottle", ITEM_OMINOUS_BOTTLE},
+        {"minecraft:paper", ITEM_PAPER},
+        {"minecraft:piglin_banner_pattern", ITEM_PIGLIN_BANNER_PATTERN},
+        {"minecraft:poisonous_potato", ITEM_POISONOUS_POTATO},
+        {"minecraft:potato", ITEM_POTATO},
+        {"minecraft:potion", ITEM_POTION},
+        {"minecraft:powered_rail", ITEM_POWERED_RAIL},
+        {"minecraft:prismarine_crystals", ITEM_PRISMARINE_CRYSTALS},
+        {"minecraft:pumpkin", ITEM_PUMPKIN},
+        {"minecraft:pumpkin_seeds", ITEM_PUMPKIN_SEEDS},
+        {"minecraft:rabbit_hide", ITEM_RABBIT_HIDE},
+        {"minecraft:rail", ITEM_RAIL},
+        {"minecraft:redstone", ITEM_REDSTONE},
+        {"minecraft:rib_armor_trim_smithing_template", ITEM_RIB_ARMOR_TRIM_SMITHING_TEMPLATE},
+        {"minecraft:rotten_flesh", ITEM_ROTTEN_FLESH},
+        {"minecraft:saddle", ITEM_SADDLE},
+        {"minecraft:sand", ITEM_SAND},
+        {"minecraft:sentry_armor_trim_smithing_template", ITEM_SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE},
+        {"minecraft:shears", ITEM_SHEARS},
+        {"minecraft:shield", ITEM_SHIELD},
+        {"minecraft:snout_armor_trim_smithing_template", ITEM_SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE},
+        {"minecraft:spectral_arrow", ITEM_SPECTRAL_ARROW},
+        {"minecraft:spider_eye", ITEM_SPIDER_EYE},
+        {"minecraft:spire_armor_trim_smithing_template", ITEM_SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE},
+        {"minecraft:spyglass", ITEM_SPYGLASS},
+        {"minecraft:stone_axe", ITEM_STONE_AXE},
+        {"minecraft:straw_bed", ITEM_STRAW_BED},
+        {"minecraft:string", ITEM_STRING},
+        {"minecraft:suspicious_stew", ITEM_SUSPICIOUS_STEW},
+        {"minecraft:tipped_arrow", ITEM_TIPPED_ARROW},
+        {"minecraft:tnt", ITEM_TNT},
+        {"minecraft:torch", ITEM_TORCH},
+        {"minecraft:trident", ITEM_TRIDENT},
+        {"minecraft:tripwire_hook", ITEM_TRIPWIRE_HOOK},
+        {"minecraft:warm_ocean_ruins_map", ITEM_WARM_OCEAN_RUINS_MAP},
+        {"minecraft:wheat", ITEM_WHEAT},
+        {"minecraft:white_candle", ITEM_WHITE_CANDLE},
+        {"minecraft:white_cushion", ITEM_WHITE_CUSHION},
+        {"minecraft:wild_armor_trim_smithing_template", ITEM_WILD_ARMOR_TRIM_SMITHING_TEMPLATE},
+        {"minecraft:wind_charge", ITEM_WIND_CHARGE},
+        {"minecraft:wooden_axe", ITEM_WOODEN_AXE},
+        {"minecraft:woodland_mansion_map", ITEM_WOODLAND_MANSION_MAP},
+    };
+    size_t lo = 0, hi = sizeof(items) / sizeof(*items);
+    while (lo < hi) {
+        size_t mid = lo + (hi - lo) / 2;
+        int cmp = strcmp(name, items[mid].name);
+        if (cmp == 0) {
+            return items[mid].id;
+        }
+        if (cmp < 0) {
+            hi = mid;
+        } else {
+            lo = mid + 1;
+        }
+    }
     fprintf(stderr, "ERR item_name2global_id: unknown item %s\n", name);
     return ITEM_UNKNOWN;
 }

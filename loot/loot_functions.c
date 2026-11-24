@@ -313,9 +313,14 @@ static void fill_incompatible_enchantments()
     IS_INCOMPATIBLE_ENCHANT[BREACH][DENSITY] = 1;
 }
 
-static inline void remove_incompatible_enchantments(int enchantmentIndex, int enchantVec[], int* vecSize, int* totalWeight)
+static inline void remove_incompatible_enchantments(int enchantmentIndex, int enchantVec[], int* vecSize, int* totalWeight, int version)
 {
     int enchantmentID = enchantVec[enchantmentIndex];
+    // since 1.21 these six enchantments share the exclusive_set/damage tag
+    const uint64_t damage =
+        (1ULL << SHARPNESS) | (1ULL << SMITE) | (1ULL << BANE_OF_ARTHROPODS) |
+        (1ULL << IMPALING) | (1ULL << DENSITY) | (1ULL << BREACH);
+    uint64_t excluded = version >= MC_1_21_1 && (damage & (1ULL << enchantmentID)) ? damage : 0;
 
     int i = 0;
     int moveBack = 0;
@@ -323,7 +328,7 @@ static inline void remove_incompatible_enchantments(int enchantmentIndex, int en
     while (i < *vecSize)
     {
         const int ix = 3 * i;
-        const int incompatible = IS_INCOMPATIBLE_ENCHANT[enchantmentID][enchantVec[ix]];
+        const int incompatible = IS_INCOMPATIBLE_ENCHANT[enchantmentID][enchantVec[ix]] || (excluded & (1ULL << enchantVec[ix]));
 
         if (moveBack > 0 && !incompatible)
             memcpy(enchantVec + ix - moveBack, enchantVec + ix, sizeof(int) * 3);
@@ -346,6 +351,7 @@ static void enchant_with_levels_function(RandomSource* rand, ItemStack* is, cons
     // params[0][0] - item enchantability
     // params[0][1] - min levels
     // params[0][2] - max levels
+    // params[0][3] - Minecraft version for compatibility rules
     //
     // params[i][0] - number of applicable enchantment instances
     // params[i][1] - total weight of the enchantment instances
@@ -384,7 +390,7 @@ static void enchant_with_levels_function(RandomSource* rand, ItemStack* is, cons
 
     while (absNextInt(rand, 50) <= level)
     {
-        remove_incompatible_enchantments(index, enchantmentVec, &vecSize, &totalWeight);
+        remove_incompatible_enchantments(index, enchantmentVec, &vecSize, &totalWeight, varparams_int_arr[0][3]);
         if (vecSize == 0) break;
 
         index = choose_enchantment(rand, enchantmentVec, vecSize, totalWeight);
@@ -1185,10 +1191,11 @@ void create_enchant_with_levels(LootFunction* lf, const int version, const char*
     lf->params = (void*)lf->varparams_int_arr;
 
     // basic data vector
-    lf->varparams_int_arr[0] = (int*)malloc(3 * sizeof(int));
+    lf->varparams_int_arr[0] = (int*)malloc(4 * sizeof(int));
     lf->varparams_int_arr[0][0] = get_enchantability(item_name);
     lf->varparams_int_arr[0][1] = min_level;
     lf->varparams_int_arr[0][2] = max_level;
+    lf->varparams_int_arr[0][3] = version;
 
     int applicable[64];
     int num_applicable = get_applicable_enchantments(item_type, version, applicable, 0);
@@ -1226,10 +1233,11 @@ void create_enchant_with_levels_tag(LootFunction* lf, const int version, const c
     lf->varparams_int_arr_size = 2 * max_level + 1;
     lf->params = (void*)lf->varparams_int_arr;
 
-    lf->varparams_int_arr[0] = (int*)malloc(3 * sizeof(int));
+    lf->varparams_int_arr[0] = (int*)malloc(4 * sizeof(int));
     lf->varparams_int_arr[0][0] = get_enchantability(item_name);
     lf->varparams_int_arr[0][1] = min_level;
     lf->varparams_int_arr[0][2] = max_level;
+    lf->varparams_int_arr[0][3] = version;
 
     int applicable[64];
     int num_applicable = 0;
@@ -1373,7 +1381,7 @@ void test_enchant_vec()
 
         while (vecSize > 0)
         {
-            remove_incompatible_enchantments(0, enchantmentVec, &vecSize, &totalWeight);
+            remove_incompatible_enchantments(0, enchantmentVec, &vecSize, &totalWeight, MC_1_21);
             choose_enchantment(&rand, enchantmentVec, vecSize, totalWeight);
             numEnchants++;
         }

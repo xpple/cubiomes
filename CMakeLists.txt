@@ -122,7 +122,10 @@ set(HEADERS
 	loot/loot_tables/chests/stronghold_corridor_1_21_9.h
 	loot/loot_tables/chests/stronghold_crossing_1_13.h
 	loot/loot_tables/chests/stronghold_library_1_13.h
+	loot/loot_tables/chests/stronghold_library_1_14.h
 	loot/loot_tables/chests/stronghold_library_1_20.h
+	loot/loot_tables/chests/stronghold_library_1_21_1.h
+	loot/loot_tables/chests/stronghold_library_1_21_11.h
 	loot/loot_tables/chests/trial_chambers/reward_1_21_1.h
 	loot/loot_tables/chests/trial_chambers/reward_common_1_21_1.h
     loot/loot_tables/chests/trial_chambers/reward_ominous_1_21_1.h
@@ -218,7 +221,10 @@ set(SOURCES
 	loot/loot_tables/chests/stronghold_corridor_1_21_9.c
 	loot/loot_tables/chests/stronghold_crossing_1_13.c
 	loot/loot_tables/chests/stronghold_library_1_13.c
+	loot/loot_tables/chests/stronghold_library_1_14.c
 	loot/loot_tables/chests/stronghold_library_1_20.c
+	loot/loot_tables/chests/stronghold_library_1_21_1.c
+	loot/loot_tables/chests/stronghold_library_1_21_11.c
 	loot/loot_tables/chests/trial_chambers/reward_1_21_1.c
 	loot/loot_tables/chests/trial_chambers/reward_common_1_21_1.c
     loot/loot_tables/chests/trial_chambers/reward_ominous_1_21_1.c

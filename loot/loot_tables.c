@@ -68,7 +68,10 @@
 #include "loot_tables/chests/stronghold_corridor_1_21_9.h"
 #include "loot_tables/chests/stronghold_crossing_1_13.h"
 #include "loot_tables/chests/stronghold_library_1_13.h"
+#include "loot_tables/chests/stronghold_library_1_14.h"
 #include "loot_tables/chests/stronghold_library_1_20.h"
+#include "loot_tables/chests/stronghold_library_1_21_1.h"
+#include "loot_tables/chests/stronghold_library_1_21_11.h"
 #include "loot_tables/chests/trial_chambers/reward_1_21_1.h"
 #include "loot_tables/chests/trial_chambers/reward_common_1_21_1.h"
 #include "loot_tables/chests/trial_chambers/reward_ominous_1_21_1.h"
@@ -314,8 +317,11 @@ int init_stronghold_crossing(LootTableContext** context, int version) {
 }
 
 int init_stronghold_library(LootTableContext** context, int version) {
-    if (version < MC_1_20) *context = init_stronghold_library_1_13();
-    else *context = init_stronghold_library_1_20();
+    if (version < MC_1_14) *context = init_stronghold_library_1_13();
+    else if (version < MC_1_20) *context = init_stronghold_library_1_14();
+    else if (version < MC_1_21_1) *context = init_stronghold_library_1_20();
+    else if (version < MC_1_21_11) *context = init_stronghold_library_1_21_1();
+    else *context = init_stronghold_library_1_21_11();
     return version > MC_1_12;
 }
 

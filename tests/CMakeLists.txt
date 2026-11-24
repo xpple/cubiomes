@@ -18,6 +18,7 @@ endfunction()
 
 add_cubiomes_test(test_biomes test_biomes.c)
 add_cubiomes_test(test_structures test_structures.c)
-add_cubiomes_test(test_loot test_loot.c)
+add_cubiomes_test(test_loot_data test_loot_data.c)
+add_cubiomes_test(test_loot_gen test_loot_gen.c)
 add_cubiomes_test(test_pieces test_pieces.c)
 add_cubiomes_test(test_carvers test_carvers.c)

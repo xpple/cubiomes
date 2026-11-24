@@ -19,7 +19,7 @@ static inline void rotPos(Pos3 bb0, Pos3 bb1, int *x, int *z, int rot) {
     *x = posX, *z = posZ;
 }
 
-static void generateBox(const Piece *p, int cx, int cz, int x0, int y0, int z0, int x1, int y1, int z1, int skipAir, RandomSource *rnd) {
+static inline void generateBox(const Piece *p, int cx, int cz, int x0, int y0, int z0, int x1, int y1, int z1, int skipAir, RandomSource *rnd) {
     if (!skipAir) {
         int w = x1 - x0 + 1;
         int d = z1 - z0 + 1;
@@ -32,18 +32,22 @@ static void generateBox(const Piece *p, int cx, int cz, int x0, int y0, int z0, 
         return;
     }
 
-    for (int y = y0; y <= y1; y++) {
-        for (int x = x0; x <= x1; x++) {
-            for (int z = z0; z <= z1; z++) {
-                int tx = x, tz = z;
-                rotPos(p->bb0, p->bb1, &tx, &tz, p->rot);
-                if (tx >= cx && tx < cx + 16 && tz >= cz && tz < cz + 16) {
-                    if (y == y0 || y == y1 || x == x0 || x == x1 || z == z0 || z == z1) {
-                        absNextFloat(rnd);
-                    }
-                }
+    const int height = y1 - y0 + 1;
+    if (height <= 0) {
+        return;
+    }
+    uint64_t skips = 0;
+    for (int x = x0; x <= x1; x++) {
+        for (int z = z0; z <= z1; z++) {
+            int tx = x, tz = z;
+            rotPos(p->bb0, p->bb1, &tx, &tz, p->rot);
+            if (tx >= cx && tx < cx + 16 && tz >= cz && tz < cz + 16) {
+                skips += x == x0 || x == x1 || z == z0 || z == z1 ? height : (height > 1 ? 2 : 1);
             }
         }
+    }
+    if (skips) {
+        absSkipN(rnd, skips);
     }
 }
 

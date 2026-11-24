@@ -330,13 +330,16 @@ double sampleSpaghetti2dThicknessModulator(const TerrainNoise *params, int x, in
 }
 
 double sampleSpaghetti2d(const TerrainNoise *params, int x, int y, int z) {
-    double spaghetti2dModulator = sampleDoublePerlin(&params->noises[OTP_SPAGHETTI_2D_MODULATOR], x * 2, y, z * 2);
-    double rarity = getSpaghettiRarity2d(spaghetti2dModulator);
     double spaghetti2dThickness = map(sampleDoublePerlin(&params->noises[OTP_SPAGHETTI_2D_THICKNESS], x * 2, y, z * 2), -1.0, 1.0, 0.6, 1.3);
-    double spaghetti2d = sampleDoublePerlin(&params->noises[OTP_SPAGHETTI_2D], x / rarity, y / rarity, z / rarity);
-    double a = fabs(rarity * spaghetti2d) - 0.083 * spaghetti2dThickness;
     double spaghetti2dElevation = map(sampleDoublePerlin(&params->noises[OTP_SPAGHETTI_2D_ELEVATION], x, 0.0, z), -1.0, 1.0, floordiv(-64, 8), 8.0);
     double b = fabs(spaghetti2dElevation - y / 8.0) - spaghetti2dThickness;
+    if (b >= 1.0) {
+        return 1.0;
+    }
+    double spaghetti2dModulator = sampleDoublePerlin(&params->noises[OTP_SPAGHETTI_2D_MODULATOR], x * 2, y, z * 2);
+    double rarity = getSpaghettiRarity2d(spaghetti2dModulator);
+    double spaghetti2d = sampleDoublePerlin(&params->noises[OTP_SPAGHETTI_2D], x / rarity, y / rarity, z / rarity);
+    double a = fabs(rarity * spaghetti2d) - 0.083 * spaghetti2dThickness;
     return clamp(fmax(b * b * b, a), -1.0, 1.0);
 }
 

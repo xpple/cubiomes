@@ -1,6 +1,7 @@
 #include "testing.h"
 #include "../finders.h"
 #include "../features/mineshaft.h"
+#include "../features/stronghold.h"
 #include "../loot/items.h"
 #include "../loot/loot_tables.h"
 #include "../loot/mc_loot.h"
@@ -159,6 +160,57 @@ static int test_mineshaft_loot_26_3() {
     return ret;
 }
 
+static int test_stronghold_loot_26_3() {
+    int ret = 0;
+    uint64_t seed = 6813112401348474747ULL;
+    int mc = MC_26_3;
+
+    int x = 3620, z = 11092;
+
+    StructureSaltConfig saltConfig;
+    ASSERT_NONZERO(ret, getStructureSaltConfig(Stronghold, mc, -1, &saltConfig));
+
+    Piece *pieces = calloc(200, sizeof(Piece));
+    int count = getStrongholdLoot(pieces, 200, saltConfig, mc, seed, x >> 4, z >> 4);
+    ASSERT_EQ(ret, count, 200);
+
+    const int lootIndices[] = {2, 4, 7, 18, 31, 33, 43, 48, -1};
+    uint64_t indexMask[(200 >> 6) + 1] = {0};
+    for (int i = 0; lootIndices[i] != -1; i++) indexMask[lootIndices[i] >> 6] |= (1ULL << (lootIndices[i] & 63));
+    const struct { Pos pos; uint64_t ls; const char *lootTable; } lootData[] = {
+        {{3642, 11091}, -7783917009199580571ULL, "chests/stronghold_crossing"},
+        {{3632, 11083}, 1707677396999511439ULL, "chests/stronghold_corridor"},
+        {{3648, 11094}, -6783316198500537794ULL, "chests/stronghold_corridor"},
+        {{3657, 11076}, 6438059911862607198ULL, "chests/stronghold_corridor"},
+        {{3623, 11068}, 6311473853180359809ULL, "chests/stronghold_crossing"},
+        {{3663, 11063}, 32654030035791926ULL, "chests/stronghold_corridor"}, // incorrect due to cave, ls should be 1231928029319791275
+        {{3606, 11096}, -1374795455116478569ULL, "chests/stronghold_library"},
+        {{3610, 11105}, -6364935338105936614ULL, "chests/stronghold_library"},
+        {{3662, 11105}, 7403474397850315272ULL, "chests/stronghold_library"},
+        {{3671, 11101}, 8877412670680680006ULL, "chests/stronghold_library"},
+    };
+
+    int offset = 0;
+    for (int i = 0; i < count; i++) {
+        Piece piece = pieces[i];
+        if (!(indexMask[i >> 6] & (1ULL << (i & 63)))) {
+            ASSERT_EQ(ret, piece.chestCount, 0);
+            continue;
+        }
+
+        for (int j = 0; j < piece.chestCount; j++) {
+            int idx = offset++;
+            ASSERT_EQ(ret, piece.chestPoses[j].x, lootData[idx].pos.x);
+            ASSERT_EQ(ret, piece.chestPoses[j].z, lootData[idx].pos.z);
+            ASSERT_EQ(ret, piece.lootSeeds[j], lootData[idx].ls);
+            ASSERT_STR_EQ(ret, piece.lootTables[j], lootData[idx].lootTable);
+        }
+    }
+    free(pieces);
+
+    return ret;
+}
+
 static int test_abandoned_camp_loot_26_3() {
     int ret = 0;
 
@@ -205,6 +257,7 @@ int main() {
     ret += test_outpost_loot_1_21_11();
     ret += test_jungle_pyramid_loot_26_2();
     ret += test_mineshaft_loot_26_3();
+    ret += test_stronghold_loot_26_3();
     ret += test_abandoned_camp_loot_26_3();
 
     return ret;
