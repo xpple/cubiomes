@@ -21,8 +21,9 @@
 //==============================================================================
 
 
-void initSurfaceNoise(SurfaceNoise *sn, int dim, uint64_t seed)
+void initSurfaceNoise(SurfaceNoise *sn, int dim, uint64_t seed, int mc)
 {
+    sn->perlinMode = mc >= MC_1_17 ? PERLIN_1_17 : PERLIN_PRE_1_17;
     uint64_t s;
     setSeed(&s, seed);
     octaveInit(&sn->octmin, &s, sn->oct+0, -15, 16);
@@ -71,6 +72,8 @@ double sampleSurfaceNoiseBetween(const SurfaceNoise *sn, int x, int y, int z,
     double yScale = 684.412 * sn->yScale;
     double vmin = 0;
     double vmax = 0;
+    double (*sample)(const PerlinNoise *, double, double, double, double, double) =
+        sn->perlinMode == PERLIN_1_17 ? samplePerlin117 : samplePerlin;
 
     persist = 1.0 / 32768.0;
     amp = 64.0;
@@ -82,8 +85,8 @@ double sampleSurfaceNoiseBetween(const SurfaceNoise *sn, int x, int y, int z,
         sy = yScale * persist;
         dy = y * sy;
 
-        vmin += samplePerlin(&sn->octmin.octaves[i], dx, dy, dz, sy, dy) * amp;
-        vmax += samplePerlin(&sn->octmax.octaves[i], dx, dy, dz, sy, dy) * amp;
+        vmin += sample(&sn->octmin.octaves[i], dx, dy, dz, sy, dy) * amp;
+        vmax += sample(&sn->octmax.octaves[i], dx, dy, dz, sy, dy) * amp;
         if (vmin - amp > noiseMax && vmax - amp > noiseMax)
             return noiseMax;
         if (vmin + amp < noiseMin && vmax + amp < noiseMin)
@@ -107,7 +110,7 @@ double sampleSurfaceNoiseBetween(const SurfaceNoise *sn, int x, int y, int z,
         sy = yStep * persist;
         dy = y * sy;
 
-        vmain += samplePerlin(&sn->octmain.octaves[i], dx, dy, dz, sy, dy) * amp;
+        vmain += sample(&sn->octmain.octaves[i], dx, dy, dz, sy, dy) * amp;
         if (vmain - amp > 1) return vmax;
         if (vmain + amp < 0) return vmin;
 
@@ -128,6 +131,8 @@ double sampleSurfaceNoise(const SurfaceNoise *sn, int x, int y, int z)
     double minNoise = 0;
     double maxNoise = 0;
     double mainNoise = 0;
+    double (*sample)(const PerlinNoise *, double, double, double, double, double) =
+        sn->perlinMode == PERLIN_1_17 ? samplePerlin117 : samplePerlin;
     double persist = 1.0;
     double contrib = 1.0;
     double dx, dy, dz, sy, ty;
@@ -141,8 +146,8 @@ double sampleSurfaceNoise(const SurfaceNoise *sn, int x, int y, int z)
         sy = yScale * persist;
         ty = y * sy;
 
-        minNoise += samplePerlin(&sn->octmin.octaves[i], dx, dy, dz, sy, ty) * contrib;
-        maxNoise += samplePerlin(&sn->octmax.octaves[i], dx, dy, dz, sy, ty) * contrib;
+        minNoise += sample(&sn->octmin.octaves[i], dx, dy, dz, sy, ty) * contrib;
+        maxNoise += sample(&sn->octmax.octaves[i], dx, dy, dz, sy, ty) * contrib;
 
         if (i < 8)
         {
@@ -151,7 +156,7 @@ double sampleSurfaceNoise(const SurfaceNoise *sn, int x, int y, int z)
             dz = maintainPrecision(z * xzStep * persist);
             sy = yStep * persist;
             ty = y * sy;
-            mainNoise += samplePerlin(&sn->octmain.octaves[i], dx, dy, dz, sy, ty) * contrib;
+            mainNoise += sample(&sn->octmain.octaves[i], dx, dy, dz, sy, ty) * contrib;
         }
         persist *= 0.5;
         contrib *= 2.0;
@@ -661,7 +666,7 @@ int getEndSurfaceHeight(int mc, uint64_t seed, int x, int z)
     setEndSeed(&en, mc, seed);
 
     SurfaceNoise sn;
-    initSurfaceNoise(&sn, DIM_END, seed);
+    initSurfaceNoise(&sn, DIM_END, seed, mc);
 
     // end noise columns vary on a grid of cell size = eight
     int cellx = (x >> 3);
@@ -2007,8 +2012,9 @@ Range getVoronoiSrcRange(Range r)
     return s;
 }
 
-void initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim)
+void initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim, int mc)
 {
+    bn->perlinMode = mc >= MC_1_17 ? PERLIN_1_17 : PERLIN_PRE_1_17;
     static const int jhash_terrain = 0x62d03a68; // minecraft:terrain
     static const uint64_t md5_terrain[2] = {0x1ee555222ef96f14, 0xe2bedfdbebe43d33}; // minecraft:terrain
 
@@ -2091,9 +2097,11 @@ double sampleBase3dNoise(const BlendedNoise *bn, int x, int y, int z)
     double maxSampleTotal = 0.0;
     double mainSampleTotal = 0.0;
     double o = 1.0;
+    double (*sample)(const PerlinNoise *, double, double, double, double, double) =
+        bn->perlinMode == PERLIN_1_17 ? samplePerlin117 : samplePerlin;
 
     for (int octaveIdx = 0; octaveIdx < 8; octaveIdx++) {
-        mainSampleTotal += samplePerlin(&bn->octmain.octaves[octaveIdx], maintainPrecision(factoredX * o), maintainPrecision(factoredY * o), maintainPrecision(factoredZ * o), bn->factoredSmearedYScale * o, factoredY * o) / o;
+        mainSampleTotal += sample(&bn->octmain.octaves[octaveIdx], maintainPrecision(factoredX * o), maintainPrecision(factoredY * o), maintainPrecision(factoredZ * o), bn->factoredSmearedYScale * o, factoredY * o) / o;
         o /= 2.0;
     }
 
@@ -2107,11 +2115,11 @@ double sampleBase3dNoise(const BlendedNoise *bn, int x, int y, int z)
         double yamp = bn->smearedYScale * o;
         double ymax = scaledY * o;
         if (q < 1.0) {
-            minSampleTotal += samplePerlin(&bn->octmin.octaves[octaveIdx], sampleX, sampleY, sampleZ, yamp, ymax) / o;
+            minSampleTotal += sample(&bn->octmin.octaves[octaveIdx], sampleX, sampleY, sampleZ, yamp, ymax) / o;
         }
 
         if (q > 0.0) {
-            maxSampleTotal += samplePerlin(&bn->octmax.octaves[octaveIdx], sampleX, sampleY, sampleZ, yamp, ymax) / o;
+            maxSampleTotal += sample(&bn->octmax.octaves[octaveIdx], sampleX, sampleY, sampleZ, yamp, ymax) / o;
         }
 
         o /= 2.0;

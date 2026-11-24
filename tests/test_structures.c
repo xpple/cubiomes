@@ -38,10 +38,9 @@ static int test_end_city_height_versions() {
     uint64_t seed = 6983438112510666596ULL;
     int versions[] = {MC_1_9, MC_1_10, MC_1_11, MC_1_12, MC_1_13, MC_1_14, MC_1_18, MC_1_19, MC_26_3};
     int numVersions = sizeof(versions) / sizeof(*versions);
-    SurfaceNoise sn;
-    initSurfaceNoise(&sn, DIM_END, seed);
-
     for (int i = 0; i < numVersions; i++) {
+        SurfaceNoise sn;
+        initSurfaceNoise(&sn, DIM_END, seed, versions[i]);
         Generator g;
         setupGenerator(&g, versions[i], 0);
         applySeed(&g, DIM_END, seed);

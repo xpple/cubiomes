@@ -70,6 +70,11 @@ STRUCT(EndNoise)
     int mc;
 };
 
+enum PerlinMode {
+    PERLIN_PRE_1_17,
+    PERLIN_1_17,
+};
+
 STRUCT(SurfaceNoise)
 {
     double xzScale, yScale;
@@ -80,6 +85,7 @@ STRUCT(SurfaceNoise)
     OctaveNoise octsurf;
     OctaveNoise octdepth;
     PerlinNoise oct[16+16+8+4+16];
+    int perlinMode;
 };
 
 STRUCT(SurfaceNoiseBeta)
@@ -177,6 +183,7 @@ STRUCT(BlendedNoise)
     OctaveNoise octmax;
     OctaveNoise octmain;
     PerlinNoise oct[16+16+8];
+    int perlinMode;
 };
 
 
@@ -190,7 +197,7 @@ extern "C"
 //==============================================================================
 
 /// Initializes surface noise for the End or the pre-1.18 Overworld.
-void initSurfaceNoise(SurfaceNoise *sn, int dim, uint64_t seed);
+void initSurfaceNoise(SurfaceNoise *sn, int dim, uint64_t seed, int mc);
 void initSurfaceNoiseBeta(SurfaceNoiseBeta *snb, uint64_t seed);
 double sampleSurfaceNoise(const SurfaceNoise *sn, int x, int y, int z);
 double sampleSurfaceNoiseBetween(const SurfaceNoise *sn, int x, int y, int z,
@@ -351,7 +358,8 @@ Range getVoronoiSrcRange(Range r);
 /// \param bn the blended noise instance
 /// \param ws the world seed
 /// \param dim the dimension
-void initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim);
+/// \param mc the Minecraft version
+void initBlendedNoise(BlendedNoise *bn, uint64_t ws, int dim, int mc);
 
 /// Sample `base_3d_noise` using a blended noise instance.
 ///

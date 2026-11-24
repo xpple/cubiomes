@@ -153,7 +153,7 @@ uint32_t testAreas(int mc, int dim, int scale)
         genBiomes(&g, ids, r);
         /*
         float *surf = malloc(4 * w * h);
-        initSurfaceNoise(&sn, dim, s);
+        initSurfaceNoise(&sn, dim, s, g.mc);
         mapApproxHeight(surf, 0, &g, &sn, x, z, w, h);
         for (int i = 0; i < w*h; i++)
             ids[i] = (int) surf[i];
@@ -436,7 +436,7 @@ void findStructures(int structureType, int mc, int dim, uint64_t seed,
     // ignore this if you are not looking for end cities
     SurfaceNoise sn;
     if (structureType == End_City)
-        initSurfaceNoise(&sn, DIM_END, seed);
+        initSurfaceNoise(&sn, DIM_END, seed, mc);
 
     StructureConfig sconf;
     if (!getStructureConfig(structureType, mc, &sconf))
@@ -499,7 +499,7 @@ int main()
     setEndSeed(&en, mc, seed);
 
     SurfaceNoise sn;
-    initSurfaceNoise(&sn, DIM_END, seed);
+    initSurfaceNoise(&sn, DIM_END, seed, mc);
 
     Pos src[20];
     getFixedEndGateways(mc, seed, src);
