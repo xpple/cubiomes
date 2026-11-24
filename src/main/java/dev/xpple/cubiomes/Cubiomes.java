@@ -9720,6 +9720,76 @@ public class Cubiomes extends Cubiomes_1 {
     /**
      * Variadic invoker class for:
      * {@snippet lang=c :
+     * LootTableContext *init_stronghold_library_1_14()
+     * }
+     */
+    public static class init_stronghold_library_1_14 {
+        private static final FunctionDescriptor BASE_DESC = FunctionDescriptor.of(
+                Cubiomes.C_POINTER        );
+        private static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("init_stronghold_library_1_14");
+
+        private final MethodHandle handle;
+        private final FunctionDescriptor descriptor;
+        private final MethodHandle spreader;
+
+        private init_stronghold_library_1_14(MethodHandle handle, FunctionDescriptor descriptor, MethodHandle spreader) {
+            this.handle = handle;
+            this.descriptor = descriptor;
+            this.spreader = spreader;
+        }
+
+        /**
+         * Variadic invoker factory for:
+         * {@snippet lang=c :
+         * LootTableContext *init_stronghold_library_1_14()
+         * }
+         */
+        public static init_stronghold_library_1_14 makeInvoker(MemoryLayout... layouts) {
+            FunctionDescriptor desc$ = BASE_DESC.appendArgumentLayouts(layouts);
+            Linker.Option fva$ = Linker.Option.firstVariadicArg(BASE_DESC.argumentLayouts().size());
+            var mh$ = Linker.nativeLinker().downcallHandle(ADDR, desc$, fva$);
+            var spreader$ = mh$.asSpreader(Object[].class, layouts.length);
+            return new init_stronghold_library_1_14(mh$, desc$, spreader$);
+        }
+
+        /**
+         * {@return the address}
+         */
+        public static MemorySegment address() {
+            return ADDR;
+        }
+
+        /**
+         * {@return the specialized method handle}
+         */
+        public MethodHandle handle() {
+            return handle;
+        }
+
+        /**
+         * {@return the specialized descriptor}
+         */
+        public FunctionDescriptor descriptor() {
+            return descriptor;
+        }
+
+        public MemorySegment apply(Object... x0) {
+            try {
+                if (TRACE_DOWNCALLS) {
+                    traceDowncall("init_stronghold_library_1_14", x0);
+                }
+                return (MemorySegment) spreader.invokeExact(x0);
+            } catch(IllegalArgumentException | ClassCastException ex$)  {
+                throw ex$; // rethrow IAE from passing wrong number/type of args
+            } catch (Throwable ex$) {
+               throw new AssertionError("should not reach here", ex$);
+            }
+        }
+    }
+
+    /**
+     * Variadic invoker class for:
+     * {@snippet lang=c :
      * LootTableContext *init_stronghold_library_1_20()
      * }
      */
@@ -9777,6 +9847,146 @@ public class Cubiomes extends Cubiomes_1 {
             try {
                 if (TRACE_DOWNCALLS) {
                     traceDowncall("init_stronghold_library_1_20", x0);
+                }
+                return (MemorySegment) spreader.invokeExact(x0);
+            } catch(IllegalArgumentException | ClassCastException ex$)  {
+                throw ex$; // rethrow IAE from passing wrong number/type of args
+            } catch (Throwable ex$) {
+               throw new AssertionError("should not reach here", ex$);
+            }
+        }
+    }
+
+    /**
+     * Variadic invoker class for:
+     * {@snippet lang=c :
+     * LootTableContext *init_stronghold_library_1_21_1()
+     * }
+     */
+    public static class init_stronghold_library_1_21_1 {
+        private static final FunctionDescriptor BASE_DESC = FunctionDescriptor.of(
+                Cubiomes.C_POINTER        );
+        private static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("init_stronghold_library_1_21_1");
+
+        private final MethodHandle handle;
+        private final FunctionDescriptor descriptor;
+        private final MethodHandle spreader;
+
+        private init_stronghold_library_1_21_1(MethodHandle handle, FunctionDescriptor descriptor, MethodHandle spreader) {
+            this.handle = handle;
+            this.descriptor = descriptor;
+            this.spreader = spreader;
+        }
+
+        /**
+         * Variadic invoker factory for:
+         * {@snippet lang=c :
+         * LootTableContext *init_stronghold_library_1_21_1()
+         * }
+         */
+        public static init_stronghold_library_1_21_1 makeInvoker(MemoryLayout... layouts) {
+            FunctionDescriptor desc$ = BASE_DESC.appendArgumentLayouts(layouts);
+            Linker.Option fva$ = Linker.Option.firstVariadicArg(BASE_DESC.argumentLayouts().size());
+            var mh$ = Linker.nativeLinker().downcallHandle(ADDR, desc$, fva$);
+            var spreader$ = mh$.asSpreader(Object[].class, layouts.length);
+            return new init_stronghold_library_1_21_1(mh$, desc$, spreader$);
+        }
+
+        /**
+         * {@return the address}
+         */
+        public static MemorySegment address() {
+            return ADDR;
+        }
+
+        /**
+         * {@return the specialized method handle}
+         */
+        public MethodHandle handle() {
+            return handle;
+        }
+
+        /**
+         * {@return the specialized descriptor}
+         */
+        public FunctionDescriptor descriptor() {
+            return descriptor;
+        }
+
+        public MemorySegment apply(Object... x0) {
+            try {
+                if (TRACE_DOWNCALLS) {
+                    traceDowncall("init_stronghold_library_1_21_1", x0);
+                }
+                return (MemorySegment) spreader.invokeExact(x0);
+            } catch(IllegalArgumentException | ClassCastException ex$)  {
+                throw ex$; // rethrow IAE from passing wrong number/type of args
+            } catch (Throwable ex$) {
+               throw new AssertionError("should not reach here", ex$);
+            }
+        }
+    }
+
+    /**
+     * Variadic invoker class for:
+     * {@snippet lang=c :
+     * LootTableContext *init_stronghold_library_1_21_11()
+     * }
+     */
+    public static class init_stronghold_library_1_21_11 {
+        private static final FunctionDescriptor BASE_DESC = FunctionDescriptor.of(
+                Cubiomes.C_POINTER        );
+        private static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("init_stronghold_library_1_21_11");
+
+        private final MethodHandle handle;
+        private final FunctionDescriptor descriptor;
+        private final MethodHandle spreader;
+
+        private init_stronghold_library_1_21_11(MethodHandle handle, FunctionDescriptor descriptor, MethodHandle spreader) {
+            this.handle = handle;
+            this.descriptor = descriptor;
+            this.spreader = spreader;
+        }
+
+        /**
+         * Variadic invoker factory for:
+         * {@snippet lang=c :
+         * LootTableContext *init_stronghold_library_1_21_11()
+         * }
+         */
+        public static init_stronghold_library_1_21_11 makeInvoker(MemoryLayout... layouts) {
+            FunctionDescriptor desc$ = BASE_DESC.appendArgumentLayouts(layouts);
+            Linker.Option fva$ = Linker.Option.firstVariadicArg(BASE_DESC.argumentLayouts().size());
+            var mh$ = Linker.nativeLinker().downcallHandle(ADDR, desc$, fva$);
+            var spreader$ = mh$.asSpreader(Object[].class, layouts.length);
+            return new init_stronghold_library_1_21_11(mh$, desc$, spreader$);
+        }
+
+        /**
+         * {@return the address}
+         */
+        public static MemorySegment address() {
+            return ADDR;
+        }
+
+        /**
+         * {@return the specialized method handle}
+         */
+        public MethodHandle handle() {
+            return handle;
+        }
+
+        /**
+         * {@return the specialized descriptor}
+         */
+        public FunctionDescriptor descriptor() {
+            return descriptor;
+        }
+
+        public MemorySegment apply(Object... x0) {
+            try {
+                if (TRACE_DOWNCALLS) {
+                    traceDowncall("init_stronghold_library_1_21_11", x0);
                 }
                 return (MemorySegment) spreader.invokeExact(x0);
             } catch(IllegalArgumentException | ClassCastException ex$)  {
