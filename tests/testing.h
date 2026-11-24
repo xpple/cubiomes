@@ -23,7 +23,10 @@
     default:            "<unsupported>" \
 )
 
-#define ASSERTION_FAILED printf("Assertion failed at %s:%d\n", __FILE__, __LINE__)
+#define ASSERTION_FAILED                                                          \
+    do {                                                                          \
+        printf("\033[31mAssertion failed at %s:%d\033[0m\n", __FILE__, __LINE__); \
+    } while (0)
 
 #define ASSERT_TRUE(ret, X)                       \
     do {                                          \
@@ -58,19 +61,19 @@
         }                                           \
     } while (0)
 
-#define ASSERT_LT(ret, LHS, RHS)               \
-    do {                                       \
-        __typeof__(LHS) lhs = (LHS);           \
-        __typeof__(RHS) rhs = (RHS);           \
-        if (lhs >= rhs) {                      \
-            ASSERTION_FAILED;                  \
-            printf("Expected \"");             \
-            printf(PRINTF_FMT(lhs), lhs);      \
-            printf("\" to be larger than \""); \
-            printf(PRINTF_FMT(rhs), rhs);      \
-            printf("\"\n");                    \
-            (ret)++;                           \
-        }                                      \
+#define ASSERT_LT(ret, LHS, RHS)             \
+    do {                                     \
+        __typeof__(LHS) lhs = (LHS);         \
+        __typeof__(RHS) rhs = (RHS);         \
+        if (lhs >= rhs) {                    \
+            ASSERTION_FAILED;                \
+            printf("Expected \"");           \
+            printf(PRINTF_FMT(lhs), lhs);    \
+            printf("\" to be less than \""); \
+            printf(PRINTF_FMT(rhs), rhs);    \
+            printf("\"\n");                  \
+            (ret)++;                         \
+        }                                    \
     } while (0)
 
 #define ASSERT_STR_EQ(ret, ACTUAL, EXPECTED)                           \

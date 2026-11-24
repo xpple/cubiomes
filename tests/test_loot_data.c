@@ -198,6 +198,8 @@ static int test_stronghold_loot_26_3() {
             continue;
         }
 
+        ASSERT_NONZERO(ret, piece.chestCount);
+
         for (int j = 0; j < piece.chestCount; j++) {
             int idx = offset++;
             ASSERT_EQ(ret, piece.chestPoses[j].x, lootData[idx].pos.x);
