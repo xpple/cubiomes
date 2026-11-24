@@ -385,11 +385,14 @@ double samplePillars(const TerrainNoise *params, int x, int y, int z) {
 
 double sampleNoodle(const TerrainNoise *params, int x, int y, int z) {
     double noodle = yLimitedInterpolatable(y, sampleDoublePerlin(&params->noises[OTP_NOODLE], x, y, z), -60, 320, -1);
+    if (noodle >= -1000000.0 && noodle < 0.0) {
+        return 64.0;
+    }
     double noodleThickness = yLimitedInterpolatable(y, map(sampleDoublePerlin(&params->noises[OTP_NOODLE_THICKNESS], x, y, z), -1.0, 1.0, -0.05, -0.1), -60, 320, 0);
     double noodleRidgeA = yLimitedInterpolatable(y, sampleDoublePerlin(&params->noises[OTP_NOODLE_RIDGE_A], x * 2.6666666666666665, y * 2.6666666666666665, z * 2.6666666666666665), -60, 320, 0);
     double noodleRidgeB = yLimitedInterpolatable(y, sampleDoublePerlin(&params->noises[OTP_NOODLE_RIDGE_B], x * 2.6666666666666665, y * 2.6666666666666665, z * 2.6666666666666665), -60, 320, 0);
     double scaledMax = 1.5 * fmax(fabs(noodleRidgeA), fabs(noodleRidgeB));
-    return rangeChoice(noodle, -1000000.0, 0.0, 64.0, noodleThickness + scaledMax);
+    return noodleThickness + scaledMax;
 }
 
 double sampleUnderground(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese) {
@@ -404,7 +407,9 @@ double sampleUnderground(const TerrainNoise *params, int x, int y, int z, double
 
 double sampleFinalDensity(const TerrainNoise *params, int x, int y, int z, double spaghettiRoughness, double entrances, double slopedCheese) {
     double a = fmin(slopedCheese, 5.0 * entrances);
-    double b = rangeChoice(slopedCheese, -1000000.0, 1.5625, a, sampleUnderground(params, x, y, z, spaghettiRoughness, entrances, slopedCheese));
+    double b = slopedCheese >= -1000000.0 && slopedCheese < 1.5625
+        ? a
+        : sampleUnderground(params, x, y, z, spaghettiRoughness, entrances, slopedCheese);
     return fmin(postProcess(slideOverworld(b, y)), sampleNoodle(params, x, y, z));
 }
 
@@ -573,7 +578,10 @@ void sampleOWNoiseColumnOld(const TerrainNoise *params, int cellX, int cellZ, in
     double depth, scale;
     getWeightedDepthAndScale(&params->g, &params->sn.octdepth, cellX, cellZ, &depth, &scale);
 
-    double randomOffset = sampleDepthNoise(&params->sn.octdepth, cellX, cellZ, params->g.mc);
+    double randomOffset = 0.0;
+    if (params->g.mc >= MC_1_16_1) {
+        randomOffset = sampleDepthNoise(&params->sn.octdepth, cellX, cellZ, params->g.mc);
+    }
 
     for (int y = colYMin; y <= colYMax; ++y) {
         double noise = sampleSurfaceNoise(&params->sn, cellX, y, cellZ);

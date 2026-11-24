@@ -685,10 +685,10 @@ void generateOrePositions(const Generator *g, const SurfaceNoise *sn, const OreC
     int oreSize = 2 * (ceil(size) + amortizedSize);
     int radius = 2 * (2 + amortizedSize);
 
-    for (int x = startX; x <= startX + oreSize; ++x) {
-        for (int z = startZ; z <= startZ + oreSize; ++z) {
+    for (int x = startX >> 2; x <= (startX + oreSize) >> 2; ++x) {
+        for (int z = startZ >> 2; z <= (startZ + oreSize) >> 2; ++z) {
             float y;
-            mapApproxHeight(&y, 0, g, sn, x >> 2, z >> 2, 1, 1);
+            mapApproxHeight(&y, 0, g, sn, x, z, 1, 1);
             if (startY <= (g->dim == DIM_OVERWORLD ? (int) floor(y) : 128)) {
                 generateVeinPart(mc, config, rnd, offsetXPos, offsetXNeg, offsetZPos, offsetZNeg, offsetYPos, offsetYNeg, startX, startY, startZ, oreSize, radius, pos3s);
                 return;
