@@ -51,6 +51,7 @@ public final class CubiomesInit {
         try {
             tempFile = Files.createTempFile(libraryName, "");
             Files.copy(Objects.requireNonNull(CubiomesInit.class.getResourceAsStream("/" + libraryName)), tempFile, StandardCopyOption.REPLACE_EXISTING);
+            tempFile.toFile().deleteOnExit();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
