@@ -86,12 +86,14 @@ const char* mc2str(int mc)
     case MC_26_1:    return "26.1"; break;
     case MC_26_2:    return "26.2"; break;
     case MC_26_3:    return "26.3"; break;
+    case MC_26_4_S3: return "26.4-snapshot3"; break;
     default:         return "?";
     }
 }
 
 int str2mc(const char *s)
 {
+    if (!strcmp(s, "26.4-snapshot3"))     return MC_26_4_S3;
     if (!strcmp(s, "26.3"))     return MC_26_3;
     if (!strcmp(s, "26.2"))     return MC_26_2;
     if (!strcmp(s, "26.1"))     return MC_26_1;
@@ -293,6 +295,8 @@ const char *biome2str(int mc, int id)
     case sulfur_caves: return "sulfur_caves";
     // 26.3
     case dappled_forest: return "dappled_forest";
+    // 26.4-snapshot3
+    case ice_caves: return "ice_caves";
     }
     return NULL;
 }
@@ -555,6 +559,7 @@ void initBiomeColors(unsigned char colors[256][3])
     setColor(colors, pale_garden,                      0x696d95); // -
     setColor(colors, sulfur_caves,                     0xc8d232); // -
     setColor(colors, dappled_forest,                   0xeb9234); // -
+    setColor(colors, ice_caves,                        0x8ce4ff); // -
 }
 
 void initBiomeTypeColors(unsigned char colors[256][3])

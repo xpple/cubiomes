@@ -13,6 +13,8 @@ int biomeExists(int mc, int id)
 
         switch (id)
         {
+		case ice_caves:
+		    return mc >= MC_26_4_S3;
         case dappled_forest:
             return mc >= MC_26_3;
         case sulfur_caves:
@@ -219,6 +221,8 @@ int isOverworld(int mc, int id)
         return mc >= MC_1_21_4;
     case dappled_forest:
         return mc >= MC_26_3;
+    case ice_caves:
+	    return mc >= MC_26_4_S3;
     }
     return 1;
 }

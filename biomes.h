@@ -44,7 +44,8 @@ enum MCVersion
     MC_26_1,
     MC_26_2,
     MC_26_3,
-    MC_NEWEST = MC_26_3,
+    MC_26_4_S3,
+    MC_NEWEST = MC_26_4_S3,
 };
 
 enum Dimension
@@ -185,6 +186,8 @@ enum BiomeID
     sulfur_caves                    = 187,
     // 26.3
     dappled_forest                  = 188,
+    // 26.4 snapshot 3
+    ice_caves                       = 189,
 };
 
 
